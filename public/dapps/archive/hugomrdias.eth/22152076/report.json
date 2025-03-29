@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "contentHash": "bafybeibz7xfqvfyo3eyfulvzkpaz33oj2vxevmfeunql3fjt5alkgsxifu",
+  "timestamp": 1743245435,
+  "blockNumber": 22152076,
+  "totalSize": 1768502,
+  "favicon": "favicon.ico",
+  "title": "Hugo Dias - Porto, Portugal, Protocol Labs",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "index.html",
+        "offenders": [
+          "https://schema.org",
+          "https://hugodias.me#website",
+          "https://hugodias.me",
+          "https://hugodias.me",
+          "https://hugodias.me",
+          "https://hugodias.me#website",
+          "https://hugodias.me/assets/images/avatar.jpg",
+          "https://hugodias.me#organization",
+          "https://hugodias.me/assets/images/avatar.jpg"
+        ]
+      }
+    ],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

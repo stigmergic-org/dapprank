@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "contentHash": "bafybeidjglvyrtlubh25bc5xinca4p6i26l3ngpkc66xjj6twjvetpm7py",
+  "timestamp": 1743245759,
+  "blockNumber": 22152102,
+  "totalSize": 62740310,
+  "favicon": "emoji.webp",
+  "title": "v1rtl.site",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": [
+      {
+        "file": "blog/coverage-in-deno/index.html",
+        "offenders": [
+          {
+            "type": "img",
+            "url": "https://img.shields.io/github/workflow/status/talentlessguy/tinyhttp/CI?style=flat-square"
+          },
+          {
+            "type": "img",
+            "url": "https://img.shields.io/codecov/c/gh/talentlessguy/tinyhttp-deno?style=flat-square"
+          }
+        ]
+      },
+      {
+        "file": "blog/deno-graphql/index.html",
+        "offenders": [
+          {
+            "type": "img",
+            "url": "https://user-images.githubusercontent.com/35937217/112218821-4133c800-8c35-11eb-984a-5c21fa71c229.png"
+          }
+        ]
+      }
+    ]
+  },
+  "networkingPurity": {
+    "http": [],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

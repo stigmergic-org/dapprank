@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "contentHash": "bafybeidbqcysr62znitq7b3qiflyao37ywat3uwcgqu4clpmqmqzbcqgd4",
+  "timestamp": 1743245750,
+  "blockNumber": 22152101,
+  "totalSize": 4428891,
+  "favicon": "favicon.jpg",
+  "title": "Takens Theorem",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "index.html",
+        "offenders": [
+          "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=FeeTotNtv,AdrActCnt,TxTfrValAdjUSD,PriceUSD,TxCnt,HashRate,BlkSizeMeanByte,IssTotNtv,SplyCur&frequency=1d&pretty=true&start_time=stdt&end_time=endt&page_size=10000"
+        ]
+      }
+    ],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

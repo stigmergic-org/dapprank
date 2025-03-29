@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dapp Rank - Benchmarks Censorship Resistance & Security</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dapp Rank benchmarks decentralized applications based on censorship resistance and security metrics.">
+  <meta name="theme-color" content="#4361ee">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dapprank.eth.link/">
+  <meta property="og:title" content="Dapp Rank - Benchmarks Censorship Resistance & Security">
+  <meta property="og:description" content="Dapp Rank benchmarks decentralized applications based on censorship resistance and security metrics.">
+  <meta property="og:image" content="/images/logo.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://dapprank.eth.link/">
+  <meta name="twitter:title" content="Dapp Rank - Benchmarks Censorship Resistance & Security">
+  <meta name="twitter:description" content="Dapp Rank benchmarks decentralized applications based on censorship resistance and security metrics.">
+  <meta name="twitter:image" content="/images/logo.png">
+  
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <a href="/">
+      <img class="header-img" src="images/logo.png" alt="Logo">
+    </a>
+    <a href="/" style="text-decoration: none; color: inherit;">
+      <div class="header-text">
+        Dapp Rank
+      </div>
+    </a>
+    <div class="theme-toggle" id="themeToggle" title="Toggle theme (light/dark/system)">
+      <!-- Theme icon will be inserted by JS based on current mode -->
+    </div>
+  </div>
+
+  <div class="navigation-tabs">
+    <ul>
+      <li class="active"><a href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/best-practices">Best Practices</a></li>
+      <li><a href="/shame-list">Shame List</a></li>
+    </ul>
+  </div>
+
+  <div id="inputForm">
+    <input type="text" id="textInput" placeholder="Enter .eth domain" onkeypress="if(event.key === 'Enter') document.getElementById('submitButton').click()">
+    <button id="submitButton">Check your score</button>
+  </div>
+  <div id="content-wrapper">
+
+    <div id="dapps">
+      <table>
+        <thead>
+          <tr>
+            <th>Score</th>
+            <th>Name</th>
+            <th>Risks</th>
+            <th>Category</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content will be appended here -->
+        </tbody>
+      </table>
+      
+    </div>
+
+    <div id="main-content">
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="https://github.com/stigmergic-org/dapprank" target="_blank" rel="noopener noreferrer">
+    <img src="./images/github-mark.png" alt="GitHub repository">
+    <span>GitHub</span>
+  </a>
+  <a href="https://x.com/joelthorst" target="_blank" rel="noopener noreferrer">
+    <img src="./images/x-logo.svg" alt="X (Twitter) profile">
+    <span>Twitter</span>
+  </a>
+  <a href="https://t.me/+4VFCHrBXGJAwZDc0" target="_blank" rel="noopener noreferrer">
+    <img src="./images/telegram-logo.png" alt="Telegram group">
+    <span>Telegram</span>
+  </a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "contentHash": "bafybeigq6ejbgwr2v2pz4p3cxjqafom7sy4s7u5qzk56ykyoupkkrg4vie",
+  "timestamp": 1743245758,
+  "blockNumber": 22152102,
+  "totalSize": 3552153,
+  "favicon": "favicon.ico",
+  "title": "Unipeer",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "404.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://fonts.gstatic.com"
+          }
+        ]
+      },
+      {
+        "file": "aml_kyc_policy.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://fonts.gstatic.com"
+          }
+        ]
+      },
+      {
+        "file": "index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://plausible.8bitlabs.tech/js/script.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.gstatic.com"
+          }
+        ]
+      },
+      {
+        "file": "privacy.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://fonts.gstatic.com"
+          }
+        ]
+      },
+      {
+        "file": "terms.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://fonts.gstatic.com"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "_next/static/chunks/framework-b3ca2e9a9574e304.js",
+        "offenders": [
+          "https://reactjs.org/docs/error-decoder.html?invariant="
+        ]
+      },
+      {
+        "file": "_next/static/chunks/main-955a42f2e4411ce1.js",
+        "offenders": [
+          "https://use.typekit.net/",
+          "http://n",
+          "http://n"
+        ]
+      },
+      {
+        "file": "_next/static/chunks/pages/aml_kyc_policy-5cf05019a297eedc.js",
+        "offenders": [
+          "https://app.unipeer.exchange/",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange"
+        ]
+      },
+      {
+        "file": "_next/static/chunks/pages/index-600b0a0f58e904ff.js",
+        "offenders": [
+          "https://app.unipeer.exchange/",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange",
+          "https://plausible.8bitlabs.tech/js/script.js"
+        ]
+      },
+      {
+        "file": "_next/static/chunks/pages/privacy-7ec02f41955b9e49.js",
+        "offenders": [
+          "https://app.unipeer.exchange/",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange"
+        ]
+      },
+      {
+        "file": "_next/static/chunks/pages/terms-99003f530cc020cf.js",
+        "offenders": [
+          "https://app.unipeer.exchange/",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange",
+          "https://docs.unipeer.exchange"
+        ]
+      },
+      {
+        "file": "_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+        "offenders": [
+          "http://a",
+          "http://a/c%20d?a=1&c=3",
+          "https://a@b",
+          "http://тест",
+          "http://a#б",
+          "http://x"
+        ]
+      }
+    ],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

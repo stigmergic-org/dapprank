@@ -1,0 +1,2484 @@
+/* Dark mode styles */
+:root {
+  /* Modern professional color palette */
+  --background-color: #f8f9fa;
+  --text-color: #212529;
+  --card-background: #ffffff;
+  --border-color: #e9ecef;
+  --border-color-rgb: 233, 236, 239; /* Added RGB values for border color */
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --highlight-color: #4361ee;
+  --secondary-background: #f1f3f5;
+  --hover-background: #e9ecef;
+  --error-color: #e63946;
+  --success-color: #2a9d8f;
+  --warning-color: #f9a826;
+  --warning-background: #ffeeba;
+  --warning-text-color: #856404;
+  --pie-line-color: var(--popup-background);
+  --popup-background: #ffffff;
+  --popup-border: #e9ecef;
+  --popup-text-color: #212529;
+  --report-background: #f8f9fa;
+  --report-header-color: #212529;
+  --report-text-color: #495057;
+  --report-subtext-color: #6c757d;
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-monospace: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --border-radius: 8px;
+  --transition-speed: 0.2s;
+  --card-background-rgb: 255, 255, 255;
+}
+
+.dark-mode {
+  --background-color: #121212;
+  --text-color: #e9ecef;
+  --card-background: #1e1e1e;
+  --border-color: #343a40;
+  --border-color-rgb: 52, 58, 64; /* Added RGB values for border color in dark mode */
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --highlight-color: #4895ef;
+  --secondary-background: #2a2d3e;
+  --hover-background: #343a40;
+  --error-color: #e63946;
+  --success-color: #2a9d8f;
+  --warning-color: #f9a826;
+  --warning-background: #3a3218;
+  --warning-text-color: #ffd970;
+  --pie-line-color: var(--popup-background);
+  --popup-background: #2a2d3e;
+  --popup-border: #343a40;
+  --popup-text-color: #e9ecef;
+  --report-background: #2a2d3e;
+  --report-header-color: #e9ecef;
+  --report-text-color: #ced4da;
+  --report-subtext-color: #adb5bd;
+  --card-background-rgb: 30, 30, 30;
+}
+
+body {
+    background: var(--background-color);
+    font-family: var(--font-primary);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Global container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 0;
+    color: var(--text-color);
+}
+
+/* Improved header styles */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+}
+
+.header-img {
+    height: 2.8rem;
+    padding-bottom: 0;
+}
+
+.header-text {
+    margin-left: 0.5rem;
+    color: var(--highlight-color);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.navigation-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    width: 100%;
+}
+
+.navigation-tabs ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+}
+
+.navigation-tabs li {
+    flex: 1;
+    text-align: center;
+}
+
+.navigation-tabs li a {
+    padding: 0.75rem 0.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+    text-decoration: none;
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    transition: color var(--transition-speed) ease;
+}
+
+.navigation-tabs li a:hover,
+.navigation-tabs li a:focus {
+    color: var(--highlight-color);
+    background-color: transparent;
+}
+
+.navigation-tabs li a::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--highlight-color);
+    transform: scaleX(0);
+    transition: transform var(--transition-speed) ease;
+}
+
+.navigation-tabs li a:hover::after,
+.navigation-tabs li.active a::after {
+    transform: scaleX(1);
+}
+
+.navigation-tabs li.active a {
+    color: var(--highlight-color);
+    font-weight: 600;
+}
+
+#inputForm {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 2.5rem auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+    position: relative;
+}
+
+#inputForm input {
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    margin-right: 0;
+    flex: 1;
+    font-size: 1rem;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    -webkit-appearance: none; /* Fix for iOS */
+}
+
+#inputForm input:focus {
+    outline: none;
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+#inputForm button {
+    padding: 0.875rem 1.5rem;
+    border: none;
+    background-color: var(--highlight-color);
+    color: white;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color var(--transition-speed) ease;
+    -webkit-appearance: none; /* Fix for iOS */
+}
+
+#inputForm button:hover {
+    background-color: #3651d1; /* Darker version of highlight color */
+}
+
+#content-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+#dapps {
+    border-radius: var(--border-radius);
+    padding: 0;
+    background-color: var(--card-background);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.07);
+    margin-bottom: 2.5rem;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+/* Add horizontal scrollbar indicators */
+#dapps::before,
+#dapps::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 15px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#dapps::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(var(--card-background-rgb), 0.9), rgba(var(--card-background-rgb), 0));
+}
+
+#dapps::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(var(--card-background-rgb), 0.9), rgba(var(--card-background-rgb), 0));
+}
+
+/* Only show indicators when there's overflow */
+#dapps.has-overflow::before,
+#dapps.has-overflow::after {
+    opacity: 1;
+}
+
+#dapps table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--border-radius);
+    table-layout: fixed;
+}
+
+#dapps th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    height: auto;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--secondary-background);
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Define specific widths for columns */
+#dapps th:nth-child(1) {
+    width: 70px; /* Score column */
+    padding-left: 1.5rem;
+    text-align: center;
+}
+
+#dapps th:nth-child(2) {
+    width: 35%; /* Name column */
+}
+
+#dapps th:nth-child(3) {
+    width: 70px; /* Risks column */
+    text-align: center;
+}
+
+#dapps th:nth-child(4) {
+    width: 18%; /* Category column */
+    text-align: center;
+}
+
+#dapps th:nth-child(5) {
+    width: 15%; /* Link column */
+    text-align: right;
+    padding-right: 1.5rem;
+}
+
+#dapps td {
+    text-align: left;
+    height: 3.5rem;
+    padding: 0.5rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-speed) ease;
+}
+
+/* Adjust cell alignment to match headers */
+#dapps td:nth-child(1) {
+    padding-left: 1.5rem; /* Match header padding */
+}
+
+#dapps td:nth-child(3) {
+    text-align: center; /* Center risks */
+}
+
+#dapps td:nth-child(4) {
+    text-align: center; /* Center category */
+}
+
+#dapps td:nth-child(5) {
+    text-align: right; /* Right align links */
+    padding-right: 1.5rem; /* Increased padding for better spacing */
+    white-space: nowrap; /* Prevent wrapping of link text */
+}
+
+#dapps td:nth-child(5) .table__item {
+    justify-content: flex-end; /* Right align the link cell content */
+}
+
+#dapps tr:last-child td {
+    border-bottom: none;
+}
+
+#dapps tr:hover td {
+    background-color: var(--hover-background);
+}
+
+.table__item {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.table__item a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color var(--transition-speed) ease;
+}
+
+.table__item a:hover {
+    color: var(--highlight-color);
+}
+
+/* Style for domain links specifically */
+#dapps td:nth-child(5) .table__item a {
+    text-decoration: none;
+    color: var(--highlight-color);
+    position: relative;
+    padding: 0; /* Remove any padding */
+    margin: 0; /* Remove any margin */
+    white-space: nowrap; /* Prevent text wrapping */
+    max-width: 100%; /* Allow links to fill the cell */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+#dapps td:nth-child(5) .table__item a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--highlight-color);
+    transform: scaleX(0);
+    transition: transform var(--transition-speed) ease;
+}
+
+#dapps td:nth-child(5) .table__item a:hover::after {
+    transform: scaleX(1);
+}
+
+.table__item img {
+    width: 32px;
+    height: 32px;
+    margin-right: 1rem;
+    vertical-align: middle;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+#dapps .pie-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+#dapps .pie-container .pie-chart {
+    transition: transform 0.15s ease;
+}
+
+#dapps .pie-container:hover .pie-chart {
+    transform: scale(1.05);
+}
+
+#dapps .pie-container .popup {
+    position: fixed;
+    left: auto;
+    width: 25em;
+    max-width: 90vw;
+    z-index: 1500;
+    transform: none;
+    pointer-events: auto;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    transition: opacity 0.2s ease-in-out;
+    will-change: opacity;
+}
+
+#install {
+    margin: 20px;
+    padding: 20px;
+    background-color: rgba(53, 122, 184, 0.1);
+    /* border: 1px solid #ccc; */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    display: none;
+}
+
+.step-header {
+    margin: 20px;
+}
+
+code {
+    background-color: var(--secondary-background);
+    border: 1px solid var(--border-color);
+    font-family: var(--font-monospace);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--text-color);
+}
+
+.prompt {
+    margin-right: 10px;
+    color: #555;
+    font-family: monospace;
+}
+
+.command {
+    flex: 1;
+    font-family: monospace;
+    color: #000;
+}
+
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--error-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s, transform 0.3s;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pie-chart, .popup-pie-chart {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pie-piece {
+    position: absolute;
+}
+
+.pie-container, .popup {
+    position: relative;
+}
+
+.popup {
+    position: absolute;
+    left: 3em;
+    width: 25em;
+    display: none;
+    align-items: center;
+    background-color: var(--popup-background);
+    border: 1px solid var(--popup-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    z-index: 1000;
+    color: var(--text-color);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.2s ease;
+}
+
+.popup-pie-container {
+    display: flex;
+    height: 100%;
+}
+
+.popup-text {
+    display: inline-grid;
+}
+
+.popup-label {
+    font-size: 0.7em;
+    font-weight: bold;
+    position: absolute;
+    white-space: nowrap;
+    color: var(--text-color);
+}
+
+.report-container {
+    padding: 0.75em;
+    margin: 0.25em;
+    background-color: var(--report-background);
+    border-radius: 8px;
+    height: calc(100% - 0.5em); /* Account for margins */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.report-header {
+    color: var(--report-header-color);
+    font-weight: bold;
+    margin-bottom: 0.25em;
+}
+
+.report-text {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    font-style: italic;
+    color: var(--report-text-color);
+}
+
+.report-sub-text {
+    margin-left: 8px;
+    color: var(--report-subtext-color);
+    padding: 0.2em;
+    border-radius: 0.6em;
+    width: fit-content;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 2rem;
+    background-color: var(--secondary-background);
+    border-top: 1px solid var(--border-color);
+}
+
+.footer a {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0.75rem;
+    text-decoration: none;
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: opacity var(--transition-speed) ease;
+}
+
+.footer a:hover {
+    opacity: 1;
+}
+
+.footer img {
+    height: 1.75rem;
+    margin-right: 0.5rem;
+}
+
+/* Category label styles */
+.category-label {
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px; /* Pill shape */
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    display: inline-block;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Category colors with more modern palette */
+.category-defi {
+    background-color: #7950f2; /* Updated purple */
+}
+
+.category-social {
+    background-color: #fd7e14; /* Updated orange */
+}
+
+.category-nft {
+    background-color: #fa5252; /* Updated red */
+}
+
+.category-wallet-interface {
+    background-color: #ff922b; /* Updated light orange */
+}
+
+.category-personal-website {
+    background-color: #40c057; /* Updated green */
+}
+
+.category-knowledge-base {
+    background-color: #339af0; /* Updated blue */
+}
+
+.category-filesharing {
+    background-color: #20c997; /* Updated teal */
+}
+
+.category-data {
+    background-color: #9775fa; /* Updated violet */
+}
+
+.category-infofi {
+    background-color: #12b886; /* Updated teal/green */
+}
+
+.category-other {
+    background-color: #6c757d; /* Updated gray */
+}
+
+/* Dapp Details Page Styles */
+.dapp-details {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding: 1rem 0;
+    box-sizing: border-box;
+}
+
+.dapp-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dapp-icon-title {
+    display: flex;
+    align-items: center;
+}
+
+.dapp-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dapp-details-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--highlight-color);
+    margin-right: 1rem;
+    letter-spacing: -0.5px;
+}
+
+.dapp-icon-title .score-badge {
+    margin-right: 1rem;
+}
+
+.dapp-details-header .category-label {
+    margin-left: auto;
+}
+
+.dapp-details-section {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.07);
+}
+
+.dapp-details-section h2 {
+    margin-top: 0;
+    color: var(--text-color);
+    font-size: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.dapp-risk-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0 1rem;
+}
+
+/* Preserve the styles for the enlarged pie container */
+.dapp-risk-chart .enlarged-pie-container {
+    margin: 0 auto;
+    padding: 1em;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    gap: 1.5em;
+}
+
+/* Center the pie chart within its container */
+.dapp-risk-chart .enlarged-pie-chart {
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 100%;
+}
+
+/* Ensure SVG triangle is properly centered and sized */
+.dapp-risk-chart svg {
+    margin: 0 auto;
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.dapp-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dapp-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--secondary-background);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    color: var(--highlight-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all var(--transition-speed) ease;
+    border: 1px solid transparent;
+}
+
+.dapp-link:hover {
+    background-color: var(--card-background);
+    border-color: var(--highlight-color);
+    transform: translateY(-2px);
+}
+
+.link-icon {
+    margin-right: 0.75rem;
+}
+
+.report-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.report-item {
+    padding: 1rem;
+    background-color: var(--secondary-background);
+    border-radius: var(--border-radius);
+    display: flex;
+    margin-bottom: 0;
+    align-items: center;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.report-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.report-label {
+    font-weight: 600;
+    min-width: 120px;
+    color: var(--report-header-color);
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
+
+.report-value {
+    font-family: var(--font-monospace);
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    color: var(--report-text-color);
+    font-size: 0.9rem;
+    gap: 0.5rem;
+}
+
+.report-section {
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding-left: 0;
+}
+
+.report-list > li {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: var(--secondary-background);
+    border-radius: var(--border-radius);
+    transition: transform var(--transition-speed) ease;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.report-list > li:hover {
+    transform: translateY(-2px);
+}
+
+.report-sublist {
+    list-style: none;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    background-color: var(--card-background);
+    border-radius: calc(var(--border-radius) - 2px);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.report-sublist > li {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.report-sublist > li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.web3-service {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.web3-url {
+    color: #666;
+    margin-right: 10px;
+}
+
+.web3-risk {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: white;
+}
+
+.risk-high {
+    background-color: #e74c3c;
+}
+
+.risk-medium {
+    background-color: #f39c12;
+}
+
+.risk-low {
+    background-color: #2ecc71;
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.loading:after {
+    content: '.';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1rem;
+    color: var(--error-color);
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--error-color);
+    margin: 1rem 0;
+}
+
+/* Make the main content area wider for the details page */
+#main-content.details-view {
+    width: 90%;
+    max-width: 1100px;
+    padding: 2rem;
+}
+
+/* Additional dark mode specific adjustments */
+.dark-mode .dapp-details-header h1 {
+    color: var(--highlight-color);
+}
+
+.dark-mode .report-sublist > li {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dark-mode .web3-url {
+    color: #aaa;
+}
+
+/* Update the sort indicator style */
+.sort-indicator {
+    margin-left: 5px;
+    color: var(--highlight-color);
+    font-size: 0.8em;
+    display: inline-block;
+    vertical-align: middle;
+    position: static; /* Change from absolute to static */
+}
+
+th {
+    position: relative;
+    padding-right: 15px !important; /* Reduced padding */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+th.sorted-asc, th.sorted-desc {
+    /* No background color change */
+    font-weight: bold; /* Just make text bold to indicate sorting */
+}
+
+th:hover {
+    /* No background color change on hover */
+}
+
+/* Censorship Resistance Score styles */
+.score-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.score-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px; /* Ensure consistent width */
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.score-high {
+    background-color: var(--success-color);
+}
+
+.score-medium {
+    background-color: var(--warning-color);
+}
+
+.score-low {
+    background-color: var(--error-color);
+}
+
+/* Hash icon and copy button styles */
+.hash-icon {
+    font-size: 1.2em;
+    transition: transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hash-link, .copy-hash-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hash-link:hover .hash-icon,
+.copy-hash-btn:hover .hash-icon {
+    transform: scale(1.2);
+}
+
+.copy-hash-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-hash-btn.copied::after {
+    content: 'Copied!';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tooltip-bg, #212529);
+    color: var(--tooltip-text, #fff);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Update report item styles */
+.report-item {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.report-label {
+    font-weight: bold;
+    min-width: 120px;
+    color: var(--label-color, #adb5bd);
+}
+
+.report-value {
+    font-family: var(--font-monospace);
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Mirror links styles - updated from dapp-links */
+.dapp-mirrors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.mirror-link {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    background-color: var(--secondary-background);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--highlight-color);
+    font-weight: bold;
+    font-size: 0.85em;
+    transition: background-color 0.2s;
+}
+
+.mirror-link:hover {
+    background-color: var(--hover-background);
+}
+
+/* Keep the existing dapp-links styles for other uses */
+.dapp-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.dapp-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--secondary-background);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--highlight-color);
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.dapp-link:hover {
+    background-color: var(--hover-background);
+}
+
+/* Overview section styles */
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.overview-item {
+    padding: 15px;
+    background-color: var(--secondary-background);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.overview-label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--label-color, #666);
+    font-size: 0.9em;
+}
+
+.overview-value {
+    display: flex;
+    align-items: center;
+    font-family: var(--monospace-font, monospace);
+    word-break: break-all;
+}
+
+.overview-value .score-badge {
+    margin-right: 10px;
+}
+
+.score-text {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.overview-value .category-label {
+    display: inline-block;
+}
+
+.warning-icon {
+    color: #ff9800;
+    margin-left: 5px;
+    cursor: help;
+    font-size: 1.2em;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Content hash outdated warning in details page */
+.content-hash-outdated {
+    display: flex;
+    align-items: center;
+}
+
+.content-hash-outdated .warning-icon {
+    margin-left: 10px;
+}
+
+.dapp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dapp-header-right .score-badge {
+    margin: 0;
+}
+
+.dapp-header-right .category-label {
+    margin: 0;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+    cursor: pointer;
+    background-color: var(--secondary-background);
+    color: var(--text-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--transition-speed) ease;
+    border: 1px solid var(--border-color);
+}
+
+.theme-toggle:hover {
+    transform: rotate(15deg);
+    background-color: var(--hover-background);
+}
+
+/* Center category labels within the table */
+#dapps td:nth-child(4) .table__item {
+    justify-content: center;
+}
+
+#dapps td:nth-child(1) .table__item {
+    justify-content: center;
+}
+
+#dapps td:nth-child(3) .table__item {
+    justify-content: center;
+}
+
+/* Keep margin-right for name column only */
+#dapps td:nth-child(2) .table__item img {
+    margin-right: 1rem;
+}
+
+/* Remove margin-right for other columns */
+#dapps td:nth-child(3) .table__item img {
+    margin-right: 0;
+}
+
+.dark-mode #dapps .pie-container .popup {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body, html {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    
+    .container {
+        max-width: 100vw;
+        overflow-x: hidden;
+        padding: 0;
+    }
+    
+    #content-wrapper {
+        max-width: 100vw;
+        overflow-x: hidden;
+        padding: 0;
+    }
+    
+    #main-content {
+        padding: 0;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    .dapp-details {
+        padding: 0.5rem;
+        max-width: 100vw;
+    }
+    
+    .dapp-details-section {
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.75rem;
+    }
+    
+    .dapp-risk-chart {
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+    }
+    
+    .distribution-info,
+    .networking-info {
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+    }
+    
+    .header {
+        flex-wrap: wrap;
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    
+    .header-img {
+        height: 2.2rem;
+    }
+    
+    .header-text {
+        font-size: 1.8rem;
+    }
+    
+    .theme-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    .navigation-tabs {
+        overflow-x: auto;
+        justify-content: flex-start;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+        -ms-overflow-style: none;  /* Hide scrollbar IE and Edge */
+        scrollbar-width: none;  /* Hide scrollbar Firefox */
+    }
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .navigation-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .navigation-tabs ul {
+        flex-wrap: nowrap;
+        padding: 0 10px;
+        width: auto;
+        min-width: 100%;
+    }
+    
+    .navigation-tabs li {
+        flex: 0 0 auto;
+    }
+    
+    .navigation-tabs li a {
+        padding: 0.75rem 1rem;
+        white-space: nowrap;
+    }
+    
+    /* Scroll fade indicators for navigation */
+    .navigation-tabs::before,
+    .navigation-tabs::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        z-index: 2;
+        pointer-events: none;
+    }
+    
+    .navigation-tabs::before {
+        left: 0;
+        background: linear-gradient(to right, var(--background-color), transparent);
+    }
+    
+    .navigation-tabs::after {
+        right: 0;
+        background: linear-gradient(to left, var(--background-color), transparent);
+    }
+    
+    /* Enhanced input form for mobile */
+    #inputForm {
+        width: 94%;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.07);
+        border-radius: var(--border-radius);
+    }
+    
+    #inputForm input {
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        padding: 1rem;
+        border: none;
+        border-bottom: 1px solid rgba(var(--border-color-rgb), 0.3);
+    }
+    
+    #inputForm input:focus {
+        box-shadow: none;
+        border-color: rgba(var(--border-color-rgb), 0.3);
+    }
+    
+    #inputForm button {
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        padding: 1rem;
+        width: 100%;
+        box-shadow: none;
+    }
+    
+    #content-wrapper {
+        padding: 0;
+    }
+    
+    #main-content {
+        padding: 0 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    #dapps {
+        margin-left: -10px;
+        margin-right: -10px;
+        width: calc(100% + 20px);
+        border-radius: 0;
+        padding: 0;
+    }
+    
+    #dapps:before, #dapps:after {
+        content: '';
+        position: sticky;
+        top: 0;
+        bottom: 0;
+        width: 15px;
+        z-index: 3;
+        pointer-events: none;
+    }
+    
+    #dapps:before {
+        left: 0;
+        float: left;
+        background: linear-gradient(to right, var(--card-background), transparent);
+    }
+    
+    #dapps:after {
+        right: 0;
+        float: right;
+        background: linear-gradient(to left, var(--card-background), transparent);
+    }
+    
+    #dapps table {
+        min-width: 750px;
+        margin: 0 auto;
+    }
+    
+    /* Fix border-radius for first and last rows */
+    #dapps table tr:first-child th:first-child {
+        border-top-left-radius: var(--border-radius);
+    }
+    
+    #dapps table tr:first-child th:last-child {
+        border-top-right-radius: var(--border-radius);
+    }
+    
+    #dapps table tr:last-child td:first-child {
+        border-bottom-left-radius: var(--border-radius);
+    }
+    
+    #dapps table tr:last-child td:last-child {
+        border-bottom-right-radius: var(--border-radius);
+    }
+    
+    /* Enhance the scroll experience with a pull to refresh style overscroll */
+    #dapps {
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+    }
+    
+    .footer {
+        padding: 1.5rem 0;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .footer a {
+        margin: 0.5rem;
+    }
+    
+    #dapps td {
+        height: 4rem; /* Slightly taller rows for better tap targets */
+    }
+    
+    /* Additional improvements for mobile table layout */
+    #dapps td {
+        padding: 0.75rem 0.5rem; /* Reduce horizontal padding */
+    }
+    
+    #dapps th {
+        padding: 0.75rem 0.5rem; /* Matching padding for headers */
+        font-size: 0.7rem; /* Slightly smaller font for headers */
+        letter-spacing: 0.3px; /* Reduce letter spacing slightly */
+        font-weight: 700; /* Increase font weight for better visibility */
+    }
+    
+    /* Header content alignment is now handled by global styles */
+    
+    /* Improve score column display */
+    #dapps th:nth-child(1) {
+        width: 60px; /* Slightly narrower score column */
+        padding-left: 0.75rem;
+        padding-right: 0.5rem;
+    }
+    
+    #dapps td:nth-child(1) {
+        padding-left: 0.75rem;
+        padding-right: 0.5rem;
+    }
+    
+    /* Adjust padding for first and last cells */
+    #dapps td:first-child, #dapps th:first-child {
+        padding-left: 0.75rem;
+    }
+    
+    #dapps td:last-child, #dapps th:last-child {
+        padding-right: 0.75rem;
+    }
+    
+    /* Add subtle borders between columns for visual separation */
+    #dapps td, #dapps th {
+        border-right: 1px solid rgba(var(--border-color-rgb), 0.1);
+    }
+    
+    #dapps td:last-child, #dapps th:last-child {
+        border-right: none;
+    }
+    
+    /* Make category label more compact */
+    .category-label {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.6rem;
+        white-space: nowrap;
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Improve the risks column visualization */
+    #dapps td:nth-child(3) {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    
+    /* Adjust column widths for mobile specifically */
+    #dapps th:nth-child(2) {
+        width: 30%; /* Slightly narrower name column */
+    }
+    
+    #dapps th:nth-child(3) {
+        width: 70px; /* Keep risks column the same */
+    }
+    
+    #dapps th:nth-child(4) {
+        width: 120px; /* Fixed width for category to prevent overlap */
+    }
+    
+    #dapps th:nth-child(5) {
+        width: 150px; /* Fixed width for link column to prevent overlap */
+    }
+    
+    /* Ensure name column text doesn't overflow */
+    #dapps td:nth-child(2) .table__item a span {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+    }
+    
+    /* Make domain text smaller and prevent wrapping */
+    #dapps td:nth-child(5) .table__item a {
+        font-size: 0.8rem;
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+    
+    /* Make category labels smaller on mobile */
+    .category-label {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+    }
+    
+    /* Adjust score badge size for mobile */
+    .score-badge {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        font-size: 0.8rem;
+    }
+    
+    /* Improve popup positioning on mobile */
+    #dapps .pie-container .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 320px;
+        z-index: 1501;
+    }
+    
+    /* Improved tap targets for navigation */
+    .navigation-tabs li a {
+        padding: 0.75rem 1rem;
+        margin: 0;
+    }
+    
+    /* Center-align the header on small screens */
+    .header {
+        justify-content: center;
+    }
+    
+    /* Improve details page on mobile */
+    .dapp-details-section {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    
+    .report-info {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .report-item {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Better tooltips on mobile */
+    .tooltip .tooltip-text {
+        width: 180px;
+        margin-left: -90px;
+    }
+    
+    /* Improved presentation for domain links in mobile view */
+    #dapps td:nth-child(5) .table__item {
+        justify-content: flex-end; /* Right align the link */
+    }
+    
+    #dapps td:nth-child(5) {
+        padding-left: 0.5rem;
+        padding-right: 1.25rem; /* More padding on mobile for better spacing */
+        text-align: right; /* Right align for consistency with desktop */
+    }
+    
+    #dapps th:nth-child(5) {
+        padding-right: 1.25rem; /* Match header padding with cell padding */
+        text-align: right;
+    }
+    
+    #dapps th:nth-child(5) .header-content {
+        justify-content: flex-end; /* Right align header content */
+        text-align: right;
+    }
+    
+    /* Ensure score column is properly visible without being sticky */
+    #dapps th:nth-child(1), 
+    #dapps td:nth-child(1) {
+        min-width: 60px; /* Ensure minimum width */
+    }
+    
+    /* Adjust the name column to prevent it from taking too much space */
+    #dapps th:nth-child(2), 
+    #dapps td:nth-child(2) {
+        max-width: 25%; /* Limit width of name column */
+    }
+    
+    /* Apply stronger border to the right of score for better separation */
+    #dapps td:nth-child(1), 
+    #dapps th:nth-child(1) {
+        border-right: 1px solid rgba(var(--border-color-rgb), 0.3);
+    }
+    
+    /* Better horizontal scrolling for the table */
+    #dapps {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: var(--highlight-color) transparent; /* Firefox */
+    }
+    
+    /* Custom scrollbar for Webkit browsers */
+    #dapps::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    #dapps::-webkit-scrollbar-thumb {
+        background-color: var(--highlight-color);
+        border-radius: 2px;
+    }
+    
+    #dapps::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    
+    /* Make the table start slightly to the left to show scroll indicator */
+    #dapps table {
+        padding-left: 2px;
+    }
+    
+    /* Revert name column to left alignment */
+    #dapps th:nth-child(2) .header-content {
+        justify-content: flex-start; /* Left align header content */
+        text-align: left;
+    }
+    
+    /* Mirror links on mobile */
+    .dapp-mirrors {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.5rem;
+    }
+    
+    .mirror-link {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Adjust copy buttons and links */
+    .hash-link, .copy-hash-btn {
+        margin-left: 0.25rem;
+        padding: 0.2rem;
+    }
+    
+    .hash-icon {
+        font-size: 0.8rem;
+    }
+    
+    /* Report lists */
+    .report-list {
+        padding-left: 1rem;
+    }
+    
+    .report-sublist {
+        padding-left: 1rem;
+    }
+    
+    .report-section h3 {
+        font-size: 1rem;
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .report-section h4 {
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .dapp-details-content {
+        padding: 0 0.5rem;
+    }
+    
+    .dapp-details-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .dapp-icon {
+        width: 48px;
+        height: 48px;
+        margin-right: 0.75rem;
+    }
+    
+    .dapp-details-section h2 {
+        font-size: 1.1rem;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Content hash section */
+    .dapp-report .report-item:first-child {
+        background-color: var(--card-background);
+        border: 1px solid var(--border-color);
+        margin-bottom: 1rem;
+    }
+    
+    .dapp-report .report-item:first-child .report-value {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+    
+    /* Make hash buttons more tap-friendly on mobile */
+    .hash-link, .copy-hash-btn {
+        margin-left: 0.3rem;
+        padding: 0.3rem;
+        min-width: 36px;
+        min-height: 36px;
+    }
+    
+    /* Improve URL display in report lists */
+    .report-sublist li {
+        line-height: 1.4;
+        padding: 0.25rem 0;
+    }
+    
+    /* Better mirror links section on mobile */
+    .dapp-details-section:first-child {
+        padding-bottom: 0.75rem;
+    }
+    
+    .dapp-mirrors {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.5rem;
+        max-height: none;
+    }
+    
+    /* Improved header layout on mobile */
+    .dapp-details-header {
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 1rem;
+        margin-bottom: 1.25rem;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .dapp-icon-title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 0;
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .dapp-icon {
+        margin-right: 0.75rem;
+        margin-bottom: 0;
+    }
+    
+    .dapp-header-right {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+    }
+    
+    /* Fix title text for better visibility */
+    .dapp-details-header h1 {
+        font-size: 1.3rem;
+        margin-right: 0;
+        text-align: center;
+    }
+    
+    /* Fix risk chart display specifically for triangle + text layout */
+    .dapp-risk-chart {
+        overflow: visible;
+        padding: 0.5rem;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* Adjust triangle SVG size for better mobile viewing */
+    .dapp-risk-chart > svg,
+    .dapp-risk-chart .enlarged-pie-container svg {
+        margin: 0 auto;
+        max-width: 160px;
+        height: auto;
+        display: block;
+    }
+    
+    /* Ensure content text is visible and properly formatted */
+    .dapp-risk-chart > div:not(.enlarged-pie-container) {
+        width: 100%;
+        max-width: 100%;
+        text-align: left;
+        padding: 0.5rem;
+        margin-top: 1.5rem;
+        box-sizing: border-box;
+    }
+    
+    /* Style for Distribution and Networking sections */
+    .distribution-info,
+    .networking-info,
+    .web3-info {
+        margin: 1rem auto;
+        padding: 1rem;
+        background-color: var(--secondary-background);
+        border-radius: var(--border-radius);
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        line-height: 1.5;
+        color: var(--text-color);
+        font-size: 0.95rem;
+    }
+    
+    /* Style for the content lines in Distribution and Networking sections */
+    .distribution-info p,
+    .networking-info p,
+    .web3-info p {
+        margin: 0.5rem 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    /* For larger screens, provide more room for the distribution info */
+    @media (min-width: 768px) {
+        .dapp-risk-chart .enlarged-pie-container {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .dapp-risk-chart .enlarged-pie-chart {
+            grid-column: 1;
+            justify-self: center;
+        }
+    }
+
+    /* For smaller screens, use a single column layout */
+    @media (max-width: 600px) {
+        .dapp-risk-chart .enlarged-pie-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+    }
+}
+
+/* Additional adjustments for very small screens */
+@media (max-width: 480px) {
+    .header-img {
+        height: 2rem;
+    }
+    
+    .header-text {
+        font-size: 1.5rem;
+    }
+    
+    .theme-toggle {
+        width: 35px;
+        height: 35px;
+    }
+    
+    #main-content {
+        padding: 0 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    
+    .dapp-details {
+        padding: 0;
+        overflow-x: hidden;
+    }
+    
+    .dapp-details-header {
+        padding: 0.75rem 0.5rem;
+        align-items: center;
+    }
+    
+    .dapp-icon-title {
+        flex-direction: row;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    .dapp-icon {
+        width: 42px;
+        height: 42px;
+        margin-right: 0.75rem;
+        margin-bottom: 0;
+    }
+    
+    .dapp-header-right {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .dapp-details-header h1 {
+        font-size: 1.1rem;
+        max-width: 100%;
+        margin-bottom: 0;
+        margin-right: 0;
+        text-align: center;
+    }
+    
+    .dapp-mirrors {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    /* Improve category and score badges */
+    .dapp-header-right .category-label {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+    }
+    
+    .dapp-header-right .score-badge {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        font-size: 0.75rem;
+    }
+    
+    /* Further optimize risk chart display on small screens */
+    .dapp-risk-chart {
+        margin: 0;
+        padding: 0.25rem;
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+    
+    /* Make triangle smaller on very small screens */
+    .dapp-risk-chart > svg,
+    .dapp-risk-chart .enlarged-pie-container svg {
+        max-width: 140px;
+    }
+    
+    /* Optimize text sections for very small screens */
+    .distribution-info,
+    .networking-info {
+        margin: 0.75rem 0;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Reduce spacing between section items */
+    .distribution-info p,
+    .networking-info p {
+        margin: 0.4rem 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Smaller headers */
+    .distribution-info h3,
+    .networking-info h3,
+    .web3-info h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Ensure content fits within the container */
+    .dapp-details-section {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Smaller font for sublist items on very small screens */
+    .report-sublist li {
+        font-size: 0.8rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    
+    /* Make content hash more readable on smallest screens */
+    .dapp-report .report-item:first-child .report-value {
+        font-size: 0.7rem;
+        line-height: 1.3;
+        width: 100%;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-break: break-all;
+    }
+    
+    /* Fix report sections */
+    .report-section h3 {
+        font-size: 1rem;
+    }
+    
+    .report-list {
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .report-list > li {
+        padding: 0.5rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .report-sublist {
+        padding: 0.25rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    
+    /* Fix overflow issues */
+    .report-value, 
+    .report-label {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    
+    /* Fix layout for report items in small screens */
+    .report-item {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .report-label {
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Fix form elements */
+    #inputForm input,
+    #inputForm button {
+        font-size: 16px;
+    }
+    
+    #inputForm button {
+        font-size: 14px;
+    }
+}
+
+/* Fix safari-specific issues */
+@supports (-webkit-touch-callout: none) {
+    #inputForm input,
+    #inputForm button {
+        font-size: 16px; /* Prevents zoom on focus in Safari mobile */
+    }
+    
+    /* Fix rounded corners for iOS */
+    #inputForm input {
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+    
+    #inputForm button {
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+    
+    #main-content, 
+    .dapp-details, 
+    .dapp-details-content, 
+    .dapp-details-section,
+    .distribution-info,
+    .networking-info,
+    .report-list,
+    .report-sublist,
+    .report-item {
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+}
+
+/* Improve scrolling behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Fix scroll container on iOS */
+* {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Pull to scroll indicator */
+.pull-to-scroll-indicator {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(var(--card-background-rgb), 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 0.75rem;
+    color: var(--text-color);
+    pointer-events: none;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    backdrop-filter: blur(2px);
+}
+
+.pull-to-scroll-indicator span {
+    display: inline-block;
+    animation: pulseAnimation 2s infinite;
+}
+
+@keyframes pulseAnimation {
+    0% { opacity: 0.7; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(0.95); }
+}
+
+/* Ensure header text is properly visible and centered by default */
+#dapps th .header-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    /* Center alignment for most columns */
+    justify-content: center;
+    text-align: center;
+}
+
+/* Specific alignment for NAME column header */
+#dapps th:nth-child(2) .header-content {
+    justify-content: flex-start; /* Left align header content */
+    text-align: left;
+}
+
+/* Specific alignment for LINK column header */
+#dapps th:nth-child(5) .header-content {
+    justify-content: flex-end; /* Right align header content */
+    text-align: right;
+}
+
+/* Additional report page styles */
+.dapp-mirrors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.mirror-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary-background);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    color: var(--highlight-color);
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all var(--transition-speed) ease;
+    border: 1px solid transparent;
+}
+
+.mirror-link:hover {
+    background-color: var(--card-background);
+    border-color: var(--highlight-color);
+    transform: translateY(-2px);
+}
+
+.report-label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-right: 1rem;
+    min-width: 120px;
+}
+
+.report-value {
+    font-family: var(--font-monospace);
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    color: var(--report-text-color);
+    font-size: 0.9rem;
+    gap: 0.5rem;
+}
+
+/* Add styles for the risk visualization triangle and its sections */
+.distribution-info,
+.networking-info,
+.web3-info {
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: var(--secondary-background);
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+/* Style for the content lines in Distribution and Networking sections */
+.distribution-info p,
+.networking-info p,
+.web3-info p {
+    margin: 0.5rem 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* For larger screens, provide more room for the distribution info */
+@media (min-width: 768px) {
+    .dapp-risk-chart .enlarged-pie-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .dapp-risk-chart .enlarged-pie-chart {
+        grid-column: 1;
+        justify-self: center;
+    }
+}
+
+/* For smaller screens, use a single column layout */
+@media (max-width: 600px) {
+    .dapp-risk-chart .enlarged-pie-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+/* Add headings for the Distribution, Networking, and Web3 sections */
+.distribution-info h3,
+.networking-info h3,
+.web3-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* Style for labels and values in all info sections */
+.distribution-info span,
+.networking-info span,
+.web3-info span {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.distribution-info strong,
+.networking-info strong,
+.web3-info strong {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.risk-information-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dapp-risk-chart .report-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .dapp-risk-chart .report-content {
+        grid-column: 2;
+        justify-self: start;
+    }
+}

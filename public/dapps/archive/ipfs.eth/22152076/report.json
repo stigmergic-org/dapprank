@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "contentHash": "bafybeiddamod5xk4uipjz52xodu4z62ul5xk6lzo3qaiz32yc3t6vd7xqa",
+  "timestamp": 1743245436,
+  "blockNumber": 22152076,
+  "totalSize": 10022690,
+  "favicon": "favicon.png",
+  "title": "IPFS is the Distributed Web",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "blog/index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          }
+        ]
+      },
+      {
+        "file": "contact-ipfs/index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          }
+        ]
+      },
+      {
+        "file": "docs/index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          }
+        ]
+      },
+      {
+        "file": "index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          }
+        ]
+      },
+      {
+        "file": "legal/index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          }
+        ]
+      },
+      {
+        "file": "media/index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          },
+          {
+            "type": "iframe",
+            "url": "https://www.youtube.com/embed/8CMxDNuuAiQ"
+          },
+          {
+            "type": "iframe",
+            "url": "https://www.youtube.com/embed/HUVmypx9HGI"
+          }
+        ]
+      },
+      {
+        "file": "team/index.html",
+        "offenders": [
+          {
+            "type": "script",
+            "url": "https://camp.ipfs.io/ribbon.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://www.google-analytics.com/analytics.js"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

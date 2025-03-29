@@ -1,0 +1,538 @@
+{
+  "version": 1,
+  "contentHash": "bafybeibiwjx53xdsn6zvhdu5oh5ygrjp5g7toi3f25ltosyptbljnvjfdu",
+  "timestamp": 1743245427,
+  "blockNumber": 22152075,
+  "totalSize": 18280671,
+  "favicon": "favicon-light-mode.png",
+  "title": "CoW Swap | The smartest way to trade cryptocurrencies",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": [
+      {
+        "file": "index.html",
+        "offenders": [
+          {
+            "type": "img",
+            "url": "https://swap.cow.fi/images/og-meta-cowswap.png?v=4"
+          }
+        ]
+      }
+    ]
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "assets/@1inch-gxWjkVZZ.js",
+        "offenders": [
+          "https://github.com/indutny/elliptic/issues",
+          "https://github.com/indutny/elliptic",
+          "https://github.com/crypto-browserify/crypto-browserify"
+        ]
+      },
+      {
+        "file": "assets/@safe-global-CRqML-Eq.js",
+        "offenders": [
+          "https://www.ethercluster.com/mordor",
+          "https://www.ethercluster.com/etc",
+          "https://www.ethercluster.com/kotti",
+          "https://gateway.ipfs.io/ipfs/${t}",
+          "https://cloudflare-eth.com/",
+          "https://api.etherscan.io",
+          "https://api-goerli.etherscan.io",
+          "https://api-sepolia.etherscan.io",
+          "https://api.polygonscan.com",
+          "https://api-testnet.polygonscan.com",
+          "https://api.arbiscan.io",
+          "https://api-goerli.arbiscan.io",
+          "https://api-optimistic.etherscan.io",
+          "https://api-goerli-optimistic.etherscan.io",
+          "https://ethereum.api.nodesmith.io/v1/mainnet/jsonrpc",
+          "https://ethereum.api.nodesmith.io/v1/ropsten/jsonrpc",
+          "https://ethereum.api.nodesmith.io/v1/rinkeby/jsonrpc",
+          "https://ethereum.api.nodesmith.io/v1/goerli/jsonrpc",
+          "https://ethereum.api.nodesmith.io/v1/kovan/jsonrpc",
+          "https://${n}/v1/lb/${r.applicationId}",
+          "https://safe-client.safe.global",
+          "https://viem.sh",
+          "https://ipfs.io",
+          "https://arweave.net"
+        ]
+      },
+      {
+        "file": "assets/@sentry-B4eJ84ct.js",
+        "offenders": [
+          "http://www.example.com",
+          "http://www.example.com",
+          "http://www.example.com"
+        ]
+      },
+      {
+        "file": "assets/@uniswap-C8NJp6ZI.js",
+        "offenders": [
+          "http://json-schema.org/draft-07/schema#",
+          "https://uniswap.org/tokenlist.schema.json"
+        ]
+      },
+      {
+        "file": "assets/Balances-B4M-rc7U.js",
+        "offenders": [
+          "https://raw.githubusercontent.com/gnosis/locked-gno-cow-merkle-distro/${ln}/${n}"
+        ]
+      },
+      {
+        "file": "assets/RoutesApp-DLuQ6U7A.js",
+        "offenders": [
+          "https://medium.com/@cow-protocol/cow-swap-improves-the-limit-order-experience-with-partially-fillable-limit-orders-45f19143e87d"
+        ]
+      },
+      {
+        "file": "assets/ajv-C5IVenln.js",
+        "offenders": [
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "http://json-schema.org/draft-07/schema#",
+          "http://json-schema.org/draft-07/schema#",
+          "http://json-schema.org/draft-07/schema",
+          "http://json-schema.org/schema"
+        ]
+      },
+      {
+        "file": "assets/ajv-CMpqBxKx.js",
+        "offenders": [
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "http://json-schema.org/draft-07/schema#",
+          "http://json-schema.org/draft-07/schema#",
+          "https://github.com/ajv-validator/ajv/blob/master/lib/definition_schema.js",
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "http://json-schema.org/draft-07/schema#",
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "http://json-schema.org/draft-07/schema",
+          "http://json-schema.org/schema"
+        ]
+      },
+      {
+        "file": "assets/index-Bsx2_5tq.js",
+        "offenders": [
+          "https://explorer-api.walletconnect.com"
+        ]
+      },
+      {
+        "file": "assets/index-C2aZCUBl.js",
+        "offenders": [
+          "https://docs.cloud.coinbase.com/wallet-sdk/docs/errors",
+          "https://api.wallet.coinbase.com/rpc/v2/desktop/chrome",
+          "https://github.com/coinbase/coinbase-wallet-sdk.git",
+          "http://localhost:3000",
+          "https://www.walletlink.org"
+        ]
+      },
+      {
+        "file": "assets/index-Dr7Q3zSY.js",
+        "offenders": [
+          "https://connect.trezor.io/${e[0]}/",
+          "https://www.google.com/chrome/",
+          "https://support.google.com/chrome/answer/95414",
+          "https://www.chromium.org/",
+          "https://www.chromium.org/",
+          "https://www.electronjs.org/",
+          "https://www.electronjs.org/",
+          "https://www.mozilla.org/en-US/firefox/new/",
+          "https://support.mozilla.org/en-US/kb/update-firefox-latest-version"
+        ]
+      },
+      {
+        "file": "assets/index-O5HCWFUh.js",
+        "offenders": [
+          "https://verify.walletconnect.com",
+          "https://verify.walletconnect.org",
+          "https://rpc.walletconnect.com/v1/",
+          "https://rpc.walletconnect.com/v1/"
+        ]
+      },
+      {
+        "file": "assets/index-hcE3Ipwo.js",
+        "offenders": [
+          "https://barn.api.cow.fi/${St}",
+          "https://api.cow.fi/${St}",
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+          "http://json-schema.org/draft-07/schema#",
+          "http://json-schema.org/draft-07/schema#",
+          "http://json-schema.org/draft-07/schema",
+          "http://json-schema.org/schema",
+          "https://cloudflare-ipfs.com/ipfs",
+          "https://api.pinata.cloud",
+          "https://api.cow.fi/mainnet",
+          "https://api.cow.fi/xdai",
+          "https://api.cow.fi/arbitrum_one",
+          "https://api.cow.fi/base",
+          "https://api.cow.fi/sepolia",
+          "https://barn.api.cow.fi/mainnet",
+          "https://barn.api.cow.fi/xdai",
+          "https://barn.api.cow.fi/arbitrum_one",
+          "https://barn.api.cow.fi/base",
+          "https://barn.api.cow.fi/sepolia",
+          "https://api.thegraph.com/subgraphs/name/cowprotocol",
+          "https://www.ethercluster.com/mordor",
+          "https://www.ethercluster.com/etc",
+          "https://www.ethercluster.com/kotti",
+          "https://gateway.ipfs.io/ipfs/${pn}",
+          "https://gnosis.mypinata.cloud/ipfs",
+          "https://api.pinata.cloud",
+          "https://github.com/",
+          "https://raw.githubusercontent.com/",
+          "https://cow.fi",
+          "https://cow.fi/learn",
+          "https://cow.fi/legal",
+          "https://cow.fi/cow-swap",
+          "https://docs.cow.fi",
+          "https://discord.com/invite/cowprotocol",
+          "https://dune.com/cowprotocol/cowswap",
+          "https://twitter.com/CoWSwap",
+          "https://api.blocknative.com/gasprices/blockprices",
+          "https://gnosis.blockscout.com/api/v1/gas-price-oracle",
+          "https://arbitrum.blockscout.com/api/v1/gas-price-oracle",
+          "https://base.blockscout.com/api/v1/gas-price-oracle",
+          "https://docs.cow.fi/cow-protocol/reference/core/tokens",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/images",
+          "https://assets.coingecko.com/coins/images/13422/thumb/frax_logo.png?1608476506",
+          "https://assets.coingecko.com/coins/images/5992/thumb/gemini-dollar-gusd.png?1536745278",
+          "https://assets.coingecko.com/coins/images/14666/thumb/Group_3.png?1617631327",
+          "https://assets.coingecko.com/coins/images/31212/large/PYUSD_Logo_%282%29.png?1691458314",
+          "https://assets.coingecko.com/coins/images/5013/thumb/sUSD.png?1616150765",
+          "https://docs.cow.fi",
+          "https://etherscan.io",
+          "https://docs.arbitrum.io",
+          "https://bridge.arbitrum.io",
+          "https://arbiscan.io",
+          "https://arbitrum.io",
+          "https://docs.base.org/",
+          "https://bridge.base.org/deposit",
+          "https://basescan.org",
+          "https://www.base.org/",
+          "https://docs.gnosischain.com",
+          "https://bridge.gnosischain.com/",
+          "https://gnosisscan.io",
+          "https://www.gnosischain.com",
+          "https://docs.cow.fi",
+          "https://sepolia.etherscan.io",
+          "https://mainnet.infura.io/v3/${INFURA_KEY}",
+          "https://rpc.gnosis.gateway.fm",
+          "https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}",
+          "https://base-mainnet.infura.io/v3/${INFURA_KEY}",
+          "https://sepolia.infura.io/v3/${INFURA_KEY}",
+          "https://bff.barn.cow.fi",
+          "https://dev.explorer.cow.fi",
+          "https://staging.explorer.cow.fi",
+          "https://barn.explorer.cow.fi",
+          "https://explorer.cow.fi",
+          "https://etherscan.io",
+          "https://ipfs.io/ipfs/${(_t=Et.match(/^ipfs:(\\/\\/)?(ipfs\\/)?(.*)$/i))==null?void",
+          "https://ipfs.io/ipns/${(Pt=Et.match(/^ipns:(\\/\\/)?(.*)$/i))==null?void",
+          "https://arweave.net/${(Mt=Et.match(/^ar:(\\/\\/)?(.*)$/i))==null?void",
+          "https://fa3f2ff0bf464c1e8445cfbb972f036f@o135525.ingest.sentry.io/5905822",
+          "https://www.googletagmanager.com/gtag/js?id=",
+          "https://www.googletagmanager.com/gtm.js?id=",
+          "https://www.googletagmanager.com/ns.html?id=GTM-TBX4BV5M",
+          "https://safe-transaction-mainnet.safe.global",
+          "https://safe-transaction-gnosis-chain.safe.global",
+          "https://safe-transaction-arbitrum.safe.global",
+          "https://safe-transaction-base.safe.global",
+          "https://safe-transaction-sepolia.safe.global",
+          "https://app.safe.global",
+          "https://cms.cow.fi/api",
+          "https://cms.cow.fi/api",
+          "https://react.dev/errors/",
+          "https://app.launchdarkly.com",
+          "https://clientstream.launchdarkly.com",
+          "https://events.launchdarkly.com",
+          "https://app.safe.global/share/safe-app?appUrl=https%3A%2F%2Fswap.cow.fi&chain=eth",
+          "https://blog.cow.fi/how-to-add-custom-tokens-on-cow-swap-a72d677c78c0",
+          "https://${Pt}",
+          "https://use.typekit.net/",
+          "https://${Wt}",
+          "https://${Bt}",
+          "https://swap.cow.fi",
+          "https://cow.fi",
+          "https://app.safe.global/favicon.ico",
+          "https://rpc.gnosischain.com/",
+          "https://arb1.arbitrum.io/rpc",
+          "https://mainnet.base.org",
+          "https://w.appzi.io/bootstrap/bundle.js?token=",
+          "https://github.com/syntax-tree/hast-util-to-jsx-runtime",
+          "https://github.com/remarkjs/react-markdown/blob/main/changelog.md",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/cow-amm.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/uniswapv2.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/curve.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/balancerv2.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/sushiswap.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/pancakeswap.json",
+          "https://files.cow.fi/tokens/CowSwap.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/CoinGecko.1.json",
+          "https://curvefi.github.io/curve-assets/ethereum.json",
+          "https://files.cow.fi/tokens/CowSwap.json",
+          "https://tokens.honeyswap.org",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/Uniswap.100.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/CoinGecko.100.json",
+          "https://curvefi.github.io/curve-assets/gnosis.json",
+          "https://files.cow.fi/tokens/CowSwap.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/CoinGecko.8453.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/Uniswap.8453.json",
+          "https://curvefi.github.io/curve-assets/base.json",
+          "https://static.optimism.io/optimism.tokenlist.json",
+          "https://files.cow.fi/tokens/CowSwap.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/Uniswap.42161.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/CoinGecko.42161.json",
+          "https://curvefi.github.io/curve-assets/arbitrum.json",
+          "https://raw.githubusercontent.com/balancer/tokenlists/refs/heads/main/generated/balancer.tokenlist.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/CowSwapSepolia.json",
+          "https://ipfs.io/ipns/tokens.uniswap.org",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/Uniswap.100.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/Uniswap.42161.json",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/Uniswap.8453.json",
+          "https://api.country.is",
+          "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainIdToName[St]}/assets/${Et}/logo.png",
+          "https://tokenlists.org/token-list?url=${Et}",
+          "https://raw.githubusercontent.com/cowprotocol/cowswap/refs/heads/develop/apps/cowswap-frontend/src/modules/hooksStore/dapps/BuildHookApp/build.png",
+          "https://docs.cow.fi/cow-protocol/tutorials/hook-dapp",
+          "https://www.gnosis.io",
+          "https://raw.githubusercontent.com/cowprotocol/cowswap/refs/heads/develop/apps/cowswap-frontend/src/modules/hooksStore/dapps/PermitHookApp/icon.png",
+          "https://docs.cow.fi/cow-protocol/tutorials/hook-dapp",
+          "https://github.com/bleu/cow-airdrop-contract-deployer",
+          "https://balancer.fi/pools/cow",
+          "https://cow-hooks-dapps-withdraw-pool.vercel.app/icon.png",
+          "https://cow-hooks-dapps-withdraw-pool.vercel.app/",
+          "https://cow-hooks-dapps-claim-vesting.vercel.app/llama-pay-icon.png",
+          "https://github.com/bleu/cow-hooks-dapps",
+          "https://cow-hooks-dapps-claim-vesting.vercel.app",
+          "https://llamapay.io/vesting",
+          "https://cow-hooks-dapps-create-vesting.vercel.app/llama-pay-icon.png",
+          "https://cow-hooks-dapps-create-vesting.vercel.app",
+          "https://app.uniswap.org/pools/v2",
+          "https://cow-hooks-dapps-withdraw-uniswap-v2.vercel.app/icon.png",
+          "https://cow-hooks-dapps-withdraw-uniswap-v2.vercel.app/",
+          "https://balancer.fi/pools/cow",
+          "https://cow-hooks-dapps-cow-amm-deposit.vercel.app/icon.png",
+          "https://cow-hooks-dapps-cow-amm-deposit.vercel.app/",
+          "https://cloudflare-ipfs.com/ipfs",
+          "https://api.pinata.cloud",
+          "https://raw.githubusercontent.com/cowprotocol/token-lists/main/src/public/PermitInfo",
+          "https://barn.api.cow.fi/affiliate/api",
+          "https://api.cow.fi/affiliate/api",
+          "https://coins.llama.fi/prices/current",
+          "https://balancer.fi/pools/${COW_AMM_CHAINS[Et]}/cow/${St}",
+          "https://app.uniswap.org/explore/pools/${UNI_CHAINS[Et]}/${St}",
+          "https://classic.curve.fi/pools",
+          "https://balancer.fi/pools",
+          "https://www.sushi.com/${SUSHI_CHAINS[Et]}/pool/v2/${St}",
+          "https://pancakeswap.finance/liquidity/pool/${PANCAKE_CHAINS[Et]}/${St}",
+          "https://blog.cow.fi/all-you-need-to-know-about-cow-swaps-new-safe-fallback-handler-8ef0439925d1",
+          "https://blog.cow.fi/how-to-use-cow-swaps-twap-orders-via-safe-wallet-1a0854484dfb",
+          "https://blog.cow.fi/cow-swap-launches-twap-orders-d5583135b472",
+          "https://raw.githubusercontent.com/bleu/cow-airdrop-contract-deployer/example/mock-airdrop-data/",
+          "https://telegram.org/js/telegram-widget.js?22",
+          "https://x.com/intent/tweet?text=${getTwitterText(_t,Pt,Mt)}",
+          "https://x.com/intent/tweet?text=${getTwitterTextForBenefit(Et)}",
+          "https://react.dev/errors/",
+          "https://github.com/cowprotocol/contracts.git"
+        ]
+      },
+      {
+        "file": "assets/index-mI2QZVJi.js",
+        "offenders": [
+          "https://explorer.walletconnect.com/?type=wallet"
+        ]
+      },
+      {
+        "file": "assets/metamask-sdk-Bq1OWiFQ.js",
+        "offenders": [
+          "https://github.com/MetaMask/metamask-sdk#readme",
+          "https://github.com/MetaMask/metamask-sdk/issues",
+          "https://github.com/MetaMask/metamask-sdk.git",
+          "https://registry.npmjs.org/",
+          "https://metamask-sdk.api.cx.metamask.io/",
+          "https://github.com/MetaMask/metamask-sdk#readme",
+          "https://github.com/MetaMask/metamask-sdk/issues",
+          "https://github.com/MetaMask/metamask-sdk",
+          "https://registry.npmjs.org/",
+          "https://metamask.app.link/connect",
+          "https://mainnet.infura.io/v3/${n}",
+          "https://goerli.infura.io/v3/${n}",
+          "https://sepolia.infura.io/v3/${n}",
+          "https://linea-mainnet.infura.io/v3/${n}",
+          "https://linea-goerli.infura.io/v3/${n}",
+          "https://polygon-mainnet.infura.io/v3/${n}",
+          "https://polygon-mumbai.infura.io/v3/${n}",
+          "https://optimism-mainnet.infura.io/v3/${n}",
+          "https://optimism-goerli.infura.io/v3/${n}",
+          "https://arbitrum-mainnet.infura.io/v3/${n}",
+          "https://arbitrum-goerli.infura.io/v3/${n}",
+          "https://palm-mainnet.infura.io/v3/${n}",
+          "https://palm-testnet.infura.io/v3/${n}",
+          "https://avalanche-mainnet.infura.io/v3/${n}",
+          "https://avalanche-fuji.infura.io/v3/${n}",
+          "https://aurora-mainnet.infura.io/v3/${n}",
+          "https://aurora-testnet.infura.io/v3/${n}",
+          "https://starknet-mainnet.infura.io/v3/${n}",
+          "https://starknet-goerli.infura.io/v3/${n}",
+          "https://starknet-goerli2.infura.io/v3/${n}",
+          "https://celo-mainnet.infura.io/v3/${n}",
+          "https://celo-alfajores.infura.io/v3/${n}",
+          "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
+          "https://addons.mozilla.org/firefox/addon/ether-metamask/",
+          "https://metamask.io",
+          "https://fwd.metamask.io",
+          "https://raw.githubusercontent.com/MetaMask/metamask-sdk/refs/heads/gh-pages/locales"
+        ]
+      },
+      {
+        "file": "assets/priceLegacy-D9tD_8Or.js",
+        "offenders": [
+          "https://api.1inch.io/v5.0/${e}"
+        ]
+      },
+      {
+        "file": "assets/vault-D1MBbYB3.js",
+        "offenders": [
+          "https://barn.api.cow.fi/${e}",
+          "https://api.cow.fi/${e}"
+        ]
+      },
+      {
+        "file": "assets/web3-BVRPY3DS.js",
+        "offenders": [
+          "https://github.com/crypto-browserify/crypto-browserify",
+          "https://example.com",
+          "http://localhost:8500",
+          "http://localhost:8500",
+          "http://localhost:8500",
+          "https://github.com/goerli/testnet",
+          "https://kovan-testnet.github.io/website/",
+          "https://ethstats.net/",
+          "https://www.rinkeby.io",
+          "https://github.com/ethereum/ropsten",
+          "https://github.com/ethereum/go-ethereum/pull/23730",
+          "https://eips.ethereum.org/EIPS/eip-1153",
+          "https://eips.ethereum.org/EIPS/eip-1559",
+          "https://eips.ethereum.org/EIPS/eip-2315",
+          "https://eips.ethereum.org/EIPS/eip-2537",
+          "https://eips.ethereum.org/EIPS/eip-2565",
+          "https://eips.ethereum.org/EIPS/eip-2718",
+          "https://eips.ethereum.org/EIPS/eip-2929",
+          "https://eips.ethereum.org/EIPS/eip-2930",
+          "https://eips.ethereum.org/EIPS/eip-3198",
+          "https://eips.ethereum.org/EIPS/eip-3529",
+          "https://eips.ethereum.org/EIPS/eip-3540",
+          "https://eips.ethereum.org/EIPS/eip-3541",
+          "https://eips.ethereum.org/EIPS/eip-3607",
+          "https://eips.ethereum.org/EIPS/eip-3651",
+          "https://eips.ethereum.org/EIPS/eip-3670",
+          "https://eips.ethereum.org/EIPS/eip-3675",
+          "https://eips.ethereum.org/EIPS/eip-3855",
+          "https://eips.ethereum.org/EIPS/eip-3860",
+          "https://eips.ethereum.org/EIPS/eip-4345",
+          "https://eips.ethereum.org/EIPS/eip-4399",
+          "https://eips.ethereum.org/EIPS/eip-5133",
+          "https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/arrow-glacier.md",
+          "https://eips.ethereum.org/EIPS/eip-2070",
+          "https://eips.ethereum.org/EIPS/eip-609",
+          "https://eips.ethereum.org/EIPS/eip-1013",
+          "https://eips.ethereum.org/EIPS/eip-779",
+          "https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/gray-glacier.md",
+          "https://eips.ethereum.org/EIPS/eip-606",
+          "https://eips.ethereum.org/EIPS/eip-1679",
+          "https://github.com/ethereum/eth1.0-specs/blob/master/network-upgrades/mainnet-upgrades/london.md",
+          "https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/merge.md",
+          "https://eips.ethereum.org/EIPS/eip-3675",
+          "https://eips.ethereum.org/EIPS/eip-2384",
+          "https://eips.ethereum.org/EIPS/eip-1716",
+          "https://github.com/ethereum/pm/issues/356",
+          "https://eips.ethereum.org/EIPS/eip-607",
+          "https://eips.ethereum.org/EIPS/eip-608"
+        ]
+      },
+      {
+        "file": "emergency.js",
+        "offenders": [
+          "https://raw.githubusercontent.com/cowprotocol/cowswap/configuration/config/emergency.json"
+        ]
+      }
+    ],
+    "websocket": [
+      {
+        "file": "assets/@safe-global-CRqML-Eq.js",
+        "offenders": [
+          "ws://localhost:8546"
+        ]
+      },
+      {
+        "file": "assets/index-O5HCWFUh.js",
+        "offenders": [
+          "wss://relay.walletconnect.com",
+          "wss://relay.walletconnect.org",
+          "wss://relay.walletconnect.com",
+          "wss://relay.walletconnect.com"
+        ]
+      }
+    ],
+    "webrtc": []
+  },
+  "web3": [
+    {
+      "file": "assets/@safe-global-CRqML-Eq.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-C2aZCUBl.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-hcE3Ipwo.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        },
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/metamask-sdk-Bq1OWiFQ.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/web3-BVRPY3DS.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        }
+      ]
+    }
+  ]
+}

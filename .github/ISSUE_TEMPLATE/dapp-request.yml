@@ -1,0 +1,49 @@
+name: Request to add a dapp
+description: Request a new dapp to be added to Dapp Rank
+title: "Add dapp: [ENS NAME]"
+labels: ["dapp-request"]
+assignees: []
+body:
+  - type: input
+    id: ens_name
+    attributes:
+      label: ENS Name
+      description: The ENS name ending with .eth
+      placeholder: example.eth
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Select the category that best describes your dapp
+      options:
+        - DeFi
+        - Social
+        - NFT
+        - Wallet Interface
+        - Personal Website
+        - Knowledge Base
+        - Filesharing
+        - Data
+        - InfoFi
+        - Other
+      multiple: false
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Requirements
+      description: Please verify the following requirements
+      options:
+        - label: The dapp has a valid ENS name
+          required: true
+        - label: The ENS name resolves to content on IPFS (not IPNS)
+          required: true
+        - label: The dapp does not try to scam, phish, or otherwise mislead users
+          required: true
+        - label: The dapp does not serve malware or other malicious content
+          required: true
