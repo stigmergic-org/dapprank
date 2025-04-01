@@ -235,8 +235,10 @@ async function getDappDataByEns(ensName: string): Promise<DappData | null> {
         // Read metadata.json using unixfs (optional)
         let metadata = await getJson(fs, root, 'metadata.json');
         
-        // Construct the favicon URL
-        const faviconUrl = report.favicon ? `./dapps/index/${ensName}/${report.favicon}` : './images/default-icon.png';
+        // Construct the favicon URL using archive directory with the block number
+        const faviconUrl = report.favicon 
+            ? `./dapps/archive/${ensName}/${report.blockNumber}/${report.favicon}` 
+            : './images/default-icon.png';
         
         return {
             metadata,
@@ -663,7 +665,10 @@ async function processDappData(root: CID, dappName: string, fs: any) {
         // Try to read report.json
         let report = await getJson(fs, root, `${dappName}/report.json`);
 
-        const faviconUrl = report.favicon ? `./dapps/index/${dappName}/${report.favicon}` : './images/default-icon.png'
+        // Construct the favicon URL using archive directory with the block number
+        const faviconUrl = report.favicon 
+            ? `./dapps/archive/${dappName}/${report.blockNumber}/${report.favicon}` 
+            : './images/default-icon.png';
 
         // Create DappData object with all available information
         const dappData: DappData = {

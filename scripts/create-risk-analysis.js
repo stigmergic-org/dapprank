@@ -172,7 +172,7 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
     await fs.symlink(relativeReportPath, symlinkPath)
     console.log(`Symlink created at ${symlinkPath}`)
 
-    // Try to save favicon and create symlink only if favicon exists
+    // Try to save favicon to archive directory only if favicon exists
     if (report.favicon && faviconInfo) {
         try {
             // Save favicon to archive directory
@@ -200,16 +200,13 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
                 await fs.writeFile(archiveFaviconPath, Buffer.concat(faviconData))
             }
             
-            // Create favicon symlink
-            const faviconSymlinkPath = join(indexDir, report.favicon)
-            const relativeFaviconPath = join('../../archive', ensName, blockNumber.toString(), report.favicon)
-            await fs.symlink(relativeFaviconPath, faviconSymlinkPath)
-            console.log('Favicon saved and symlinked successfully')
+            // No longer creating favicon symlink in index directory
+            console.log('Favicon saved successfully to archive directory')
         } catch (error) {
             console.log('Error saving favicon', error)
         }
     } else {
-        console.log('No favicon found, skipping favicon symlink')
+        console.log('No favicon found, skipping favicon save')
     }
 }
 
