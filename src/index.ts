@@ -7,8 +7,6 @@ import { fetchCar, getJson } from './ipfs-utils'
 // @ts-ignore
 import about from './pages/about.md'
 // @ts-ignore
-import faq from './pages/faq.md'
-// @ts-ignore
 import bestPractices from './pages/best-practices.md'
 // @ts-ignore
 import shameList from './pages/shame-list.md'

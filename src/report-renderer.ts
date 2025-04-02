@@ -1,58 +1,26 @@
 import { isContentHashOutdated, getCurrentContentHash } from './ens-resolver';
+import { fetchCar, getJson } from './ipfs-utils';
+import { 
+    renderReportDetails as renderV1ReportDetails,
+    renderDistributionInfo,
+    renderNetworkingInfo, 
+    renderWeb3Info 
+} from './components/report-details/details-v1';
+import { renderOutdatedWarning } from './components/report-details/details-outdated';
 
-// Function to render detailed report information
+// Function to render detailed report information based on version
 export function renderReportDetails(report: any): string {
-    let html = '';
-    
-    html += `
-            <div class="report-item">
-                <span class="report-label">Content Hash:</span>
-                <span class="report-value" id="content-hash-warning">
-                    <span>${report.contentHash}</span>
-                    <a href="https://webui.ipfs.io/#/ipfs/${report.contentHash}" target="_blank" class="hash-link" title="Inspect IPFS Content">
-                        <span class="hash-icon">🔍</span>
-                    </a>
-                    <button class="copy-hash-btn" title="Copy hash" onclick="navigator.clipboard.writeText('${report.contentHash}').then(() => { this.classList.add('copied'); setTimeout(() => this.classList.remove('copied'), 2000); })">
-                        <span class="hash-icon">📋</span>
-                    </button>
-                </span>
-            </div>
-    `;
-    html += `
-        <div class="report-info">
-            <div class="report-item">
-                <span class="report-label">Total Size:</span>
-                <span class="report-value">${formatFileSize(report.totalSize)}</span>
-            </div>
-            <div class="report-item">
-                <span class="report-label">Created at:</span>
-                <span class="report-value">${new Date(report.timestamp * 1000).toISOString().replace('T', ' ').split('.')[0]}</span>
-            </div>
-            <div class="report-item">
-                <span class="report-label">Block number:</span>
-                <span class="report-value">${report.blockNumber}</span>
-            </div>
-        </div>
-    `;
-    
-    html += `
-        <h3>Distribution Purity</h3>
-        <div class="report-section">
-            ${renderDistributionPurity(report.distributionPurity)}
-        </div>
-        
-        <h3>Networking Purity</h3>
-        <div class="report-section">
-            ${renderNetworkingPurity(report.networkingPurity)}
-        </div>
-        
-        <h3>Web3 Interactions</h3>
-        <div class="report-section">
-            ${renderWeb3Interactions(report.web3)}
-        </div>
-    `;
-    
-    return html;
+    // Use the appropriate renderer based on report version
+    // Currently we only have v1, but in the future we can add more versions
+    return renderV1ReportDetails(report);
+}
+
+// Interface for historical report data
+interface HistoricalReport {
+    timestamp: number;
+    blockNumber: number;
+    report: any;
+    isLatest: boolean;
 }
 
 // Function to render the dapp details page
@@ -64,6 +32,106 @@ export function renderDappDetailsPage(
     calculateCensorshipResistanceScore: (dappData: any) => number,
     getScoreCategory: (score: number) => string,
     getCategoryColor: (category: string) => string
+) {
+    // Calculate censorship resistance score
+    const score = calculateCensorshipResistanceScore(dappData);
+    const scoreCategory = getScoreCategory(score);
+    
+    // Create the details page HTML
+    const title = dappData.report.title || ensName;
+    const category = dappData.metadata?.category || 'other';
+
+    // Load historical reports
+    loadHistoricalReports(ensName, dappData.report.blockNumber).then(historicalReports => {
+        renderDappDetailsPageWithHistory(
+            ensName,
+            dappData,
+            container,
+            createRiskChart,
+            calculateCensorshipResistanceScore,
+            getScoreCategory,
+            getCategoryColor,
+            historicalReports
+        );
+    }).catch(error => {
+        console.error('Error loading historical reports:', error);
+        // Fallback to rendering with just the current report
+        renderDappDetailsPageWithHistory(
+            ensName,
+            dappData,
+            container,
+            createRiskChart,
+            calculateCensorshipResistanceScore,
+            getScoreCategory,
+            getCategoryColor,
+            []
+        );
+    });
+}
+
+// Function to load all historical reports for an ENS name
+async function loadHistoricalReports(ensName: string, currentBlockNumber: number): Promise<HistoricalReport[]> {
+    try {
+        // Fetch archive directory listing
+        const { fs, root } = await fetchCar(`/dapps/archive/${ensName}/`);
+        
+        // Get list of block numbers (directories) in the archive
+        const blockNumbers: number[] = [];
+        try {
+            for await (const entry of fs.ls(root)) {
+                if (!entry.name) continue;
+                // Try to parse the directory name as a block number
+                const blockNumber = parseInt(entry.name, 10);
+                if (!isNaN(blockNumber)) {
+                    blockNumbers.push(blockNumber);
+                }
+            }
+        } catch (error) {
+            console.error(`Error listing archive for ${ensName}:`, error);
+            return [];
+        }
+        
+        // Sort block numbers in descending order (newest first)
+        blockNumbers.sort((a, b) => b - a);
+        
+        // Load report data for each block number
+        const reports: HistoricalReport[] = [];
+        
+        for (const blockNumber of blockNumbers) {
+            try {
+                // Get the report.json for this block number
+                const reportData = await getJson(fs, root, `${blockNumber}/report.json`);
+                
+                // Add to the list of reports
+                reports.push({
+                    timestamp: reportData.timestamp,
+                    blockNumber: blockNumber,
+                    report: reportData,
+                    isLatest: blockNumber === currentBlockNumber
+                });
+            } catch (error) {
+                console.error(`Error loading report for ${ensName} at block ${blockNumber}:`, error);
+                // Continue with other block numbers
+            }
+        }
+        
+        return reports;
+    } catch (error) {
+        console.error(`Error loading historical reports for ${ensName}:`, error);
+        return [];
+    }
+}
+
+// Function to render the dapp details page with historical reports
+function renderDappDetailsPageWithHistory(
+    ensName: string, 
+    dappData: any, 
+    container: HTMLElement, 
+    createRiskChart: (dappData: any, showEnlarged?: boolean) => Promise<HTMLElement>,
+    calculateCensorshipResistanceScore: (dappData: any) => number,
+    getScoreCategory: (score: number) => string,
+    getCategoryColor: (category: string) => string,
+    historicalReports: HistoricalReport[]
 ) {
     // Calculate censorship resistance score
     const score = calculateCensorshipResistanceScore(dappData);
@@ -133,11 +201,11 @@ export function renderDappDetailsPage(
                 
                 <div class="dapp-details-section">
                     <h2>Report Details</h2>
-                    <div class="dapp-report">
-                        ${renderReportDetails(dappData.report)}
+                    <div class="dapp-report-history" id="dapp-report-history">
+                        <!-- The report history will be loaded here -->
+                        <p>Loading report history...</p>
                     </div>
                 </div>
-
             </div>
         </div>
     `;
@@ -185,49 +253,118 @@ export function renderDappDetailsPage(
         riskInfoContainer.appendChild(web3Info);
     }
     
-    // Check if contentHash is outdated and add warning icon if needed
-    if (dappData.report.contentHash) {
-        // First, get the current content hash to compare with the report's hash
-        const getCurrentHash = async () => {
-            try {
-                const currentContentHash = await getCurrentContentHash(ensName);
-                const isOutdated = currentContentHash && currentContentHash !== dappData.report.contentHash;
-                
-                if (isOutdated && currentContentHash) {
-                    // Show the warning banner at the top of the page with the current hash
-                    const warningBanner = document.getElementById('content-hash-warning-banner');
-                    if (warningBanner) {
-                        // Find the paragraph element to update
-                        const paragraph = warningBanner.querySelector('p');
-                        if (paragraph) {
-                            paragraph.innerHTML = `This report was generated using an older version of the dapp. The ENS record points to a newer version. The data shown may not reflect the current state of the dapp.<br><br><strong>Current content hash:</strong><br /> <span style="font-family: var(--font-monospace); word-break: break-all; font-size: 0.85rem; background-color: rgba(0,0,0,0.05); padding: 3px 6px; border-radius: 3px; display: inline-block; margin-top: 3px;">${currentContentHash}</span>`;
-                        }
-                        warningBanner.style.display = 'flex';
-                    }
-                    
-                    // Also add the warning icon next to the content hash as before
-                    const warningContainer = document.createElement('span');
-                    warningContainer.className = 'tooltip warning-icon';
-                    warningContainer.textContent = '⚠️';
-                    
-                    const tooltip = document.createElement('span');
-                    tooltip.className = 'tooltip-text';
-                    tooltip.textContent = 'Content hash is outdated. The ENS record points to a newer version.';
-                    warningContainer.appendChild(tooltip);
-                    
-                    const warningElement = document.getElementById('content-hash-warning');
-                    if (warningElement) {
-                        warningElement.appendChild(warningContainer);
-                    }
-                }
-            } catch (error) {
-                console.error(`Error checking contentHash for ${ensName}:`, error);
-            }
-        };
+    // Get the current content hash and update the report history
+    getCurrentContentHash(ensName).then(currentContentHash => {
+        // Update the report history with the current content hash
+        const reportHistoryContainer = document.getElementById('dapp-report-history');
+        if (reportHistoryContainer) {
+            reportHistoryContainer.innerHTML = renderReportHistory(historicalReports, currentContentHash);
+            // Set up event listeners for report toggles
+            setupReportToggleListeners();
+        }
         
-        // Execute the async function
-        getCurrentHash();
+        // Check if contentHash is outdated and show warning banner if needed
+        if (currentContentHash && dappData.report.contentHash && currentContentHash !== dappData.report.contentHash) {
+            const warningBanner = document.getElementById('content-hash-warning-banner');
+            if (warningBanner) {
+                // Find the paragraph element to update
+                const paragraph = warningBanner.querySelector('p');
+                if (paragraph) {
+                    paragraph.innerHTML = `This report was generated using an older version of the dapp. The ENS record points to a newer version. The data shown may not reflect the current state of the dapp.<br><br><strong>Current content hash:</strong><br /> <span style="font-family: var(--font-monospace); word-break: break-all; font-size: 0.85rem; background-color: rgba(0,0,0,0.05); padding: 3px 6px; border-radius: 3px; display: inline-block; margin-top: 3px;">${currentContentHash}</span>`;
+                }
+                warningBanner.style.display = 'flex';
+            }
+        }
+    }).catch(error => {
+        console.error(`Error getting current content hash for ${ensName}:`, error);
+        
+        // Still render the report history without the current content hash
+        const reportHistoryContainer = document.getElementById('dapp-report-history');
+        if (reportHistoryContainer) {
+            reportHistoryContainer.innerHTML = renderReportHistory(historicalReports, null);
+            // Set up event listeners for report toggles
+            setupReportToggleListeners();
+        }
+    });
+}
+
+// Function to render the report history section
+function renderReportHistory(reports: HistoricalReport[], currentContentHash: string | null): string {
+    if (!reports || reports.length === 0) {
+        return '<p>No historical reports available.</p>';
     }
+
+    let html = `
+        <div class="report-history-container">
+    `;
+
+    // Sort reports by timestamp, newest first
+    const sortedReports = [...reports].sort((a, b) => b.timestamp - a.timestamp);
+    
+    // Get the most recent report's content hash
+    const latestReportContentHash = sortedReports[0]?.report.contentHash;
+    
+    // Add warning for outdated content hash
+    if (currentContentHash && latestReportContentHash && currentContentHash !== latestReportContentHash) {
+        html += renderOutdatedWarning(currentContentHash, latestReportContentHash);
+    }
+
+    sortedReports.forEach((report, index) => {
+        const date = new Date(report.timestamp * 1000);
+        const formattedDate = new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(date);
+        const isContentHashMatch = currentContentHash && report.report.contentHash === currentContentHash;
+
+        // Create a unique ID for each report section
+        const reportId = `report-${report.blockNumber}`;
+        
+        html += `
+            <div class="report-history-item">
+                <div class="report-history-header" data-report-id="${reportId}">
+                    <div class="report-history-title">
+                        <span class="report-date">${formattedDate}</span>
+                        <span class="report-block">Block #${report.blockNumber}</span>
+                        ${isContentHashMatch ? '<span class="report-current-badge">Current ENS Record</span>' : ''}
+                    </div>
+                    <div class="report-toggle-icon">▼</div>
+                </div>
+                <div class="report-history-content" id="${reportId}" style="display: none;">
+                    ${renderReportDetails(report.report)}
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    
+    return html;
+}
+
+// Function to set up event listeners for report toggle buttons
+function setupReportToggleListeners() {
+    document.querySelectorAll('.report-history-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const reportId = header.getAttribute('data-report-id');
+            const contentSection = document.getElementById(reportId);
+            const toggleIcon = header.querySelector('.report-toggle-icon');
+            
+            if (contentSection) {
+                // Toggle display
+                if (contentSection.style.display === 'none') {
+                    contentSection.style.display = 'block';
+                    if (toggleIcon) toggleIcon.textContent = '▲';
+                } else {
+                    contentSection.style.display = 'none';
+                    if (toggleIcon) toggleIcon.textContent = '▼';
+                }
+            }
+        });
+    });
 }
 
 // Helper function to format file size
@@ -360,71 +497,4 @@ export function renderWeb3Interactions(web3: any[]): string {
             risk: offender.risk
         }))
     );
-}
-
-// Helper function to render distribution information in a readable format
-function renderDistributionInfo(purity: any): string {
-    if (!purity) return '<p>No distribution information available.</p>';
-    
-    const externalScripts = purity.externalScripts || [];
-    const externalMedia = purity.externalMedia || [];
-    
-    if (externalScripts.length === 0 && externalMedia.length === 0) {
-        return '<p>✅ No external scripts or media detected. The dapp is fully distributed and self-contained.</p>';
-    }
-    
-    let html = '';
-    
-    if (externalScripts.length > 0) {
-        html += `<p>️📜 External scripts detected (${externalScripts.length})</p>`;
-    }
-    
-    if (externalMedia.length > 0) {
-        html += `<p>🎬 External media detected (${externalMedia.length})</p>`;
-    }
-    
-    return html;
-}
-
-// Helper function to render networking information in a readable format
-function renderNetworkingInfo(purity: any): string {
-    if (!purity) return '<p>No networking information available.</p>';
-    
-    const httpRequests = purity.http || [];
-    const wsConnections = purity.websocket || [];
-    const webrtcConnections = purity.webrtc || [];
-    
-    if (httpRequests.length === 0 && wsConnections.length === 0 && webrtcConnections.length === 0) {
-        return '<p>✅ No outbound network requests detected. The dapp does not communicate with external services.</p>';
-    }
-    
-    let html = '';
-    
-    if (httpRequests.length > 0) {
-        html += `<p>🌐 HTTP requests detected (${httpRequests.length})</p>`;
-    }
-    
-    if (wsConnections.length > 0) {
-        html += `<p>🔌 WebSocket connections detected (${wsConnections.length})</p>`;
-    }
-    
-    if (webrtcConnections.length > 0) {
-        html += `<p>📡 WebRTC connections detected (${webrtcConnections.length})</p>`;
-    }
-    
-    return html;
-}
-
-// Helper function to render web3 information in a readable format
-function renderWeb3Info(web3: any[]): string {
-    if (!web3 || web3.length === 0) {
-        return '<p>❌ No Web3 interactions detected. This dapp does not interact with any blockchain.</p>';
-    }
-    
-    // Count total interactions
-    const totalInteractions = web3.reduce((total, item) => {
-        return total + (item.offenders ? item.offenders.length : 0);
-    }, 0);
-    
-    return `<p>🧩 ${totalInteractions} Web3 interactions detected. This dapp utilizes blockchain functionality.</p>`;
 } 

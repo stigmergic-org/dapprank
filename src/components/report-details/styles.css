@@ -1,0 +1,395 @@
+/* Report History Container */
+.report-history-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-color);
+}
+
+/* Report Item */
+.report-history-item {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.report-history-item:last-child {
+  border-bottom: none;
+}
+
+/* Outdated report warning */
+.report-outdated-warning .report-history-header {
+  background-color: var(--warning-background);
+  border-left: 4px solid var(--warning-color);
+}
+
+.report-outdated-warning .report-history-header:hover {
+  background-color: var(--warning-background-hover, #fff3e0);
+}
+
+.report-warning-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 500;
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.report-warning-content {
+  background-color: var(--warning-background-light, #fff8e1);
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 10px;
+}
+
+/* Updated to be more consistent with report-info */
+.report-hash-comparison {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.report-hash-item {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.report-hash-item > strong {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  margin-left: 1em;
+  text-align: left;
+  width: 100%;
+}
+
+.report-hash-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Updated to match report-value */
+.report-hash-value {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-family: var(--font-monospace);
+  font-size: 0.85rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  overflow-wrap: break-word;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--secondary-background, rgba(0, 0, 0, 0.03));
+  color: var(--text-color);
+}
+
+/* Report Header */
+.report-history-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: var(--card-background);
+}
+
+.report-history-header:hover {
+  background-color: var(--hover-color);
+}
+
+.report-history-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.report-date {
+  font-weight: 500;
+}
+
+.report-block {
+  color: var(--text-secondary);
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+}
+
+.report-toggle-icon {
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+/* Report Content */
+.report-history-content {
+  padding: 0 20px 20px;
+  background-color: var(--background-color);
+  border-top: 1px dashed var(--border-color);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Badge Styles */
+.report-latest-badge,
+.report-current-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.report-latest-badge {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.report-current-badge {
+  background-color: var(--success-color);
+  color: white;
+}
+
+/* Report Details */
+.report-item {
+  display: flex;
+  margin-bottom: 16px;
+  padding: 12px;
+  flex-direction: column;
+  border-radius: 6px;
+  background-color: var(--secondary-background);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.report-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  margin-left: 1em;
+  text-align: left;
+  width: 100%;
+}
+
+.report-value {
+  word-break: break-all;
+  font-family: var(--font-monospace, monospace);
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: var(--secondary-background);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+
+/* Updated to be more consistent with the hash-comparison section */
+.report-info {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Grid Layout */
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+  grid-auto-flow: row;
+}
+
+.report-section {
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Report Lists */
+.report-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.report-list > li {
+  margin-bottom: 15px;
+  background-color: var(--card-background);
+  padding: 12px 15px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.report-list > li > div {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.report-sublist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+}
+
+.report-sublist li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.report-sublist li:last-child {
+  border-bottom: none;
+}
+
+/* Hash Related Styles */
+.hash-button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Updated button styles with better dark mode compatibility */
+.hash-link, .copy-hash-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: var(--secondary-background);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: 50%;
+  white-space: nowrap;
+}
+
+.hash-link:hover, .copy-hash-btn:hover {
+  background-color: var(--hover-background);
+  border-color: var(--highlight-color);
+  color: var(--highlight-color);
+}
+
+/* Dark mode specific enhancements */
+.dark-mode .report-hash-comparison {
+  background-color: var(--card-background);
+}
+  
+.dark-mode .report-hash-value {
+  background-color: var(--secondary-background);
+  color: var(--text-color);
+}
+  
+.dark-mode .report-warning-content {
+  background-color: var(--warning-background);
+  color: var(--warning-text-color);
+}
+  
+.dark-mode .hash-link, 
+.dark-mode .copy-hash-btn {
+  background-color: var(--secondary-background);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+  
+.dark-mode .hash-link:hover, 
+.dark-mode .copy-hash-btn:hover {
+  background-color: var(--hover-background);
+}
+  
+.dark-mode .report-item {
+  background-color: var(--secondary-background);
+}
+  
+.dark-mode .report-value {
+  background-color: var(--secondary-background);
+  color: var(--text-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+  .report-item {
+    padding: 10px 8px;
+  }
+  
+  .report-history-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+@media (min-width: 768px) {
+  .report-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+/* Report item in grid should not have bottom margin */
+.report-grid .report-item {
+  margin-bottom: 0;
+}
+
+/* For Desktop: force equal height of all grid items */
+@media (min-width: 768px) {
+  .report-grid .report-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .report-grid .report-value {
+    flex: 1;
+  }
+} 

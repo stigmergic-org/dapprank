@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "contentHash": "bafybeid46vstxcfh2ac3hmlspcr6pzood6ht55wnhipoahn46swg3rffma",
+  "timestamp": 1743591006,
+  "blockNumber": 22180713,
+  "totalSize": 802972,
+  "favicon": "",
+  "title": "",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}
