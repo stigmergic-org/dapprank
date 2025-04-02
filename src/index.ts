@@ -1,6 +1,6 @@
 import './styles.css'
 import { createRiskChart } from './pie-chart'
-import { renderReportDetails, formatFileSize, renderDappDetailsPage } from './report-renderer'
+import { renderDappDetailsPage } from './report-renderer'
 import { isContentHashOutdated } from './ens-resolver'
 import { fetchCar, getJson } from './ipfs-utils'
 
@@ -144,8 +144,6 @@ function handleRouteChange() {
         mainContent.style.display = 'none';
     } else if (path === '/about') {
         displayContent(about);
-    } else if (path === '/faq') {
-        displayContent(faq);
     } else if (path === '/best-practices') {
         displayContent(bestPractices);
     } else if (path === '/shame-list') {
@@ -193,60 +191,15 @@ async function displayDappDetails(ensName: string) {
     dappsTable.style.display = 'none';
     mainContent.style.display = 'block';
     
-    // Show loading state
-    mainContent.innerHTML = '<div class="loading">Loading dapp details...</div>';
-    
-    try {
-        // Fetch dapp data
-        const dappData = await getDappDataByEns(ensName);
-        
-        if (!dappData) {
-            mainContent.innerHTML = `<div class="error">Dapp "${ensName}" not found</div>`;
-            return;
-        }
-        
-        // Render the dapp details page using the imported function
-        renderDappDetailsPage(
-            ensName, 
-            dappData, 
-            mainContent, 
-            createRiskChart, 
-            calculateCensorshipResistanceScore, 
-            getScoreCategory, 
-            getCategoryColor
-        );
-    } catch (error) {
-        console.error(`Error loading dapp details for ${ensName}:`, error);
-        mainContent.innerHTML = `<div class="error">Error loading dapp details: ${error.message}</div>`;
-    }
-}
-
-// Function to get dapp data by ENS name
-async function getDappDataByEns(ensName: string): Promise<DappData | null> {
-    try {
-        // Use the fetchCar function to get a unixfs instance for the dapp
-        const { fs, root } = await fetchCar(`/dapps/index/${ensName}/`);
-        
-        // Read report.json using unixfs
-        let report = await getJson(fs, root, 'report.json');
-        
-        // Read metadata.json using unixfs (optional)
-        let metadata = await getJson(fs, root, 'metadata.json');
-        
-        // Construct the favicon URL using archive directory with the block number
-        const faviconUrl = report.favicon 
-            ? `./dapps/archive/${ensName}/${report.blockNumber}/${report.favicon}` 
-            : './images/default-icon.png';
-        
-        return {
-            metadata,
-            report,
-            favicon: faviconUrl
-        };
-    } catch (error) {
-        console.error(`Error fetching dapp data for ${ensName}:`, error);
-        return null;
-    }
+    // Use the enhanced renderDappDetailsPage that handles all data fetching internally
+    renderDappDetailsPage(
+        ensName, 
+        mainContent, 
+        createRiskChart, 
+        calculateCensorshipResistanceScore, 
+        getScoreCategory, 
+        getCategoryColor
+    );
 }
 
 // Add a function to handle navigation links without page reload

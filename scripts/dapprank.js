@@ -278,6 +278,7 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
     // Create directory paths
     const archiveDir = join(process.cwd(), 'public/dapps/archive', ensName, blockNumber.toString())
     const indexDir = join(process.cwd(), 'public/dapps/index', ensName)
+    const rootArchiveDir = join(process.cwd(), 'public/dapps/archive', ensName)
     
     // Create directories
     await fs.mkdir(archiveDir, { recursive: true })
@@ -287,6 +288,15 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
     const reportPath = join(archiveDir, 'report.json')
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2))
     console.log(`Report saved to ${reportPath}`)
+
+    // Create metadata.json in the root archive directory if it doesn't exist
+    const archiveMetadataPath = join(rootArchiveDir, 'metadata.json')
+    try {
+        await fs.access(archiveMetadataPath)
+    } catch (error) {
+        await fs.writeFile(archiveMetadataPath, JSON.stringify({ category: "" }, null, 2))
+        console.log(`Created metadata file at ${archiveMetadataPath}`)
+    }
 
     // Clean up the index directory - remove all files except metadata.json
     try {
@@ -302,13 +312,15 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
         console.log(`Warning: Error cleaning index directory: ${error.message}`)
     }
 
-    // Create metadata.json if it doesn't exist
-    const metadataPath = join(indexDir, 'metadata.json')
+    // Create metadata.json in the index directory if it doesn't exist
+    const indexMetadataPath = join(indexDir, 'metadata.json')
     try {
-        await fs.access(metadataPath)
+        await fs.access(indexMetadataPath)
     } catch (error) {
-        await fs.writeFile(metadataPath, JSON.stringify({ category: "" }, null, 2))
-        console.log(`Created metadata file at ${metadataPath}`)
+        // Create symlink to root archive directory metadata file
+        const relativeMetadataPath = join('../../archive', ensName, 'metadata.json')
+        await fs.symlink(relativeMetadataPath, indexMetadataPath)
+        console.log(`Created metadata symlink at ${indexMetadataPath}`)
     }
 
     // Create symlink to latest report

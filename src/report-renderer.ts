@@ -23,26 +23,39 @@ interface HistoricalReport {
     isLatest: boolean;
 }
 
+// Interface for metadata
+interface DappMetadata {
+    description?: string;
+    category?: string;
+    [key: string]: any; // Allow other properties
+}
+
+// Interface for dapp data with reports
+export interface ArchiveData {
+    latestDappData: {
+        metadata: DappMetadata;
+        report: any;
+        favicon: string;
+    };
+    historicalReports: HistoricalReport[];
+}
+
 // Function to render the dapp details page
 export function renderDappDetailsPage(
     ensName: string, 
-    dappData: any, 
     container: HTMLElement, 
     createRiskChart: (dappData: any, showEnlarged?: boolean) => Promise<HTMLElement>,
     calculateCensorshipResistanceScore: (dappData: any) => number,
     getScoreCategory: (score: number) => string,
     getCategoryColor: (category: string) => string
 ) {
-    // Calculate censorship resistance score
-    const score = calculateCensorshipResistanceScore(dappData);
-    const scoreCategory = getScoreCategory(score);
+    // Show loading state
+    container.innerHTML = '<div class="loading">Loading dapp details...</div>';
     
-    // Create the details page HTML
-    const title = dappData.report.title || ensName;
-    const category = dappData.metadata?.category || 'other';
-
-    // Load historical reports
-    loadHistoricalReports(ensName, dappData.report.blockNumber).then(historicalReports => {
+    // Load all data (latest dapp data and historical reports) in one call
+    loadHistoricalReports(ensName).then(archiveData => {
+        const dappData = archiveData.latestDappData;
+        
         renderDappDetailsPageWithHistory(
             ensName,
             dappData,
@@ -51,26 +64,17 @@ export function renderDappDetailsPage(
             calculateCensorshipResistanceScore,
             getScoreCategory,
             getCategoryColor,
-            historicalReports
+            archiveData.historicalReports
         );
     }).catch(error => {
-        console.error('Error loading historical reports:', error);
-        // Fallback to rendering with just the current report
-        renderDappDetailsPageWithHistory(
-            ensName,
-            dappData,
-            container,
-            createRiskChart,
-            calculateCensorshipResistanceScore,
-            getScoreCategory,
-            getCategoryColor,
-            []
-        );
+        console.error('Error loading data for dapp details:', error);
+        // Show error message
+        container.innerHTML = `<div class="error">Error loading dapp details: ${error.message}</div>`;
     });
 }
 
-// Function to load all historical reports for an ENS name
-async function loadHistoricalReports(ensName: string, currentBlockNumber: number): Promise<HistoricalReport[]> {
+// Function to load all historical reports and latest dapp data for an ENS name
+export async function loadHistoricalReports(ensName: string, currentBlockNumber?: number): Promise<ArchiveData> {
     try {
         // Fetch archive directory listing
         const { fs, root } = await fetchCar(`/dapps/archive/${ensName}/`);
@@ -88,14 +92,45 @@ async function loadHistoricalReports(ensName: string, currentBlockNumber: number
             }
         } catch (error) {
             console.error(`Error listing archive for ${ensName}:`, error);
-            return [];
+            throw new Error(`Failed to list archive: ${error.message}`);
         }
         
         // Sort block numbers in descending order (newest first)
         blockNumbers.sort((a, b) => b - a);
         
-        // Load report data for each block number
-        const reports: HistoricalReport[] = [];
+        if (blockNumbers.length === 0) {
+            throw new Error(`No reports found for ${ensName}`);
+        }
+        
+        // The latest block number is the first one in the sorted array
+        const latestBlockNumber = blockNumbers[0];
+        
+        // If currentBlockNumber is not provided, use the latest one
+        currentBlockNumber = currentBlockNumber || latestBlockNumber;
+        
+        // Load the latest report data
+        const latestReport = await getJson(fs, root, `${latestBlockNumber}/report.json`);
+        
+        // Load metadata from the archive directory which should have the definitive metadata
+        let latestMetadata: DappMetadata = await getJson(fs, root, 'metadata.json');
+        
+        // Construct the favicon URL for the latest report
+        const faviconUrl = latestReport.favicon 
+            ? `./dapps/archive/${ensName}/${latestBlockNumber}/${latestReport.favicon}` 
+            : './images/default-icon.png';
+            
+        // Create the latest dapp data object
+        const latestDappData = {
+            metadata: latestMetadata,
+            report: latestReport,
+            favicon: faviconUrl
+        };
+        
+        // Log the category for debugging
+        console.log(`Dapp ${ensName} category from metadata:`, latestMetadata.category || 'not found');
+        
+        // Load report data for each block number for historical reports
+        const historicalReports: HistoricalReport[] = [];
         
         for (const blockNumber of blockNumbers) {
             try {
@@ -103,7 +138,7 @@ async function loadHistoricalReports(ensName: string, currentBlockNumber: number
                 const reportData = await getJson(fs, root, `${blockNumber}/report.json`);
                 
                 // Add to the list of reports
-                reports.push({
+                historicalReports.push({
                     timestamp: reportData.timestamp,
                     blockNumber: blockNumber,
                     report: reportData,
@@ -115,10 +150,13 @@ async function loadHistoricalReports(ensName: string, currentBlockNumber: number
             }
         }
         
-        return reports;
+        return {
+            latestDappData,
+            historicalReports
+        };
     } catch (error) {
-        console.error(`Error loading historical reports for ${ensName}:`, error);
-        return [];
+        console.error(`Error loading data for ${ensName}:`, error);
+        throw error;
     }
 }
 
@@ -139,7 +177,10 @@ function renderDappDetailsPageWithHistory(
     
     // Create the details page HTML
     const title = dappData.report.title || ensName;
+    
+    // Get the category from metadata with debug logging
     const category = dappData.metadata?.category || 'other';
+    console.log(`[${ensName}] Using category: "${category}"`);
     
     let html = `
         <div class="dapp-details">
