@@ -7,6 +7,7 @@ import { promises as fs } from 'fs'
 import { join } from 'path'
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
+import { glob } from 'glob'
 
 const WEB3_APIs = [
     { url: 'http://localhost:5001', service: 'ipfs', risk: 'none' },
@@ -33,46 +34,190 @@ const LINK_NON_FETCHING_REL_VALUES = [
 const ANALYSIS_VERSION = 1
 
 program
-    .name('create-risk-analysis')
+    .name('dapprank')
     .description('Analyze ENS sites for external dependencies and Web3 APIs')
     .option('-i, --ipfs <url>', 'IPFS API URL', 'http://localhost:5001')
     .option('-r, --rpc <url>', 'Ethereum RPC URL', 'http://localhost:8545')
-    .argument('<ens-name-or-cid>', 'ENS name or CID to analyze')
-    .action(async (input, options) => {
-        const kubo = createKubo({ url: options.ipfs })
-        
-        let rootCID
-        let ensName
-        let blockNumber
 
-        if (input.endsWith('.eth')) {
-            ensName = input
-            const client = createPublicClient({
-                chain: mainnet,
-                transport: http(options.rpc)
-            })
+// Add command
+program
+    .command('add')
+    .description('Add a new report for an ENS domain')
+    .argument('<ens-name>', 'ENS name to analyze')
+    .action(async (ensName, options) => {
+        // Validate that this is an ENS name
+        if (!ensName.endsWith('.eth')) {
+            console.error('Error: Not a valid ENS name. Must end with .eth');
+            process.exit(1);
+        }
+
+        const parentOptions = program.optsWithGlobals();
+        const kubo = createKubo({ url: parentOptions.ipfs });
+        const client = createPublicClient({
+            chain: mainnet,
+            transport: http(parentOptions.rpc)
+        });
+        
+        // Get current block number
+        const blockNumber = await client.getBlockNumber();
+        
+        // Resolve ENS name to CID
+        console.log(`Resolving ENS name: ${ensName}...`);
+        const rootCID = await resolveENSName(client, ensName, blockNumber);
+        
+        if (!rootCID) {
+            console.error('Could not resolve ENS name');
+            process.exit(1);
+        }
+        
+        // Check if a report for this CID already exists
+        if (await reportExistsForCID(ensName, rootCID)) {
+            console.log(`Report for CID ${rootCID} already exists. Skipping...`);
+            return;
+        }
+        
+        // Generate and save report
+        console.log(`Analyzing ${rootCID}...`);
+        const { report, faviconInfo } = await generateReport(kubo, rootCID, blockNumber);
+        await saveReport(report, ensName, blockNumber, kubo, faviconInfo);
+        console.log(`Analysis complete for ${ensName}`);
+    });
+
+// Update command
+program
+    .command('update')
+    .description('Update all existing reports')
+    .action(async (options) => {
+        const parentOptions = program.optsWithGlobals();
+        const kubo = createKubo({ url: parentOptions.ipfs });
+        const client = createPublicClient({
+            chain: mainnet,
+            transport: http(parentOptions.rpc)
+        });
+        
+        // Get current block number once and use for all domains
+        const blockNumber = await client.getBlockNumber();
+        console.log(`Using block number: ${blockNumber}`);
+        
+        // Get all domain directories
+        const indexDir = join(process.cwd(), 'public/dapps/index');
+        try {
+            const domainDirs = await fs.readdir(indexDir);
             
-            blockNumber = await client.getBlockNumber()
-            rootCID = await resolveENSName(client, ensName, blockNumber)
-            if (!rootCID) {
-                console.error('Could not resolve ENS name')
-                process.exit(1)
+            console.log(`Found ${domainDirs.length} domains to check for updates`);
+            
+            // Process each domain
+            for (const domain of domainDirs) {
+                try {
+                    // Skip non-directories
+                    const stats = await fs.stat(join(indexDir, domain));
+                    if (!stats.isDirectory()) continue;
+                    
+                    // Skip non-ENS domains
+                    if (!domain.endsWith('.eth')) {
+                        console.log(`Skipping non-ENS domain: ${domain}`);
+                        continue;
+                    }
+                    
+                    console.log(`\nProcessing domain: ${domain}`);
+                    
+                    // Resolve ENS name to CID
+                    const rootCID = await resolveENSName(client, domain, blockNumber);
+                    
+                    if (!rootCID) {
+                        console.log(`Could not resolve ENS name: ${domain}. Skipping...`);
+                        continue;
+                    }
+                    
+                    // Check if a report for this CID already exists
+                    if (await reportExistsForCID(domain, rootCID)) {
+                        console.log(`Report for CID ${rootCID} already exists. Skipping...`);
+                        continue;
+                    }
+                    
+                    // Generate and save report
+                    console.log(`Analyzing ${rootCID}...`);
+                    const { report, faviconInfo } = await generateReport(kubo, rootCID, blockNumber);
+                    await saveReport(report, domain, blockNumber, kubo, faviconInfo);
+                } catch (error) {
+                    console.error(`Error processing domain ${domain}:`, error);
+                }
             }
-        } else {
-            rootCID = input
+            
+            console.log('\nUpdate completed!');
+        } catch (error) {
+            console.error(`Error accessing index directory: ${error.message}`);
+            process.exit(1);
         }
+    });
 
-        console.log(`Analyzing ${rootCID}`)
-        const { report, faviconInfo } = await generateReport(kubo, rootCID, blockNumber)
+// Test command
+program
+    .command('test')
+    .description('Test analysis for a CID without saving')
+    .argument('<cid>', 'CID to analyze')
+    .action(async (cid, options) => {
+        const parentOptions = program.optsWithGlobals();
+        const kubo = createKubo({ url: parentOptions.ipfs });
         
-        if (ensName) {
-            await saveReport(report, ensName, blockNumber, kubo, faviconInfo)
-        } else {
-            console.log(JSON.stringify(report, null, 2))
-        }
-    })
+        console.log(`Analyzing ${cid}...`);
+        const { report } = await generateReport(kubo, cid);
+        
+        // Print report to console
+        console.log(JSON.stringify(report, null, 2));
+    });
 
-program.parseAsync()
+program.parseAsync();
+
+// Helper function to check if a report for a CID already exists
+async function reportExistsForCID(ensName, cid) {
+    try {
+        const archiveDir = join(process.cwd(), 'public/dapps/archive', ensName);
+        
+        // Check if the archive directory exists
+        try {
+            await fs.access(archiveDir);
+        } catch (error) {
+            // Directory doesn't exist, so no reports exist
+            return false;
+        }
+        
+        // Get all block number directories
+        const blockDirs = await fs.readdir(archiveDir);
+        
+        // If no directories, return false
+        if (blockDirs.length === 0) {
+            return false;
+        }
+        
+        // Find the directory with the highest block number (latest report)
+        const latestBlockDir = blockDirs
+            .filter(dir => !isNaN(Number(dir))) // Filter out non-numeric directories
+            .sort((a, b) => Number(b) - Number(a))[0]; // Sort in descending order and take first
+        
+        if (!latestBlockDir) {
+            return false; // No valid block directories found
+        }
+        
+        // Check only the report in the latest block directory
+        const reportPath = join(archiveDir, latestBlockDir, 'report.json');
+        
+        try {
+            const reportContent = await fs.readFile(reportPath, 'utf-8');
+            const reportData = JSON.parse(reportContent);
+            
+            // Check if the CID matches
+            return reportData.contentHash === cid;
+        } catch (readError) {
+            console.log(`Error reading latest report file ${reportPath}:`, readError.message);
+            return false;
+        }
+    } catch (error) {
+        console.log(`Warning: Error checking if report exists: ${error.message}`);
+        // If directory doesn't exist or other error, report doesn't exist
+        return false;
+    }
+}
 
 async function resolveENSName(client, ensName, blockNumber) {
     try {
