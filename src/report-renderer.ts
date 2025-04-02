@@ -294,8 +294,17 @@ function renderDappDetailsPageWithHistory(
         riskInfoContainer.appendChild(web3Info);
     }
     
+    console.log('beforecontethhash')
+
+    const reportHistoryContainer = document.getElementById('dapp-report-history');
+    if (reportHistoryContainer) {
+        reportHistoryContainer.innerHTML = renderReportHistory(historicalReports, null);
+        // Set up event listeners for report toggles
+        setupReportToggleListeners();
+    }
     // Get the current content hash and update the report history
     getCurrentContentHash(ensName).then(currentContentHash => {
+        console.log('ens resolved')
         // Update the report history with the current content hash
         const reportHistoryContainer = document.getElementById('dapp-report-history');
         if (reportHistoryContainer) {
@@ -318,14 +327,9 @@ function renderDappDetailsPageWithHistory(
         }
     }).catch(error => {
         console.error(`Error getting current content hash for ${ensName}:`, error);
+        console.log('ens not resolved')
         
         // Still render the report history without the current content hash
-        const reportHistoryContainer = document.getElementById('dapp-report-history');
-        if (reportHistoryContainer) {
-            reportHistoryContainer.innerHTML = renderReportHistory(historicalReports, null);
-            // Set up event listeners for report toggles
-            setupReportToggleListeners();
-        }
     });
 }
 
