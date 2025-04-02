@@ -15,6 +15,7 @@ The following projects have .eth on their Twitter account, but don't have any we
  - [linea.eth](https://x.com/LineaBuild)
  - [optimism.eth](https://x.com/Optimism)
  - [consensys.eth](https://x.com/Consensys)
+ - [buidlguidl.eth](https://x.com/buidlguidl)
 
 
  ### Misconfigured projects
