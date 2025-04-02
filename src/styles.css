@@ -389,8 +389,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Style for domain links specifically */
-#dapps td:nth-child(5) .table__item a {
-    text-decoration: none;
+#dapps td:nth-child(6) .table__item a {
     color: var(--highlight-color);
     position: relative;
     padding: 0; /* Remove any padding */
@@ -2363,6 +2362,7 @@ html {
 #dapps td:nth-child(5) {
   text-align: center;
   width: 60px; /* Match the header width */
+  color: var(--text-color);
 }
 
 #dapps th:nth-child(5) {

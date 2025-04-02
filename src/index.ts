@@ -923,14 +923,6 @@ async function renderResultDiv(
             seedersLink.target = '_blank';
             seedersLink.className = 'seeders-value';
             
-            // Apply explicit inline styles to ensure visibility
-            seedersLink.style.color = '#333333'; // Darker color for better visibility
-            seedersLink.style.fontWeight = 'normal';
-            seedersLink.style.fontSize = '14px';
-            seedersLink.style.display = 'inline-block';
-            seedersLink.style.width = '100%';
-            seedersLink.style.textAlign = 'center';
-            
             // Clear the loading placeholder and add the link
             seedersDiv.innerHTML = '';
             seedersDiv.appendChild(seedersLink);
@@ -941,12 +933,6 @@ async function renderResultDiv(
             seedersDiv.innerHTML = '';
             const seedersText = document.createElement('span');
             seedersText.textContent = '?';
-            seedersText.style.color = '#333333'; // Darker color for better visibility
-            seedersText.style.fontWeight = 'normal';
-            seedersText.style.fontSize = '14px';
-            seedersText.style.display = 'inline-block';
-            seedersText.style.width = '100%';
-            seedersText.style.textAlign = 'center';
             seedersDiv.appendChild(seedersText);
         });
     } else {
@@ -954,12 +940,6 @@ async function renderResultDiv(
         seedersDiv.innerHTML = '';
         const seedersText = document.createElement('span');
         seedersText.textContent = '0';
-        seedersText.style.color = '#333333'; // Darker color for better visibility
-        seedersText.style.fontWeight = 'normal';
-        seedersText.style.fontSize = '14px';
-        seedersText.style.display = 'inline-block';
-        seedersText.style.width = '100%';
-        seedersText.style.textAlign = 'center';
         seedersDiv.appendChild(seedersText);
     }
 
@@ -971,8 +951,8 @@ async function renderResultDiv(
     domainLink.textContent = ensName;
     domainLink.target = '_blank';
     domainLink.className = 'link-style'; // Add class for styling
-    domainLink.style.color = '#0066cc'; // Blue color for links
-    domainLink.style.fontWeight = 'bold'; // Bold weight for links
+    // domainLink.style.color = '#0066cc'; // Blue color for links
+    // domainLink.style.fontWeight = 'bold'; // Bold weight for links
     domainDiv.appendChild(domainLink);
 
     // Add the row with the cells in the new order: score, name, risk, category, seeders, domain
