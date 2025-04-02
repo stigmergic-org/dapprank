@@ -34,7 +34,7 @@ let currentSortDirection = 'asc'; // Default sort direction
 let highestScore = 0;
 
 // Cache object for seeders data
-const seedersCache = new Map<string, number>();
+// const seedersCache = new Map<string, number>();
 
 // Interface for IPFS provider information
 interface IPFSProvider {
@@ -51,10 +51,10 @@ interface SeedersResponse {
 // Function to fetch seeders data for a CID
 async function fetchSeeders(cid: string): Promise<{count: number, providers: IPFSProvider[]}> {
     // Check cache first
-    if (seedersCache.has(cid)) {
-        // For cached counts, we only return the count without provider details
-        return { count: seedersCache.get(cid)!, providers: [] };
-    }
+    // if (seedersCache.has(cid)) {
+    //     // For cached counts, we only return the count without provider details
+    //     return { count: seedersCache.get(cid)!, providers: [] };
+    // }
     
     try {
         const response = await fetch(`https://delegated-ipfs.dev/routing/v1/providers/${cid}`);
@@ -68,12 +68,12 @@ async function fetchSeeders(cid: string): Promise<{count: number, providers: IPF
         const seedersCount = providers.length;
         
         // Cache the result
-        seedersCache.set(cid, seedersCount);
+        // seedersCache.set(cid, seedersCount);
         
         return { count: seedersCount, providers };
     } catch (error) {
         console.error(`Error fetching seeders for ${cid}:`, error);
-        return { count: 0, providers: [] };
+        return { count: -1, providers: [] };
     }
 }
 
@@ -481,6 +481,9 @@ function sortTable(columnIndex: number, direction: string) {
       // Seeders column - can be either an <a> link or a <span> for fallback
       aValue = parseInt(a.querySelector('td:nth-child(5) a, td:nth-child(5) span')?.textContent || '0', 10);
       bValue = parseInt(b.querySelector('td:nth-child(5) a, td:nth-child(5) span')?.textContent || '0', 10);
+
+      aValue = Number.isNaN(aValue) ? -1 : aValue
+      bValue = Number.isNaN(bValue) ? -1 : bValue
     } else if (columnIndex === 5) {
       // Domain column - direct selector for the link text
       aValue = a.querySelector('td:nth-child(6) a')?.textContent?.toLowerCase() || '';
@@ -915,7 +918,7 @@ async function renderResultDiv(
         fetchSeeders(dappData.report.contentHash).then(result => {
             // Create a link for the seeders count with more explicit styling
             const seedersLink = document.createElement('a');
-            seedersLink.textContent = result.count.toString();
+            seedersLink.textContent = result.count == -1 ? '?' : result.count.toString()
             seedersLink.href = `https://delegated-ipfs.dev/routing/v1/providers/${dappData.report.contentHash}`;
             seedersLink.target = '_blank';
             seedersLink.className = 'seeders-value';
@@ -937,7 +940,7 @@ async function renderResultDiv(
             // Replace loading indicator with error value with explicit styling
             seedersDiv.innerHTML = '';
             const seedersText = document.createElement('span');
-            seedersText.textContent = '0';
+            seedersText.textContent = '?';
             seedersText.style.color = '#333333'; // Darker color for better visibility
             seedersText.style.fontWeight = 'normal';
             seedersText.style.fontSize = '14px';
