@@ -33,6 +33,66 @@ let currentSortDirection = 'asc'; // Default sort direction
 // Replace the hasAddedCrownToFirstApp variable with a tracking of the highest score
 let highestScore = 0;
 
+// Cache object for seeders data
+const seedersCache = new Map<string, number>();
+
+// Interface for IPFS provider information
+interface IPFSProvider {
+    ID: string;
+    Addrs: string[];
+    Schema: string;
+}
+
+// Interface for seeders response
+interface SeedersResponse {
+    Providers: IPFSProvider[];
+}
+
+// Function to fetch seeders data for a CID
+async function fetchSeeders(cid: string): Promise<{count: number, providers: IPFSProvider[]}> {
+    // Check cache first
+    if (seedersCache.has(cid)) {
+        // For cached counts, we only return the count without provider details
+        return { count: seedersCache.get(cid)!, providers: [] };
+    }
+    
+    try {
+        const response = await fetch(`https://delegated-ipfs.dev/routing/v1/providers/${cid}`);
+        if (!response.ok) {
+            console.error(`Failed to fetch seeders for ${cid}: ${response.statusText}`);
+            return { count: 0, providers: [] };
+        }
+        
+        const data = await response.json() as SeedersResponse;
+        const providers = data.Providers || [];
+        const seedersCount = providers.length;
+        
+        // Cache the result
+        seedersCache.set(cid, seedersCount);
+        
+        return { count: seedersCount, providers };
+    } catch (error) {
+        console.error(`Error fetching seeders for ${cid}:`, error);
+        return { count: 0, providers: [] };
+    }
+}
+
+// Function to format provider IDs for the tooltip
+function formatProvidersForTooltip(providers: IPFSProvider[]): string {
+    if (providers.length === 0) {
+        return 'No seeders found';
+    }
+    
+    if (providers.length <= 3) {
+        // Show full details for few providers
+        return providers.map(p => `${p.ID.substring(0, 10)}... (${p.Addrs.length} addresses)`).join('\n');
+    } else {
+        // For many providers, just show the count and a few examples
+        const examples = providers.slice(0, 3).map(p => `${p.ID.substring(0, 10)}...`).join('\n');
+        return `${providers.length} seeders, including:\n${examples}\n...and ${providers.length - 3} more`;
+    }
+}
+
 // Table sorting functionality
 interface SortableColumn {
   index: number;
@@ -85,7 +145,13 @@ const sortableColumns: SortableColumn[] = [
   },
   {
     index: 4,
-    selector: 'td:nth-child(5) a',
+    selector: 'td:nth-child(5) a, td:nth-child(5) span',
+    type: 'number',
+    getValue: (row, selector) => parseInt(row.querySelector(selector)?.textContent || '0', 10)
+  },
+  {
+    index: 5,
+    selector: 'td:nth-child(6) a',
     type: 'domain',
     getValue: (row, selector) => {
       // Get the text content of the domain link
@@ -338,7 +404,8 @@ function setupTableSorting() {
         columnIndex = 0; // Score column index
       }
       else if (headerText === 'category') columnIndex = 3;
-      else if (headerText === 'domain' || headerText === 'link') columnIndex = 4;
+      else if (headerText === 'seeders') columnIndex = 4;
+      else if (headerText === 'domain' || headerText === 'link') columnIndex = 5;
       
       if (columnIndex === -1) {
         console.log(headerText, columnIndex)
@@ -354,8 +421,8 @@ function setupTableSorting() {
         // Toggle direction if same column
         direction = currentSortDirection === 'asc' ? 'desc' : 'asc';
       } else {
-        // Default to ascending for new column
-        direction = 'asc';
+        // Default to descending for Seeders column on first click, ascending for others
+        direction = columnIndex === 4 ? 'desc' : 'asc';
       }
       
       // Clear all sort indicators
@@ -411,9 +478,13 @@ function sortTable(columnIndex: number, direction: string) {
       aValue = a.querySelector('td:nth-child(4) .category-label')?.textContent?.toLowerCase() || '';
       bValue = b.querySelector('td:nth-child(4) .category-label')?.textContent?.toLowerCase() || '';
     } else if (columnIndex === 4) {
+      // Seeders column - can be either an <a> link or a <span> for fallback
+      aValue = parseInt(a.querySelector('td:nth-child(5) a, td:nth-child(5) span')?.textContent || '0', 10);
+      bValue = parseInt(b.querySelector('td:nth-child(5) a, td:nth-child(5) span')?.textContent || '0', 10);
+    } else if (columnIndex === 5) {
       // Domain column - direct selector for the link text
-      aValue = a.querySelector('td:nth-child(5) a')?.textContent?.toLowerCase() || '';
-      bValue = b.querySelector('td:nth-child(5) a')?.textContent?.toLowerCase() || '';
+      aValue = a.querySelector('td:nth-child(6) a')?.textContent?.toLowerCase() || '';
+      bValue = b.querySelector('td:nth-child(6) a')?.textContent?.toLowerCase() || '';
     } else {
       // Default case
       aValue = '';
@@ -705,7 +776,7 @@ function getCategoryColor(category: string): string {
     return `category-${cssCategory}`;
 }
 
-// Update renderResultDiv to add crown to highest scoring apps
+// Update renderResultDiv to add seeders column
 async function renderResultDiv(
     ensName: string, 
     dappData: DappData
@@ -829,6 +900,66 @@ async function renderResultDiv(
     categoryLabel.textContent = category;
     categoryDiv.appendChild(categoryLabel);
 
+    // Seeders cell
+    const seedersDiv = document.createElement('div');
+    seedersDiv.className = 'table__item';
+    
+    // Add a loading indicator initially
+    const loadingText = document.createElement('span');
+    loadingText.textContent = '...';
+    loadingText.className = 'seeders-loading';
+    seedersDiv.appendChild(loadingText);
+    
+    // Create seeders count element - now as a clickable link to data
+    if (dappData.report.contentHash) {
+        fetchSeeders(dappData.report.contentHash).then(result => {
+            // Create a link for the seeders count with more explicit styling
+            const seedersLink = document.createElement('a');
+            seedersLink.textContent = result.count.toString();
+            seedersLink.href = `https://delegated-ipfs.dev/routing/v1/providers/${dappData.report.contentHash}`;
+            seedersLink.target = '_blank';
+            seedersLink.className = 'seeders-value';
+            
+            // Apply explicit inline styles to ensure visibility
+            seedersLink.style.color = '#333333'; // Darker color for better visibility
+            seedersLink.style.fontWeight = 'normal';
+            seedersLink.style.fontSize = '14px';
+            seedersLink.style.display = 'inline-block';
+            seedersLink.style.width = '100%';
+            seedersLink.style.textAlign = 'center';
+            
+            // Clear the loading placeholder and add the link
+            seedersDiv.innerHTML = '';
+            seedersDiv.appendChild(seedersLink);
+        }).catch(error => {
+            console.error(`Error fetching seeders for ${ensName}:`, error);
+            
+            // Replace loading indicator with error value with explicit styling
+            seedersDiv.innerHTML = '';
+            const seedersText = document.createElement('span');
+            seedersText.textContent = '0';
+            seedersText.style.color = '#333333'; // Darker color for better visibility
+            seedersText.style.fontWeight = 'normal';
+            seedersText.style.fontSize = '14px';
+            seedersText.style.display = 'inline-block';
+            seedersText.style.width = '100%';
+            seedersText.style.textAlign = 'center';
+            seedersDiv.appendChild(seedersText);
+        });
+    } else {
+        // No content hash available, show 0 immediately with explicit styling
+        seedersDiv.innerHTML = '';
+        const seedersText = document.createElement('span');
+        seedersText.textContent = '0';
+        seedersText.style.color = '#333333'; // Darker color for better visibility
+        seedersText.style.fontWeight = 'normal';
+        seedersText.style.fontSize = '14px';
+        seedersText.style.display = 'inline-block';
+        seedersText.style.width = '100%';
+        seedersText.style.textAlign = 'center';
+        seedersDiv.appendChild(seedersText);
+    }
+
     // Domain cell (ENS name)
     const domainDiv = document.createElement('div');
     domainDiv.className = 'table__item';
@@ -836,10 +967,13 @@ async function renderResultDiv(
     domainLink.href = `https://${ensName}.link`;
     domainLink.textContent = ensName;
     domainLink.target = '_blank';
+    domainLink.className = 'link-style'; // Add class for styling
+    domainLink.style.color = '#0066cc'; // Blue color for links
+    domainLink.style.fontWeight = 'bold'; // Bold weight for links
     domainDiv.appendChild(domainLink);
 
-    // Add the row with the cells in the new order: score, name, risk, category, domain
-    addDappRow([scoreDiv, dappDiv, risksDiv, categoryDiv, domainDiv]);
+    // Add the row with the cells in the new order: score, name, risk, category, seeders, domain
+    addDappRow([scoreDiv, dappDiv, risksDiv, categoryDiv, seedersDiv, domainDiv]);
 }
 
 // Update the table header to include the score column

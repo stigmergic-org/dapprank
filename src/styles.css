@@ -28,6 +28,12 @@
   --border-radius: 8px;
   --transition-speed: 0.2s;
   --card-background-rgb: 255, 255, 255;
+  
+  /* Seeders color variables */
+  --seeders-high-color: #2a9d8f;
+  --seeders-medium-color: #f9a826;
+  --seeders-low-color: #e63946;
+  --seeders-error-color: #6c757d;
 }
 
 .dark-mode {
@@ -54,6 +60,12 @@
   --report-text-color: #ced4da;
   --report-subtext-color: #adb5bd;
   --card-background-rgb: 30, 30, 30;
+  
+  /* Seeders color variables in dark mode */
+  --seeders-high-color: #34d399;
+  --seeders-medium-color: #fbbf24;
+  --seeders-low-color: #f87171;
+  --seeders-error-color: #9ca3af;
 }
 
 body {
@@ -313,7 +325,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #dapps th:nth-child(5) {
     width: 15%; /* Link column */
-    text-align: right;
+    text-align: left;
     padding-right: 1.5rem;
 }
 
@@ -339,13 +351,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #dapps td:nth-child(5) {
-    text-align: right; /* Right align links */
+    text-align: left; /* Left align links */
     padding-right: 1.5rem; /* Increased padding for better spacing */
     white-space: nowrap; /* Prevent wrapping of link text */
 }
 
 #dapps td:nth-child(5) .table__item {
-    justify-content: flex-end; /* Right align the link cell content */
+    justify-content: flex-start; /* Left align the link cell content */
 }
 
 #dapps tr:last-child td {
@@ -1659,7 +1671,7 @@ th:hover {
     }
     
     #dapps th:nth-child(5) {
-        width: 150px; /* Fixed width for link column to prevent overlap */
+        width: 60px; /* Reduced width for seeders column - it only needs to display small numbers */
     }
     
     /* Ensure name column text doesn't overflow */
@@ -2310,13 +2322,13 @@ html {
 
 .pull-to-scroll-indicator span {
     display: inline-block;
-    animation: pulseAnimation 2s infinite;
+    animation: pulseAnimation 2s infinite ease-in-out;
 }
 
 @keyframes pulseAnimation {
-    0% { opacity: 0.7; transform: scale(0.95); }
-    50% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0.7; transform: scale(0.95); }
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
 }
 
 /* Ensure header text is properly visible and centered by default */
@@ -2335,10 +2347,86 @@ html {
     text-align: left;
 }
 
-/* Specific alignment for LINK column header */
+/* Specific alignment for SEEDERS column header */
 #dapps th:nth-child(5) .header-content {
-    justify-content: flex-end; /* Right align header content */
-    text-align: right;
+    justify-content: center; /* Center align header content */
+    text-align: center;
+}
+
+/* Specific alignment for LINK column header */
+#dapps th:nth-child(6) .header-content {
+    justify-content: flex-start; /* Left align header content */
+    text-align: left;
+}
+
+/* Center align the seeders column */
+#dapps td:nth-child(5) {
+  text-align: center;
+  width: 60px; /* Match the header width */
+}
+
+#dapps th:nth-child(5) {
+  text-align: center;
+  width: 60px; /* Consistent width */
+}
+
+/* Center the table item content in the seeders column */
+#dapps td:nth-child(5) .table__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 30px; /* Ensure minimum width for numbers */
+  max-width: 60px; /* Maximum width to match header */
+}
+
+/* Make the seeders value more prominent */
+#dapps td:nth-child(5) span {
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* Left align the link column and style links */
+#dapps td:nth-child(6) {
+  text-align: left;
+  width: 15%; /* Set a reasonable width for the link column */
+  max-width: 150px; /* Prevent it from getting too wide */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#dapps th:nth-child(6) {
+  text-align: left;
+  width: 15%;
+  max-width: 150px;
+}
+
+/* Style links in the Link column */
+.link-style {
+  color: var(--highlight-color);
+  text-decoration: none;
+  position: relative;
+}
+
+.link-style:hover {
+  text-decoration: underline;
+}
+
+.link-style:after {
+  content: '↗';
+  display: inline-block;
+  margin-left: 2px;
+  font-size: 0.8em;
+  position: relative;
+  top: -1px;
+}
+
+/* Remove all link styling from seeders column */
+#dapps td:nth-child(5) a,
+#dapps td:nth-child(5) a:hover {
+  color: inherit;
+  text-decoration: none;
+  font-weight: normal;
 }
 
 /* Additional report page styles */
@@ -2481,4 +2569,68 @@ html {
         grid-column: 2;
         justify-self: start;
     }
+}
+
+/* Hide unused styles */
+.seeders-count,
+.seeders-high,
+.seeders-medium,
+.seeders-low,
+.seeders-error,
+.seeders-count[data-title]:hover:after,
+.seeders-tooltip[data-title]:hover:after {
+  display: none;
+}
+
+/* Mobile responsiveness for the columns */
+@media (max-width: 768px) {
+  #dapps th:nth-child(5) {
+    width: 50px; /* Even narrower on tablets */
+  }
+  
+  #dapps td:nth-child(5) {
+    width: 50px;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  
+  #dapps td:nth-child(6),
+  #dapps th:nth-child(6) {
+    width: 100px;
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Optimize space on very small screens */
+  #dapps th:nth-child(5) {
+    width: 40px;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  
+  #dapps td:nth-child(5) {
+    width: 40px;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  
+  #dapps td:nth-child(6),
+  #dapps th:nth-child(6) {
+    width: 80px;
+    max-width: 80px;
+  }
+}
+
+/* Add loading indicator style */
+.seeders-loading {
+  display: inline-block;
+  color: var(--report-subtext-color);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
