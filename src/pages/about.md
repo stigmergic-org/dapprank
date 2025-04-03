@@ -21,6 +21,9 @@ The risk of a dapp is assessed based on the three main criteria: distribution pu
 - **Web3 api usage** is currently assessed based on if the dapp uses the *window.ethereum* or a local rpc endpoint.
 
 
+### What is Corruption Resistance"?
+The term "corruption resistance" is aimed at generalizing the term "censorship resistance" to be more encompassing to scenarios that includes malicious or hacked developers. In the case of dapps it's aimed to strive for the case where the application is deployed in such a way where a corrupt developer can not harm their users very easily.
+
 ### How can I help?
 
 Build a dapp that is useful to others!

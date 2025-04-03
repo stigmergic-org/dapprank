@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "contentHash": "bafybeia5byb5rrsjv7ir5f6wgmnn2izlflhc6fsxxk556l2uph7rs7otue",
+  "timestamp": 1743668121,
+  "blockNumber": 22187130,
+  "totalSize": 2452890,
+  "favicon": "nns.svg",
+  "title": "Nick Name Service (NNS)",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "assets/index-BXiJ_fQB.js",
+        "offenders": [
+          "https://www.walletlink.org",
+          "https://docs.cloud.coinbase.com/wallet-sdk/docs/errors",
+          "https://api.wallet.coinbase.com/rpc/v2/desktop/chrome",
+          "https://go.cb-w.com/walletlink"
+        ]
+      },
+      {
+        "file": "assets/index-CDjaS65L.js",
+        "offenders": [
+          "https://rpc.walletconnect.org",
+          "https://pulse.walletconnect.org",
+          "https://api.web3modal.org",
+          "https://secure.walletconnect.org",
+          "https://meldcrypto.com",
+          "https://viem.sh",
+          "https://t.me",
+          "https://rpc.walletconnect.org/v1",
+          "https://verify.walletconnect.com",
+          "https://verify.walletconnect.org",
+          "https://echo.walletconnect.com",
+          "https://pulse.walletconnect.org/batch",
+          "https://rpc.walletconnect.org/v1/",
+          "https://secure.walletconnect.org/sdk",
+          "https://viem.sh",
+          "https://ipfs.io",
+          "https://arweave.net",
+          "https://oxlib.sh${s??",
+          "https://rpc.walletconnect.org/v1/",
+          "https://secure.walletconnect.org",
+          "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "https://mainnet.base.org",
+          "https://basescan.org",
+          "https://api.basescan.org/api",
+          "https://eth.merkle.io",
+          "https://etherscan.io",
+          "https://api.etherscan.io/api",
+          "https://rpc.walletconnect.org/v1",
+          "https://solscan.io",
+          "https://rpc.walletconnect.org/v1",
+          "https://solscan.io",
+          "https://rpc.walletconnect.org/v1",
+          "https://solscan.io",
+          "https://rpc.walletconnect.org/v1",
+          "https://rpc.walletconnect.org/v1",
+          "https://wagmi.sh/core",
+          "https://nicknameservice.eth.limo",
+          "https://robohash.org/${i}.png",
+          "https://mainnet.base.org",
+          "https://basescan.org"
+        ]
+      },
+      {
+        "file": "assets/index-DJzGXEZ6.js",
+        "offenders": [
+          "https://walletconnect.com/faq"
+        ]
+      },
+      {
+        "file": "assets/index-DfpmT7Zu.js",
+        "offenders": [
+          "https://walletconnect.com/explorer"
+        ]
+      },
+      {
+        "file": "assets/index-oZefQTvi.js",
+        "offenders": [
+          "https://keys.coinbase.com/connect",
+          "http://rpc.wallet.coinbase.com",
+          "https://www.walletlink.org",
+          "https://go.cb-w.com/walletlink",
+          "https://docs.cloud.coinbase.com/wallet-sdk/docs/errors"
+        ]
+      }
+    ],
+    "websocket": [
+      {
+        "file": "assets/index-CDjaS65L.js",
+        "offenders": [
+          "wss://relay.walletconnect.org",
+          "wss://relay.walletconnect.org"
+        ]
+      }
+    ],
+    "webrtc": []
+  },
+  "web3": [
+    {
+      "file": "assets/index-BXiJ_fQB.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-CDjaS65L.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    }
+  ]
+}

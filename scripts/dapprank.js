@@ -44,6 +44,7 @@ program
     .command('add')
     .description('Add a new report for an ENS domain')
     .argument('<ens-name>', 'ENS name to analyze')
+    .option('-f, --force', 'Force analysis even if a report exists for this CID', false)
     .action(async (ensName, options) => {
         // Validate that this is an ENS name
         if (!ensName.endsWith('.eth')) {
@@ -70,8 +71,8 @@ program
             process.exit(1);
         }
         
-        // Check if a report for this CID already exists
-        if (await reportExistsForCID(ensName, rootCID)) {
+        // Check if a report for this CID already exists (skip this check if force option is enabled)
+        if (!options.force && await reportExistsForCID(ensName, rootCID)) {
             console.log(`Report for CID ${rootCID} already exists. Skipping...`);
             return;
         }
