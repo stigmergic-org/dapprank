@@ -8,6 +8,7 @@ import { join } from 'path'
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
 import { glob } from 'glob'
+import { WASMagic } from "wasmagic";
 
 const WEB3_APIs = [
     { url: 'http://localhost:5001', service: 'ipfs', risk: 'none' },
@@ -45,6 +46,7 @@ program
     .description('Add a new report for an ENS domain')
     .argument('<ens-name>', 'ENS name to analyze')
     .option('-f, --force', 'Force analysis even if a report exists for this CID', false)
+    .option('-n, --no-save', 'Skip saving the report to disk and print to console instead', true)
     .action(async (ensName, options) => {
         // Validate that this is an ENS name
         if (!ensName.endsWith('.eth')) {
@@ -77,11 +79,19 @@ program
             return;
         }
         
-        // Generate and save report
+        // Generate report
         console.log(`Analyzing ${rootCID}...`);
         const { report, faviconInfo } = await generateReport(kubo, rootCID, blockNumber);
-        await saveReport(report, ensName, blockNumber, kubo, faviconInfo);
-        console.log(`Analysis complete for ${ensName}`);
+        
+        if (!options.save) {
+            // Print report to console
+            console.log(JSON.stringify(report, null, 2));
+            console.log(`Analysis complete for ${ensName} (report not saved)`);
+        } else {
+            // Save report to disk
+            await saveReport(report, ensName, blockNumber, kubo, faviconInfo);
+            console.log(`Analysis complete for ${ensName}`);
+        }
     });
 
 // Update command
@@ -511,8 +521,27 @@ function analyzeDistributionPurity(fileContent) {
     return analysis;
 }
 
+async function detectMimeType(kubo, cid) {
+    try {
+        const chunks = [];
+        for await (const chunk of kubo.cat(cid)) {
+            chunks.push(chunk);
+        }
+        const buffer = Buffer.concat(chunks);
+        const magic = await WASMagic.create();
+        return magic.detect(buffer)
+    } catch (error) {
+        if (error.message === 'this dag node is a directory') {
+            return 'inode/directory'
+        } else {
+            return 'application/octet-stream'
+        }
+    }
+}
+
 async function generateReport(kubo, rootCID, blockNumber = null) {
     try {
+        const rootMimeType = await detectMimeType(kubo, rootCID);
         const files = await getFilesFromCID(kubo, rootCID);
 
         const report = {
@@ -520,6 +549,7 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
             contentHash: rootCID,
             timestamp: Math.floor(Date.now() / 1000),
             blockNumber: blockNumber ? Number(blockNumber) : null,
+            rootMimeType: rootMimeType,
             totalSize: 0,
             favicon: '',
             title: '',

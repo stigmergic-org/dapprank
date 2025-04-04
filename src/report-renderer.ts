@@ -8,6 +8,39 @@ import {
 } from './components/report-details/details-v1';
 import { renderOutdatedWarning } from './components/report-details/details-outdated';
 
+// Helper function to get an appropriate icon based on MIME type
+export function getMimeTypeIcon(mimeType: string | null | undefined): string {
+    if (!mimeType) {
+        return './images/icons/default.png';
+    } else if (mimeType === 'inode/directory') {
+        return './images/icons/default.png';
+    } else if (mimeType.startsWith('text/html')) {
+        return './images/icons/html.png';
+    } else if (mimeType.startsWith('image/jpeg')) {
+        return './images/icons/jpg.png';
+    } else if (mimeType.startsWith('image/png')) {
+        return './images/icons/png.png';
+    } else if (mimeType.startsWith('application/pdf')) {
+        return './images/icons/pdf.png';
+    } else if (mimeType.startsWith('application/json')) {
+        return './images/icons/json.png';
+    } else if (mimeType.startsWith('application/xml') || 
+               mimeType.startsWith('text/xml')) {
+        return './images/icons/xml.png';
+    } else if (mimeType.startsWith('text/csv')) {
+        return './images/icons/csv.png';
+    } else if (mimeType.includes('zip') || 
+               mimeType.includes('compressed')) {
+        return './images/icons/zip.png';
+    } else if (mimeType.includes('document') || 
+               mimeType.includes('msword') ||
+               mimeType.includes('officedocument')) {
+        return './images/icons/doc.png';
+    } else {
+        return './images/icons/file.png';
+    }
+}
+
 // Function to render detailed report information based on version
 export function renderReportDetails(report: any): string {
     // Use the appropriate renderer based on report version
@@ -115,9 +148,13 @@ export async function loadHistoricalReports(ensName: string, currentBlockNumber?
         let latestMetadata: DappMetadata = await getJson(fs, root, 'metadata.json');
         
         // Construct the favicon URL for the latest report
-        const faviconUrl = latestReport.favicon 
-            ? `./dapps/archive/${ensName}/${latestBlockNumber}/${latestReport.favicon}` 
-            : './images/default-icon.png';
+        let faviconUrl = '';
+        if (latestReport.favicon) {
+            faviconUrl = `./dapps/archive/${ensName}/${latestBlockNumber}/${latestReport.favicon}`;
+        } else {
+            // Select icon based on rootMimeType
+            faviconUrl = getMimeTypeIcon(latestReport.rootMimeType);
+        }
             
         // Create the latest dapp data object
         const latestDappData = {
@@ -188,7 +225,7 @@ function renderDappDetailsPageWithHistory(
                 <div class="dapp-icon-title">
                     ${dappData.favicon ? 
                         `<img src="${dappData.favicon}" alt="${title} icon" class="dapp-icon">` : 
-                        `<img src="./images/default-icon.png" alt="Default icon" class="dapp-icon">`}
+                        `<img src="${getMimeTypeIcon(dappData.report.rootMimeType)}" alt="${dappData.report.rootMimeType || 'Default'} icon" class="dapp-icon">`}
                     <h1>${title}</h1>
                 </div>
                 <div class="dapp-header-right">

@@ -44,6 +44,14 @@ export function renderReportDetails(report: any): string {
                       <span class="item-icon">⛓️</span> ${report.blockNumber}
                   </span>
               </div>
+              ${report.rootMimeType ? `
+              <div class="report-item">
+                  <span class="report-label">MIME Type:</span>
+                  <span class="report-value">
+                      <span class="item-icon">🗃️</span> ${report.rootMimeType}
+                  </span>
+              </div>
+              ` : ''}
             </div>
         </div>
     `;

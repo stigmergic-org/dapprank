@@ -3,6 +3,7 @@ import { createRiskChart } from './pie-chart'
 import { renderDappDetailsPage } from './report-renderer'
 import { isContentHashOutdated } from './ens-resolver'
 import { fetchCar, getJson } from './ipfs-utils'
+import { getMimeTypeIcon } from './report-renderer'
 
 // @ts-ignore
 import about from './pages/about.md'
@@ -318,6 +319,7 @@ interface DappData {
         blockNumber: number;
         totalSize: number;
         hasFavicon: boolean;
+        rootMimeType?: string;
         distributionPurity: {
             externalScripts: any[];
             externalMedia: {
@@ -691,9 +693,13 @@ async function processDappData(root: CID, dappName: string, fs: any) {
         let report = await getJson(fs, root, `${dappName}/report.json`);
 
         // Construct the favicon URL using archive directory with the block number
-        const faviconUrl = report.favicon 
-            ? `./dapps/archive/${dappName}/${report.blockNumber}/${report.favicon}` 
-            : './images/default-icon.png';
+        let faviconUrl = '';
+        if (report.favicon) {
+            faviconUrl = `./dapps/archive/${dappName}/${report.blockNumber}/${report.favicon}`;
+        } else {
+            // Select icon based on rootMimeType
+            faviconUrl = getMimeTypeIcon(report.rootMimeType);
+        }
 
         // Create DappData object with all available information
         const dappData: DappData = {
@@ -825,8 +831,8 @@ async function renderResultDiv(
     
     // Add the dapp icon
     const dappIcon = document.createElement('img');
-    dappIcon.src = dappData.favicon
-    dappIcon.alt = 'dapp-logo';
+    dappIcon.src = dappData.favicon;
+    dappIcon.alt = dappData.report.rootMimeType ? `${dappData.report.rootMimeType} icon` : 'dapp-logo';
     dappIcon.width = 24;
     dappIcon.height = 24;
     iconContainer.appendChild(dappIcon);
@@ -951,8 +957,6 @@ async function renderResultDiv(
     domainLink.textContent = ensName;
     domainLink.target = '_blank';
     domainLink.className = 'link-style'; // Add class for styling
-    // domainLink.style.color = '#0066cc'; // Blue color for links
-    // domainLink.style.fontWeight = 'bold'; // Bold weight for links
     domainDiv.appendChild(domainLink);
 
     // Add the row with the cells in the new order: score, name, risk, category, seeders, domain
