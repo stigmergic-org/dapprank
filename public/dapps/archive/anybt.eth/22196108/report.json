@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "contentHash": "bafybeifc4qxbfptakdq67u5l45cezp4ikofpqj4tt2cawyynlwodpzghjq",
+  "timestamp": 1743776398,
+  "blockNumber": 22196108,
+  "rootMimeType": "inode/directory",
+  "totalSize": 3874304,
+  "favicon": "favicon.vnd.microsoft.icon",
+  "title": "AnyBT",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "index-44e9cf22.js",
+        "offenders": [
+          "https://gateway.pinata.cloud/ipfs,https://cloudflare-ipfs.com/ipfs,https://hardbin.com/ipfs"
+        ]
+      },
+      {
+        "file": "index-b289f123.js",
+        "offenders": [
+          "https://reactjs.org/docs/error-decoder.html?invariant=",
+          "https://gateway.magnode.ru",
+          "https://gateway.magnode.ru",
+          "https://gw.magnode.ru",
+          "https://cloudflare-ipfs.com",
+          "https://gateway.ipfs.io",
+          "https://dweb.link",
+          "https://ipfs.fleek.co",
+          "https://gateway.pinata.cloud"
+        ]
+      }
+    ],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

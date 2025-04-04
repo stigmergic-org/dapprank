@@ -1,0 +1,270 @@
+{
+  "version": 1,
+  "contentHash": "bafybeifyauigle3eicgpguktys72z7ayuovexdlyxqkh3ban4obngwmcoe",
+  "timestamp": 1743776295,
+  "blockNumber": 22196095,
+  "rootMimeType": "inode/directory",
+  "totalSize": 295788246,
+  "favicon": "c941d3c8b8040ac5999d93e0edb92ad0.jpg",
+  "title": "Nedtzo Art",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "assets/blocks/POAP/poap.js",
+        "offenders": [
+          "https://testnet.rss3.io/data/accounts/${userid}/activities?limit=100&action_limit=10&platform=POAP",
+          "https://collectors.poap.xyz/token/${id}"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index-0f05fef0.js",
+        "offenders": [
+          "https://www.walletlink.org",
+          "https://docs.cloud.coinbase.com/wallet-sdk/docs/errors",
+          "https://api.wallet.coinbase.com/rpc/v2/desktop/chrome",
+          "https://go.cb-w.com/walletlink"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index-236adf03.js",
+        "offenders": [
+          "https://rpc.walletconnect.com/v1"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index-2a4539af.js",
+        "offenders": [
+          "https://docs.cloud.coinbase.com/wallet-sdk/docs/errors",
+          "https://keys.coinbase.com/connect",
+          "https://www.walletlink.org",
+          "https://go.cb-w.com/walletlink"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index-6fce87de.js",
+        "offenders": [
+          "https://explorer.walletconnect.com/?type=wallet"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index-c3d9f118.js",
+        "offenders": [
+          "https://explorer-api.walletconnect.com"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index-f5ba1ec2.js",
+        "offenders": [
+          "https://reactjs.org/docs/error-decoder.html?invariant=",
+          "https://viem.sh",
+          "https://ipfs.io",
+          "https://arweave.net",
+          "https://wagmi.sh/core",
+          "https://wagmi.sh/react",
+          "https://arb1.arbitrum.io/rpc",
+          "https://arbiscan.io",
+          "https://api.arbiscan.io/api",
+          "https://mainnet.base.org",
+          "https://basescan.org",
+          "https://api.basescan.org/api",
+          "https://cloudflare-eth.com",
+          "https://etherscan.io",
+          "https://api.etherscan.io/api",
+          "https://mainnet.optimism.io",
+          "https://optimistic.etherscan.io",
+          "https://api-optimistic.etherscan.io/api",
+          "https://walletconnect.com/faq",
+          "https://rpc.walletconnect.org",
+          "https://pulse.walletconnect.org",
+          "https://api.web3modal.org",
+          "https://secure.walletconnect.org",
+          "https://secure.walletconnect.org/sdk",
+          "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "https://walletconnect.com/explorer",
+          "https://secure.walletconnect.org",
+          "https://web3modal.com",
+          "https://avatars.githubusercontent.com/u/37784886",
+          "https://apihash.webhash.com/cryptoblock"
+        ]
+      },
+      {
+        "file": "assets/blocks/cryptopay/index.es-fe3b6058.js",
+        "offenders": [
+          "https://rpc.walletconnect.com/v1",
+          "https://verify.walletconnect.com",
+          "https://verify.walletconnect.org",
+          "https://echo.walletconnect.com",
+          "https://rpc.walletconnect.com/v1/",
+          "https://rpc.walletconnect.com/v1/"
+        ]
+      },
+      {
+        "file": "assets/blocks/efp/efp.js",
+        "offenders": [
+          "https://api.ethfollow.xyz/api/v1/users/${ensName}/followers?include=ens&limit=10",
+          "https://api.ethfollow.xyz/api/v1/users/${ensName}/following?include=ens&limit=10",
+          "https://via.placeholder.com/50",
+          "https://via.placeholder.com/50"
+        ]
+      },
+      {
+        "file": "assets/blocks/farcaster/farcaster.js",
+        "offenders": [
+          "https://testnet.rss3.io/data/accounts/${keyword}/profiles?platform=Farcaster",
+          "https://testnet.rss3.io/data/accounts/${encodeURIComponent(keyword)}/activities?limit=${limit}&direction=out&action_limit=1&platform=Farcaster",
+          "https://w3s.link/ipfs/${ipfsUrl.slice(7)}"
+        ]
+      },
+      {
+        "file": "assets/blocks/mirror/mirror.js",
+        "offenders": [
+          "https://1w3.spheron.link/ipfs/${url.slice(7)}",
+          "https://testnet.rss3.io/data/accounts/${encodeURIComponent(accountID)}/activities?limit=100&action_limit=10&platform=Mirror"
+        ]
+      },
+      {
+        "file": "assets/js/libraries/html5-qrcode.min.js",
+        "offenders": [
+          "https://github.com/mebjas/html5-qrcode"
+        ]
+      },
+      {
+        "file": "assets/js/libraries/quill.min.js",
+        "offenders": [
+          "https://quilljs.com",
+          "https://quilljs.com"
+        ]
+      },
+      {
+        "file": "assets/js/nft-card.min.js",
+        "offenders": [
+          "https://api.opensea.io/jsonrpc/v1/",
+          "https://rinkeby-api.opensea.io/jsonrpc/v1/",
+          "https://api.opensea.io",
+          "https://rinkeby-api.opensea.io",
+          "https://opensea.io",
+          "https://rinkeby.opensea.io",
+          "https://opensea.io/static/images/opensea-icon.png",
+          "https://github.com/ethereum/eips/issues/1155",
+          "https://example.com",
+          "https://i.redditmedia.com/NaFzmSbDX2T2RALMxy2tmGJN_gPVNH9lJggCKUDDqcc.jpg?w=320&s=3913239508209aaf6ba1188fe3d3b5fc",
+          "https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/ownership/Ownable.sol",
+          "https://i.redditmedia.com/NaFzmSbDX2T2RALMxy2tmGJN_gPVNH9lJggCKUDDqcc.jpg?w=320&s=3913239508209aaf6ba1188fe3d3b5fc",
+          "https://etherscan.io/address/",
+          "https://opensea.io/static/images/opensea-icon.png",
+          "https://github.com/ethereum/eips/issues/20",
+          "https://opensea.io/static/images/opensea-icon.png",
+          "http://erc721.org/",
+          "https://github.com/indutny/elliptic/issues",
+          "https://github.com/indutny/elliptic",
+          "https://cryptokitties.co",
+          "https://api.cryptokitties.co/kitties/",
+          "https://www.cryptokitties.co/kitty/",
+          "https://www.cryptokitties.co/kitty/",
+          "https://www.larvalabs.com/cryptopunks/cryptopunk2838.png",
+          "https://www.larvalabs.com/cryptopunks",
+          "https://www.larvalabs.com/cryptopunks/cryptopunk",
+          "https://www.larvalabs.com/cryptopunks/details/",
+          "https://enjincoin.io/",
+          "https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md",
+          "https://etherscan.io/enslookup?q=",
+          "https://ens.domains/",
+          "https://i.redditmedia.com/NaFzmSbDX2T2RALMxy2tmGJN_gPVNH9lJggCKUDDqcc.jpg?w=320&s=3913239508209aaf6ba1188fe3d3b5fc",
+          "https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/ownership/Ownable.sol",
+          "https://i.redditmedia.com/NaFzmSbDX2T2RALMxy2tmGJN_gPVNH9lJggCKUDDqcc.jpg?w=320&s=3913239508209aaf6ba1188fe3d3b5fc",
+          "https://etherscan.io/address/",
+          "https://cryptokitties.co",
+          "https://www.cryptokitties.co/kitty/",
+          "https://d30y9cdsu7xlg0.cloudfront.net/png/45447-200.png",
+          "https://github.com/projectwyvern/wyvern-schemas",
+          "https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md",
+          "https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md",
+          "https://ens.domains/",
+          "https://i.redditmedia.com/NaFzmSbDX2T2RALMxy2tmGJN_gPVNH9lJggCKUDDqcc.jpg?w=320&s=3913239508209aaf6ba1188fe3d3b5fc",
+          "https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/ownership/Ownable.sol",
+          "https://i.redditmedia.com/NaFzmSbDX2T2RALMxy2tmGJN_gPVNH9lJggCKUDDqcc.jpg?w=320&s=3913239508209aaf6ba1188fe3d3b5fc",
+          "https://rinkeby.etherscan.io/address/",
+          "https://cointelegraph.com/storage/uploads/view/f88e17e41f607dc0aef238230dd40cc6.png",
+          "https://projectwyvern.com",
+          "https://cointelegraph.com/storage/uploads/view/f88e17e41f607dc0aef238230dd40cc6.png",
+          "https://www.projectwyvern.com",
+          "https://mainnet.infura.io",
+          "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500&display=swap"
+        ]
+      }
+    ],
+    "websocket": [
+      {
+        "file": "assets/blocks/cryptopay/index.es-fe3b6058.js",
+        "offenders": [
+          "wss://relay.walletconnect.com",
+          "wss://relay.walletconnect.org",
+          "wss://relay.walletconnect.com",
+          "wss://relay.walletconnect.com"
+        ]
+      }
+    ],
+    "webrtc": []
+  },
+  "web3": [
+    {
+      "file": "assets/blocks/cryptopay/index-0f05fef0.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/blocks/cryptopay/index-f5ba1ec2.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    },
+    {
+      "file": "assets/js/nft-card.min.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        },
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        },
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        },
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        },
+        {
+          "service": "ethereum",
+          "url": "http://localhost:8545",
+          "risk": "none"
+        },
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    }
+  ]
+}
