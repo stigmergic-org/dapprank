@@ -11,6 +11,8 @@ import about from './pages/about.md'
 import bestPractices from './pages/best-practices.md'
 // @ts-ignore
 import shameList from './pages/shame-list.md'
+// @ts-ignore
+import terms from './pages/terms.md'
 
 import { CID } from 'multiformats/cid';
 
@@ -215,6 +217,8 @@ function handleRouteChange() {
         displayContent(bestPractices);
     } else if (path === '/shame-list') {
         displayContent(shameList);
+    } else if (path === '/terms') {
+        displayContent(terms);
     }
 }
 

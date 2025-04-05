@@ -599,20 +599,49 @@ code {
     bottom: 0;
     width: 100%;
     text-align: center;
-    padding: 2rem 0;
-    margin-top: 2rem;
+    padding: 1.25rem 0 0.75rem; /* Reduced padding for mobile */
+    margin-top: 1.5rem;
     background-color: var(--secondary-background);
     border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem; /* Reduced gap */
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.footer-legal {
+    padding-top: 0.4rem; /* Reduced padding on mobile */
+    border-top: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 90%;
+    text-align: center;
 }
 
 .footer a {
     display: inline-flex;
     align-items: center;
-    margin: 0 0.75rem;
     text-decoration: none;
     color: var(--text-color);
     opacity: 0.8;
     transition: opacity var(--transition-speed) ease;
+    margin: 0.2rem; /* Reduced margin */
+}
+
+.social-link {
+    margin: 0 0.5rem;
+}
+
+.terms-link {
+    font-size: 0.85rem; /* Slightly smaller font */
+    opacity: 0.7;
+    padding: 0.25rem 0; /* Reduced vertical padding */
 }
 
 .footer a:hover {
@@ -1582,14 +1611,9 @@ th:hover {
         scroll-snap-type: x proximity;
     }
     
+    /* Mobile footer adjustments */
     .footer {
-        padding: 1.5rem 0;
-        margin-top: 1.5rem;
         flex-wrap: wrap;
-    }
-    
-    .footer a {
-        margin: 0.5rem;
     }
     
     #dapps td {
