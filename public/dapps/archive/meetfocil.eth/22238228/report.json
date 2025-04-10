@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "contentHash": "bafybeih3vnjutnueboxrq5qvgfzmiu6uczbglgbhurhwdyt5tzuxwkcblm",
+  "timestamp": 1744284526,
+  "blockNumber": 22238228,
+  "rootMimeType": "inode/directory",
+  "totalSize": 4573216,
+  "favicon": "logo.png",
+  "title": "Home | FOCIL",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "404.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i"
+          },
+          {
+            "type": "link",
+            "url": "https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "focil-but-with-transaction-hashes/index.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i"
+          },
+          {
+            "type": "link",
+            "url": "https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "il-flooding-in-focil/index.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i"
+          },
+          {
+            "type": "link",
+            "url": "https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "index.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i"
+          },
+          {
+            "type": "link",
+            "url": "https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "transaction-invalidation/index.html",
+        "offenders": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i"
+          },
+          {
+            "type": "link",
+            "url": "https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "404.html",
+        "offenders": [
+          "https://schema.org"
+        ]
+      },
+      {
+        "file": "focil-but-with-transaction-hashes/index.html",
+        "offenders": [
+          "https://schema.org"
+        ]
+      },
+      {
+        "file": "il-flooding-in-focil/index.html",
+        "offenders": [
+          "https://schema.org"
+        ]
+      },
+      {
+        "file": "index.html",
+        "offenders": [
+          "https://schema.org"
+        ]
+      },
+      {
+        "file": "transaction-invalidation/index.html",
+        "offenders": [
+          "https://schema.org"
+        ]
+      }
+    ],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": []
+}

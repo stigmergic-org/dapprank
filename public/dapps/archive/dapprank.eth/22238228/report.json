@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "contentHash": "bafybeicqsmt6tunfphct5dczrnnf23yculkw3t3i2rkjfjtbo3eklmgfhu",
+  "timestamp": 1744284500,
+  "blockNumber": 22238228,
+  "rootMimeType": "inode/directory",
+  "totalSize": 11794807,
+  "favicon": "favicon.ico",
+  "title": "Dapp Rank - Benchmarks Censorship Resistance",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": {
+    "http": [
+      {
+        "file": "859.2f1ed26ad45a097d67ef.js",
+        "offenders": [
+          "https://viem.sh",
+          "https://ipfs.io",
+          "https://arweave.net",
+          "https://oxlib.sh${r??",
+          "https://eth.merkle.io",
+          "https://etherscan.io",
+          "https://api.etherscan.io/api"
+        ]
+      },
+      {
+        "file": "index.4f6ffd06d0e8dd619676.js",
+        "offenders": [
+          "https://webui.ipfs.io/#/ipfs/",
+          "https://webui.ipfs.io/#/ipfs/",
+          "https://delegated-ipfs.dev/routing/v1/providers/",
+          "https://github.com/stigmergic-org/dapprank/issues/new?template=dapp-request.yml&title="
+        ]
+      }
+    ],
+    "websocket": [],
+    "webrtc": []
+  },
+  "web3": [
+    {
+      "file": "index.4f6ffd06d0e8dd619676.js",
+      "offenders": [
+        {
+          "service": "ethereum",
+          "url": "window.ethereum",
+          "risk": "none"
+        }
+      ]
+    }
+  ]
+}
