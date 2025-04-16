@@ -274,8 +274,9 @@ async function reportExistsForCID(ensName, cid) {
             const reportContent = await fs.readFile(reportPath, 'utf-8');
             const reportData = JSON.parse(reportContent);
             
-            // Check if the CID matches
-            return reportData.contentHash === cid;
+            // Check if both the CID and version match
+            // If the CID matches but version is outdated, return false so a new report will be created
+            return reportData.contentHash === cid && reportData.version === ANALYSIS_VERSION;
         } catch (readError) {
             console.log(`Error reading latest report file ${reportPath}:`, readError.message);
             return false;
