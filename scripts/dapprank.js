@@ -11,11 +11,41 @@ import { promises as fs } from 'fs'
 import { join } from 'path'
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
+import crypto from 'crypto'
 import { WASMagic } from "wasmagic"
 import * as cheerio from 'cheerio'
-import * as acorn from 'acorn'
-import * as acornWalk from 'acorn-walk'
 import { GoogleGenAI } from "@google/genai"
+
+// Cache for script analysis to avoid repeated AI calls for identical content
+const scriptAnalysisCache = new Map();
+const CACHE_FILE_PATH = join(process.cwd(), 'script-analysis-cache.json');
+
+// Load cache from disk if it exists
+async function loadScriptAnalysisCache() {
+    try {
+        const cacheExists = await fs.access(CACHE_FILE_PATH).then(() => true).catch(() => false);
+        if (cacheExists) {
+            const cacheData = JSON.parse(await fs.readFile(CACHE_FILE_PATH, 'utf-8'));
+            Object.entries(cacheData).forEach(([key, value]) => {
+                scriptAnalysisCache.set(key, value);
+            });
+            console.log(`Loaded script analysis cache with ${scriptAnalysisCache.size} entries`);
+        }
+    } catch (error) {
+        console.error('Failed to load script analysis cache:', error.message);
+    }
+}
+
+// Save cache to disk
+async function saveScriptAnalysisCache() {
+    try {
+        const cacheData = Object.fromEntries(scriptAnalysisCache.entries());
+        await fs.writeFile(CACHE_FILE_PATH, JSON.stringify(cacheData, null, 2));
+        console.log(`Saved script analysis cache with ${scriptAnalysisCache.size} entries`);
+    } catch (error) {
+        console.error('Failed to save script analysis cache:', error.message);
+    }
+}
 
 const WEB3_APIs = [
     { url: 'http://localhost:8545', service: 'ethereum', risk: 'none' },
@@ -107,6 +137,9 @@ program
             await saveReport(report, ensName, blockNumber, kubo, faviconInfo);
             console.log(`Analysis complete for ${ensName}`);
         }
+        
+        // Save the cache after analysis
+        await saveScriptAnalysisCache();
     });
 
 // Update command
@@ -170,6 +203,9 @@ program
                 }
             }
             
+            // Save the cache after all processing is complete
+            await saveScriptAnalysisCache();
+            
             console.log('\nUpdate completed!');
         } catch (error) {
             console.error(`Error accessing index directory: ${error.message}`);
@@ -191,7 +227,13 @@ program
         
         // Print report to console
         console.log(JSON.stringify(report, null, 2));
+
+        // Save the cache after analysis
+        await saveScriptAnalysisCache();
     });
+
+// Load the cache before parsing commands
+await loadScriptAnalysisCache();
 
 program.parseAsync();
 
@@ -578,6 +620,20 @@ async function analyzeIndividualScript(filePath, scriptText) {
             // console.log(`Found ${count} occurrences of window.ethereum in ${filePath}`);
         }
         
+        // Create a hash of the script content to use as a cache key
+        const hash = crypto.createHash('sha256').update(scriptText).digest('hex');
+        
+        // Check if we already have an analysis for this script content
+        if (scriptAnalysisCache.has(hash)) {
+            console.log(`Using cached analysis for ${filePath}`);
+            const cachedResult = scriptAnalysisCache.get(hash);
+            return {
+                libraries: cachedResult.libraries || [],
+                networking: cachedResult.networking || [],
+                ethereum: result.ethereum // Use current ethereum detection result
+            };
+        }
+        
         // Load API key from environment variable
         const apiKey = process.env.GOOGLE_API_KEY;
         if (!apiKey) {
@@ -587,13 +643,6 @@ async function analyzeIndividualScript(filePath, scriptText) {
         
         // Initialize the Google Generative AI client
         const ai = new GoogleGenAI({ apiKey });
-        
-        
-        // For each API call you find, extract:
-        // - The type of call (HTTP, WebSocket, WebRTC)
-        // - The library or framework being used
-        // - As much of the URL or endpoint as possible (reconstruct string literals)
-        // - A brief description of what the code is doing
         
         // Format the structured output we want from Gemini - focus on network calls only
         const systemPrompt = `
@@ -669,6 +718,12 @@ async function analyzeIndividualScript(filePath, scriptText) {
             if (analysis.libraries && analysis.libraries.length > 0) {
                 result.libraries = analysis.libraries
             }
+            
+            // Store in cache for future use
+            scriptAnalysisCache.set(hash, {
+                libraries: result.libraries,
+                networking: result.networking
+            });
             
             console.log(`Successfully analyzed ${filePath}`);
             

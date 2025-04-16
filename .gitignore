@@ -108,3 +108,6 @@ dist
 package-lock.json
 .thegraph-apiKey
 .DS_Store
+
+# DappRank script analysis cache
+script-analysis-cache.json
