@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// Load environment variables from .env file
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 import { create as createKubo } from 'kubo-rpc-client'
 import { createPublicClient, http, namehash } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -7,12 +11,13 @@ import { promises as fs } from 'fs'
 import { join } from 'path'
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
-import { glob } from 'glob'
-import { WASMagic } from "wasmagic";
+import { WASMagic } from "wasmagic"
+import * as cheerio from 'cheerio'
+import * as acorn from 'acorn'
+import * as acornWalk from 'acorn-walk'
+import { GoogleGenAI } from "@google/genai"
 
 const WEB3_APIs = [
-    { url: 'http://localhost:5001', service: 'ipfs', risk: 'none' },
-    { url: 'http://127.0.0.1:5001', service: 'ipfs', risk: 'none' },
     { url: 'http://localhost:8545', service: 'ethereum', risk: 'none' },
     { url: 'http://127.0.0.1:8545', service: 'ethereum', risk: 'none' },
 ]
@@ -32,7 +37,17 @@ const LINK_NON_FETCHING_REL_VALUES = [
     'no-follow',
     'canonical'
 ];
-const ANALYSIS_VERSION = 1
+
+// Network API patterns to detect in JavaScript AST
+const NETWORK_APIS = {
+    FETCH: ['fetch'],
+    XHR: ['XMLHttpRequest'],
+    WEBSOCKET: ['WebSocket', 'WebSocketStream'],
+    WEBRTC: ['RTCPeerConnection', 'RTCDataChannel'],
+    WEB3: ['window.ethereum', 'ethereum']
+}
+
+const ANALYSIS_VERSION = 2
 
 program
     .name('dapprank')
@@ -417,108 +432,256 @@ async function getFilesFromCID(kubo, cid, result = [], pathCarry = '') {
     return result
 }
 
-async function analyzeFile(kubo, cid, filePath) {
-    console.log('analyzing', filePath)
-    const fileType = filePath.split('.').pop();
-    if (!['html', 'htm', 'js', 'svg'].some(ext => fileType === ext)) {
-        // console.log(`Skipping non-target file type: ${filePath}`);
-        return {};
-    }
-
-    const fileContentChunks = [];
-    for await (const chunk of kubo.cat(cid)) {
-        fileContentChunks.push(chunk);
-    }
-    const fileContent = Buffer.concat(fileContentChunks).toString();
-    let scriptContent = []
-    if (filePath.endsWith('js')) {
-        scriptContent.push(fileContent)
-    } else {
-        const scriptTagRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
-        let match;
-        while ((match = scriptTagRegex.exec(fileContent)) !== null) {
-            scriptContent.push(match[1]);
+// Function to extract the content of a file as a string
+async function getFileContent(kubo, cid) {
+    try {
+        const chunks = [];
+        for await (const chunk of kubo.cat(cid)) {
+            chunks.push(chunk);
         }
+        return Buffer.concat(chunks).toString('utf-8');
+    } catch (error) {
+        console.error(`Error getting file content: ${error.message}`);
+        return null;
     }
-
-    // Analyze the file content for external resources loaded as the file is loaded
-    const analysis = {
-        distributionPurity: analyzeDistributionPurity(fileContent),
-        networkingPurity: analyzeNetworkingPurity(scriptContent)
-    }
-    return analysis;
 }
 
-function analyzeNetworkingPurity(scriptContents) {
-    const analysis = {
-        http: [],
-        websocket: [],
-        webrtc: [],
-        web3: []
+// Analyze HTML content with Cheerio
+async function analyzeHTML(kubo, cid, filePath) {
+    console.log(`Analyzing HTML file: ${filePath}`);
+    const fileContent = await getFileContent(kubo, cid);
+    if (!fileContent) return {};
+    
+    const $ = cheerio.load(fileContent);
+    
+    // Extract metadata
+    const metadata = {
+        title: $('title').text().trim(),
+        description: $('meta[name="description"]').attr('content') || '',
     };
-    const webrtcRegex = /\b(RTCPeerConnection|RTCDataChannel)\b/gi;
-    const websocketRegex = /(wss:\/\/|ws:\/\/)[^\s'"]+/gi;
-    const httpResourceRegex = /(?<!href.{0,20})(?<=["'`])(https|http):\/\/[^\s"'`]+/gi;
-    const ethereumRegex = /window\.ethereum\b/;
-    let match;
-
-    scriptContents.forEach(content => {
-        // http apis
-        while ((match = httpResourceRegex.exec(content)) !== null) {
-            // ignore w3.org svg
-            const url = match[0];
-            const { service, risk } = WEB3_APIs.find(api => url.includes(api.url)) || {};
-            if (service) {
-                analysis.web3.push({ service, url, risk });
-            } else if (!url.includes('w3.org') && !url.includes('svg')) {
-                analysis.http.push(url);
+    
+    // Analyze external resources
+    const externalMedia = [];
+    const externalScripts = [];
+    
+    // Check for external images, videos, audio, iframes
+    $('img, video, audio, iframe, source, object, embed, track').each((i, elem) => {
+        const src = $(elem).attr('src');
+        if (src && src.startsWith('http')) {
+            externalMedia.push({
+                type: elem.tagName.toLowerCase(),
+                url: src
+            });
+        }
+    });
+    
+    // Check for external scripts and links
+    $('script, link').each((i, elem) => {
+        const $elem = $(elem);
+        const src = $elem.attr('src') || $elem.attr('href');
+        
+        if (!src || !src.startsWith('http')) return;
+        
+        if (elem.tagName.toLowerCase() === 'link') {
+            const rel = $elem.attr('rel');
+            if (rel && LINK_NON_FETCHING_REL_VALUES.includes(rel.toLowerCase())) {
+                return;
             }
         }
         
-        // Find WebSocket calls
-        while ((match = websocketRegex.exec(content)) !== null) {
-            analysis.websocket.push( match[0] );
+        externalScripts.push({
+            type: elem.tagName.toLowerCase(),
+            url: src
+        });
+    });
+    
+    // Extract JavaScript from script tags for AST analysis
+    const scriptContents = [];
+    $('script').each((i, elem) => {
+        console.log(`Loading inline script ${i}`)
+        const $elem = $(elem);
+        const scriptType = $elem.attr('type');
+        
+        // Skip non-JS scripts (like application/json, text/template, etc.)
+        if (scriptType && 
+            !['text/javascript', 'application/javascript', ''].includes(scriptType) && 
+            !scriptType.includes('javascript')) {
+            return;
         }
-
-        // // Find WebRTC calls
-        while ((match = webrtcRegex.exec(content)) !== null) {
-            analysis.webrtc.push(match[0]);
+        
+        const content = $elem.html();
+        if (content && content.trim()) {
+            scriptContents.push(content);
         }
-
-        // // find Ethereum usage
-        if (ethereumRegex.test(content)) {
-            analysis.web3.push({ service: 'ethereum', url: 'window.ethereum', risk: 'none' });
-        }
-    })
-    return analysis;
+    });
+    
+    return {
+        metadata,
+        distributionPurity: {
+            externalMedia,
+            externalScripts
+        },
+        scriptContents
+    };
 }
 
-function analyzeDistributionPurity(fileContent) {
-    const analysis = {
-        externalMedia: [],
-        externalScripts: []
-    };
-    const tagRegex = /<(img|video|iframe|audio|source|object|embed|track|link|script)\s+[^>]*?\b(src|href)=["']([^"']*)["'][^>]*>/gi;
-    let match;
-    while ((match = tagRegex.exec(fileContent)) !== null) {
-        let [fullMatch, type, attr, url] = match;
-        if (url.startsWith('http')) {
-            if (type === 'link') {
-                const relRegex = /\brel=["']([^"']*)["']/i;
-                const match = relRegex.exec(fullMatch);
-                const rel = match ? match[1] : null
-                if (rel && LINK_NON_FETCHING_REL_VALUES.includes(rel.toLowerCase())) {
-                    continue
-                }
-            }
-            if (type === 'iframe' || type === 'script' || attr === 'href') {
-                analysis.externalScripts.push({ type, url });
-            } else {
-                analysis.externalMedia.push({ type, url });
-            }
-        }
+// Analyze JavaScript file
+async function loadJavaScriptFile(kubo, cid, filePath) {
+    console.log(`Loading JavaScript file: ${filePath}`);
+    const content = await getFileContent(kubo, cid);
+    return content
+}
+
+/**
+ * Detect window.ethereum occurrences in JavaScript code
+ * @param {string} scriptText - The JavaScript content to analyze
+ * @returns {number} Number of occurrences found, 0 if none
+ */
+function detectWindowEthereum(scriptText) {
+    if (!scriptText || scriptText.trim().length < 20) {
+        return 0;
     }
-    return analysis;
+    
+    const windowEthereumPattern = /window\.ethereum/g;
+    const matches = scriptText.match(windowEthereumPattern);
+    
+    return matches ? matches.length : 0;
+}
+
+/**
+ * Analyzes a single JavaScript file or inline script
+ * @param {string} filePath - Path or identifier for the script
+ * @param {string} scriptText - The JavaScript content to analyze
+ * @returns {Object} Analysis results with networkingPurity and ethereum data
+ */
+async function analyzeIndividualScript(filePath, scriptText) {
+    console.log(`Analyzing script: ${filePath}`);
+    
+    // Initialize empty results
+    const result = {
+        libraries: [],
+        networking: [],
+        ethereum: []
+    };
+    
+    try {
+        // Skip if script content is too small
+        if (!scriptText || scriptText.trim().length < 20) {
+            console.log(`Script content too small for ${filePath}, skipping analysis`);
+            return result
+        }
+        
+        // Check for window.ethereum occurrences
+        const count = detectWindowEthereum(scriptText);
+        if (count > 0) {
+            result.ethereum.push({ count });
+            // console.log(`Found ${count} occurrences of window.ethereum in ${filePath}`);
+        }
+        
+        // Load API key from environment variable
+        const apiKey = process.env.GOOGLE_API_KEY;
+        if (!apiKey) {
+            console.error('Error: GOOGLE_API_KEY environment variable not set');
+            return result
+        }
+        
+        // Initialize the Google Generative AI client
+        const ai = new GoogleGenAI({ apiKey });
+        
+        
+        // For each API call you find, extract:
+        // - The type of call (HTTP, WebSocket, WebRTC)
+        // - The library or framework being used
+        // - As much of the URL or endpoint as possible (reconstruct string literals)
+        // - A brief description of what the code is doing
+        
+        // Format the structured output we want from Gemini - focus on network calls only
+        const systemPrompt = `
+        Analyze the provided JavaScript code and answer the following questions thouroughly.
+
+        1. What top level javascript libraries are being used?
+            - name: explicity name or descriptive title of the library
+            - motivation: say why you concluded the code uses this library (formatted as markdown)
+        2. What calls are there to networking libraries, and what url is being passed?
+            - type: look only for fetch, XMLHttpRequest, navigator.sendBeacon, WebSocket, WebSocketStream, EventSource, RTCPeerConnection
+            - urls: best guess at what url is being passed to the function call (if multiple, return all)
+            - library: best guess if this call originates from one of the libraries from (1), or otherwise
+            - motivation: say why you concluded the given url, the library being used, and/or how data is passed to the call (formatted as markdown)
+
+        
+        Return ONLY valid JSON with this structure:
+        {
+          "libraries": [
+            {
+              "name": "...",
+              "motivation": "..."
+            }
+          ],
+          "networking": [
+            {
+              "type": "...",
+              "urls": ["..."],
+              "motivation": "..."
+            }
+          ]
+        }
+        
+        If no API calls of a certain type are found, return an empty array for that type.
+        `;
+        
+        // Query the Gemini model
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-pro-exp-03-25",
+            contents: [
+                {
+                    role: "user",
+                    parts: [
+                        { text: systemPrompt },
+                        { text: `File: ${filePath}\n\nCode:\n\`\`\`javascript\n${scriptText}\n\`\`\`` }
+                    ]
+                }
+            ],
+            generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 8192,
+            }
+        });
+        // console.log(response.text)
+        const responseText = response.text
+        
+        // Parse the JSON response
+        try {
+            // Extract the JSON part (in case there's any text around it)
+            const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) {
+                console.log(`No valid JSON found in response for ${filePath}`);
+                return result;
+            }
+            
+            const jsonStr = jsonMatch[0];
+            const analysis = JSON.parse(jsonStr);
+            
+            // Process the results 
+            if (analysis.networking && analysis.networking.length > 0) {
+                result.networking = analysis.networking
+            }
+            
+            if (analysis.libraries && analysis.libraries.length > 0) {
+                result.libraries = analysis.libraries
+            }
+            
+            console.log(`Successfully analyzed ${filePath}`);
+            
+        } catch (jsonError) {
+            console.error(`Error parsing JSON response for ${filePath}:`, jsonError);
+            console.log("Response was:", responseText.substring(0, 200) + "...");
+        }
+        
+    } catch (aiError) {
+        console.error(`Error in script analysis for ${filePath}:`, aiError);
+    }
+    
+    return result
 }
 
 async function detectMimeType(kubo, cid) {
@@ -541,9 +704,15 @@ async function detectMimeType(kubo, cid) {
 
 async function generateReport(kubo, rootCID, blockNumber = null) {
     try {
+        // First, detect the MIME type of the root
         const rootMimeType = await detectMimeType(kubo, rootCID);
+        console.log(`Root MIME type: ${rootMimeType}`);
+        
+        // Get all files in the IPFS directory
         const files = await getFilesFromCID(kubo, rootCID);
-
+        console.log(`Found ${files.length} files to analyze`);
+        
+        // Initialize the report structure
         const report = {
             version: ANALYSIS_VERSION,
             contentHash: rootCID,
@@ -557,57 +726,102 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
                 externalScripts: [],
                 externalMedia: [],
             },
-            networkingPurity: {
-                http: [],
-                websocket: [],
-                webrtc: [],
-            },
-            web3: []
+            networkingPurity: [],
+            libraryUsage: [],
+            ethereum: [] // New field to store unique files that access window.ethereum
         };
+        
         let faviconInfo = null;
+        let indexHtmlContent = null;
 
-        console.log(`Analyzing ${files.length} files`);
+        // Process all files
         for (const file of files) {
-            // Extract title from index.html
-            if (file.path.toLowerCase() === 'index.html' || (file.path === '' && file.type === 'file')) {
-                const content = [];
-                for await (const chunk of kubo.cat(file.cid)) {
-                    content.push(chunk);
-                }
-                const htmlContent = Buffer.concat(content).toString();
-                const titleMatch = htmlContent.match(/<title[^>]*>([^<]+)<\/title>/i);
-                report.title = titleMatch ? titleMatch[1].trim() : '';
-
-                faviconInfo = getFaviconPath(htmlContent, files);
-                report.favicon = faviconInfo.path;
-            }
-
-            const analysis = await analyzeFile(kubo, file.cid, file.path);
             report.totalSize += file.size;
-            addToReportIfNotEmpty(report.distributionPurity.externalScripts, analysis.distributionPurity?.externalScripts, file.path);
-            addToReportIfNotEmpty(report.distributionPurity.externalMedia, analysis.distributionPurity?.externalMedia, file.path);
-            addToReportIfNotEmpty(report.networkingPurity.http, analysis.networkingPurity?.http, file.path);
-            addToReportIfNotEmpty(report.networkingPurity.websocket, analysis.networkingPurity?.websocket, file.path);
-            addToReportIfNotEmpty(report.networkingPurity.webrtc, analysis.networkingPurity?.webrtc, file.path);
-            addToReportIfNotEmpty(report.web3, analysis.networkingPurity?.web3, file.path);
+
+            if (file.path.includes('.well-known/source.git')) continue
+            
+            const fileMimeType = await detectMimeType(kubo, file.cid);
+            
+            if (fileMimeType.includes('html')) {
+                const { metadata, distributionPurity, scriptContents } = await analyzeHTML(kubo, file.cid, file.path);
+                
+                // If this is index.html, extract title and favicon
+                if (file.path.toLowerCase() === 'index.html' || 
+                    (file.path === '' && fileMimeType.includes('html'))) {
+                    report.title = metadata?.title || '';
+                    indexHtmlContent = await getFileContent(kubo, file.cid);
+
+                    // Extract favicon if we have index.html content
+                    if (indexHtmlContent) {
+                        faviconInfo = getFaviconPath(indexHtmlContent, files);
+                        report.favicon = faviconInfo.path;
+                    }
+                }
+
+                // Process inline scripts from HTML
+                if (scriptContents && scriptContents.length > 0) {
+                    console.log(`Found ${scriptContents.length} inline scripts in ${file.path}`);
+                    
+                    // Process each inline script individually
+                    for (let i = 0; i < scriptContents.length; i++) {
+                        const scriptText = scriptContents[i];
+                        if (scriptText && scriptText.trim().length >= 20) {
+                            const inlineScriptPath = `${file.path}#inline-script-${i+1}`;
+                            console.log(`Analyzing inline script #${i+1} from ${file.path} (${scriptText.length} bytes)`);
+                            
+                            // Analyze this individual inline script
+                            const scriptAnalysis = await analyzeIndividualScript(inlineScriptPath, scriptText);
+                            
+                            // Add networking purity findings to the report
+                            addToReportIfNotEmpty(report.networkingPurity, scriptAnalysis.networking, inlineScriptPath);
+                            // Add libraries findings to the report
+                            addToReportIfNotEmpty(report.libraryUsage, scriptAnalysis.libraries, inlineScriptPath);
+                            // Add Ethereum findings to the report
+                            addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, inlineScriptPath);
+                        }
+                    }
+                }
+                
+                addToReportIfNotEmpty(report.distributionPurity.externalScripts, distributionPurity?.externalScripts, file.path);
+                addToReportIfNotEmpty(report.distributionPurity.externalMedia, distributionPurity?.externalMedia, file.path);
+            } 
+            else if (fileMimeType.includes('javascript')) {
+                // Load and analyze JavaScript file
+                const content = await loadJavaScriptFile(kubo, file.cid, file.path);
+                if (content && content.trim().length >= 20) {
+                    console.log(`Analyzing JavaScript file: ${file.path} (${content.length} bytes)`);
+                    
+                    // Analyze this individual JS file
+                    const scriptAnalysis = await analyzeIndividualScript(file.path, content);
+                    
+                    // Add networking findings to the report
+                    addToReportIfNotEmpty(report.networkingPurity, scriptAnalysis.networking, file.path);
+                    // Add libraries findings to the report
+                    addToReportIfNotEmpty(report.libraryUsage, scriptAnalysis.libraries, file.path);
+                    // Add Ethereum findings to the report
+                    addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, file.path);
+                }
+            }
         }
 
-        console.log(`Total size: ${(report.totalSize / 1024 / 1024).toFixed(2)} MB`);
+        console.log(`Analysis complete. Total size: ${(report.totalSize / 1024 / 1024).toFixed(2)} MB`);
         return { report, faviconInfo };
     } catch (error) {
         console.error(`Error generating report: ${error.message}`);
-        console.log(error);
+        console.error(error);
+        throw error;
     }
 }
 
+// Extract favicon information from HTML
 function getFaviconPath(htmlContent, files) {
-    // Look for all favicon links in head
-    const faviconRegex = /<link[^>]*(?:rel=["'](?:shortcut )?icon["'][^>]*href=["']([^"']+)["']|href=["']([^"']+)["'][^>]*rel=["'](?:shortcut )?icon["'])[^>]*>/gi;
+    const $ = cheerio.load(htmlContent);
     const favicons = [];
-    let match;
     
-    while ((match = faviconRegex.exec(htmlContent)) !== null) {
-        const href = match[1] || match[2];
+    // Look for favicon link tags
+    $('link[rel="icon"], link[rel="shortcut icon"]').each((i, elem) => {
+        const href = $(elem).attr('href');
+        if (!href) return;
         
         // Check if this is a data URL
         if (href.startsWith('data:')) {
@@ -616,7 +830,6 @@ function getFaviconPath(htmlContent, files) {
             if (dataUrlMatch) {
                 const mimeType = dataUrlMatch[1];
                 const encoding = dataUrlMatch[2];
-                const data = dataUrlMatch[3];
                 
                 // Determine file extension from mime type
                 const ext = mimeType.split('/')[1] || 'ico';
@@ -629,16 +842,19 @@ function getFaviconPath(htmlContent, files) {
                     isDataUrl: true
                 };
             }
-            continue;
+            return;
         }
         
+        // Normalize path to match files array (remove leading ./)
         const normalizedPath = href.replace(/^\.?\//, '');
         const faviconFile = files.find(file => file.path === normalizedPath);
+        
         if (faviconFile) {
             // Get file extension
             const ext = normalizedPath.split('.').pop().toLowerCase();
             // Only use filename without path
             const fileName = normalizedPath.split('/').pop();
+            
             favicons.push({
                 path: fileName,
                 cid: faviconFile.cid,
@@ -646,14 +862,14 @@ function getFaviconPath(htmlContent, files) {
                 isDataUrl: false
             });
         }
-    }
-
+    });
+    
     // Sort favicons by priority and return the highest priority one
     if (favicons.length > 0) {
         favicons.sort((a, b) => b.priority - a.priority);
         return favicons[0];
     }
-
+    
     // Fallback to looking for favicon.ico file directly
     const faviconFile = files.find(file => file.path === 'favicon.ico');
     return faviconFile ? {
@@ -682,6 +898,6 @@ function getFaviconPriority(ext) {
 
 function addToReportIfNotEmpty(report, analysis, filePath) {
     if (analysis && analysis.length > 0) {
-        report.push({ file: filePath, offenders: analysis });
+        report.push({ file: filePath, occurences: analysis });
     }
 }
