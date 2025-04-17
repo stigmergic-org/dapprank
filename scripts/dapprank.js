@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { create as createKubo } from 'kubo-rpc-client'
-import { createPublicClient, http, namehash } from 'viem'
+import { createPublicClient, http, namehash, encodeFunctionData } from 'viem'
 import { mainnet } from 'viem/chains'
 import { program } from 'commander'
 import { promises as fs } from 'fs'
@@ -300,47 +300,235 @@ async function resolveENSName(client, ensName, blockNumber) {
             return ''
         }
 
-        const contentHash = await client.readContract({
+        // First try to get the contentHash directly using contenthash method
+        try {
+            const contentHash = await client.readContract({
+                address: resolverAddress,
+                abi: [{
+                    name: 'contenthash',
+                    type: 'function',
+                    stateMutability: 'view',
+                    inputs: [{ name: 'node', type: 'bytes32' }],
+                    outputs: [{ name: '', type: 'bytes' }]
+                }],
+                functionName: 'contenthash',
+                args: [namehash(ensName)],
+                blockNumber
+            })
+            
+            if (contentHash && contentHash !== '0x') {
+                return processContentHash(contentHash)
+            }
+            // If contentHash is null or empty, we'll fall through to try ENSIP-10 resolve method
+        } catch (error) {
+            console.log(`Error resolving contenthash directly, trying ENSIP-10 resolver`)
+            // Fall through to try ENSIP-10 resolver
+        }
+        
+        // Check if resolver supports ENSIP-10
+        const supportsENSIP10 = await client.readContract({
             address: resolverAddress,
             abi: [{
+                name: 'supportsInterface',
+                type: 'function',
+                stateMutability: 'view',
+                inputs: [{ name: 'interfaceID', type: 'bytes4' }],
+                outputs: [{ name: '', type: 'bool' }]
+            }],
+            functionName: 'supportsInterface',
+            args: ['0x9061b923'], // ENSIP-10 interface ID
+            blockNumber
+        }).catch(error => {
+            console.log(`Error checking ENSIP-10 support: ${error.message}`)
+            return false
+        })
+        
+        if (supportsENSIP10) {
+            console.log('Resolver supports ENSIP-10, using resolve method')
+            
+            // Use encodeFunctionData to properly encode the contenthash function call
+            const node = namehash(ensName)
+            const contenthashAbi = {
                 name: 'contenthash',
                 type: 'function',
                 stateMutability: 'view',
                 inputs: [{ name: 'node', type: 'bytes32' }],
                 outputs: [{ name: '', type: 'bytes' }]
-            }],
-            functionName: 'contenthash',
-            args: [namehash(ensName)],
-            blockNumber
-        })
-        
-        if (!contentHash || contentHash === '0x') return ''
-        
-        // Check if the contenthash starts with the IPFS protocol prefix
-        if (contentHash.startsWith('0xe5010172')) {
-            console.log('IPNS contenthash not supported')
-            return ''
-        } else if (!contentHash.startsWith('0xe3010170')) {
-            console.log('Contenthash does not start with IPFS prefix')
-            return ''
+            }
+            
+            // Encode the function call for contenthash(node)
+            const calldata = encodeFunctionData({
+                abi: [contenthashAbi],
+                functionName: 'contenthash',
+                args: [node]
+            })
+            
+            // DNS encode the name
+            const dnsEncodedName = dnsEncodeName(ensName)
+            
+            // Call the resolve method
+            const resolveResult = await client.readContract({
+                address: resolverAddress,
+                abi: [{
+                    name: 'resolve',
+                    type: 'function',
+                    stateMutability: 'view',
+                    inputs: [
+                        { name: 'name', type: 'bytes' },
+                        { name: 'data', type: 'bytes' }
+                    ],
+                    outputs: [{ name: '', type: 'bytes' }]
+                }],
+                functionName: 'resolve',
+                args: [dnsEncodedName, calldata],
+                blockNumber
+            }).catch(error => {
+                console.log(`Error calling ENSIP-10 resolve method: ${error.message}`)
+                return null
+            })
+            
+            if (resolveResult && resolveResult !== '0x') {
+                // The result might be an ABI-encoded value that needs to be decoded
+                // For contenthash, the return type is bytes
+                
+                // Check if the result is a direct contenthash or needs processing
+                if (resolveResult.startsWith('0x0000000000000000000000000000000000000000000000000000000000000020')) {
+                    // This is likely an ABI-encoded bytes value, with offset at position 32
+                    
+                    // Skip the first 64 chars (0x + 32 bytes for the offset)
+                    // Then read the length from the next 32 bytes
+                    const lengthHex = resolveResult.slice(2 + 64, 2 + 64 + 64)
+                    const length = parseInt(lengthHex, 16)
+                    
+                    // Extract the actual bytes content
+                    const contentBytes = resolveResult.slice(2 + 64 + 64, 2 + 64 + 64 + (length * 2))
+                    
+                    // Process the extracted content
+                    return processContentHash('0x' + contentBytes)
+                }
+                
+                // If it's not in the expected ABI format, try processing directly
+                return processContentHash(resolveResult)
+            }
         }
         
-        // Decode the contenthash - it's a hex string starting with 0xe3010170 (IPFS)
-        // Remove 0x and the protocol prefix (e3010170)
-        const ipfsHex = contentHash.slice(10)
-        // Convert hex to bytes
-        const bytes = new Uint8Array(ipfsHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
-        
-        // Convert to CIDv1
-        const cidv1 = CID.decode(bytes).toV1()
-        // Return as base32 string
-        return cidv1.toString(base32)
+        console.log('Could not resolve ENS name using either method')
+        return ''
     } catch (error) {
         console.log(`Error resolving ENS name ${ensName}:`, error)
         // Log the full error stack for debugging
         console.log('Full error:', error.stack)
         return ''
     }
+}
+
+// Helper function to process contentHash
+function processContentHash(contentHash) {
+    // If the content hash is already in a CID format (starts with 'b' for base32), return it
+    if (typeof contentHash === 'string' && contentHash.startsWith('b')) {
+        return contentHash
+    }
+    
+    // Remove 0x prefix if present for further processing
+    const hexData = contentHash.startsWith('0x') ? contentHash.slice(2) : contentHash
+    
+    // Check if the contenthash starts with the IPFS protocol prefix
+    if (contentHash.startsWith('0xe5010172')) {
+        console.log('IPNS contenthash not supported')
+        return ''
+    } else if (contentHash.startsWith('0xe3010170')) {
+        // Standard IPFS contenthash processing
+        // Remove 0x and the protocol prefix (e3010170)
+        const ipfsHex = contentHash.slice(10)
+        // Convert hex to bytes
+        const bytes = new Uint8Array(ipfsHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
+        
+        try {
+            // Convert to CIDv1
+            const cidv1 = CID.decode(bytes).toV1()
+            // Return as base32 string
+            return cidv1.toString(base32)
+        } catch (error) {
+            console.log('Error decoding IPFS CID:', error.message)
+        }
+    } 
+    
+    // Look for common IPFS protocol markers
+    const ipfsMarkers = [
+        { marker: 'e3010170', desc: 'IPFS with E3 prefix' },
+        { marker: '0170', desc: 'IPFS without E3 prefix' },
+        { marker: '1220', desc: 'IPFS v0 hash prefix' },
+        { marker: '12200000000000000000000000000000', desc: 'IPFS v0 with padding' }
+    ]
+    
+    // Try each marker
+    for (const { marker, desc } of ipfsMarkers) {
+        const index = hexData.indexOf(marker)
+        if (index >= 0) {
+            try {
+                // Extract potential CID starting from the marker position
+                const possibleCidHex = hexData.slice(index)
+                
+                // Convert hex to bytes
+                const bytes = new Uint8Array(possibleCidHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
+                
+                // Try to decode as CID
+                const cid = CID.decode(bytes)
+                const cidv1 = cid.toV1()
+                const cidString = cidv1.toString(base32)
+                return cidString
+            } catch (error) {
+                // Continue to try other formats
+            }
+        }
+    }
+    
+    // Try to decode the entire content as a CID as a last resort
+    try {
+        const allBytes = new Uint8Array(hexData.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
+        const cid = CID.decode(allBytes)
+        const cidv1 = cid.toV1()
+        const cidString = cidv1.toString(base32)
+        return cidString
+    } catch (fullCidError) {
+        // Failed to decode
+    }
+    
+    console.log('Could not parse content hash in any format')
+    return ''
+}
+
+// Function to DNS encode an ENS name as per ENSIP-10
+function dnsEncodeName(name) {
+    if (!name) return '0x00'
+    
+    // Remove trailing period if present
+    if (name.endsWith('.')) {
+        name = name.substring(0, name.length - 1)
+    }
+    
+    // Split the name by periods to get the labels
+    const labels = name.split('.')
+    
+    // Encode each label with its length
+    const result = []
+    for (const label of labels) {
+        // Each label is prefixed with its length as a single byte
+        if (label.length > 0) {
+            // Add length byte
+            result.push(label.length)
+            // Add label bytes
+            for (let i = 0; i < label.length; i++) {
+                result.push(label.charCodeAt(i))
+            }
+        }
+    }
+    
+    // Add root label (zero length)
+    result.push(0)
+    
+    // Convert to hex string with 0x prefix
+    return '0x' + Buffer.from(result).toString('hex')
 }
 
 async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
