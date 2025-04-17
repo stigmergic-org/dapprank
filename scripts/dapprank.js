@@ -93,77 +93,93 @@ program
     .option('-f, --force', 'Force analysis even if a report exists for this CID', false)
     .option('-n, --no-save', 'Skip saving the report to disk and print to console instead', true)
     .action(async (ensName, options) => {
-        // Validate that this is an ENS name
-        if (!ensName.endsWith('.eth')) {
-            console.error('Error: Not a valid ENS name. Must end with .eth');
-            process.exit(1);
-        }
+        try {
+            // Validate that this is an ENS name
+            if (!ensName.endsWith('.eth')) {
+                console.error('Error: Not a valid ENS name. Must end with .eth');
+                process.exit(1);
+            }
 
-        const parentOptions = program.optsWithGlobals();
-        const kubo = createKubo({ url: parentOptions.ipfs });
-        const client = createPublicClient({
-            chain: mainnet,
-            transport: http(parentOptions.rpc)
-        });
-        
-        // Get current block number
-        const blockNumber = await client.getBlockNumber();
-        
-        // Resolve ENS name to CID
-        console.log(`Resolving ENS name: ${ensName}...`);
-        const rootCID = await resolveENSName(client, ensName, blockNumber);
-        
-        if (!rootCID) {
-            console.error('Could not resolve ENS name');
+            const parentOptions = program.optsWithGlobals();
+            const kubo = createKubo({ url: parentOptions.ipfs });
+            const client = createPublicClient({
+                chain: mainnet,
+                transport: http(parentOptions.rpc)
+            });
+            
+            // Get current block number
+            const blockNumber = await client.getBlockNumber();
+            
+            // Resolve ENS name to CID
+            console.log(`Resolving ENS name: ${ensName}...`);
+            const rootCID = await resolveENSName(client, ensName, blockNumber);
+            
+            if (!rootCID) {
+                console.error('Could not resolve ENS name');
+                process.exit(1);
+            }
+            
+            // Check if a report for this CID already exists (skip this check if force option is enabled)
+            if (!options.force && await reportExistsForCID(ensName, rootCID)) {
+                console.log(`Report for CID ${rootCID} already exists. Skipping...`);
+                return;
+            }
+            
+            // Generate report
+            console.log(`Analyzing ${rootCID}...`);
+            const { report, faviconInfo } = await generateReport(kubo, rootCID, blockNumber);
+            
+            if (!options.save) {
+                // Print report to console
+                console.log(JSON.stringify(report, null, 2));
+                console.log(`Analysis complete for ${ensName} (report not saved)`);
+            } else {
+                // Save report to disk
+                await saveReport(report, ensName, blockNumber, kubo, faviconInfo);
+                console.log(`Analysis complete for ${ensName}`);
+            }
+            
+            // Save the cache after analysis
+            await saveScriptAnalysisCache();
+        } catch (error) {
+            console.error(`Fatal error analyzing ${ensName}:`, error);
+            // Make sure to save the cache even on error
+            try {
+                await saveScriptAnalysisCache();
+            } catch (cacheError) {
+                console.error('Error saving cache:', cacheError);
+            }
             process.exit(1);
         }
-        
-        // Check if a report for this CID already exists (skip this check if force option is enabled)
-        if (!options.force && await reportExistsForCID(ensName, rootCID)) {
-            console.log(`Report for CID ${rootCID} already exists. Skipping...`);
-            return;
-        }
-        
-        // Generate report
-        console.log(`Analyzing ${rootCID}...`);
-        const { report, faviconInfo } = await generateReport(kubo, rootCID, blockNumber);
-        
-        if (!options.save) {
-            // Print report to console
-            console.log(JSON.stringify(report, null, 2));
-            console.log(`Analysis complete for ${ensName} (report not saved)`);
-        } else {
-            // Save report to disk
-            await saveReport(report, ensName, blockNumber, kubo, faviconInfo);
-            console.log(`Analysis complete for ${ensName}`);
-        }
-        
-        // Save the cache after analysis
-        await saveScriptAnalysisCache();
     });
 
 // Update command
 program
     .command('update')
     .description('Update all existing reports')
+    .option('--halt-on-error', 'Stop processing all domains after the first error', false)
     .action(async (options) => {
-        const parentOptions = program.optsWithGlobals();
-        const kubo = createKubo({ url: parentOptions.ipfs });
-        const client = createPublicClient({
-            chain: mainnet,
-            transport: http(parentOptions.rpc)
-        });
-        
-        // Get current block number once and use for all domains
-        const blockNumber = await client.getBlockNumber();
-        console.log(`Using block number: ${blockNumber}`);
-        
-        // Get all domain directories
-        const indexDir = join(process.cwd(), 'public/dapps/index');
         try {
+            const parentOptions = program.optsWithGlobals();
+            const kubo = createKubo({ url: parentOptions.ipfs });
+            const client = createPublicClient({
+                chain: mainnet,
+                transport: http(parentOptions.rpc)
+            });
+            
+            // Get current block number once and use for all domains
+            const blockNumber = await client.getBlockNumber();
+            console.log(`Using block number: ${blockNumber}`);
+            
+            // Get all domain directories
+            const indexDir = join(process.cwd(), 'public/dapps/index');
+            
             const domainDirs = await fs.readdir(indexDir);
             
             console.log(`Found ${domainDirs.length} domains to check for updates`);
+            
+            // Track failed domains
+            const failedDomains = [];
             
             // Process each domain
             for (const domain of domainDirs) {
@@ -200,15 +216,38 @@ program
                     await saveReport(report, domain, blockNumber, kubo, faviconInfo);
                 } catch (error) {
                     console.error(`Error processing domain ${domain}:`, error);
+                    failedDomains.push({ domain, error: error.message });
+                    
+                    if (options.haltOnError) {
+                        console.error(`Halting due to error. By default, the script will continue processing other domains.`);
+                        // Make sure to save cache before exiting
+                        await saveScriptAnalysisCache();
+                        process.exit(1);
+                    }
                 }
             }
             
             // Save the cache after all processing is complete
             await saveScriptAnalysisCache();
             
-            console.log('\nUpdate completed!');
+            // Report on any failures
+            if (failedDomains.length > 0) {
+                console.error(`\nThe following domains failed to process:`);
+                failedDomains.forEach(({ domain, error }) => {
+                    console.error(`  - ${domain}: ${error}`);
+                });
+                process.exit(1);
+            }
+            
+            console.log('\nUpdate completed successfully!');
         } catch (error) {
-            console.error(`Error accessing index directory: ${error.message}`);
+            console.error(`Fatal error during update:`, error);
+            // Make sure to save the cache even on error
+            try {
+                await saveScriptAnalysisCache();
+            } catch (cacheError) {
+                console.error('Error saving cache:', cacheError);
+            }
             process.exit(1);
         }
     });
@@ -219,17 +258,28 @@ program
     .description('Test analysis for a CID without saving')
     .argument('<cid>', 'CID to analyze')
     .action(async (cid, options) => {
-        const parentOptions = program.optsWithGlobals();
-        const kubo = createKubo({ url: parentOptions.ipfs });
-        
-        console.log(`Analyzing ${cid}...`);
-        const { report } = await generateReport(kubo, cid);
-        
-        // Print report to console
-        console.log(JSON.stringify(report, null, 2));
+        try {
+            const parentOptions = program.optsWithGlobals();
+            const kubo = createKubo({ url: parentOptions.ipfs });
+            
+            console.log(`Analyzing ${cid}...`);
+            const { report } = await generateReport(kubo, cid);
+            
+            // Print report to console
+            console.log(JSON.stringify(report, null, 2));
 
-        // Save the cache after analysis
-        await saveScriptAnalysisCache();
+            // Save the cache after analysis
+            await saveScriptAnalysisCache();
+        } catch (error) {
+            console.error(`Fatal error analyzing CID ${cid}:`, error);
+            // Make sure to save the cache even on error
+            try {
+                await saveScriptAnalysisCache();
+            } catch (cacheError) {
+                console.error('Error saving cache:', cacheError);
+            }
+            process.exit(1);
+        }
     });
 
 // Load the cache before parsing commands
@@ -784,6 +834,7 @@ function detectWindowEthereum(scriptText) {
  * @param {string} filePath - Path or identifier for the script
  * @param {string} scriptText - The JavaScript content to analyze
  * @returns {Object} Analysis results with networkingPurity and ethereum data
+ * @throws {Error} If AI analysis fails
  */
 async function analyzeIndividualScript(filePath, scriptText) {
     console.log(`Analyzing script: ${filePath}`);
@@ -826,8 +877,7 @@ async function analyzeIndividualScript(filePath, scriptText) {
         // Load API key from environment variable
         const apiKey = process.env.GOOGLE_API_KEY;
         if (!apiKey) {
-            console.error('Error: GOOGLE_API_KEY environment variable not set');
-            return result
+            throw new Error('GOOGLE_API_KEY environment variable not set');
         }
         
         // Initialize the Google Generative AI client
@@ -892,8 +942,7 @@ async function analyzeIndividualScript(filePath, scriptText) {
             // Extract the JSON part (in case there's any text around it)
             const jsonMatch = responseText.match(/\{[\s\S]*\}/);
             if (!jsonMatch) {
-                console.log(`No valid JSON found in response for ${filePath}`);
-                return result;
+                throw new Error(`No valid JSON found in response for ${filePath}`);
             }
             
             const jsonStr = jsonMatch[0];
@@ -918,14 +967,14 @@ async function analyzeIndividualScript(filePath, scriptText) {
             
         } catch (jsonError) {
             console.error(`Error parsing JSON response for ${filePath}:`, jsonError);
-            console.log("Response was:", responseText.substring(0, 200) + "...");
+            console.error("Response was:", responseText.substring(0, 200) + "...");
+            throw new Error(`Failed to parse AI analysis response for ${filePath}: ${jsonError.message}`);
         }
         
     } catch (aiError) {
         console.error(`Error in script analysis for ${filePath}:`, aiError);
+        throw aiError; // Re-throw the error to fail the entire process
     }
-    
-    return result
 }
 
 async function detectMimeType(kubo, cid) {
