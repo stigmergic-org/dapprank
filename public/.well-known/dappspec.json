@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/stigmergic-org/dapprank",
+  "preserveHistory": -1,
+  "chains": {
+    "1": {
+      "rpcs": [],
+      "contracts": []
+    }
+  },
+  "fallbacks": {
+    "window": true,
+    "rpcs": true
+  },
+  "auxiliary": [
+    "https://delegated-ipfs.dev/routing/v1/providers/"
+  ]
+}

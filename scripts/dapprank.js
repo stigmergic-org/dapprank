@@ -975,6 +975,9 @@ async function analyzeIndividualScript(filePath, scriptText) {
         console.error(`Error in script analysis for ${filePath}:`, aiError);
         throw aiError; // Re-throw the error to fail the entire process
     }
+    
+    // Return the final result after successful analysis
+    return result;
 }
 
 async function detectMimeType(kubo, cid) {
