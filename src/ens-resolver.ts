@@ -46,18 +46,16 @@ export function createEthereumClient(): PublicClient | null {
         // Determine which client to create based on available providers
         if (hasWallet && tenderlyRpcUrl) {
             // Both wallet and Tenderly available, use fallback
-            console.log('Using fallback transport with multiple providers');
             // @ts-ignore - Ignoring type issues with viem's transport typing
             return createPublicClient({
                 chain: mainnet,
                 transport: fallback([
-                    http(tenderlyRpcUrl),
                     custom(window.ethereum),
+                    http(tenderlyRpcUrl),
                 ])
             });
         } else if (hasWallet) {
             // Only wallet available
-            console.log('Using browser wallet for ENS resolution');
             // @ts-ignore - Ignoring type issues with viem's transport typing
             return createPublicClient({
                 chain: mainnet,
@@ -65,7 +63,6 @@ export function createEthereumClient(): PublicClient | null {
             });
         } else if (tenderlyRpcUrl) {
             // Only Tenderly available
-            console.log('Using Tenderly RPC for ENS resolution');
             // Fix TypeScript error by not including account property
             return createPublicClient({
                 chain: mainnet,
@@ -176,7 +173,6 @@ export async function getCurrentContentHash(ensName: string): Promise<string | n
             }
             // If contentHash is null or empty, we'll fall through to try ENSIP-10 resolve method
         } catch (error) {
-            console.log(`Error resolving contenthash directly, trying ENSIP-10 resolver`);
             // Fall through to try ENSIP-10 resolver
         }
         
@@ -193,12 +189,10 @@ export async function getCurrentContentHash(ensName: string): Promise<string | n
             functionName: 'supportsInterface',
             args: ['0x9061b923'], // ENSIP-10 interface ID
         }).catch(error => {
-            console.log(`Error checking ENSIP-10 support: ${error.message}`);
             return false;
         });
         
         if (supportsENSIP10) {
-            console.log('Resolver supports ENSIP-10, using resolve method');
             
             // Use encodeFunctionData to properly encode the contenthash function call
             const node = namehash(ensName);

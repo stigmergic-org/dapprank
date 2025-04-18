@@ -21,6 +21,6 @@ export function hasTenderlyApiKey(): boolean {
  * Log environment information (for debugging)
  */
 export function logEnvironmentInfo(): void {
-  console.log('Environment Information:');
-  console.log('- Tenderly API Key available:', hasTenderlyApiKey());
+  // console.log('Environment Information:');
+  // console.log('- Tenderly API Key available:', hasTenderlyApiKey());
 } 
