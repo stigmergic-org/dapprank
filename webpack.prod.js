@@ -3,6 +3,11 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const common = require("./webpack.common");
 const { exec } = require("child_process");
+const webpack = require("webpack");
+const dotenv = require("dotenv");
+
+// Load environment variables
+const env = dotenv.config().parsed || {};
 
 // Custom plugin to add build to IPFS
 class IPFSPlugin {
@@ -74,6 +79,13 @@ module.exports = merge(common, {
       test: /\.(js|css|html|svg)$/,
       threshold: 10240,
       minRatio: 0.8,
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        // Pass the environment variables
+        TENDERLY_API_KEY: JSON.stringify(env.TENDERLY_API_KEY || process.env.TENDERLY_API_KEY || ''),
+        // Add other environment variables as needed
+      }
     }),
     new IPFSPlugin()
   ]

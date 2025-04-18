@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const RemarkHTML = import('remark-html');
+const Dotenv = require('dotenv-webpack');
 
 
 module.exports = {
@@ -63,6 +64,13 @@ module.exports = {
       patterns: [
         { from: 'public', globOptions: { ignore: ['**/*.html'] } }
       ]
+    }),
+    new Dotenv({
+      systemvars: true,
+      safe: false,
+      defaults: {
+        TENDERLY_API_KEY: ''
+      }
     })
   ],
   optimization: {

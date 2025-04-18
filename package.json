@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack serve --open --config webpack.dev.mjs",
     "dev-ipfs": "webpack serve --open --config webpack.ipfs.mjs",
-    "build": "webpack --progress --config webpack.prod.js",
+    "build": "node -r dotenv/config ./node_modules/.bin/webpack --progress --config webpack.prod.js",
     "analyze": "node scripts/create-risk-analysis.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^5.2.7",
     "dotenv": "^16.5.0",
+    "dotenv-webpack": "^8.1.0",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "kubo-rpc-client": "^5.1.0",

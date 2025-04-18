@@ -8,6 +8,10 @@ import * as dagPb from '@ipld/dag-pb';
 import * as raw from 'multiformats/codecs/raw';
 import { CID } from 'multiformats/cid';
 import { CARFactory, CarBlock } from 'cartonne';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // Create global objects
 globalThis.blockstore = new MemoryBlockstore();

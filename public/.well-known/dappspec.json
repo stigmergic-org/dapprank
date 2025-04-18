@@ -3,8 +3,11 @@
   "preserveHistory": -1,
   "chains": {
     "1": {
-      "rpcs": [],
-      "contracts": []
+      "rpcs": ["https://mainnet.gateway.tenderly.co/"],
+      "contracts": [
+        "0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63",
+        "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+      ]
     }
   },
   "fallbacks": {
