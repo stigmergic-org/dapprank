@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { create as createKubo } from 'kubo-rpc-client'
-import { createPublicClient, http, namehash, encodeFunctionData } from 'viem'
+import { createPublicClient, http, namehash, encodeFunctionData, decodeAbiParameters } from 'viem'
 import { mainnet } from 'viem/chains'
 import { program } from 'commander'
 import { promises as fs } from 'fs'
@@ -15,6 +15,9 @@ import crypto from 'crypto'
 import { WASMagic } from "wasmagic"
 import * as cheerio from 'cheerio'
 import { GoogleGenAI } from "@google/genai"
+
+// Address of the Universal Resolver contract on mainnet
+const UNIVERSAL_RESOLVER_ADDRESS = '0x64969fb44091A7E5fA1213D30D7A7e8488edf693'
 
 // Cache for script analysis to avoid repeated AI calls for identical content
 const scriptAnalysisCache = new Map();
@@ -338,135 +341,80 @@ async function reportExistsForCID(ensName, cid) {
     }
 }
 
+// Resolve ENS name using Universal Resolver contract
 async function resolveENSName(client, ensName, blockNumber) {
     try {
-        const resolverAddress = await client.getEnsResolver({
-            name: ensName,
-            blockNumber
-        })
-
-        if (!resolverAddress) {
-            console.log('No resolver address found for', ensName)
-            return ''
-        }
-
-        // First try to get the contentHash directly using contenthash method
-        try {
-            const contentHash = await client.readContract({
-                address: resolverAddress,
-                abi: [{
-                    name: 'contenthash',
-                    type: 'function',
-                    stateMutability: 'view',
-                    inputs: [{ name: 'node', type: 'bytes32' }],
-                    outputs: [{ name: '', type: 'bytes' }]
-                }],
-                functionName: 'contenthash',
-                args: [namehash(ensName)],
-                blockNumber
-            })
-            
-            if (contentHash && contentHash !== '0x') {
-                return processContentHash(contentHash)
-            }
-            // If contentHash is null or empty, we'll fall through to try ENSIP-10 resolve method
-        } catch (error) {
-            console.log(`Error resolving contenthash directly, trying ENSIP-10 resolver`)
-            // Fall through to try ENSIP-10 resolver
+        console.log(`Resolving ${ensName} using Universal Resolver...`)
+        
+        // DNS encode the ENS name (required for Universal Resolver)
+        const dnsEncodedName = dnsEncodeName(ensName)
+        
+        // Encode the function call for contenthash(node)
+        const contenthashAbi = {
+            name: 'contenthash',
+            type: 'function',
+            stateMutability: 'view',
+            inputs: [{ name: 'node', type: 'bytes32' }],
+            outputs: [{ name: '', type: 'bytes' }]
         }
         
-        // Check if resolver supports ENSIP-10
-        const supportsENSIP10 = await client.readContract({
-            address: resolverAddress,
+        // Encode call to contenthash(namehash(ensName))
+        const calldata = encodeFunctionData({
+            abi: [contenthashAbi],
+            functionName: 'contenthash',
+            args: [namehash(ensName)]
+        })
+        
+        // Call Universal Resolver's resolve function
+        // This does everything in one call: finds the resolver and calls the contenthash function
+        const [resolveResult, resolverAddress] = await client.readContract({
+            address: UNIVERSAL_RESOLVER_ADDRESS,
             abi: [{
-                name: 'supportsInterface',
+                name: 'resolve',
                 type: 'function',
                 stateMutability: 'view',
-                inputs: [{ name: 'interfaceID', type: 'bytes4' }],
-                outputs: [{ name: '', type: 'bool' }]
+                inputs: [
+                    { name: 'name', type: 'bytes' },
+                    { name: 'data', type: 'bytes' }
+                ],
+                outputs: [
+                    { name: '', type: 'bytes' },
+                    { name: '', type: 'address' }
+                ]
             }],
-            functionName: 'supportsInterface',
-            args: ['0x9061b923'], // ENSIP-10 interface ID
+            functionName: 'resolve',
+            args: [dnsEncodedName, calldata],
             blockNumber
-        }).catch(error => {
-            console.log(`Error checking ENSIP-10 support: ${error.message}`)
-            return false
+        }).catch((error) => {
+            console.log(`Error calling Universal Resolver for ${ensName}:`, error.message)
+            return [null, null]
         })
         
-        if (supportsENSIP10) {
-            console.log('Resolver supports ENSIP-10, using resolve method')
+        if (resolveResult && resolveResult !== '0x') {
+            console.log(`Successfully resolved ${ensName} with Universal Resolver. Resolver: ${resolverAddress}`)
             
-            // Use encodeFunctionData to properly encode the contenthash function call
-            const node = namehash(ensName)
-            const contenthashAbi = {
-                name: 'contenthash',
-                type: 'function',
-                stateMutability: 'view',
-                inputs: [{ name: 'node', type: 'bytes32' }],
-                outputs: [{ name: '', type: 'bytes' }]
-            }
-            
-            // Encode the function call for contenthash(node)
-            const calldata = encodeFunctionData({
-                abi: [contenthashAbi],
-                functionName: 'contenthash',
-                args: [node]
-            })
-            
-            // DNS encode the name
-            const dnsEncodedName = dnsEncodeName(ensName)
-            
-            // Call the resolve method
-            const resolveResult = await client.readContract({
-                address: resolverAddress,
-                abi: [{
-                    name: 'resolve',
-                    type: 'function',
-                    stateMutability: 'view',
-                    inputs: [
-                        { name: 'name', type: 'bytes' },
-                        { name: 'data', type: 'bytes' }
-                    ],
-                    outputs: [{ name: '', type: 'bytes' }]
-                }],
-                functionName: 'resolve',
-                args: [dnsEncodedName, calldata],
-                blockNumber
-            }).catch(error => {
-                console.log(`Error calling ENSIP-10 resolve method: ${error.message}`)
-                return null
-            })
-            
-            if (resolveResult && resolveResult !== '0x') {
-                // The result might be an ABI-encoded value that needs to be decoded
-                // For contenthash, the return type is bytes
+            // Try to decode the result which is ABI-encoded bytes
+            try {
+                // The result is ABI-encoded, so decode it to get the actual bytes value
+                const decoded = decodeAbiParameters(
+                    [{ name: 'contenthash', type: 'bytes' }],
+                    resolveResult
+                )
                 
-                // Check if the result is a direct contenthash or needs processing
-                if (resolveResult.startsWith('0x0000000000000000000000000000000000000000000000000000000000000020')) {
-                    // This is likely an ABI-encoded bytes value, with offset at position 32
-                    
-                    // Skip the first 64 chars (0x + 32 bytes for the offset)
-                    // Then read the length from the next 32 bytes
-                    const lengthHex = resolveResult.slice(2 + 64, 2 + 64 + 64)
-                    const length = parseInt(lengthHex, 16)
-                    
-                    // Extract the actual bytes content
-                    const contentBytes = resolveResult.slice(2 + 64 + 64, 2 + 64 + 64 + (length * 2))
-                    
-                    // Process the extracted content
-                    return processContentHash('0x' + contentBytes)
+                if (decoded && decoded[0]) {
+                    return processContentHash(decoded[0])
                 }
-                
-                // If it's not in the expected ABI format, try processing directly
+            } catch (decodeError) {
+                console.log(`Error decoding result from Universal Resolver:`, decodeError.message)
+                // If decoding fails, try direct processing as fallback
                 return processContentHash(resolveResult)
             }
         }
         
-        console.log('Could not resolve ENS name using either method')
+        console.log(`Could not resolve ${ensName} using Universal Resolver`)
         return ''
     } catch (error) {
-        console.log(`Error resolving ENS name ${ensName}:`, error)
-        // Log the full error stack for debugging
+        console.log(`Error in Universal Resolver for ${ensName}:`, error)
         console.log('Full error:', error.stack)
         return ''
     }

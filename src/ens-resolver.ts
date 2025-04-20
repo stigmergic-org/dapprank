@@ -1,4 +1,4 @@
-import { createPublicClient, custom, http, fallback, PublicClient, encodeFunctionData } from 'viem';
+import { createPublicClient, custom, http, fallback, PublicClient, encodeFunctionData, decodeAbiParameters } from 'viem';
 import { mainnet } from 'viem/chains';
 import { namehash } from 'viem/ens';
 import { CID } from 'multiformats/cid';
@@ -10,6 +10,8 @@ declare global {
     interface Window {
         ethereum?: {
             request: (args: any) => Promise<any>;
+            chainId?: string;
+            on?: (event: string, listener: (arg: any) => void) => void;
         };
     }
 }
@@ -26,26 +28,92 @@ const getTenderlyRpcUrl = (): string | null => {
 // Global client instance
 let ethereumClient: PublicClient | null = null;
 
+// Cache for mainnet check result
+let isOnMainnetCache: boolean | null = null;
+
+// Universal Resolver address on mainnet
+const UNIVERSAL_RESOLVER_ADDRESS = '0x64969fb44091A7E5fA1213D30D7A7e8488edf693';
+
+// Check if wallet is connected to mainnet with caching
+async function isWalletOnMainnet(): Promise<boolean> {
+    // Return cached result if available
+    if (isOnMainnetCache !== null) {
+        return isOnMainnetCache;
+    }
+    
+    try {
+        if (typeof window === 'undefined' || !window.ethereum || !window.ethereum.request) {
+            isOnMainnetCache = false;
+            return false;
+        }
+        
+        // Get chainId from ethereum provider
+        let chainId: string;
+        
+        // First check if it's already available as a property
+        if (window.ethereum.chainId) {
+            chainId = window.ethereum.chainId;
+        } else {
+            // Otherwise make a request
+            chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        }
+        
+        // Convert to number and check if it's mainnet (chain ID 1)
+        const chainIdNum = parseInt(chainId, 16);
+        console.log(`Current wallet chain ID: ${chainIdNum}`);
+        
+        // Cache the result
+        isOnMainnetCache = chainIdNum === 1;
+        return isOnMainnetCache;
+    } catch (error) {
+        console.error('Error checking wallet chain:', error);
+        isOnMainnetCache = false;
+        return false;
+    }
+}
+
+// Listen for chain changes and update the cache
+function setupChainChangeListener() {
+    if (typeof window !== 'undefined' && window.ethereum && window.ethereum.request) {
+        window.ethereum.on?.('chainChanged', (chainId: string) => {
+            // Update the cache when chain changes
+            const chainIdNum = parseInt(chainId, 16);
+            console.log(`Chain changed to: ${chainIdNum}`);
+            isOnMainnetCache = chainIdNum === 1;
+            
+            // Clear client to force recreation with new settings
+            ethereumClient = null;
+        });
+    }
+}
+
+// Call setup once on module initialization
+if (typeof window !== 'undefined') {
+    setupChainChangeListener();
+}
+
 /**
  * Creates an Ethereum client with fallback transport functionality
  * Note: There are some TypeScript typing issues with viem and its account handling,
  * but the implementation works correctly at runtime.
  */
 // @ts-ignore - Ignoring type issues with viem's transport typing
-export function createEthereumClient(): PublicClient | null {
+export async function createEthereumClient(): Promise<PublicClient | null> {
     try {
         // Log environment info when creating client (helpful for debugging)
         logEnvironmentInfo();
         
-        // Check if browser wallet is available
+        // Check if browser wallet is available and on mainnet
         const hasWallet = typeof window !== 'undefined' && window.ethereum && window.ethereum.request;
+        const isOnMainnet = hasWallet ? await isWalletOnMainnet() : false;
         
         // Get Tenderly RPC URL
         const tenderlyRpcUrl = getTenderlyRpcUrl();
         
         // Determine which client to create based on available providers
-        if (hasWallet && tenderlyRpcUrl) {
-            // Both wallet and Tenderly available, use fallback
+        if (hasWallet && isOnMainnet && tenderlyRpcUrl) {
+            // Both wallet (on mainnet) and Tenderly available, use fallback
+            console.log('Using wallet provider (mainnet) with Tenderly fallback');
             // @ts-ignore - Ignoring type issues with viem's transport typing
             return createPublicClient({
                 chain: mainnet,
@@ -54,23 +122,25 @@ export function createEthereumClient(): PublicClient | null {
                     http(tenderlyRpcUrl),
                 ])
             });
-        } else if (hasWallet) {
-            // Only wallet available
+        } else if (hasWallet && isOnMainnet) {
+            // Only wallet available and on mainnet
+            console.log('Using wallet provider (mainnet)');
             // @ts-ignore - Ignoring type issues with viem's transport typing
             return createPublicClient({
                 chain: mainnet,
                 transport: custom(window.ethereum)
             });
         } else if (tenderlyRpcUrl) {
-            // Only Tenderly available
-            // Fix TypeScript error by not including account property
+            // Use Tenderly if wallet is not on mainnet or not available
+            console.log('Using Tenderly provider only');
+            // @ts-ignore
             return createPublicClient({
                 chain: mainnet,
                 transport: http(tenderlyRpcUrl)
             });
         } else {
             // No providers available
-            console.error('No Ethereum providers available. Need either a browser wallet or Tenderly API key.');
+            console.error('No Ethereum providers available. Need either a browser wallet on mainnet or Tenderly API key.');
             return null;
         }
     } catch (error) {
@@ -82,9 +152,9 @@ export function createEthereumClient(): PublicClient | null {
 /**
  * Get the global Ethereum client, creating it if it doesn't exist yet
  */
-export function getEthereumClient(): PublicClient | null {
+export async function getEthereumClient(): Promise<PublicClient | null> {
     if (!ethereumClient) {
-        ethereumClient = createEthereumClient();
+        ethereumClient = await createEthereumClient();
     }
     return ethereumClient;
 }
@@ -131,135 +201,82 @@ function dnsEncodeName(name: string): `0x${string}` {
     return `0x${hexString}`;
 }
 
-// Function to get the current contentHash from ENS
+// Function to get the current contentHash from ENS using the Universal Resolver
 export async function getCurrentContentHash(ensName: string): Promise<string | null> {
     try {
         // Get global Ethereum client
-        const client = getEthereumClient();
+        const client = await getEthereumClient();
         
         // If no client available, exit early
         if (!client) {
             return null;
         }
 
-        // Get the resolver address for the ENS name
-        const resolverAddress = await client.getEnsResolver({
-            name: ensName,
-        });
-
-        if (!resolverAddress) {
-            console.log('No resolver address found for', ensName);
-            return null;
-        }
-
-        // First try to get the contentHash directly using contenthash method
-        try {
-            const contentHash = await client.readContract({
-                address: resolverAddress,
-                abi: [{
-                    name: 'contenthash',
-                    type: 'function',
-                    stateMutability: 'view',
-                    inputs: [{ name: 'node', type: 'bytes32' }],
-                    outputs: [{ name: '', type: 'bytes' }]
-                }],
-                functionName: 'contenthash',
-                args: [namehash(ensName)],
-            });
-            
-            if (contentHash && contentHash !== '0x') {
-                // Process and return content hash
-                return processContentHash(contentHash);
-            }
-            // If contentHash is null or empty, we'll fall through to try ENSIP-10 resolve method
-        } catch (error) {
-            // Fall through to try ENSIP-10 resolver
-        }
+        // DNS encode the ENS name
+        const dnsEncodedName = dnsEncodeName(ensName);
         
-        // Check if resolver supports ENSIP-10
-        const supportsENSIP10 = await client.readContract({
-            address: resolverAddress,
+        // Encode the function call for contenthash(node)
+        const contenthashAbi = {
+            name: 'contenthash',
+            type: 'function',
+            stateMutability: 'view',
+            inputs: [{ name: 'node', type: 'bytes32' }],
+            outputs: [{ name: '', type: 'bytes' }]
+        };
+        
+        // Encode call to contenthash(namehash(ensName))
+        const calldata = encodeFunctionData({
+            abi: [contenthashAbi],
+            functionName: 'contenthash',
+            args: [namehash(ensName)]
+        });
+        
+        // Call Universal Resolver's resolve function
+        // This does everything in one call: finds the resolver and calls the contenthash function
+        const [resolveResult, resolverAddress] = await client.readContract({
+            address: UNIVERSAL_RESOLVER_ADDRESS,
             abi: [{
-                name: 'supportsInterface',
+                name: 'resolve',
                 type: 'function',
                 stateMutability: 'view',
-                inputs: [{ name: 'interfaceID', type: 'bytes4' }],
-                outputs: [{ name: '', type: 'bool' }]
+                inputs: [
+                    { name: 'name', type: 'bytes' },
+                    { name: 'data', type: 'bytes' }
+                ],
+                outputs: [
+                    { name: '', type: 'bytes' },
+                    { name: '', type: 'address' }
+                ]
             }],
-            functionName: 'supportsInterface',
-            args: ['0x9061b923'], // ENSIP-10 interface ID
-        }).catch(error => {
-            return false;
+            functionName: 'resolve',
+            args: [dnsEncodedName, calldata],
+        }).catch((error): [null, null] => {
+            console.log(`Error calling Universal Resolver for ${ensName}:`, error.message);
+            return [null, null];
         });
         
-        if (supportsENSIP10) {
+        if (resolveResult && resolveResult !== '0x') {
+            console.log(`Successfully resolved ${ensName} with Universal Resolver. Resolver: ${resolverAddress}`);
             
-            // Use encodeFunctionData to properly encode the contenthash function call
-            const node = namehash(ensName);
-            const contenthashAbi = {
-                name: 'contenthash',
-                type: 'function',
-                stateMutability: 'view',
-                inputs: [{ name: 'node', type: 'bytes32' }],
-                outputs: [{ name: '', type: 'bytes' }]
-            };
-            
-            // Encode the function call for contenthash(node)
-            const calldata = encodeFunctionData({
-                abi: [contenthashAbi],
-                functionName: 'contenthash',
-                args: [node]
-            });
-            
-            // DNS encode the name
-            const dnsEncodedName = dnsEncodeName(ensName);
-            
-            // Call the resolve method
-            const resolveResult = await client.readContract({
-                address: resolverAddress,
-                abi: [{
-                    name: 'resolve',
-                    type: 'function',
-                    stateMutability: 'view',
-                    inputs: [
-                        { name: 'name', type: 'bytes' },
-                        { name: 'data', type: 'bytes' }
-                    ],
-                    outputs: [{ name: '', type: 'bytes' }]
-                }],
-                functionName: 'resolve',
-                args: [dnsEncodedName, calldata],
-            }).catch((error): null => {
-                console.log(`Error calling ENSIP-10 resolve method: ${error.message}`);
-                return null;
-            });
-            
-            if (resolveResult && resolveResult !== '0x') {
-                // The result might be an ABI-encoded value that needs to be decoded
-                // For contenthash, the return type is bytes
+            // Try to decode the result which is ABI-encoded bytes
+            try {
+                // The result is ABI-encoded, so decode it to get the actual bytes value
+                const decoded = decodeAbiParameters(
+                    [{ name: 'contenthash', type: 'bytes' }],
+                    resolveResult
+                );
                 
-                // Check if the result is a direct contenthash or needs processing
-                if (resolveResult.startsWith('0x0000000000000000000000000000000000000000000000000000000000000020')) {
-                    // This is likely an ABI-encoded bytes value, with offset at position 32
-                    
-                    // Skip the first 64 chars (0x + 32 bytes for the offset)
-                    // Then read the length from the next 32 bytes
-                    const lengthHex = resolveResult.slice(2 + 64, 2 + 64 + 64);
-                    const length = parseInt(lengthHex, 16);
-                    
-                    // Extract the actual bytes content
-                    const contentBytes = resolveResult.slice(2 + 64 + 64, 2 + 64 + 64 + (length * 2));
-                    
-                    // Process the extracted content
-                    return processContentHash('0x' + contentBytes);
+                if (decoded && decoded[0]) {
+                    return processContentHash(decoded[0]);
                 }
-                
-                // If it's not in the expected ABI format, try processing directly
+            } catch (decodeError) {
+                console.log(`Error decoding result from Universal Resolver for ${ensName}:`, decodeError.message);
+                // If decoding fails, try direct processing as fallback
                 return processContentHash(resolveResult);
             }
         }
         
-        console.log('Could not resolve ENS name using either method');
+        console.log(`Could not resolve content hash for ${ensName}`);
         return null;
     } catch (error) {
         console.error(`Error resolving ENS name ${ensName}:`, error);
