@@ -484,6 +484,36 @@ code {
     color: var(--text-color);
 }
 
+/* Syntax highlighting for TypeScript code blocks */
+.language-typescript {
+    display: block;
+    overflow-x: auto;
+    padding: 1rem;
+    background-color: var(--secondary-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: var(--font-monospace);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+/* Also add styling for JavaScript code blocks for completeness */
+.language-javascript {
+    display: block;
+    overflow-x: auto;
+    padding: 1rem;
+    background-color: var(--secondary-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: var(--font-monospace);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
 .prompt {
     margin-right: 10px;
     color: #555;

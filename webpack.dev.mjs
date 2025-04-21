@@ -99,7 +99,7 @@ async function addAssetsToUnixfs(assets, fs) {
   
   // Use addAll to process all files at once
   let rootEntry = null;
-  for await (const entry of fs.addAll(importCandidates())) {
+  for await (const entry of fs.addAll(importCandidates(), { wrapWithDirectory: true })) {
     // The last entry will be the root directory
     rootEntry = entry;
   }

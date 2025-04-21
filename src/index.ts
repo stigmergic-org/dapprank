@@ -8,7 +8,7 @@ import { getMimeTypeIcon } from './report-renderer'
 // @ts-ignore
 import about from './pages/about.md'
 // @ts-ignore
-import bestPractices from './pages/best-practices.md'
+import dappspec from './pages/dappspec.md'
 // @ts-ignore
 import shameList from './pages/shame-list.md'
 // @ts-ignore
@@ -213,8 +213,8 @@ function handleRouteChange() {
         mainContent.style.display = 'none';
     } else if (path === '/about') {
         displayContent(about);
-    } else if (path === '/best-practices') {
-        displayContent(bestPractices);
+    } else if (path === '/dappspec') {
+        displayContent(dappspec);
     } else if (path === '/shame-list') {
         displayContent(shameList);
     } else if (path === '/terms') {
