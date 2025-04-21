@@ -544,6 +544,18 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2))
     console.log(`Report saved to ${reportPath}`)
 
+    // Check and save dappspec.json if it exists
+    try {
+        const dappspecFile = await getDappspecJson(kubo, report.contentHash)
+        if (dappspecFile) {
+            const dappspecPath = join(archiveDir, 'dappspec.json')
+            await fs.writeFile(dappspecPath, JSON.stringify(dappspecFile, null, 2))
+            console.log(`Dappspec saved to ${dappspecPath}`)
+        }
+    } catch (error) {
+        console.log(`No dappspec.json found: ${error.message}`)
+    }
+
     // Create metadata.json in the root archive directory if it doesn't exist
     const archiveMetadataPath = join(rootArchiveDir, 'metadata.json')
     try {
@@ -671,6 +683,83 @@ async function getFileContent(kubo, cid) {
         return Buffer.concat(chunks).toString('utf-8');
     } catch (error) {
         console.error(`Error getting file content: ${error.message}`);
+        return null;
+    }
+}
+
+/**
+ * Fetch and parse the .well-known/dappspec.json file if it exists in the IPFS content
+ * @param {Object} kubo - IPFS Kubo client instance
+ * @param {string} rootCID - The CID of the IPFS content
+ * @returns {Object|null} The parsed dappspec.json content or null if not found
+ */
+async function getDappspecJson(kubo, rootCID) {
+    console.log('Checking for .well-known/dappspec.json...');
+    
+    try {
+        // First check if the .well-known directory exists
+        const entries = [];
+        try {
+            // Try to list the root directory
+            for await (const item of kubo.ls(rootCID)) {
+                entries.push(item);
+            }
+        } catch (error) {
+            console.log('Error listing root directory:', error.message);
+            return null;
+        }
+        
+        // Find .well-known directory
+        const wellKnownDir = entries.find(item => 
+            item.type === 'dir' && 
+            item.name === '.well-known'
+        );
+        
+        if (!wellKnownDir) {
+            console.log('No .well-known directory found');
+            return null;
+        }
+        
+        // List files in .well-known directory
+        const wellKnownEntries = [];
+        try {
+            for await (const item of kubo.ls(wellKnownDir.cid)) {
+                wellKnownEntries.push(item);
+            }
+        } catch (error) {
+            console.log('Error listing .well-known directory:', error.message);
+            return null;
+        }
+        
+        // Find dappspec.json file
+        const dappspecFile = wellKnownEntries.find(item =>
+            item.type === 'file' &&
+            item.name === 'dappspec.json'
+        );
+        
+        if (!dappspecFile) {
+            console.log('No dappspec.json file found in .well-known directory');
+            return null;
+        }
+        
+        // Get file content
+        const content = await getFileContent(kubo, dappspecFile.cid);
+        if (!content) {
+            console.log('Failed to read dappspec.json content');
+            return null;
+        }
+        
+        // Parse JSON content
+        try {
+            const jsonContent = JSON.parse(content);
+            console.log('Successfully found and parsed dappspec.json');
+            return jsonContent;
+        } catch (jsonError) {
+            console.log('Error parsing dappspec.json content:', jsonError.message);
+            return null;
+        }
+    } catch (error) {
+        console.log('Error checking for dappspec.json:', error.message);
         return null;
     }
 }
@@ -983,6 +1072,7 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
             report.totalSize += file.size;
 
             if (file.path.includes('.well-known/source.git')) continue
+            if (file.path === '.well-known/dappspec.json') continue
             
             const fileMimeType = await detectMimeType(kubo, file.cid);
             
