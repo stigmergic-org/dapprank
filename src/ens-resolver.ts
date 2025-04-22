@@ -25,6 +25,38 @@ const getTenderlyRpcUrl = (): string | null => {
     return `https://mainnet.gateway.tenderly.co/${apiKey}`;
 };
 
+/**
+ * Get RPC URL from URL query parameters according to DappSpec
+ * Format: ?ds-rpc-<CHAIN_ID>=url (e.g., ?ds-rpc-1=https://mainnet.infura.io/v3/YOUR-API-KEY)
+ * @param chainId The chain ID to get the RPC URL for
+ * @returns The RPC URL from query params or null if not found
+ */
+const getRpcUrlFromQueryParams = (chainId: number): string | null => {
+    // Only run in browser context
+    if (typeof window === 'undefined') {
+        return null;
+    }
+
+    try {
+        // Create URLSearchParams object from the current URL's query string
+        const queryParams = new URLSearchParams(window.location.search);
+        
+        // Look for the ds-rpc-<CHAIN_ID> parameter
+        const paramName = `ds-rpc-${chainId}`;
+        const rpcUrl = queryParams.get(paramName);
+        
+        if (rpcUrl) {
+            console.log(`Using RPC URL from query parameters for chain ${chainId}: ${rpcUrl}`);
+            return rpcUrl;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Error reading RPC URL from query parameters:', error);
+        return null;
+    }
+};
+
 // Global client instance
 let ethereumClient: PublicClient | null = null;
 
@@ -87,9 +119,42 @@ function setupChainChangeListener() {
     }
 }
 
+// Also setup listener for URL changes to detect query parameter changes
+function setupUrlChangeListener() {
+    if (typeof window !== 'undefined') {
+        // Store current search params for comparison
+        let currentSearch = window.location.search;
+
+        // Listen for popstate events (back/forward buttons, etc.)
+        window.addEventListener('popstate', () => {
+            // Clear client to force recreation with new settings
+            ethereumClient = null;
+            // Update stored search
+            currentSearch = window.location.search;
+        });
+        
+        // For SPA navigation, we need to check periodically if URL params changed
+        // This is needed because history.pushState() doesn't trigger any events
+        const checkUrlChanges = () => {
+            // If search params changed since last check
+            if (window.location.search !== currentSearch) {
+                console.log('URL query parameters changed, recreating Ethereum client');
+                // Clear client to force recreation with new settings
+                ethereumClient = null;
+                // Update stored search
+                currentSearch = window.location.search;
+            }
+        };
+        
+        // Check for URL changes every second (can be adjusted based on app needs)
+        setInterval(checkUrlChanges, 1000);
+    }
+}
+
 // Call setup once on module initialization
 if (typeof window !== 'undefined') {
     setupChainChangeListener();
+    setupUrlChangeListener();
 }
 
 /**
@@ -103,6 +168,9 @@ export async function createEthereumClient(): Promise<PublicClient | null> {
         // Log environment info when creating client (helpful for debugging)
         logEnvironmentInfo();
         
+        // Check for RPC URL in query parameters (highest priority per DappSpec)
+        const queryParamRpcUrl = getRpcUrlFromQueryParams(1); // 1 is the chain ID for Ethereum mainnet
+        
         // Check if browser wallet is available and on mainnet
         const hasWallet = typeof window !== 'undefined' && window.ethereum && window.ethereum.request;
         const isOnMainnet = hasWallet ? await isWalletOnMainnet() : false;
@@ -110,37 +178,39 @@ export async function createEthereumClient(): Promise<PublicClient | null> {
         // Get Tenderly RPC URL
         const tenderlyRpcUrl = getTenderlyRpcUrl();
         
-        // Determine which client to create based on available providers
-        if (hasWallet && isOnMainnet && tenderlyRpcUrl) {
-            // Both wallet (on mainnet) and Tenderly available, use fallback
-            console.log('Using wallet provider (mainnet) with Tenderly fallback');
+        // Build transport sources array with proper priority:
+        // 1. Query param RPC (if available)
+        // 2. window.ethereum (if available and on mainnet)
+        // 3. Tenderly RPC (if available)
+        const transportSources = [];
+        
+        // First priority: Query param RPC URL
+        if (queryParamRpcUrl) {
+            transportSources.push(http(queryParamRpcUrl));
+        }
+        
+        // Second priority: window.ethereum
+        if (hasWallet && isOnMainnet) {
+            // @ts-ignore - Ignoring type issues with viem's transport typing
+            transportSources.push(custom(window.ethereum));
+        }
+        
+        // Third priority: Tenderly RPC
+        if (tenderlyRpcUrl) {
+            transportSources.push(http(tenderlyRpcUrl));
+        }
+        
+        // Create client if we have at least one transport source
+        if (transportSources.length > 0) {
+            console.log(`Creating Ethereum client with ${transportSources.length} transport sources`);
             // @ts-ignore - Ignoring type issues with viem's transport typing
             return createPublicClient({
                 chain: mainnet,
-                transport: fallback([
-                    custom(window.ethereum),
-                    http(tenderlyRpcUrl),
-                ])
-            });
-        } else if (hasWallet && isOnMainnet) {
-            // Only wallet available and on mainnet
-            console.log('Using wallet provider (mainnet)');
-            // @ts-ignore - Ignoring type issues with viem's transport typing
-            return createPublicClient({
-                chain: mainnet,
-                transport: custom(window.ethereum)
-            });
-        } else if (tenderlyRpcUrl) {
-            // Use Tenderly if wallet is not on mainnet or not available
-            console.log('Using Tenderly provider only');
-            // @ts-ignore
-            return createPublicClient({
-                chain: mainnet,
-                transport: http(tenderlyRpcUrl)
+                transport: transportSources.length === 1 ? transportSources[0] : fallback(transportSources)
             });
         } else {
             // No providers available
-            console.error('No Ethereum providers available. Need either a browser wallet on mainnet or Tenderly API key.');
+            console.error('No Ethereum providers available. Need either a browser wallet on mainnet, URL parameter RPC, or Tenderly API key.');
             return null;
         }
     } catch (error) {
@@ -256,7 +326,6 @@ export async function getCurrentContentHash(ensName: string): Promise<string | n
         });
         
         if (resolveResult && resolveResult !== '0x') {
-            console.log(`Successfully resolved ${ensName} with Universal Resolver. Resolver: ${resolverAddress}`);
             
             // Try to decode the result which is ABI-encoded bytes
             try {
@@ -368,5 +437,16 @@ export async function isContentHashOutdated(ensName: string, reportContentHash: 
     } catch (error) {
         console.error(`Error checking if contentHash is outdated for ${ensName}:`, error);
         return false;
+    }
+}
+
+/**
+ * Utility function to manually reset the Ethereum client
+ * Useful when URL parameters change through programmatic navigation
+ */
+export function resetEthereumClient(): void {
+    if (ethereumClient) {
+        console.log('Manually resetting Ethereum client');
+        ethereumClient = null;
     }
 } 

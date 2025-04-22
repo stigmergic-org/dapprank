@@ -17,6 +17,9 @@ By following this specification, dapp developers create applications that are mo
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
 
+#### DappSpec Version
+`0.1.0`
+
 #### Manifest Location
 
 The DappSpec manifest MUST be stored at `/.well-known/dappspec.json` within the dapp's content root.
@@ -29,7 +32,7 @@ Dapps conforming to this specification MUST use an ENS domain as their primary i
 
 ```typescript
 interface Manifest {
-  dappspecVersion: string;
+  dappspec: string;
   repository: string;
   preserveHistory: number;
   dservice: {
@@ -55,7 +58,7 @@ interface Manifest {
 ```
 
 The manifest fields are defined as follows:
-- `dappspecVersion`: The version of the DappSpec specification being used.
+- `dappspec`: The version of the DappSpec specification being used.
 - `repository`: URL of the source code repository for the dapp, typically a git repository.
 - `preserveHistory`: Indicates how many historical versions pinning services should maintain. A value of -1 means all history should be preserved.
 - `dservice`: Information about the dapp's own decentralized backend service.
