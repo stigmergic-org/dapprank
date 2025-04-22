@@ -100,6 +100,14 @@ Analyze the provided JavaScript code and answer the following questions thouroug
         - auxiliary: any other urls that likely are used to make network requests
         - self: urls that are relative to the current domain, e.g. /path/to/resource
     - motivation: say why you concluded the given url, the library being used, and/or how data is passed to the call (formatted as markdown), make sure to exclude api keys and other sensitive information
+3. What dappspec fallback is supported? These are query parameters that can be used to specify backup url endpoints for common services.
+    - type: one of:
+        - rpc: provided through '?ds-rpc-<CHAIN_ID>=url'
+        - bundler: provided through '?ds-bundler-<CHAIN_ID>=url'
+        - dservice-self: provided through '?dservice=url'
+        - dservice-external: provided through '?ds-<ens-name>=url'
+    - motivation: say why you concluded that the script supports parsing and using these query parameters (formatted as markdown)
+
 
 Return ONLY valid JSON that conforms to this OpenAPI 3.0 schema:
 
@@ -161,6 +169,24 @@ Return ONLY valid JSON that conforms to this OpenAPI 3.0 schema:
                 "motivation": {
                   "type": "string",
                   "description": "Explanation for why these URLs were identified"
+                }
+              }
+            }
+          },
+          "fallbacks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "motivation"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["rpc", "bundler", "dservice-self", "dservice-external"],
+                  "description": "Type of dappspec fallback supported"
+                },
+                "motivation": {
+                  "type": "string",
+                  "description": "Explanation for why this fallback is identified as supported"
                 }
               }
             }
@@ -977,7 +1003,8 @@ async function analyzeIndividualScript(filePath, scriptText) {
         libraries: [],
         networking: [],
         urls: [],
-        ethereum: []
+        ethereum: [],
+        fallbacks: []
     };
     
     try {
@@ -1009,6 +1036,7 @@ async function analyzeIndividualScript(filePath, scriptText) {
                 libraries: cachedResult.libraries || [],
                 networking: cachedResult.networking || [],
                 urls: cachedResult.urls || [],
+                fallbacks: cachedResult.fallbacks || [],
                 ethereum: result.ethereum // Use current ethereum detection result
             };
             return cachedAnalysis;
@@ -1057,6 +1085,20 @@ async function analyzeIndividualScript(filePath, scriptText) {
                             type: { 
                                 type: "string",
                                 enum: ["rpc", "bundler", "auxiliary", "self"]
+                            },
+                            motivation: { type: "string" }
+                        }
+                    }
+                },
+                fallbacks: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        required: ["type", "motivation"],
+                        properties: {
+                            type: { 
+                                type: "string",
+                                enum: ["rpc", "bundler", "dservice-self", "dservice-external"]
                             },
                             motivation: { type: "string" }
                         }
@@ -1261,11 +1303,16 @@ async function analyzeIndividualScript(filePath, scriptText) {
                 result.urls = parsedAnalysis.urls;
             }
             
+            if (parsedAnalysis.fallbacks && parsedAnalysis.fallbacks.length > 0) {
+                result.fallbacks = parsedAnalysis.fallbacks;
+            }
+            
             // Store in cache for future use - use combined hash with all data
             scriptAnalysisCache.set(combinedHash, {
                 libraries: result.libraries,
                 networking: result.networking,
-                urls: result.urls
+                urls: result.urls,
+                fallbacks: result.fallbacks
             });
             
             console.log(`Successfully analyzed ${filePath}`);
@@ -1332,7 +1379,8 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
             networkingPurity: [],
             libraryUsage: [],
             urls: [],
-            ethereum: [] // New field to store unique files that access window.ethereum
+            ethereum: [], // Field to store unique files that access window.ethereum
+            fallbacks: [] // New field to store dappspec fallback support
         };
         
         let faviconInfo = null;
@@ -1385,6 +1433,8 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
                             addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, inlineScriptPath);
                             // Add urls findings to the report
                             addToReportIfNotEmpty(report.urls, scriptAnalysis.urls, inlineScriptPath);
+                            // Add dappspec fallback findings to the report
+                            addToReportIfNotEmpty(report.fallbacks, scriptAnalysis.fallbacks, inlineScriptPath);
                         }
                     }
                 }
@@ -1409,6 +1459,8 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
                     addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, file.path);
                     // Add urls findings to the report
                     addToReportIfNotEmpty(report.urls, scriptAnalysis.urls, file.path);
+                    // Add dappspec fallback findings to the report
+                    addToReportIfNotEmpty(report.fallbacks, scriptAnalysis.fallbacks, file.path);
                 }
             }
         }
