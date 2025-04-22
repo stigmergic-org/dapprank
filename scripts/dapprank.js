@@ -82,6 +82,102 @@ const NETWORK_APIS = {
 
 const ANALYSIS_VERSION = 2
 
+// Create a stable hash for the system prompt to make sure it's consistent across runs
+// Store this at the top level so it's calculated once
+const SYSTEM_PROMPT_TEMPLATE = `
+Analyze the provided JavaScript code and answer the following questions thouroughly.
+
+1. What top level javascript libraries are being used?
+    - name: explicity name or descriptive title of the library
+    - motivation: say why you concluded the code uses this library (formatted as markdown)
+2. What calls are there to networking libraries, and what url is being passed?
+    - method: look only for fetch, XMLHttpRequest, navigator.sendBeacon, WebSocket, WebSocketStream, EventSource, RTCPeerConnection
+    - urls: best guess at what url is being passed to the function call (if multiple, return all), don't list urls that are not part of the codebase at all, don't include api keys
+    - library: best guess if this call originates from one of the libraries from (1), or otherwise
+    - type: one of:
+        - rpc: urls that are ethereum rpc endpoints
+        - bundler: urls that are 4337 account abstraction bundler endpoints
+        - auxiliary: any other urls that likely are used to make network requests
+        - self: urls that are relative to the current domain, e.g. /path/to/resource
+    - motivation: say why you concluded the given url, the library being used, and/or how data is passed to the call (formatted as markdown), make sure to exclude api keys and other sensitive information
+
+Return ONLY valid JSON that conforms to this OpenAPI 3.0 schema:
+
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "JavaScript Analysis Schema",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "AnalysisResult": {
+        "type": "object",
+        "required": ["libraries", "networking"],
+        "properties": {
+          "libraries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "motivation"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name or descriptive title of the library"
+                },
+                "motivation": {
+                  "type": "string",
+                  "description": "Explanation for why this library was identified"
+                }
+              }
+            }
+          },
+          "networking": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["method", "urls", "type", "motivation"],
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "description": "Method of network API call"
+                },
+                "urls": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "URLs being accessed by the API call"
+                },
+                "library": {
+                  "type": "string",
+                  "description": "Library that makes the network call"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["rpc", "bundler", "auxiliary", "self"],
+                  "description": "Classification of the URL"
+                },
+                "motivation": {
+                  "type": "string",
+                  "description": "Explanation for why these URLs were identified"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+Your response should be a JSON object that conforms to the AnalysisResult schema. If no API calls of a certain type are found, return an empty array for that type.
+`;
+
+// Calculate a hash of the prompt template to use as part of the cache key
+const PROMPT_HASH = crypto.createHash('sha256').update(SYSTEM_PROMPT_TEMPLATE).digest('hex').slice(0, 8);
+console.log(`Using prompt template with hash: ${PROMPT_HASH}`);
+
 program
     .name('dapprank')
     .description('Analyze ENS sites for external dependencies and Web3 APIs')
@@ -880,6 +976,7 @@ async function analyzeIndividualScript(filePath, scriptText) {
     const result = {
         libraries: [],
         networking: [],
+        urls: [],
         ethereum: []
     };
     
@@ -897,18 +994,24 @@ async function analyzeIndividualScript(filePath, scriptText) {
             // console.log(`Found ${count} occurrences of window.ethereum in ${filePath}`);
         }
         
-        // Create a hash of the script content to use as a cache key
-        const hash = crypto.createHash('sha256').update(scriptText).digest('hex');
+        // Create a hash of the script content combined with the prompt hash
+        // This ensures the cache is invalidated if either the script or the prompt changes
+        const scriptHash = crypto.createHash('sha256').update(scriptText).digest('hex');
+        const combinedHash = `${scriptHash}_${PROMPT_HASH}`;
         
-        // Check if we already have an analysis for this script content
-        if (scriptAnalysisCache.has(hash)) {
+        // Check if we already have an analysis for this script content and prompt
+        if (scriptAnalysisCache.has(combinedHash)) {
             console.log(`Using cached analysis for ${filePath}`);
-            const cachedResult = scriptAnalysisCache.get(hash);
-            return {
+            const cachedResult = scriptAnalysisCache.get(combinedHash);
+            
+            // Initialize the returning result object
+            const cachedAnalysis = {
                 libraries: cachedResult.libraries || [],
                 networking: cachedResult.networking || [],
+                urls: cachedResult.urls || [],
                 ethereum: result.ethereum // Use current ethereum detection result
             };
+            return cachedAnalysis;
         }
         
         // Load API key from environment variable
@@ -920,41 +1023,49 @@ async function analyzeIndividualScript(filePath, scriptText) {
         // Initialize the Google Generative AI client
         const ai = new GoogleGenAI({ apiKey });
         
-        // Format the structured output we want from Gemini - focus on network calls only
-        const systemPrompt = `
-        Analyze the provided JavaScript code and answer the following questions thouroughly.
-
-        1. What top level javascript libraries are being used?
-            - name: explicity name or descriptive title of the library
-            - motivation: say why you concluded the code uses this library (formatted as markdown)
-        2. What calls are there to networking libraries, and what url is being passed?
-            - type: look only for fetch, XMLHttpRequest, navigator.sendBeacon, WebSocket, WebSocketStream, EventSource, RTCPeerConnection
-            - urls: best guess at what url is being passed to the function call (if multiple, return all)
-            - library: best guess if this call originates from one of the libraries from (1), or otherwise
-            - motivation: say why you concluded the given url, the library being used, and/or how data is passed to the call (formatted as markdown)
-
+        // Use the system prompt template defined at the top level
+        const systemPrompt = SYSTEM_PROMPT_TEMPLATE;
         
-        Return ONLY valid JSON with this structure:
-        {
-          "libraries": [
-            {
-              "name": "...",
-              "motivation": "..."
+        // Define the response schema structure
+        const responseSchema = {
+            type: "object",
+            required: ["libraries", "networking", "urls"],
+            properties: {
+                libraries: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        required: ["name", "motivation"],
+                        properties: {
+                            name: { type: "string" },
+                            motivation: { type: "string" }
+                        }
+                    }
+                },
+                networking: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        required: ["method", "urls", "type", "motivation"],
+                        properties: {
+                            method: { type: "string" },
+                            urls: { 
+                                type: "array",
+                                items: { type: "string" }
+                            },
+                            library: { type: "string" },
+                            type: { 
+                                type: "string",
+                                enum: ["rpc", "bundler", "auxiliary", "self"]
+                            },
+                            motivation: { type: "string" }
+                        }
+                    }
+                }
             }
-          ],
-          "networking": [
-            {
-              "type": "...",
-              "urls": ["..."],
-              "motivation": "..."
-            }
-          ]
-        }
-        
-        If no API calls of a certain type are found, return an empty array for that type.
-        `;
-        
-        // Query the Gemini model
+        };
+
+        // Query the Gemini model with structured output
         const response = await ai.models.generateContent({
             model: "gemini-2.5-pro-exp-03-25",
             contents: [
@@ -969,45 +1080,204 @@ async function analyzeIndividualScript(filePath, scriptText) {
             generationConfig: {
                 temperature: 0.1,
                 maxOutputTokens: 8192,
-            }
+            },
+            response_mime_type: "application/json",
+            response_schema: responseSchema
         });
-        // console.log(response.text)
-        const responseText = response.text
         
-        // Parse the JSON response
+        console.log(`Received response from Gemini for ${filePath}`);
+        
         try {
-            // Extract the JSON part (in case there's any text around it)
-            const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) {
-                throw new Error(`No valid JSON found in response for ${filePath}`);
+            // In the Gemini 1.x API, the response is accessed through the text property
+            // In the Gemini 2.x API with structured output, we access it through parsed
+            let parsedAnalysis;
+            
+            try {
+                // First try to access it as a structured response
+                parsedAnalysis = response.candidates?.[0].content?.parts?.[0]?.functionCall?.args;
+                
+                // If that doesn't work, try direct access to text
+                if (!parsedAnalysis) {
+                    // For Gemini 1.x
+                    if (typeof response.text === 'function') {
+                        const responseText = response.text();
+                        console.log(`Using text() method for ${filePath}`);
+                        
+                        // Check for markdown code blocks
+                        const markdownMatch = responseText.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+                        if (markdownMatch) {
+                            console.log(`Found markdown JSON block in text() for ${filePath}`);
+                            parsedAnalysis = JSON.parse(markdownMatch[1]);
+                        } else {
+                            parsedAnalysis = JSON.parse(responseText);
+                        }
+                    } 
+                    // For Gemini 2.x text access
+                    else if (response.text) {
+                        console.log(`Using text property for ${filePath}`);
+                        
+                        // Check for markdown code blocks
+                        const markdownMatch = response.text.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+                        if (markdownMatch) {
+                            console.log(`Found markdown JSON block in text property for ${filePath}`);
+                            parsedAnalysis = JSON.parse(markdownMatch[1]);
+                        } else {
+                            parsedAnalysis = JSON.parse(response.text);
+                        }
+                    }
+                    // Direct parts access - combine all parts
+                    else if (response.parts && response.parts.length > 0) {
+                        console.log(`Using parts access for ${filePath}`);
+                        // Combine all text parts to handle fragmented responses
+                        const textContent = response.parts.map(part => part.text || '').join('');
+                        
+                        // Check for markdown code blocks
+                        const markdownMatch = textContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+                        if (markdownMatch) {
+                            console.log(`Found markdown JSON block in parts for ${filePath}`);
+                            parsedAnalysis = JSON.parse(markdownMatch[1]);
+                        } else {
+                            parsedAnalysis = JSON.parse(textContent);
+                        }
+                    }
+                    else {
+                        throw new Error('Could not access response content');
+                    }
+                }
+            } catch (accessError) {
+                console.error(`Error accessing response content: ${accessError.message}`);
+                // Last attempt - try to stringify the entire response and extract JSON
+                const responseStr = JSON.stringify(response);
+                console.log(`Fallback: Stringifying entire response for ${filePath}`);
+                
+                // Extract candidates text parts and join them if available
+                try {
+                    if (response.candidates && response.candidates[0] && 
+                        response.candidates[0].content && response.candidates[0].content.parts) {
+                        
+                        const parts = response.candidates[0].content.parts;
+                        // Combine all text parts
+                        const combinedText = parts.map(part => part.text || '').join('');
+                        console.log(`Extracted combined text from candidates for ${filePath}`);
+                        
+                        // Check for markdown code blocks
+                        const markdownMatch = combinedText.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+                        if (markdownMatch) {
+                            console.log(`Found markdown JSON block in combined candidates for ${filePath}`);
+                            parsedAnalysis = JSON.parse(markdownMatch[1]);
+                            return; // Skip remaining fallbacks if successful
+                        } else {
+                            // Try parsing as direct JSON
+                            parsedAnalysis = JSON.parse(combinedText);
+                            return; // Skip remaining fallbacks if successful
+                        }
+                    }
+                } catch (candidateError) {
+                    console.log(`Error parsing combined candidates: ${candidateError.message}`);
+                    // Continue to next fallback
+                }
+                
+                // Check if response contains a markdown code block in stringified form
+                const markdownMatch = responseStr.match(/"text":"```json\s*(\{[\s\S]*?\})\s*```"/);
+                if (markdownMatch) {
+                    try {
+                        // Extract the JSON content from within the markdown code block
+                        console.log(`Found markdown JSON block in stringified response for ${filePath}`);
+                        const jsonContent = markdownMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n');
+                        parsedAnalysis = JSON.parse(jsonContent);
+                    } catch (markdownParseError) {
+                        console.error(`Error parsing markdown JSON: ${markdownParseError.message}`);
+                        // Fall through to next attempt
+                    }
+                }
+                
+                // If we still don't have a valid result, try even more aggressive pattern matching
+                if (!parsedAnalysis) {
+                    console.log(`Attempting more aggressive JSON extraction for ${filePath}`);
+                    // Extract any JSON-like structure from the response string
+                    try {
+                        // Look for any JSON object pattern in the response
+                        const jsonPattern = /\{(?:[^{}]|"(?:\\"|[^"])*"|\{(?:[^{}]|"(?:\\"|[^"])*")*\})*\}/g;
+                        const matches = responseStr.match(jsonPattern);
+                        
+                        if (matches && matches.length > 0) {
+                            // Try each match until we find a valid one
+                            for (const match of matches) {
+                                try {
+                                    // Clean up escaped characters
+                                    const cleanedMatch = match
+                                        .replace(/\\"/g, '"')
+                                        .replace(/\\n/g, '\n')
+                                        .replace(/\\\\/g, '\\');
+                                    
+                                    const potentialJson = JSON.parse(cleanedMatch);
+                                    
+                                    // Check if it has the expected structure
+                                    if (potentialJson && 
+                                        (potentialJson.libraries !== undefined || 
+                                         potentialJson.networking !== undefined || 
+                                         potentialJson.urls !== undefined)) {
+                                        
+                                        console.log(`Found valid JSON structure in aggressive extraction for ${filePath}`);
+                                        parsedAnalysis = potentialJson;
+                                        break;
+                                    }
+                                } catch (matchParseError) {
+                                    // Continue trying other matches
+                                }
+                            }
+                        }
+                        
+                        if (!parsedAnalysis) {
+                            // If all else fails, try the original regex approach
+                            const jsonMatch = responseStr.match(/"text":"([^"]*)"/) || responseStr.match(/\{[\s\S]*\}/);
+                            if (jsonMatch) {
+                                const jsonContent = jsonMatch[1] ? jsonMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n') : jsonMatch[0];
+                                parsedAnalysis = JSON.parse(jsonContent);
+                            } else {
+                                throw new Error('No JSON content found in response');
+                            }
+                        }
+                    } catch (finalError) {
+                        throw new Error(`Failed to extract JSON from response: ${finalError.message}`);
+                    }
+                }
             }
             
-            const jsonStr = jsonMatch[0];
-            const analysis = JSON.parse(jsonStr);
+            if (!parsedAnalysis) {
+                throw new Error('No valid analysis data extracted from response');
+            }
             
             // Process the results 
-            if (analysis.networking && analysis.networking.length > 0) {
-                result.networking = analysis.networking
+            if (parsedAnalysis.networking && parsedAnalysis.networking.length > 0) {
+                result.networking = parsedAnalysis.networking;
             }
             
-            if (analysis.libraries && analysis.libraries.length > 0) {
-                result.libraries = analysis.libraries
+            if (parsedAnalysis.libraries && parsedAnalysis.libraries.length > 0) {
+                result.libraries = parsedAnalysis.libraries;
+            }
+
+            if (parsedAnalysis.urls && parsedAnalysis.urls.length > 0) {
+                result.urls = parsedAnalysis.urls;
             }
             
-            // Store in cache for future use
-            scriptAnalysisCache.set(hash, {
+            // Store in cache for future use - use combined hash with all data
+            scriptAnalysisCache.set(combinedHash, {
                 libraries: result.libraries,
-                networking: result.networking
+                networking: result.networking,
+                urls: result.urls
             });
             
             console.log(`Successfully analyzed ${filePath}`);
-            
         } catch (jsonError) {
             console.error(`Error parsing JSON response for ${filePath}:`, jsonError);
-            console.error("Response was:", responseText.substring(0, 200) + "...");
+            // Safely log response by converting to string first
+            const safeResponseStr = typeof response === 'object' ? 
+                JSON.stringify(response, null, 2).substring(0, 500) + '...' : 
+                String(response).substring(0, 500) + '...';
+            console.error("Response:", safeResponseStr);
             throw new Error(`Failed to parse AI analysis response for ${filePath}: ${jsonError.message}`);
         }
-        
     } catch (aiError) {
         console.error(`Error in script analysis for ${filePath}:`, aiError);
         throw aiError; // Re-throw the error to fail the entire process
@@ -1061,6 +1331,7 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
             },
             networkingPurity: [],
             libraryUsage: [],
+            urls: [],
             ethereum: [] // New field to store unique files that access window.ethereum
         };
         
@@ -1112,6 +1383,8 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
                             addToReportIfNotEmpty(report.libraryUsage, scriptAnalysis.libraries, inlineScriptPath);
                             // Add Ethereum findings to the report
                             addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, inlineScriptPath);
+                            // Add urls findings to the report
+                            addToReportIfNotEmpty(report.urls, scriptAnalysis.urls, inlineScriptPath);
                         }
                     }
                 }
@@ -1134,6 +1407,8 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
                     addToReportIfNotEmpty(report.libraryUsage, scriptAnalysis.libraries, file.path);
                     // Add Ethereum findings to the report
                     addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, file.path);
+                    // Add urls findings to the report
+                    addToReportIfNotEmpty(report.urls, scriptAnalysis.urls, file.path);
                 }
             }
         }
