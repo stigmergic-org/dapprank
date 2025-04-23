@@ -71,14 +71,6 @@ const LINK_NON_FETCHING_REL_VALUES = [
     'canonical'
 ];
 
-// Network API patterns to detect in JavaScript AST
-const NETWORK_APIS = {
-    FETCH: ['fetch'],
-    XHR: ['XMLHttpRequest'],
-    WEBSOCKET: ['WebSocket', 'WebSocketStream'],
-    WEBRTC: ['RTCPeerConnection', 'RTCDataChannel'],
-    WEB3: ['window.ethereum', 'ethereum']
-}
 
 const ANALYSIS_VERSION = 2
 
@@ -90,14 +82,14 @@ Analyze the provided JavaScript code and answer the following questions thouroug
 1. What top level javascript libraries are being used?
     - name: explicity name or descriptive title of the library
     - motivation: say why you concluded the code uses this library (formatted as markdown)
-2. What calls are there to networking libraries, and what url is being passed?
+2. What calls are there to networking libraries, and what url is being passed? (if one of the methods is detected, there MUST be a corresponding entry in the networking section)
     - method: look only for fetch, XMLHttpRequest, navigator.sendBeacon, WebSocket, WebSocketStream, EventSource, RTCPeerConnection
-    - urls: best guess at what url is being passed to the function call (if multiple, return all), don't list urls that are not part of the codebase at all, don't include api keys
+    - urls: best guess at what url is being passed to the function call (if multiple, return all), don't list urls that are not part of the codebase at all, don't include api keys. Don't include if url is only 'window.ethereum' or query param '?ds-rpc-<CHAIN_ID>'.
     - library: best guess if this call originates from one of the libraries from (1), or otherwise
     - type: one of:
-        - rpc: urls that are ethereum rpc endpoints
+        - rpc: urls that are ethereum rpc endpoints.
         - bundler: urls that are 4337 account abstraction bundler endpoints
-        - auxiliary: any other urls that likely are used to make network requests
+        - auxiliary: any other urls, or if determination couldn't be made
         - self: urls that are relative to the current domain, e.g. /path/to/resource
     - motivation: say why you concluded the given url, the library being used, and/or how data is passed to the call (formatted as markdown), make sure to exclude api keys and other sensitive information
 3. What dappspec fallback is supported? These are query parameters that can be used to specify backup url endpoints for common services.
@@ -1109,7 +1101,8 @@ async function analyzeIndividualScript(filePath, scriptText) {
 
         // Query the Gemini model with structured output
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-pro-exp-03-25",
+            // model: "gemini-2.5-pro-exp-03-25", // free model
+            model: "gemini-2.5-pro-preview-03-25",
             contents: [
                 {
                     role: "user",
