@@ -166,7 +166,7 @@ When `fallbacks.rpcs` or `fallbacks.dservice` are set to `true`, the dapp suppor
   - Main service: `?dservice=url` (URL-encoded value)
   - External services: `?ds-<ens-name>=url` (URL-encoded value)
 
-These parameters allow users to specify alternative endpoints when the default ones are inaccessible, enhancing censorship resistance.
+These parameters allow users to specify alternative endpoints when the default ones are inaccessible, enhancing censorship resistance. When a user provides any of these query parameters, the given value SHOULD be prioritized over the apps existing options.
 
 ### Auxiliary Services
 
@@ -184,7 +184,10 @@ Listing these services:
 
 ### Rationale
 
-This specification balances simplicity with comprehensiveness to ensure dapps can be resilient against censorship while remaining practical to implement. The JSON format makes it machine-readable, allowing automated tools to enhance resilience.
+This specification is designed to highlight design choices necessary to build truely resilient applications. By requiring you to list ethereum rpc, bundler, and auxiliary endpoints it forces you to consider where centralization chokepoints are located within your application. Further, documenting fallback options highlights steps you can take to further add resilience in case all the default endpoints are not available. 
+
+The introduction of the *dservice* concept is an acknoledgement that most applications need to rely on some sort of indexer to access blockchain data. The ethereum rpc api is simply not sophisticated enough for advanced query functionality. However, dservices takes this a step further by introducing redundancy by allowing multiple endpoints and allowing the user to pass their own endpoint through a query parameter. Additionally dservices can become a canonical way dapps can expose backend apis. By allowing dapps to define other ENS names as *externalDservices*, infrastructure can be shared across multiple dapps. For example, `dappA.eth` can expose a dservice with three backing endpoints, `dappB.eth` can now consume the dservice of Dapp A by resovling `dappA.eth/.well-known/dappspec.json` and using the resolved urls to make requests. Dapps could even implement payment or subscription services where they charge other dapps to consume the default endpoints.
+
 
 ### Recommendations
 
