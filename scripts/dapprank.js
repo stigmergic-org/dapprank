@@ -980,60 +980,7 @@ function detectWindowEthereum(scriptText) {
     return matches ? matches.length : 0;
 }
 
-/**
- * Analyzes a single JavaScript file or inline script
- * @param {string} filePath - Path or identifier for the script
- * @param {string} scriptText - The JavaScript content to analyze
- * @returns {Object} Analysis results with networkingPurity and ethereum data
- * @throws {Error} If AI analysis fails
- */
-async function analyzeIndividualScript(filePath, scriptText) {
-    console.log(`Analyzing script: ${filePath}`);
-    
-    // Initialize empty results
-    const result = {
-        libraries: [],
-        networking: [],
-        urls: [],
-        ethereum: [],
-        fallbacks: []
-    };
-    
-    try {
-        // Skip if script content is too small
-        if (!scriptText || scriptText.trim().length < 20) {
-            console.log(`Script content too small for ${filePath}, skipping analysis`);
-            return result
-        }
-        
-        // Check for window.ethereum occurrences
-        const count = detectWindowEthereum(scriptText);
-        if (count > 0) {
-            result.ethereum.push({ count });
-            // console.log(`Found ${count} occurrences of window.ethereum in ${filePath}`);
-        }
-        
-        // Create a hash of the script content combined with the prompt hash
-        // This ensures the cache is invalidated if either the script or the prompt changes
-        const scriptHash = crypto.createHash('sha256').update(scriptText).digest('hex');
-        const combinedHash = `${scriptHash}_${PROMPT_HASH}`;
-        
-        // Check if we already have an analysis for this script content and prompt
-        if (scriptAnalysisCache.has(combinedHash)) {
-            console.log(`Using cached analysis for ${filePath}`);
-            const cachedResult = scriptAnalysisCache.get(combinedHash);
-            
-            // Initialize the returning result object
-            const cachedAnalysis = {
-                libraries: cachedResult.libraries || [],
-                networking: cachedResult.networking || [],
-                urls: cachedResult.urls || [],
-                fallbacks: cachedResult.fallbacks || [],
-                ethereum: result.ethereum // Use current ethereum detection result
-            };
-            return cachedAnalysis;
-        }
-        
+async function gemeniAnalysis(scriptText, filePath) {
         // Load API key from environment variable
         const apiKey = process.env.GOOGLE_API_KEY;
         if (!apiKey) {
@@ -1121,209 +1068,104 @@ async function analyzeIndividualScript(filePath, scriptText) {
         });
         
         console.log(`Received response from Gemini for ${filePath}`);
-        
-        try {
-            // In the Gemini 1.x API, the response is accessed through the text property
-            // In the Gemini 2.x API with structured output, we access it through parsed
-            let parsedAnalysis;
-            
-            try {
-                // First try to access it as a structured response
-                parsedAnalysis = response.candidates?.[0].content?.parts?.[0]?.functionCall?.args;
-                
-                // If that doesn't work, try direct access to text
-                if (!parsedAnalysis) {
-                    // For Gemini 1.x
-                    if (typeof response.text === 'function') {
-                        const responseText = response.text();
-                        console.log(`Using text() method for ${filePath}`);
-                        
-                        // Check for markdown code blocks
-                        const markdownMatch = responseText.match(/```json\s*(\{[\s\S]*?\})\s*```/);
-                        if (markdownMatch) {
-                            console.log(`Found markdown JSON block in text() for ${filePath}`);
-                            parsedAnalysis = JSON.parse(markdownMatch[1]);
-                        } else {
-                            parsedAnalysis = JSON.parse(responseText);
-                        }
-                    } 
-                    // For Gemini 2.x text access
-                    else if (response.text) {
-                        console.log(`Using text property for ${filePath}`);
-                        
-                        // Check for markdown code blocks
-                        const markdownMatch = response.text.match(/```json\s*(\{[\s\S]*?\})\s*```/);
-                        if (markdownMatch) {
-                            console.log(`Found markdown JSON block in text property for ${filePath}`);
-                            parsedAnalysis = JSON.parse(markdownMatch[1]);
-                        } else {
-                            parsedAnalysis = JSON.parse(response.text);
-                        }
-                    }
-                    // Direct parts access - combine all parts
-                    else if (response.parts && response.parts.length > 0) {
-                        console.log(`Using parts access for ${filePath}`);
-                        // Combine all text parts to handle fragmented responses
-                        const textContent = response.parts.map(part => part.text || '').join('');
-                        
-                        // Check for markdown code blocks
-                        const markdownMatch = textContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
-                        if (markdownMatch) {
-                            console.log(`Found markdown JSON block in parts for ${filePath}`);
-                            parsedAnalysis = JSON.parse(markdownMatch[1]);
-                        } else {
-                            parsedAnalysis = JSON.parse(textContent);
-                        }
-                    }
-                    else {
-                        throw new Error('Could not access response content');
-                    }
-                }
-            } catch (accessError) {
-                console.error(`Error accessing response content: ${accessError.message}`);
-                // Last attempt - try to stringify the entire response and extract JSON
-                const responseStr = JSON.stringify(response);
-                console.log(`Fallback: Stringifying entire response for ${filePath}`);
-                
-                // Extract candidates text parts and join them if available
-                try {
-                    if (response.candidates && response.candidates[0] && 
-                        response.candidates[0].content && response.candidates[0].content.parts) {
-                        
-                        const parts = response.candidates[0].content.parts;
-                        // Combine all text parts
-                        const combinedText = parts.map(part => part.text || '').join('');
-                        console.log(`Extracted combined text from candidates for ${filePath}`);
-                        
-                        // Check for markdown code blocks
-                        const markdownMatch = combinedText.match(/```json\s*(\{[\s\S]*?\})\s*```/);
-                        if (markdownMatch) {
-                            console.log(`Found markdown JSON block in combined candidates for ${filePath}`);
-                            parsedAnalysis = JSON.parse(markdownMatch[1]);
-                            return; // Skip remaining fallbacks if successful
-                        } else {
-                            // Try parsing as direct JSON
-                            parsedAnalysis = JSON.parse(combinedText);
-                            return; // Skip remaining fallbacks if successful
-                        }
-                    }
-                } catch (candidateError) {
-                    console.log(`Error parsing combined candidates: ${candidateError.message}`);
-                    // Continue to next fallback
-                }
-                
-                // Check if response contains a markdown code block in stringified form
-                const markdownMatch = responseStr.match(/"text":"```json\s*(\{[\s\S]*?\})\s*```"/);
-                if (markdownMatch) {
-                    try {
-                        // Extract the JSON content from within the markdown code block
-                        console.log(`Found markdown JSON block in stringified response for ${filePath}`);
-                        const jsonContent = markdownMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n');
-                        parsedAnalysis = JSON.parse(jsonContent);
-                    } catch (markdownParseError) {
-                        console.error(`Error parsing markdown JSON: ${markdownParseError.message}`);
-                        // Fall through to next attempt
-                    }
-                }
-                
-                // If we still don't have a valid result, try even more aggressive pattern matching
-                if (!parsedAnalysis) {
-                    console.log(`Attempting more aggressive JSON extraction for ${filePath}`);
-                    // Extract any JSON-like structure from the response string
-                    try {
-                        // Look for any JSON object pattern in the response
-                        const jsonPattern = /\{(?:[^{}]|"(?:\\"|[^"])*"|\{(?:[^{}]|"(?:\\"|[^"])*")*\})*\}/g;
-                        const matches = responseStr.match(jsonPattern);
-                        
-                        if (matches && matches.length > 0) {
-                            // Try each match until we find a valid one
-                            for (const match of matches) {
-                                try {
-                                    // Clean up escaped characters
-                                    const cleanedMatch = match
-                                        .replace(/\\"/g, '"')
-                                        .replace(/\\n/g, '\n')
-                                        .replace(/\\\\/g, '\\');
-                                    
-                                    const potentialJson = JSON.parse(cleanedMatch);
-                                    
-                                    // Check if it has the expected structure
-                                    if (potentialJson && 
-                                        (potentialJson.libraries !== undefined || 
-                                         potentialJson.networking !== undefined || 
-                                         potentialJson.urls !== undefined)) {
-                                        
-                                        console.log(`Found valid JSON structure in aggressive extraction for ${filePath}`);
-                                        parsedAnalysis = potentialJson;
-                                        break;
-                                    }
-                                } catch (matchParseError) {
-                                    // Continue trying other matches
-                                }
-                            }
-                        }
-                        
-                        if (!parsedAnalysis) {
-                            // If all else fails, try the original regex approach
-                            const jsonMatch = responseStr.match(/"text":"([^"]*)"/) || responseStr.match(/\{[\s\S]*\}/);
-                            if (jsonMatch) {
-                                const jsonContent = jsonMatch[1] ? jsonMatch[1].replace(/\\"/g, '"').replace(/\\n/g, '\n') : jsonMatch[0];
-                                parsedAnalysis = JSON.parse(jsonContent);
-                            } else {
-                                throw new Error('No JSON content found in response');
-                            }
-                        }
-                    } catch (finalError) {
-                        throw new Error(`Failed to extract JSON from response: ${finalError.message}`);
-                    }
-                }
-            }
-            
-            if (!parsedAnalysis) {
-                throw new Error('No valid analysis data extracted from response');
-            }
-            
-            // Process the results 
-            if (parsedAnalysis.networking && parsedAnalysis.networking.length > 0) {
-                result.networking = parsedAnalysis.networking;
-            }
-            
-            if (parsedAnalysis.libraries && parsedAnalysis.libraries.length > 0) {
-                result.libraries = parsedAnalysis.libraries;
-            }
 
-            if (parsedAnalysis.urls && parsedAnalysis.urls.length > 0) {
-                result.urls = parsedAnalysis.urls;
-            }
-            
-            if (parsedAnalysis.fallbacks && parsedAnalysis.fallbacks.length > 0) {
-                result.fallbacks = parsedAnalysis.fallbacks;
-            }
-            
-            // Store in cache for future use - use combined hash with all data
-            scriptAnalysisCache.set(combinedHash, {
-                libraries: result.libraries,
-                networking: result.networking,
-                urls: result.urls,
-                fallbacks: result.fallbacks
-            });
-            
-            console.log(`Successfully analyzed ${filePath}`);
-        } catch (jsonError) {
-            console.error(`Error parsing JSON response for ${filePath}:`, jsonError);
-            // Safely log response by converting to string first
-            const safeResponseStr = typeof response === 'object' ? 
-                JSON.stringify(response, null, 2).substring(0, 500) + '...' : 
-                String(response).substring(0, 500) + '...';
-            console.error("Response:", safeResponseStr);
-            throw new Error(`Failed to parse AI analysis response for ${filePath}: ${jsonError.message}`);
+        if (response.candidates[0].content.parts.length > 1) throw new Error('Multiple parts found in response, not sure how to proceed');
+
+        const textContent = response.candidates[0].content.parts[0].text;
+
+
+        const markdownMatch = textContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+        const analysis = JSON.parse(markdownMatch[1]);
+
+        return analysis;
+}
+
+/**
+ * Analyzes a single JavaScript file or inline script
+ * @param {string} filePath - Path or identifier for the script
+ * @param {string} scriptText - The JavaScript content to analyze
+ * @returns {Object} Analysis results with networkingPurity and ethereum data
+ * @throws {Error} If AI analysis fails
+ */
+async function analyzeIndividualScript(filePath, scriptText) {
+    console.log(`Analyzing script: ${filePath}`);
+    
+    // Initialize empty results
+    const result = {
+        libraries: [],
+        networking: [],
+        ethereum: [],
+        fallbacks: []
+    };
+    
+    try {
+        // Skip if script content is too small
+        if (!scriptText || scriptText.trim().length < 20) {
+            console.log(`Script content too small for ${filePath}, skipping analysis`);
+            return result
         }
+        
+        // Check for window.ethereum occurrences
+        const count = detectWindowEthereum(scriptText);
+        if (count > 0) {
+            result.ethereum.push({ count });
+            // console.log(`Found ${count} occurrences of window.ethereum in ${filePath}`);
+        }
+        
+        // Create a hash of the script content combined with the prompt hash
+        // This ensures the cache is invalidated if either the script or the prompt changes
+        const scriptHash = crypto.createHash('sha256').update(scriptText).digest('hex');
+        const combinedHash = `${scriptHash}_${PROMPT_HASH}`;
+        
+        // Check if we already have an analysis for this script content and prompt
+        if (scriptAnalysisCache.has(combinedHash)) {
+            console.log(`Using cached analysis for ${filePath}`);
+            const cachedResult = scriptAnalysisCache.get(combinedHash);
+            
+            // Initialize the returning result object
+            const cachedAnalysis = {
+                libraries: cachedResult.libraries || [],
+                networking: cachedResult.networking || [],
+                fallbacks: cachedResult.fallbacks || [],
+                ethereum: result.ethereum // Use current ethereum detection result
+            };
+            return cachedAnalysis;
+        }
+        
+        const analysis = await gemeniAnalysis(scriptText, filePath);
+
+        
+        if (!analysis) {
+            throw new Error('No valid analysis data extracted from response');
+        }
+        
+        // Process the results 
+        if (analysis.networking && analysis.networking.length > 0) {
+            result.networking = analysis.networking;
+        }
+        
+        if (analysis.libraries && analysis.libraries.length > 0) {
+            result.libraries = analysis.libraries;
+        }
+        
+        if (analysis.fallbacks && analysis.fallbacks.length > 0) {
+            result.fallbacks = analysis.fallbacks;
+        }
+        
+        // Store in cache for future use - use combined hash with all data
+        scriptAnalysisCache.set(combinedHash, {
+            libraries: result.libraries,
+            networking: result.networking,
+            fallbacks: result.fallbacks,
+            ethereum: result.ethereum
+        });
+        
+        console.log(`Successfully analyzed ${filePath}`);
     } catch (aiError) {
         console.error(`Error in script analysis for ${filePath}:`, aiError);
         throw aiError; // Re-throw the error to fail the entire process
     }
     
-    // Return the final result after successful analysis
     return result;
 }
 
