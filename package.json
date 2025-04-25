@@ -12,6 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@babel/parser": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
     "@google/genai": "^0.8.0",
     "cheerio": "^1.0.0",
     "commander": "^13.1.0",

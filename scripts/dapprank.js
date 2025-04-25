@@ -15,6 +15,9 @@ import crypto from 'crypto'
 import { WASMagic } from "wasmagic"
 import * as cheerio from 'cheerio'
 import { GoogleGenAI } from "@google/genai"
+import * as parser from '@babel/parser'
+import traverseDefault from '@babel/traverse'
+const traverse = traverseDefault.default
 
 // Address of the Universal Resolver contract on mainnet
 const UNIVERSAL_RESOLVER_ADDRESS = '0x64969fb44091A7E5fA1213D30D7A7e8488edf693'
@@ -980,7 +983,88 @@ function detectWindowEthereum(scriptText) {
     return matches ? matches.length : 0;
 }
 
-async function gemeniAnalysis(scriptText, filePath) {
+async function geminiAnalysisWithChunking(scriptText, filePath) {
+    try {
+        return await geminiAnalysis(scriptText, filePath);
+    } catch (error) {
+        if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
+            console.log('Token limit exceeded, attempting to chunk the code...');
+            const chunks = await splitScriptIntoChunks(scriptText);
+            console.log(`Split script into ${chunks.length} chunks`);
+
+            const results = [];
+            for (const chunk of chunks) {
+                const result = await geminiAnalysisWithChunking(chunk, filePath);
+                results.push(result);
+            }
+
+            const mergedResults = results.reduce((acc, curr) => {
+                if (curr.libraries) {
+                    acc.libraries = [...acc.libraries, ...curr.libraries];
+                }
+                if (curr.networking) {
+                    acc.networking = [...acc.networking, ...curr.networking];
+                }
+                if (curr.fallbacks) {
+                    acc.fallbacks = [...acc.fallbacks, ...curr.fallbacks];
+                }
+                return acc;
+            }, { libraries: [], networking: [], fallbacks: [] });
+            
+            return mergedResults;
+        }
+        throw error;
+    }
+}
+
+/**
+ * Splits a JS script into two chunks by finding an AST node near the middle.
+ * Falls back to char-based split if parsing fails.
+ * @param {string} scriptText - The JS code to split.
+ * @returns {[string, string]} - Two chunks of code.
+ */
+export function splitScriptIntoChunks(scriptText) {
+    let splitIndex = Math.floor(scriptText.length / 2); // default fallback
+
+    try {
+        const ast = parser.parse(scriptText, {
+            sourceType: 'module',
+            allowReturnOutsideFunction: true,
+            errorRecovery: true
+        });
+
+        const codeLength = scriptText.length;
+        let closestNode = null;
+        let closestDist = Infinity;
+
+        traverse(ast, {
+            enter(path) {
+                const { start } = path.node;
+                if (typeof start !== 'number') return; // skip nodes without positions
+
+                const dist = Math.abs(start - codeLength / 2);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestNode = path.node;
+                }
+            }
+        });
+
+        if (closestNode) {
+            splitIndex = closestNode.start;
+        }
+    } catch (err) {
+        console.warn('AST parsing failed — falling back to char-based split.', err);
+    }
+
+    // Perform the split
+    const chunkA = scriptText.slice(0, splitIndex);
+    const chunkB = scriptText.slice(splitIndex);
+
+    return [chunkA, chunkB];
+  }
+
+async function geminiAnalysis(scriptText, filePath) {
         // Load API key from environment variable
         const apiKey = process.env.GOOGLE_API_KEY;
         if (!apiKey) {
@@ -1071,13 +1155,18 @@ async function gemeniAnalysis(scriptText, filePath) {
 
         if (response.candidates[0].content.parts.length > 1) throw new Error('Multiple parts found in response, not sure how to proceed');
 
+        // console.log('response content', response.candidates[0].content);
         const textContent = response.candidates[0].content.parts[0].text;
-
+        // console.log('textContent', textContent);
 
         const markdownMatch = textContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
         const analysis = JSON.parse(markdownMatch[1]);
 
-        return analysis;
+        return {
+            libraries: analysis.libraries,
+            networking: analysis.networking,
+            fallbacks: analysis.fallbacks
+        };
 }
 
 /**
@@ -1132,7 +1221,7 @@ async function analyzeIndividualScript(filePath, scriptText) {
             return cachedAnalysis;
         }
         
-        const analysis = await gemeniAnalysis(scriptText, filePath);
+        const analysis = await geminiAnalysisWithChunking(scriptText, filePath);
 
         
         if (!analysis) {
