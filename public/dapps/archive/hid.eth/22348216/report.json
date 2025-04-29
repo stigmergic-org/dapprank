@@ -1,0 +1,419 @@
+{
+  "version": 2,
+  "contentHash": "bafybeiemwejvb7a2n24twrtxeoqlek7hgquipsdjvehp4sqftn2ac4rvey",
+  "timestamp": 1745614823,
+  "blockNumber": 22348216,
+  "rootMimeType": "inode/directory",
+  "totalSize": 11000260,
+  "favicon": "f41eaa5eac20ef7f4c77b8ff497995a0.jpg",
+  "title": "hidayath.eth",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://webhash-insta.netlify.app/style.css"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/js/custom.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/link-ajax",
+            "/biolink-block-ajax"
+          ],
+          "library": "jQuery",
+          "type": "self",
+          "motivation": "The code uses `$.ajax` (which is a jQuery wrapper for `XMLHttpRequest`) within the `ajax_call_helper` function. The URL is dynamically constructed using a global `url` variable and a `controller` parameter passed to the function (`${url}${controller}`). The identified controllers are 'link-ajax' and 'biolink-block-ajax', indicating relative paths on the same domain."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/cookieconsent.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIG.theme_css]"
+          ],
+          "library": "CookieConsent",
+          "type": "self",
+          "motivation": "The `hb` function uses `XMLHttpRequest` to fetch a resource. This function is called within the `m.run` method with `a.theme_css` as the URL (`hb(a.theme_css, ...)`), where `a` is the configuration object passed to the main `run` function. This is used to dynamically load the CSS theme for the cookie consent banner, likely hosted on the same domain."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/jquery.min.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "jQuery's AJAX functionality (`$.ajax`, `$.get`, `$.post`, etc.) uses `XMLHttpRequest` internally. The code includes logic to create an `XMLHttpRequest` object: `S.ajaxSettings.xhr=function(){try{return new C.XMLHttpRequest}catch(e){}}`. However, the specific URLs for these requests are determined by the user of the jQuery library when calling functions like `$.ajax(options)`, `$.get(url)`, etc., and are not hardcoded within the library itself. Therefore, no specific URLs from the codebase can be listed."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/nft-card.min.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.opensea.io/wyvern/v1/orders/post/",
+            "https://api.opensea.io/api/v1/asset/",
+            "https://api.opensea.io/api/v1/assets/",
+            "https://api.opensea.io/api/v1/tokens/",
+            "https://api.opensea.io/api/v1/bundle/",
+            "https://api.opensea.io/api/v1/bundles/",
+            "https://api.opensea.io/wyvern/v1/orders/",
+            "https://rinkeby-api.opensea.io/wyvern/v1/orders/post/",
+            "https://rinkeby-api.opensea.io/api/v1/asset/",
+            "https://rinkeby-api.opensea.io/api/v1/assets/",
+            "https://rinkeby-api.opensea.io/api/v1/tokens/",
+            "https://rinkeby-api.opensea.io/api/v1/bundle/",
+            "https://rinkeby-api.opensea.io/api/v1/bundles/",
+            "https://rinkeby-api.opensea.io/wyvern/v1/orders/"
+          ],
+          "library": "OpenSeaAPI (axios wrapper)",
+          "type": "auxiliary",
+          "motivation": "The `OpenSeaAPI` class uses a `fetch` method (`_fetch`) internally (potentially wrapping `axios`) to make calls to its `apiBaseUrl`. This base URL defaults to `https://api.opensea.io` (mainnet) or `https://rinkeby-api.opensea.io` (Rinkeby). Specific API paths like `/wyvern/v1/orders/post/`, `/api/v1/asset/...`, `/api/v1/assets/`, etc., are appended to this base URL for various API operations (posting orders, getting assets, bundles, etc.)."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.opensea.io/jsonrpc/v1/",
+            "https://rinkeby-api.opensea.io/jsonrpc/v1/",
+            "https://mainnet.infura.io"
+          ],
+          "library": "Web3.js",
+          "type": "rpc",
+          "motivation": "The code initializes `Web3.js` with `HttpProvider`. The provider URLs are set based on the network: `https://api.opensea.io/jsonrpc/v1/` for mainnet and `https://rinkeby-api.opensea.io/jsonrpc/v1/` for Rinkeby. A fallback to `https://mainnet.infura.io` is also present as a default in the constructor. Web3.js's `HttpProvider` typically uses `XMLHttpRequest` (or potentially `fetch` in newer versions, but the analysis indicates XMLHttpRequest usage might be present or polyfilled) to interact with Ethereum JSON-RPC endpoints."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "assets/js/custom.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$` symbol extensively for selecting DOM elements (`$(selector)`) and making AJAX requests (`$.ajax`). It also checks `if(typeof $ == 'function')` before using jQuery's tooltip functionality (`$('[data-toggle=\"tooltip\"],[data-tooltip]').tooltip();`)."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/Chart.bundle.min.js",
+      "occurences": [
+        {
+          "name": "Chart.js",
+          "motivation": "The code contains a header comment `/*! * Chart.js v2.9.4 * https://www.chartjs.org * (c) 2020 Chart.js Contributors * Released under the MIT License */` explicitly stating its name and version. The code structure and function names (e.g., `Chart`, `DatasetController`, `Scale`, various chart types like `bar`, `line`, `doughnut`) are characteristic of the Chart.js library."
+        },
+        {
+          "name": "Moment.js",
+          "motivation": "The code includes a bundled version of Moment.js, identifiable by its specific function patterns, internal variables like `a.momentProperties`, and date/time manipulation logic. The comment `a.version=\"2.24.0\"` near the end confirms the presence and version of Moment.js, which is often used by Chart.js for time-related scales."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/aos.min.js",
+      "occurences": [
+        {
+          "name": "AOS (Animate On Scroll)",
+          "motivation": "```\n- The code is wrapped in a UMD (Universal Module Definition) pattern commonly used by libraries: `!function(e,t){...e.AOS=t()}(this,function(){...})`.\n- It assigns its core functionality to `e.AOS` (where `e` is likely `window`).\n- It uses specific data attributes like `data-aos`, `data-aos-easing`, `data-aos-duration`, etc., for configuration.\n- It adds CSS classes like `aos-init` and `aos-animate` to elements.\n- It defines methods like `init`, `refresh`, and `refreshHard`, which are characteristic of a library's API.\n- The filename `aos.min.js` strongly suggests it's the AOS library.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/bootstrap.min.js",
+      "occurences": [
+        {
+          "name": "Bootstrap",
+          "motivation": "The code contains the comment `/*! Bootstrap v4.6.0 (https://getbootstrap.com/) */` at the beginning, and the entire codebase consists of Bootstrap's JavaScript components (Alert, Button, Carousel, Collapse, Dropdown, Modal, Popover, Scrollspy, Tab, Toast, Tooltip)."
+        },
+        {
+          "name": "jQuery",
+          "motivation": "The code explicitly checks for jQuery's presence (`d.jQueryDetection()`) and throws an error if it's missing or the version is incompatible. It uses `o.default` extensively, which is assigned the imported `jquery` module, for DOM manipulation and event handling (e.g., `o.default(this._element)`, `o.default(document).on(...)`). The UMD header also lists `require(\"jquery\")`."
+        },
+        {
+          "name": "Popper.js",
+          "motivation": "The code checks for Popper.js's presence within components that require positioning, such as Dropdown and Tooltip (`if(\"undefined\"==typeof a.default)throw new TypeError(\"Bootstrap's dropdowns require Popper (https://popper.js.org)\")`). It uses `a.default` (assigned the imported `popper.js` module) to create Popper instances (`this._popper=new a.default(...)`). The UMD header also lists `require(\"popper.js\")`."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/clipboard.min.js",
+      "occurences": [
+        {
+          "name": "clipboard.js",
+          "motivation": "The code contains a header comment `/*! * clipboard.js v2.0.4 * https://zenorocha.github.io/clipboard.js */` and exports a `ClipboardJS` object (`exports.ClipboardJS=e():t.ClipboardJS=e()`). The code structure and functionality align with the clipboard.js library's purpose of handling copy/cut actions."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/cookieconsent.js",
+      "occurences": [
+        {
+          "name": "CookieConsent",
+          "motivation": "The code includes a header comment explicitly stating `CookieConsent v2.8.0`, its GitHub URL, author, and license. The entire script appears to be the implementation of this library."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/daterangepicker.min.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$` variable extensively for DOM manipulation and event handling, which is the standard alias for jQuery. It also checks for `window.jQuery` and uses `require('jquery')` in Node/Browserify environments within its UMD wrapper. The code defines a jQuery plugin using `$.fn.daterangepicker`."
+        },
+        {
+          "name": "Moment.js",
+          "motivation": "The code explicitly requires or expects `moment` via AMD (`define(['moment', ...])`), CommonJS (`require('moment')`), or browser globals (`root.moment`). It heavily utilizes `moment()` for date creation, manipulation (`add`, `subtract`, `startOf`, `endOf`), formatting (`format`), and comparison (`isBefore`, `isAfter`, `isSame`)."
+        },
+        {
+          "name": "Date Range Picker",
+          "motivation": "The code defines a `DateRangePicker` class and attaches it as a jQuery plugin `$.fn.daterangepicker`. The file name (`daterangepicker.min.js`) and the header comment (`@version: 3.1`, `@author: Dan Grossman`, `@website: http://www.daterangepicker.com/`) clearly identify it as the Date Range Picker library."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/fontawesome-all.min.js",
+      "occurences": [
+        {
+          "name": "Font Awesome",
+          "motivation": "The code contains a header comment: `/*!\n * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com\n * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\n */`. It also includes definitions for icon data structures typical of Font Awesome."
+        },
+        {
+          "name": "Font Awesome",
+          "motivation": "The code defines icon data (size, unicode, SVG path) in arrays (e.g., `[448,512,[],\"f0fc\",...]`) and registers these icons under prefixes like `fas`, `far`, etc. within a global structure (`Y.styles`). It also includes CSS rules specific to Font Awesome classes (`.svg-inline--fa`, `.fa-lg`, `.fa-spin`, etc.). The filename `fontawesome-all.min.js` further confirms this."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/fontawesome-brands.modified.js",
+      "occurences": [
+        {
+          "name": "Font Awesome Brands",
+          "motivation": "The code contains a header comment `/*!\\n * Font Awesome Free 5.13.1 by @fontawesome - https://fontawesome.com\\n * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)\\n */` and defines icon data in a format typical for Font Awesome (`defineIcons('fab', icons)`)."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/fontawesome-iconpicker.min.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses a UMD pattern `!function(e){...}(jQuery)` which explicitly depends on jQuery. It extensively uses `z(...)` and `l(...)` which are aliases for the jQuery function within the script's scope."
+        },
+        {
+          "name": "jQuery UI (Position utility)",
+          "motivation": "The code defines and uses `z.ui.pos` and `z.fn.pos` for positioning elements, specifically the icon picker popover (`this.popover.pos(...)`). This mimics or directly utilizes the jQuery UI Position utility."
+        },
+        {
+          "name": "Font Awesome Icon Picker",
+          "motivation": "The code header explicitly states `/*! Font Awesome Icon Picker ... */`. The core functionality is defining a jQuery plugin `l.fn.iconpicker = function(a){...}`."
+        },
+        {
+          "name": "Font Awesome (implied data)",
+          "motivation": "The plugin is named 'Font Awesome Icon Picker' and the `o.defaultOptions.icons` array contains a large dataset of icon definitions with CSS classes corresponding to Font Awesome icons (e.g., `fab fa-500px`, `fas fa-ad`). The purpose of the library is to select these icons."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/fontawesome-solid.min.js",
+      "occurences": [
+        {
+          "name": "Font Awesome Solid",
+          "motivation": "The code header explicitly states `/*! * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com */`. The code structure involves defining icon data (SVG paths and metadata) within an object `L` and using functions like `V` to register these icons under a namespace (`___FONT_AWESOME___`) and style prefix (`fas`). The variable `L` contains a large dictionary mapping icon names (e.g., `\"address-book\"`, `\"adjust\"`) to arrays containing SVG path data and metadata, characteristic of an icon library."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/fontawesome.min.js",
+      "occurences": [
+        {
+          "name": "Font Awesome",
+          "motivation": "The code begins with a comment block explicitly stating `/*! Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com */`. It also contains numerous references to Font Awesome specific concepts like `fontawesome`, `fa-`, `svg-inline--fa`, icon prefixes (`fas`, `far`, `fab`, etc.), and DOM manipulation logic characteristic of Font Awesome's JavaScript SVG replacement."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/html5-qrcode.min.js",
+      "occurences": [
+        {
+          "name": "html5-qrcode",
+          "motivation": "The file name is `html5-qrcode.min.js` and the code defines a global variable `__Html5QrcodeLibrary__`. The code contains classes like `Html5Qrcode`, `Html5QrcodeScanner` and methods related to QR code scanning using the camera (`getCameras`, `start`, `stop`, `scanFile`) or image elements/URLs."
+        },
+        {
+          "name": "ZXing-JS",
+          "motivation": "The code includes many classes and constants characteristic of the ZXing library (or a JavaScript port/wrapper), such as `Result`, `BinaryBitmap`, `HybridBinarizer`, `MultiFormatReader`, `QRCodeReader`, `AztecReader`, `PDF417Reader`, `BarcodeFormat`, `DecodeHintType`, `ResultPoint`, `NotFoundException`, `FormatException`, `ChecksumException`, specific algorithm implementations (like Reed-Solomon, finder patterns), and error correction levels (`QRCodeDecoderErrorCorrectionLevel`). It appears to be bundled within the `html5-qrcode` library."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/jquery-qrcode.min.js",
+      "occurences": [
+        {
+          "name": "jquery-qrcode",
+          "motivation": "The code header contains `/*! jquery-qrcode v0.18.0 - https://larsjung.de/jquery-qrcode/ */`. It also references `window.jQuery` and extends the jQuery prototype with `w.fn.qrcode = t.exports = function(t){...}` which is characteristic of a jQuery plugin."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/jquery.min.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code contains the comment `/*! jQuery v3.5.1 | (c) JS Foundation and other contributors | jquery.org/license */` at the beginning. It defines the core jQuery function `S` and assigns it to `C.jQuery` and `C.$` (`C` is typically `window`). The `S.fn.jquery` property is set to the version string `'3.5.1'`."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/jquery.slim.min.js",
+      "occurences": [
+        {
+          "name": "jQuery Slim",
+          "motivation": "The code contains a header comment `/*! jQuery v3.6.0 -ajax,-ajax/jsonp,-ajax/load,-ajax/script,-ajax/var/location,-ajax/var/nonce,-ajax/var/rquery,-ajax/xhr,-manipulation/_evalUrl,-deprecated/ajax-event-alias,-effects,-effects/Tween,-effects/animatedSelector | (c) OpenJS Foundation and other contributors | jquery.org/license */`. This explicitly identifies the library as jQuery version 3.6.0. The list of excluded modules (`-ajax`, `-effects`, etc.) corresponds to the jQuery Slim build."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/moment-timezone-with-data-10-year-range.min.js",
+      "occurences": [
+        {
+          "name": "Moment.js",
+          "motivation": "The code explicitly requires `moment` via `require(\"moment\")` in a CommonJS environment and checks for `c.moment` in a browser environment. It also checks the version of the `moment` object (`b.version`) and throws an error if it's missing or too old, stating `Moment Timezone requires Moment.js`."
+        },
+        {
+          "name": "Moment Timezone",
+          "motivation": "The code defines functions and data structures specifically for handling timezones (e.g., `zones`, `links`, `countries` arrays, `b.tz`, `R.zone`, `R.guess`, `P.tz`). The error message `Moment Timezone requires Moment.js` and the structure heavily align with the Moment Timezone library's source code. The filename `moment-timezone-with-data-10-year-range.min.js` also clearly indicates this library."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/moment.min.js",
+      "occurences": [
+        {
+          "name": "Moment.js",
+          "motivation": "The code contains explicit comments identifying it as `//! moment.js`, `//! version : 2.18.1`, `//! authors : Tim Wood, Iskren Chernev, Moment.js contributors`, `//! license : MIT`, and `//! momentjs.com`. It also uses functions and patterns characteristic of the Moment.js date/time library (e.g., `moment`, `localeData`, `format`, `add`, `subtract`)."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/pickr.min.js",
+      "occurences": [
+        {
+          "name": "Pickr",
+          "motivation": "The code header contains the comment `/*! Pickr 1.8.2 MIT | https://github.com/Simonwep/pickr */` which explicitly identifies the library and its version. The code defines a class `L` which is later assigned to `t.Pickr = e()` and `exports.Pickr=e()`, confirming it exports the Pickr object/class."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/popper.min.js",
+      "occurences": [
+        {
+          "name": "Popper.js",
+          "motivation": "The code includes a copyright notice `Copyright (C) Federico Zivolo 2017` and explicitly defines `e.Popper=t()` at the beginning. The name `Popper.js` is mentioned in comments within the `computeStyle` modifier regarding `gpuAcceleration` deprecation. The overall structure and functionality (calculating element positions, handling modifiers like `flip`, `offset`, `preventOverflow`, `arrow`) are characteristic of Popper.js, a library for positioning tooltips and popovers."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/quill.min.js",
+      "occurences": [
+        {
+          "name": "Quill Editor",
+          "motivation": "```markdown\nThe code contains a header comment explicitly stating the library name and version:\n/*!\n * Quill Editor v1.3.7\n * https://quilljs.com/\n * Copyright (c) 2014, Jason Chen\n * Copyright (c) 2013, salesforce.com\n */\nAdditionally, the global object `Quill` is exported: `\"object\"==typeof exports?exports.Quill=e():t.Quill=e()}`.\n```"
+        },
+        {
+          "name": "Parchment",
+          "motivation": "```markdown\nParchment is Quill's document model library. Although bundled within Quill, it's a distinct core component. The code makes numerous references to Parchment concepts like Blots, Scope, Attributors, and registration functions related to it. For example, `ParchmentError` is defined, and `parchment:w.default` is listed in `S.imports`.\n```"
+        },
+        {
+          "name": "Delta",
+          "motivation": "```markdown\nDelta is Quill's format for representing document changes. The code defines and extensively uses a `Delta` class (e.g., `var s=function(t){...};s.prototype.insert=function(t,e){...}` matching the Delta structure) for managing content and changes. It's also listed in `S.imports` as `delta:d.default`.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/sortable.js",
+      "occurences": [
+        {
+          "name": "Sortable.js",
+          "motivation": "The code includes a header comment `/**! * Sortable 1.10.0-rc3 ... */` and defines a global `Sortable` object/class. The code structure and functionality are consistent with the Sortable.js library for drag-and-drop lists."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/libraries/splide.min.js",
+      "occurences": [
+        {
+          "name": "Splide.js",
+          "motivation": "markdown\n* The code contains a prominent comment: `/*! Splide.js Version : 4.1.2 License : MIT Copyright: 2022 Naotoshi Fujita */`.\n* It exports a global variable `Splide` at the end: `(n=\"undefined\"!=typeof globalThis?globalThis:n||self).Splide=t();`\n* The functionality within the code (DOM manipulation for sliders/carousels, event handling, classes like `splide__slide`, `splide__track`, etc.) is characteristic of the Splide.js library."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/nft-card.min.js",
+      "occurences": [
+        {
+          "name": "Web3.js",
+          "motivation": "The code contains assignments like `window.Web3 = r` and instantiation like `this.web3 = new s(e)`, `this.web3ReadOnly = new s(r)`, and `new s.providers.HttpProvider(...)`. It also uses web3-specific methods like `web3.eth.contract`, `web3.eth.getCode`, `web3.eth.estimateGas`, `web3.eth.sendTransaction`, `web3.toWei`, `web3.isAddress`."
+        },
+        {
+          "name": "OpenSea SDK (OpenSeaPort / OpenSeaAPI)",
+          "motivation": "The code includes class definitions and instantiations like `t.OpenSeaPort=r.OpenSeaPort`, `this.seaport=new fe.OpenSeaPort(...)`, `this.api=new d.OpenSeaAPI(...)`, and makes calls to methods like `this.api.getAsset`, `this.api.postOrder`, `this.seaport.fulfillOrder`."
+        },
+        {
+          "name": "Lodash",
+          "motivation": "The minified code includes a large block starting with a Lodash license comment: `/** * @license * Lodash <https://lodash.com/> ... */` and uses common Lodash functions like `pickBy`, `includes`, `uniqBy`, `sortBy`, `isNull`, `isUndefined`, `isObject`, `isFunction`, `map`, `filter` (referenced via variables like `l=n(3)` where `n(3)` corresponds to Lodash)."
+        },
+        {
+          "name": "lit-html / lit-element",
+          "motivation": "The code contains multiple `@license Copyright (c) 2017 The Polymer Project Authors...` comments typical of lit-* libraries. It defines classes extending `HTMLElement` (referenced as `J` or `se`), uses decorators like `@Y(\"nft-card\")` and `@Q({...})`, and templating functions like `j` (likely `html`) and `ae` (likely `css`), characteristic of lit-element and lit-html."
+        },
+        {
+          "name": "Buffer (Polyfill)",
+          "motivation": "The code includes a comment `/*! * The buffer module from node.js, for the browser. ... */` and uses `Buffer.from`, `Buffer.isBuffer`, indicating the inclusion of a Buffer polyfill for browser environments."
+        },
+        {
+          "name": "bignumber.js",
+          "motivation": "The code includes license comments `/*! bignumber.js v4.1.0 https://github.com/MikeMcl/bignumber.js/LICENCE */` and uses `new c.BigNumber(...)` for handling large numbers."
+        },
+        {
+          "name": "axios",
+          "motivation": "The code contains references suggesting the use of axios, such as `c.Axios=i`, `c.create`, `c.Cancel`, `c.CancelToken`, `c.isCancel`. Axios is likely used internally by the `OpenSeaAPI` for making HTTP requests."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code includes references to `new (0,n(127).ec)(\"secp256k1\")` and uses various methods associated with elliptic curve cryptography like `.mul`, `.add`, `.validate`, `.sign`, `.verify`, `.recoverPubKey`, suggesting the use of the `elliptic` library."
+        },
+        {
+          "name": "js-sha3",
+          "motivation": "The code contains the license header `/*! [js-sha3]{@link https://github.com/emn178/js-sha3} ... */` and references hashing functions like `keccak256` and `sha3`."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "assets/js/nft-card.min.js",
+      "occurences": [
+        {
+          "count": 4
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

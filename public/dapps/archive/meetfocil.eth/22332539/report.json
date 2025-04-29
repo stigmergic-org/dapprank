@@ -1,0 +1,202 @@
+{
+  "version": 2,
+  "contentHash": "bafybeih3vnjutnueboxrq5qvgfzmiu6uczbglgbhurhwdyt5tzuxwkcblm",
+  "timestamp": 1745427465,
+  "blockNumber": 22332539,
+  "rootMimeType": "inode/directory",
+  "totalSize": 4573216,
+  "favicon": "logo.png",
+  "title": "Home | FOCILHome | FOCIL",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "404.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "focil-but-with-transaction-hashes/index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "il-flooding-in-focil/index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      },
+      {
+        "file": "transaction-invalidation/index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/js/jquery.min.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "jQuery's `ajax` module (`w.ajax`, `w.ajaxTransport`, `w.ajaxSettings.xhr`) utilizes the `XMLHttpRequest` object to perform network requests. The specific URLs requested are determined dynamically at runtime based on the configuration passed to jQuery's AJAX functions (e.g., `$.ajax`, `$.get`, `$.fn.load`) by the consuming application or defaulted to the current page's location (`window.location.href`), and are not statically defined within the library code itself."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "404.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "MathJax",
+          "motivation": "The code defines the `window.MathJax` object, which is the standard global configuration object for the MathJax library used for rendering mathematical notation. The properties `tex` and `svg` are specific configurations for MathJax."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/jquery.min.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code contains the copyright header `/*! jQuery v3.3.1 | (c) JS Foundation and other contributors | jquery.org/license */`. It also defines the core jQuery object (`w`), its prototype (`w.fn`), sets the `jquery: \"3.3.1\"` property, and exposes itself globally via `e.jQuery=e.$=w`."
+        }
+      ]
+    },
+    {
+      "file": "assets/js/scroll-and-navbar.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code extensively uses the `$` function and the `jQuery(document).ready()` pattern, which are characteristic of the jQuery library for DOM manipulation and event handling."
+        }
+      ]
+    },
+    {
+      "file": "focil-but-with-transaction-hashes/index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "MathJax",
+          "motivation": "The code defines the `window.MathJax` object, which is the standard global configuration object for the MathJax library used for rendering mathematical notation. The properties `tex` and `svg` are specific configurations for MathJax."
+        }
+      ]
+    },
+    {
+      "file": "il-flooding-in-focil/index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "MathJax",
+          "motivation": "The code defines the `window.MathJax` object, which is the standard global configuration object for the MathJax library used for rendering mathematical notation. The properties `tex` and `svg` are specific configurations for MathJax."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "MathJax",
+          "motivation": "The code defines the `window.MathJax` object, which is the standard global configuration object for the MathJax library used for rendering mathematical notation. The properties `tex` and `svg` are specific configurations for MathJax."
+        }
+      ]
+    },
+    {
+      "file": "transaction-invalidation/index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "MathJax",
+          "motivation": "The code defines the `window.MathJax` object, which is the standard global configuration object for the MathJax library used for rendering mathematical notation. The properties `tex` and `svg` are specific configurations for MathJax."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

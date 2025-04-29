@@ -1,0 +1,432 @@
+{
+  "version": 2,
+  "contentHash": "bafybeidljrg4ble3dfpiwpcleyhl44ewz7y6mg3orpj6eivmp7lz2xchi4",
+  "timestamp": 1745601812,
+  "blockNumber": 22347501,
+  "rootMimeType": "inode/directory",
+  "totalSize": 102512643,
+  "favicon": "",
+  "title": "Vitalik Buterin's website",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": [
+      {
+        "file": "general/2000/01/01/On_Collusion_DE.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://ethresear.ch/uploads/default/original/2X/4/4236db5226633dcc00bb4924f55db33488707488.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2000/01/01/On_Collusion_IT.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://ethresear.ch/uploads/default/original/2X/4/4236db5226633dcc00bb4924f55db33488707488.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2000/01/01/On_Collusion_Polish.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://ethresear.ch/uploads/default/original/2X/4/4236db5226633dcc00bb4924f55db33488707488.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2000/01/01/On_Collusion_Portuguese.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://ethresear.ch/uploads/default/original/2X/4/4236db5226633dcc00bb4924f55db33488707488.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2016/12/10/qap.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*YD-ckgBfmmmRBCyVlhp8YQ.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*wp6bmXoPEU_zZHzJFRq6IQ.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*wsBN9VA71EXm2L4EV-hwcw.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*8agIwBEX5YJ1HyZ4K5r5Gw.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*kAn6O2BcDOsMgSwRPvRfZA.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*QD2EfVsbNguEXrjKJwNVMg.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/01/14/exploring_ecp.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*2PxXNwMceh1XC_waAP9NiA.jpeg"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*qDOPI299SKvZuzeNnik4JA.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*alHa7VxwcLoJk4C_YU9Iog.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/02/01/zk_snarks.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*xX1YSBNSFjmkNKR2kP-TFA.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*gOI0njM1tPSvmvZuIUe0MA.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/06/09/sales.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/800/1*zl1MuV2-RoVzs8X1HOleJA.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/800/1*WHr0X7TZL6Rzn0sg3_R-Aw.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/11/22/starks_part_2.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Clock_group.svg/560px-Clock_group.svg.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/12/17/voting.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "http://upyun-assets.ethfans.org/uploads/photo/image/97e569c5676248db835c1a01eaf0e790.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i0.wp.com/elaineou.com/wp-content/uploads/2016/07/Screen-Shot-2016-07-18-at-1.28.08-PM.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/evqfsMj.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i0.wp.com/elaineou.com/wp-content/uploads/2016/07/Screen-Shot-2016-07-18-at-1.28.08-PM.png"
+          },
+          {
+            "type": "img",
+            "url": "https://philoofalexandria.files.wordpress.com/2011/10/top_marginal_income_tax_rate_1913-2003.jpg"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/12/31/pos_faq.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://raw.githubusercontent.com/vbuterin/diagrams/master/possec.png"
+          },
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/blob/master/powsec.png?raw=true"
+          },
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/blob/master/slasher1sec.png?raw=true"
+          },
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/blob/master/slasher2sec.png?raw=true"
+          },
+          {
+            "type": "img",
+            "url": "https://blog.ethereum.org/wp-content/uploads/2014/07/liquidity.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2017/12/31/sharding_faq.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/raw/master/scalability_faq/image02.png"
+          },
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/raw/master/scalability_faq/image00.gif"
+          },
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/raw/master/scalability_faq/image03.png"
+          },
+          {
+            "type": "img",
+            "url": "https://github.com/vbuterin/diagrams/raw/master/scalability_faq/image01.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2018/03/28/plutocracy.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://pic4.zhimg.com/v2-a4b7403626be584f21d47837190e99e0_1200x500.jpg"
+          }
+        ]
+      },
+      {
+        "file": "general/2018/04/20/radical_markets.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://nationalpostcom.files.wordpress.com/2012/11/highway-built-around-house03.jpg"
+          },
+          {
+            "type": "img",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Shiba_inu_taiki.jpg/220px-Shiba_inu_taiki.jpg"
+          },
+          {
+            "type": "img",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Deadweight-loss-price-ceiling.svg/350px-Deadweight-loss-price-ceiling.svg.png"
+          },
+          {
+            "type": "img",
+            "url": "https://cryptobriefing.com/wp-content/uploads/2018/02/Buterin-Copycat-Poster-1.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2019/04/01/cantor.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://cdn-images-1.medium.com/max/2000/1*4ByVTuO_nU-lKZo7NHDBWA.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2019/04/03/collusion.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://ethresear.ch/uploads/default/original/2X/4/4236db5226633dcc00bb4924f55db33488707488.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2019/08/28/hybrid_layer_2.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://raw.githubusercontent.com/vbuterin/diagrams/master/fisherman_dilemma_1.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2020/02/18/election_zhTW.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/SOnzQr7.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/VWUMXSM.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/DDXKsu3.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/66VNN4m.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/Uel7WLY.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/YuqbYtM.png"
+          },
+          {
+            "type": "img",
+            "url": "https://i.imgur.com/VFWHnnl.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2021/01/05/rollup_ES.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/rollup-files/diag1.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/rollup-files/diag2.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/rollup-files/tree.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2021/03/23/legitimacy_ES.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/legitimacy-files/chart.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/legitimacy-files/hive.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/voting-files/coordinationgame.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/voting-files/byzantinegeneral.jpg"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/legitimacy-files/bitcoin1.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/legitimacy-files/bitcoin2.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/legitimacy-files/cccp.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/round_7_files/matching.jpg"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/legitimacy-files/jack.jpg"
+          }
+        ]
+      },
+      {
+        "file": "general/2022/07/13/networkstates_zhCN.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://user-images.githubusercontent.com/126170040/221384302-ee5dad2d-b3da-4171-b388-54e3e9f19bfb.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/networkstates/communes.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/networkstates/nytccpbtc.png"
+          },
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/networkstates/helical.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2022/08/29/zkevm_zhTW.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://user-images.githubusercontent.com/85469891/186605516-b6e9a19a-895d-4e36-b7b9-729bb2b198d0.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2022/10/28/ux_zhCN.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://vitalik.ca/images/ux/diagram.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2022/12/30/institutions.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F1b7ab13d-2733-4de9-a9f0-50e2ecfdcfed_1024x924.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2024/07/23/circlestarks.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://hackmd.io/_uploads/BJ5nW2i80.png"
+          }
+        ]
+      },
+      {
+        "file": "general/2024/09/01/gluecp.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://hackmd.io/_uploads/BJdoaxqo0.png"
+          }
+        ]
+      }
+    ]
+  },
+  "networkingPurity": [],
+  "libraryUsage": [
+    {
+      "file": "scripts/tex-svg.js",
+      "occurences": [
+        {
+          "name": "MathJax",
+          "motivation": "The code extensively uses the `MathJax` global object, its configuration system (`MathJax.config`, `MathJax.loader`, `MathJax.startup`), and internal modules/classes like `MmlVisitor`, `SerializedMmlVisitor`, `AbstractDOMAdaptor`, `HTMLAdaptor`, `AbstractMathDocument`, `AbstractInputJax`, `AbstractOutputJax`, `Package`, `Loader`, etc. The filename `tex-svg.js` also strongly suggests its use for rendering TeX/LaTeX mathematics into SVG."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

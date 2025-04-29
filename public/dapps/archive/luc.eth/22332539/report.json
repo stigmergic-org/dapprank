@@ -1,0 +1,87 @@
+{
+  "version": 2,
+  "contentHash": "bafybeiczjtsvk6gioflnmqx6rkaowoueece4t4bkxi7fpjenlpqzovymla",
+  "timestamp": 1745427456,
+  "blockNumber": 22332539,
+  "rootMimeType": "inode/directory",
+  "totalSize": 9621876,
+  "favicon": "favicon.png",
+  "title": "lucemans/computer | Luc van Kampen",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "script",
+            "url": "https://v3x.report/please.js"
+          },
+          {
+            "type": "script",
+            "url": "https://plausible.io/js/script.js"
+          },
+          {
+            "type": "script",
+            "url": "https://internal.v3x.report/js/script.js"
+          }
+        ]
+      }
+    ],
+    "externalMedia": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/sT8GcDaNpc4/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/GwX_m28SSOA/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/hz1KH1qvzB4/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/SHuCDqPbAP4/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/mzYKp9lAB1I/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://pbs.twimg.com/media/F2X6ws4WoAATLye.jpg"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/URnUs4sSrU4/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/_bKVwVUlk7g/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/hZ0t7R40C_4/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/1eLLhwVTnoM/mqdefault.webp"
+          },
+          {
+            "type": "img",
+            "url": "https://i3.ytimg.com/vi_webp/gcsunutwMxU/mqdefault.webp"
+          }
+        ]
+      }
+    ]
+  },
+  "networkingPurity": [],
+  "libraryUsage": [],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

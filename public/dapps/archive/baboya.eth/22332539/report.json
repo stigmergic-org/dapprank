@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibw4h6mp2adhl4chsjq7sr5x6c52wyrfkxbuskjc6z6tdk6nqbz4e",
+  "timestamp": 1745423963,
+  "blockNumber": 22332539,
+  "rootMimeType": "inode/directory",
+  "totalSize": 247604,
+  "favicon": "stranger.png",
+  "title": "baboya",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.gstatic.com"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [],
+  "libraryUsage": [],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

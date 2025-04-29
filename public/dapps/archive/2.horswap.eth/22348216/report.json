@@ -1,0 +1,1034 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibtdjzmhx77pxlpmy7fqnwyb7dmrtwbk3n6fpyw3qdgmxaznzwm44",
+  "timestamp": 1745610419,
+  "blockNumber": 22348216,
+  "rootMimeType": "inode/directory",
+  "totalSize": 30799320,
+  "favicon": "favicon.png",
+  "title": "Horswap",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "service-worker.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "./index.html",
+            "./static/css/9838.0e06790f.css",
+            "./static/js/1183.de906ac0.chunk.js",
+            "./static/js/1444.bff84fe5.chunk.js",
+            "./static/js/1457.094ae640.chunk.js",
+            "./static/js/152.1edb4c4c.chunk.js",
+            "./static/js/1699.3d07e1b0.chunk.js",
+            "./static/js/1769.a1e1e1a0.chunk.js",
+            "./static/js/1846.294f6cfd.chunk.js",
+            "./static/js/1871.92239e45.chunk.js",
+            "./static/js/2075.5a376f7a.chunk.js",
+            "./static/js/2161.3ff8f713.chunk.js",
+            "./static/js/2333.1e581f5d.chunk.js",
+            "./static/js/2476.c8c759e4.chunk.js",
+            "./static/js/2595.f558ccfd.chunk.js",
+            "./static/js/262.308d96ff.chunk.js",
+            "./static/js/2635.68549299.chunk.js",
+            "./static/js/2733.5d5be18e.chunk.js",
+            "./static/js/2860.30c91fb1.chunk.js",
+            "./static/js/3007.be6da783.chunk.js",
+            "./static/js/3064.ff7b0887.chunk.js",
+            "./static/js/3095.5b6b72ff.chunk.js",
+            "./static/js/317.a8c4ad6f.chunk.js",
+            "./static/js/320.22b53d75.chunk.js",
+            "./static/js/3492.555b424d.chunk.js",
+            "./static/js/3668.3a70b66a.chunk.js",
+            "./static/js/398.780d504a.chunk.js",
+            "./static/js/4211.3b7c94b6.chunk.js",
+            "./static/js/4457.a9db3c0c.chunk.js",
+            "./static/js/4477.3898ce9e.chunk.js",
+            "./static/js/4567.ca0d910d.chunk.js",
+            "./static/js/4666.d2e0fa47.chunk.js",
+            "./static/js/4836.f6203fd5.chunk.js",
+            "./static/js/5253.0d264f2f.chunk.js",
+            "./static/js/5384.c901b918.chunk.js",
+            "./static/js/560.509166fe.chunk.js",
+            "./static/js/5696.4df153b2.chunk.js",
+            "./static/js/624.780464fc.chunk.js",
+            "./static/js/6421.8a6bebb3.chunk.js",
+            "./static/js/6488.961c5383.chunk.js",
+            "./static/js/6658.9c87f31e.chunk.js",
+            "./static/js/6668.3d48a4bd.chunk.js",
+            "./static/js/6740.f6ecaedc.chunk.js",
+            "./static/js/6881.33b06d50.chunk.js",
+            "./static/js/6965.4113d2de.chunk.js",
+            "./static/js/744.a7824fa0.chunk.js",
+            "./static/js/7549.394b4759.chunk.js",
+            "./static/js/7693.e9c301d0.chunk.js",
+            "./static/js/7708.23ea4d99.chunk.js",
+            "./static/js/791.e3fddbc5.chunk.js",
+            "./static/js/7916.845b7fbc.chunk.js",
+            "./static/js/804.60756171.chunk.js",
+            "./static/js/8120.3b866a72.chunk.js",
+            "./static/js/8533.73d139fd.chunk.js",
+            "./static/js/8555.d696ae6a.chunk.js",
+            "./static/js/8668.997d0f0e.chunk.js",
+            "./static/js/9017.9d1fa818.chunk.js",
+            "./static/js/9519.ba6addb8.chunk.js",
+            "./static/js/968.53d8f84f.chunk.js",
+            "./static/js/9838.b9093077.js",
+            "./static/js/main.d983ef71.js",
+            "./static/media/404-page-dark.f12d4be3f0df0c8314f0.png",
+            "./static/media/404-page-light.5065e3e5151b1e0e51fd.png",
+            "./static/media/Inter-Black.e258f99875304915b846.woff",
+            "./static/media/Inter-Black.ef2d12b9f04d00e319f2.woff2",
+            "./static/media/Inter-BlackItalic.70d2cf354617b8400370.woff",
+            "./static/media/Inter-BlackItalic.a1ea21b039cc259b6452.woff2",
+            "./static/media/Inter-Bold.1c3dfbb05cd4ae02710e.woff",
+            "./static/media/Inter-Bold.a808c21aaa221f6d24f9.woff2",
+            "./static/media/Inter-BoldItalic.32e2b20f6958d2d2b42d.woff",
+            "./static/media/Inter-BoldItalic.974439652aea7e778bf7.woff2",
+            "./static/media/Inter-ExtraBold.1ca2a2cfb6b4cad40001.woff2",
+            "./static/media/Inter-ExtraBold.30c3d891c030615a228a.woff",
+            "./static/media/Inter-ExtraBoldItalic.a0a103e5c1d773038d85.woff2",
+            "./static/media/Inter-ExtraBoldItalic.cd6682866c7a0fead62a.woff",
+            "./static/media/Inter-ExtraLight.21843ac6e40e9c4fd1c6.woff2",
+            "./static/media/Inter-ExtraLight.7b7bd05c50e77a1dea5f.woff",
+            "./static/media/Inter-ExtraLightItalic.04abe79a58b830b05436.woff2",
+            "./static/media/Inter-ExtraLightItalic.a7a00555699d20ff4912.woff",
+            "./static/media/Inter-Italic.635afeed439bcb3e4823.woff",
+            "./static/media/Inter-Italic.e2f52803eb133261314f.woff2",
+            "./static/media/Inter-Light.51f4d17560f77b8a0b38.woff2",
+            "./static/media/Inter-Light.c08cfeeb313675a65efc.woff",
+            "./static/media/Inter-LightItalic.203b9b31308f80781b13.woff",
+            "./static/media/Inter-LightItalic.8942ebe85375956847c9.woff2",
+            "./static/media/Inter-Medium.ba68c34a21c5751a2838.woff2",
+            "./static/media/Inter-Medium.f5549f68ca7db479bc7d.woff",
+            "./static/media/Inter-MediumItalic.2812ec5af03af477a492.woff",
+            "./static/media/Inter-MediumItalic.d29ef50afbad4a107530.woff2",
+            "./static/media/Inter-Regular.6cc68d6b835a3dd06e7e.woff2",
+            "./static/media/Inter-Regular.8398b3762d7b06fc3b8c.woff",
+            "./static/media/Inter-SemiBold.25b1ffc9587070462342.woff",
+            "./static/media/Inter-SemiBold.625474d6ebbfe4e3b0ae.woff2",
+            "./static/media/Inter-SemiBoldItalic.80d799bef2a34b9d253c.woff",
+            "./static/media/Inter-SemiBoldItalic.c632fb9629c16866b4b6.woff2",
+            "./static/media/Inter-Thin.de9194d1cf4ce0dd3b56.woff2",
+            "./static/media/Inter-Thin.fcc912460dcaea1ee8d4.woff",
+            "./static/media/Inter-ThinItalic.6b5565d76adf0660b406.woff",
+            "./static/media/Inter-ThinItalic.ec0fcc99e9d879db77ba.woff2",
+            "./static/media/Inter-italic.var.b27297c148a7ef314ce2.woff2",
+            "./static/media/Inter-roman.var.b65534c5223684261945.woff2",
+            "./static/media/Inter.var.9df5db385c3370707c5b.woff2",
+            "./static/media/arbitrum_logo.17ba9b2d5b1574bd70b71505367f5130.svg",
+            "./static/media/avax_logo.cccd7fc1b8cc3508f945300068d80ba3.svg",
+            "./static/media/avax_square_logo.4a934d828b6b42b7a4a592e85a418d2c.svg",
+            "./static/media/base_logo.592b9f3296cf185dc13a87accb29f844.svg",
+            "./static/media/base_square_logo.6b02aa3e74095827e14aa77ab3e8b203.svg",
+            "./static/media/big_unicorn.90ddcbf00b3ff1ad4495.png",
+            "./static/media/blank_token.1870729478dcddb2cac513635621d4c9.svg",
+            "./static/media/blue-loader.249140daf016adc355cfb029ec67de19.svg",
+            "./static/media/bnb-logo.797868eb94521320b78e3967134febbe.svg",
+            "./static/media/bnbCircle.797868eb94521320b78e3967134febbe.svg",
+            "./static/media/bnb_square_logo.2d1fd22f591e299d5139ab4935da17c9.svg",
+            "./static/media/brave-icon.91e0081d6d5d0001a27211aa0bdf8f37.svg",
+            "./static/media/browser-wallet-dark.257c8f5da352c06afbfad5e277146406.svg",
+            "./static/media/browser-wallet-light.13c75351dc347a6c71691a873a74b620.svg",
+            "./static/media/celo_logo.e95fad7be41e27771a1729f111f11ec9.svg",
+            "./static/media/celo_square_logo.2ca4ce8b181980cb6ca8b5809319ec49.svg",
+            "./static/media/coinbase-icon.6870e62fb40f1d213198361a1b3d5521.svg",
+            "./static/media/contract-interaction.c6167131a8fe6fcb2ccf88699a2ef4f5.svg",
+            "./static/media/discord.293ffb0f8360028d0f021f1d6f413ef6.svg",
+            "./static/media/dot_line.41984deedf7551ac719792666e0f44c8.svg",
+            "./static/media/dropdown.fef18eeb100831b750bb2101c7ed956f.svg",
+            "./static/media/github.3b21c250a99986431958daaa9246a45a.svg",
+            "./static/media/hors.320e60fb49454c15fc97.png",
+            "./static/media/ledger-icon.e85018863afe4a8e0e1a19a7d24bc792.svg",
+            "./static/media/logo.631f0cebbcac0bacf8ecc0ede01bc542.svg",
+            "./static/media/matic-token-icon.efed2ee4e843195b44bf68ffc7439403.svg",
+            "./static/media/menu.79681e1fce984681ebcb77a55d52d4de.svg",
+            "./static/media/metamask-icon.c8b2298e68e585a7f4d9c7b7e6320715.svg",
+            "./static/media/noise.3c7efafc83614205bd1a.png",
+            "./static/media/optimism_square_logo.ce1b534277a7091704d6d681f1d725ca.svg",
+            "./static/media/optimistic_ethereum.34412af263c903b58c43a243c4a21d56.svg",
+            "./static/media/papers-text.59088c60908213059fe247224711a962.svg",
+            "./static/media/polygon-matic-logo.fa179cde13c4aed3c08b244ea856340d.svg",
+            "./static/media/polygon_square_logo.5a7f124163b5c9f0c084929b9fb6145d.svg",
+            "./static/media/rabby-icon.529c59c12dcafffcb062cd7cdb994b3f.svg",
+            "./static/media/search.3d4b96e3a9ccded7bfd728a818c83611.svg",
+            "./static/media/socks.e6b0bda323ae546a877a5c49b95201cb.svg",
+            "./static/media/swapCard.1a0376fd97213efb0859.png",
+            "./static/media/tooltip_triangle.50e53ca86366852445bb688bcffdfddb.svg",
+            "./static/media/twitter-safe.55cffd589d2838bd191cfd3ed211b200.svg"
+          ],
+          "library": "Workbox",
+          "type": "self",
+          "motivation": "The code uses Workbox's precaching (`L().precache(he)`) and runtime caching strategies (`I(new U(...))`, `I(new K(t,e))`). These strategies intercept fetch events (`self.addEventListener(\"fetch\", ...)`). The listed URLs are explicitly defined in the `precacheEntries` (`he`) and `onDemandEntries` (`oe`) arrays, which are then fetched and cached by Workbox strategies. These are all relative URLs pointing to static assets hosted on the same origin as the service worker."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "./index.html"
+          ],
+          "library": "custom",
+          "type": "self",
+          "motivation": "The custom navigation route handler `ie` calls `fetch(t||ae,{cache:\"reload\",signal:a.signal})` where `ae` is './index.html'. This specifically fetches the main HTML document with a cache-bypassing strategy (`cache:\"reload\"`) likely to check for updates, comparing ETags if a cached version exists."
+        }
+      ]
+    },
+    {
+      "file": "static/js/2860.30c91fb1.chunk.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "JPEG Decoder",
+          "type": "auxiliary",
+          "motivation": "```javascript\n// The `load` method within the JPEG Decoder module (86059) uses XMLHttpRequest:\ne.prototype.load = function(t) {\n  var e = new XMLHttpRequest;\n  e.open(\"GET\", t, !0), // Uses the 't' argument as the URL\n  e.responseType = \"arraybuffer\",\n  e.onload = function() { ... }.bind(this),\n  e.send(null)\n}\n// The specific URL is provided as an argument `t` to the `load` function, not hardcoded within this chunk.\n// It fetches data (likely a JPEG image) as an 'arraybuffer'. Classified as 'auxiliary' as it's fetching external resources not specific to RPC or Bundler endpoints.\n```"
+        }
+      ]
+    },
+    {
+      "file": "static/js/3007.be6da783.chunk.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/{token_address}/logo.png",
+            "{token.logoURI}"
+          ],
+          "library": "otherwise",
+          "type": "auxiliary",
+          "motivation": "The `fetch` call is found within the async function `p(e, t=!1)`. This function is called within a `useEffect` hook inside function `f` to retrieve token logo images. It attempts to fetch based on a dynamically determined URL (`t`), then falls back to the token's `logoURI` property (`n.logoURI`), and finally attempts a structured URL like `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${r}/logo.png` for mainnet tokens. These URLs fetch image assets, classifying them as auxiliary."
+        }
+      ]
+    },
+    {
+      "file": "static/js/4836.f6203fd5.chunk.js",
+      "occurences": [
+        {
+          "method": "Contract Call (read)",
+          "urls": [],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code calls `t.callStatic.collect(...)`. This is an ethers.js method to perform a read-only call (`eth_call`) to a smart contract function (`collect`) using the provider configured via `@web3-react/core`. The specific RPC URL is determined by the user's wallet provider."
+        },
+        {
+          "method": "Contract Call (read)",
+          "urls": [],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code calls `(0,k.Wk)(i,\"tokenURI\",n,...)`. This function `k.Wk` appears to wrap a smart contract read call (`tokenURI`) likely using the provider configured via `@web3-react/core`. The specific RPC URL is determined by the user's wallet provider."
+        },
+        {
+          "method": "Contract Call (read)",
+          "urls": [],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code calls `(0,k.Wk)(Ce?ci:null,\"ownerOf\",[Ce])`. This function `k.Wk` appears to wrap a smart contract read call (`ownerOf`) likely using the provider configured via `@web3-react/core`. The specific RPC URL is determined by the user's wallet provider."
+        },
+        {
+          "method": "Contract Call (read)",
+          "urls": [],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code calls `(0,s.Wk)(i?t:null,\"ownerOf\",[i])`. This function `s.Wk` appears to wrap a smart contract read call (`ownerOf`) likely using the provider configured via `@web3-react/core`. The specific RPC URL is determined by the user's wallet provider."
+        },
+        {
+          "method": "eth_estimateGas",
+          "urls": [],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code calls `v.getSigner().estimateGas(r)`. This is an ethers.js method that triggers an `eth_estimateGas` RPC call using the provider configured via `@web3-react/core`. The specific RPC URL is determined by the user's wallet provider."
+        },
+        {
+          "method": "eth_sendTransaction",
+          "urls": [],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code calls `v.getSigner().sendTransaction(i)`. This is an ethers.js method that triggers an `eth_sendTransaction` RPC call using the provider configured via `@web3-react/core`, prompting the user for confirmation. The specific RPC URL is determined by the user's wallet provider."
+        }
+      ]
+    },
+    {
+      "file": "static/js/968.53d8f84f.chunk.js",
+      "occurences": [
+        {
+          "method": "eth_call / eth_getBalance / eth_sendTransaction / eth_estimateGas",
+          "urls": [],
+          "library": "Ethers.js / Viem (via useWeb3React provider)",
+          "type": "rpc",
+          "motivation": "The code uses hooks like `(0,q.Oo)` (useV2Pair), `(0,$.K5)` (useCurrencyBalances), `(0,T.q)` (useTokenAllowance) and directly calls contract methods like `estimateGas.addLiquidity`, `addLiquidity`, `addLiquidityETH` via a contract instance `Le` obtained using the provider `de` from `useWeb3React`. These operations implicitly trigger JSON-RPC requests (like `eth_call`, `eth_getBalance`, `eth_estimateGas`, `eth_sendTransaction`) to the blockchain node configured in the user's wallet provider (e.g., MetaMask)."
+        }
+      ]
+    },
+    {
+      "file": "static/js/9838.b9093077.js",
+      "occurences": [
+        {
+          "method": "WebSocket",
+          "urls": [
+            "https://www.walletlink.org/rpc"
+          ],
+          "library": "CoinbaseWalletSDK",
+          "type": "auxiliary",
+          "motivation": "The `WalletSDKConnection` class initializes an `RxWebSocket` instance with a URL constructed by appending `/rpc` to the `linkAPIUrl`. The default `linkAPIUrl` is `https://www.walletlink.org`. This WebSocket is used for the WalletLink relay communication between the dapp and the Coinbase Wallet mobile app."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[RPC-URL]"
+          ],
+          "library": "ethers.js / CoinbaseWalletSDK",
+          "type": "rpc",
+          "motivation": "The `WalletSDKRelayAbstract` class (and by extension, likely ethers.js providers integrated within the SDK like `JsonRpcProvider`) uses `window.fetch` in the `makeEthereumJSONRPCRequest` method to send JSON-RPC requests. The URL is determined by the `jsonRpcUrl` parameter, which is typically configured by the dapp or the SDK initialization based on the selected chain ID. Since the specific URL is dynamic or configured externally, `[RPC-URL]` is used as a placeholder."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "viem (http transport)",
+          "type": "rpc",
+          "motivation": "The `http` transport function in viem (`79840`) takes a URL (`e`) and uses it internally to make RPC requests via `fetch` (`a.rpc.http(v,{body:e,fetchOptions:u,timeout:g})`). The specific URL depends on the client configuration."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "graphql-request",
+          "type": "auxiliary",
+          "motivation": "The `GraphQLClient` class (`36344`) takes a URL in its constructor and uses `fetch` (`[4,s(this.url,...)]`) to send GraphQL requests to that endpoint."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [],
+          "library": "viem (webSocket transport)",
+          "type": "rpc",
+          "motivation": "The `webSocket` transport function in viem (`32855`) takes a WebSocket URL (`h`) and uses the native `WebSocket` API (`new e(t)` where `e` is WebSocket) to establish a connection for RPC requests and subscriptions."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "fetch polyfill",
+          "type": "auxiliary",
+          "motivation": "The `fetch` polyfill included in the code (`44351`) uses `XMLHttpRequest` (`s=new XMLHttpRequest`) as the underlying mechanism to make network requests when native fetch is not available or polyfilled."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "service-worker.js",
+      "occurences": [
+        {
+          "name": "Workbox",
+          "motivation": "The code explicitly imports and uses modules with names like `workbox:core:6.5.3`, `workbox:expiration:6.5.3`, `workbox:precaching:6.5.3`, `workbox:routing:6.5.3`, and `workbox:strategies:6.5.3`. It utilizes Workbox classes like `PrecacheController`, `CacheFirst`, `ExpirationPlugin`, `Router`, and functions like `registerRoute`, `precacheAndRoute` implicitly through the structure (e.g., `L().precache(he)`)."
+        },
+        {
+          "name": "idb (IndexedDB Promised)",
+          "motivation": "The code includes a sophisticated wrapper around IndexedDB (`indexedDB.open`, `IDBTransaction`, `IDBRequest`, `IDBCursor`, etc.) using Promises and Proxies (`new Proxy(e,$)`), which is characteristic of the `idb` library or a similar implementation for easier IndexedDB handling, particularly seen in the Workbox expiration module (`workbox-expiration`)."
+        }
+      ]
+    },
+    {
+      "file": "static/js/1457.094ae640.chunk.js",
+      "occurences": [
+        {
+          "name": "react",
+          "motivation": "Code uses `u.createElement`, `u.useRef`, `u.useMemo`, `u.forwardRef`, `u.useState` (implied by `(0,pe.QP)` which returns state and setter), `u.useCallback` (implied by hook dependencies), and `u.useEffect` (implied by hooks like `useWeb3React`), where `u` is the minified variable for React."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "Code calls `(0,a.useWeb3React)` which is the primary hook from the `@web3-react/core` library to access wallet connection state (account, chainId)."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Code extensively uses tagged template literals with `x.default.div`, `x.default.span`, `x.default.button`, `x.css`, `(0,x.default)(...)` for creating styled components, and `(0,x.useTheme)` hook, where `x` is the minified variable for styled-components."
+        },
+        {
+          "name": "ethers",
+          "motivation": "Code initializes what appears to be an ethers provider or related class with `new Z.vU(B)`, likely for multicall (`Z.vU` could be `ethers.providers.MulticallProvider` or similar). It's also used implicitly by `@web3-react` for interacting with the blockchain."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "Code uses `(0,f.rU)` which is minified syntax typically representing the `Link` component (`<... as:f.rU, to:\"/add/ETH\">`). It also defines internal menu items with `to` props (`<O to={t} ...>`) which are characteristic of routing links."
+        },
+        {
+          "name": "redux/redux-toolkit",
+          "motivation": "The pattern `(0,pe.QP)()` likely corresponds to a custom hook (`useAppSelector` or similar) generated or used with Redux Toolkit or standard Redux for state management, as it returns a state variable and a setter (`[r,h]=...`, `[w,v]=...`)."
+        },
+        {
+          "name": "Uniswap UI Component Library",
+          "motivation": "Code uses numerous components prefixed with `m.` (e.g., `m.dL`, `m.Tv.DeprecatedLabel`, `m.Tv.DeprecatedBody`, `m.Pw`, `m.Tv.LargeHeader`) which suggests a dedicated UI component library, likely internal or specific to Uniswap."
+        },
+        {
+          "name": "react-feather",
+          "motivation": "Imports and uses icon components like `ee` (Inbox), `oe` (Layers), `ae` (BookOpen), and `ce.Z` (ChevronDown). These specific icons and the pattern of aliasing them are common when using `react-feather`."
+        },
+        {
+          "name": "prop-types",
+          "motivation": "Code includes runtime type checking for React component props using `V().string`, `V().oneOfType([V().string, V().number])`, where `V` is the minified variable likely corresponding to the `prop-types` library (`X.propTypes = { ... }`)."
+        }
+      ]
+    },
+    {
+      "file": "static/js/152.1edb4c4c.chunk.js",
+      "occurences": [
+        {
+          "name": "ajv",
+          "motivation": "The code includes a direct reference to `ajv/dist/runtime/ucs2length` via a comment (`require(\"ajv/dist/runtime/ucs2length\").default`) associated with module `93834`. Additionally, module `93420` defines and exports various format validators (`date`, `time`, `date-time`, `uri`, `email`, `hostname`, `ipv4`, `ipv6`, etc.) which are typical helpers used by `ajv`. The main exported function `validate` (aliased as `w`) performs complex object validation with checks for types, required properties, string patterns (using `RegExp`), formats (using helpers from module `93420`), min/max lengths, and constraints, which is characteristic of schema validation performed by `ajv`."
+        }
+      ]
+    },
+    {
+      "file": "static/js/1846.294f6cfd.chunk.js",
+      "occurences": [
+        {
+          "name": "WebSocket Environment Detection",
+          "motivation": "The code checks for the presence of `WebSocket` or `MozWebSocket` in various global scopes (`undefined`, `t.g` (global), `window`, `self`) and exports the found constructor. This is characteristic of a module designed to provide access to the native WebSocket API in a cross-environment compatible way, rather than being a full third-party library itself."
+        }
+      ]
+    },
+    {
+      "file": "static/js/1871.92239e45.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses React's `createElement` (variable `c` in `23377`, `r.createElement` in `20037`), `cloneElement` (`r.cloneElement` in `20037`), `Fragment` (`r.Fragment` in `20037`, `23377`), and defines component-like structures with props. The presence of `propTypes` (`41432`) in `51871` and React-specific type checks (`9728`, `37609`) further confirm its use."
+        },
+        {
+          "name": "react-markdown / remark / unified",
+          "motivation": "The code heavily utilizes modules commonly found in the `remark` and `unified` ecosystems for processing markdown. Key indicators include:\n*   `51871`: A component strongly resembling `react-markdown`, using `remark-parse` (`1914`), `unified` processor (`17779`), renderers (`23377`), and handling various markdown features.\n*   Multiple tokenizer functions (`81402`, `42532`, `81078`, `52507`, `23108`, `22813`, `27066`, `44671`, `11515`, `24848`, `2346`, `37884`, `86499`, `39632`, `19531`, `39749`, `24574`, `93197`, `74792`, `76213`, `97253`) are present, characteristic of `remark-parse`.\n*   HTML entity parsing (`44266`, `37452`, `93580`).\n*   Tree traversal utilities (`31590`, `33050`, `49828`).\n*   Plugin-like modules for specific features (GFM tables in `60285`, list processing in `18814`, HTML handling in `2768`, table structure normalization in `8940`).\n*   URL transformation (`65259`).\n*   The `vfile` ecosystem (`30508`, `68298`, `91763`) for handling virtual files and reporting errors/messages during processing."
+        },
+        {
+          "name": "prop-types",
+          "motivation": "The code at `41432` defines standard `prop-types` validators (`string`, `bool`, `func`, `arrayOf`, `oneOf`, `oneOfType`, `object`, `array`), which are then used in `51871` (`y.propTypes = {...}`) to validate props for a React component."
+        }
+      ]
+    },
+    {
+      "file": "static/js/2161.3ff8f713.chunk.js",
+      "occurences": [
+        {
+          "name": "react",
+          "motivation": "Code uses `(0,l.useState)`, `(0,l.useCallback)`, `(0,l.useMemo)`, `(0,r.forwardRef)`, `(0,r.jsx)`, `(0,r.jsxs)` which are common patterns in compiled React code."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Code uses `d.default.div.withConfig`, `(0,d.default)(...)`, `${p.MG}`, `${p.lt}`, and `(0,d.useTheme)` which are characteristic of styled-components."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "The code explicitly calls `(0,o.useWeb3React)()`, a hook provided by this library to access web3 context like `account` and `chainId`."
+        },
+        {
+          "name": "@uniswap/sdk-core",
+          "motivation": "Code interacts with properties like `currency.isToken`, `currency.isNative`, `amount.quotient`, uses `i.Bz` (likely `MaxUint256`), and potentially formatting functions like `(0,m.Z)` suggesting usage of a library for handling blockchain currency amounts and types, like the Uniswap SDK."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "The code uses `m.estimateGas.approve`, `m.approve` for contract interaction and `(0,l.y)(a)` (likely `calculateGasMargin`), which are common patterns when using ethers.js for interacting with smart contracts."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "Code uses `(0,h.default)(c.rU).withConfig` where `c.rU` is likely `Link` and `(0,c.rU)` is used as a component tag (`<c.rU to={e}>`). Also, `(0,l.TH)().pathname` suggests usage of `useLocation`."
+        },
+        {
+          "name": "react-redux",
+          "motivation": "The code uses `(0,u.T)()` which likely corresponds to `useDispatch`, and calls like `v((0,p.dA)())` suggest dispatching Redux actions."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "Code uses `(0,r.jsx)(i.cC, {id:\"...\"})` pattern extensively, which is the standard way to use the `FormattedMessage` component from react-intl for internationalization."
+        },
+        {
+          "name": "feather-icons-react",
+          "motivation": "The code defines a component `c` (displayName `Plus`) using `(0,r.forwardRef)` and SVG elements (`<svg>`, `<line>`), exporting it as `n.Z`. This structure matches how libraries like `feather-icons-react` provide icon components."
+        }
+      ]
+    },
+    {
+      "file": "static/js/2476.c8c759e4.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses JSX syntax (`(0,i.jsx)`, `(0,i.jsxs)`) which is characteristic of React applications."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code utilizes `(0,m.default)(...)` syntax with tagged template literals (`withConfig({displayName:..., componentId:...})`) and `useTheme`, which are hallmarks of the styled-components library."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "The code imports and uses the `useWeb3React` hook (`(0,r.useWeb3React)`) to interact with wallet connections and blockchain context."
+        },
+        {
+          "name": "Uniswap V2 SDK (or similar)",
+          "motivation": "The code imports and uses concepts like `Pair` (`B.Pair`), `Token` (`S.Fl`, `S.h1`, `S.Hz`, `S.AA`, `S.ML`), `ChainId` (`I.ChainId`), `CurrencyAmount` (`I.CurrencyAmount`), and token constants specific to Uniswap V2, suggesting the use of `@uniswap/v2-sdk` or a related library."
+        },
+        {
+          "name": "ethers.js / viem",
+          "motivation": "The code creates a contract interface (`new R.vU(b.Mt)`) likely representing an ABI, and interacts with contract methods (`balanceOf`, `earned`, `totalSupply`, etc.) using a hook `(0,F._Y)`. This pattern is common when using libraries like ethers.js or viem for blockchain interactions."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "The code uses a component pattern `(0,d.cC,{id:...})` frequently, which strongly suggests the use of `react-intl`'s `FormattedMessage` component for internationalization, where `id` refers to a translation key."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "The code uses components aliased as `u.rU` with `to` props (`to: \"/add/v2/ETH\"`, `to: \"/pools/v2/find\"`, `to: \"/migrate/v2\"`), likely representing the `Link` component from `react-router-dom` for internal navigation."
+        },
+        {
+          "name": "jsbi",
+          "motivation": "The code frequently uses `c().BigInt()`, `c().greaterThan()`, `c().divide()`, `c().multiply()`, etc. This `c()` wrapper is often used for the `jsbi` library, especially in conjunction with older versions of the Uniswap SDK that required it for BigInt operations before native BigInt support was widespread."
+        }
+      ]
+    },
+    {
+      "file": "static/js/262.308d96ff.chunk.js",
+      "occurences": [
+        {
+          "name": "Ajv",
+          "motivation": "The code includes numerous references to JSON Schema validation concepts, imports specific Ajv classes like `Ajv`, `ValidationError`, `MissingRefError`, `CodeGen`, `KeywordCxt`, and defines validation logic for various JSON Schema keywords (e.g., `type`, `properties`, `items`, `format`, `additionalProperties`, `required`, `$ref`, `allOf`, `anyOf`, `oneOf`, `not`, `if/then/else`, `const`, `enum`, `minLength`, `maxLength`, `minimum`, `maximum`, etc.). The file structure with modules defining keyword validation logic (e.g., 10470 for `additionalProperties`, 34959 for `allOf`) and core components (e.g., 43214 for schema compilation, 70251 for keyword context) is characteristic of Ajv. The presence of meta-schema definitions (module 98) and related helpers (module 90895) further confirms its use."
+        },
+        {
+          "name": "json-schema-traverse",
+          "motivation": "Module `50496` exports a function that traverses a JSON schema structure, defining categories like `keywords`, `arrayKeywords`, and `propsKeywords`. This aligns with the functionality of the `json-schema-traverse` library, which Ajv uses internally."
+        },
+        {
+          "name": "fast-deep-equal",
+          "motivation": "Module `44106` exports a function designed for deep equality comparison between two JavaScript values. This corresponds to the `fast-deep-equal` library, often used by validation libraries like Ajv for comparing schema parts or data."
+        },
+        {
+          "name": "uri-js",
+          "motivation": "Module `55343` contains extensive code for parsing, serializing, resolving, and normalizing URIs according to RFC3986, including handling schemes, hosts (IPv4, IPv6, Punycode via module `E` which seems to be punycode.js), paths, queries, and fragments. This is characteristic of the `uri-js` library, used by Ajv for validating URI formats and resolving schema references (`$id`, `$ref`)."
+        }
+      ]
+    },
+    {
+      "file": "static/js/2635.68549299.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses React hooks like `(0,x.useState)`, `(0,x.useEffect)`, `(0,x.useCallback)` and JSX syntax like `(0,i.jsx)` and `(0,i.jsxs)`."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code uses `h.default.div.withConfig`, `(0,h.default)(...).withConfig`, and `(0,h.useTheme)`, which are characteristic patterns of the styled-components library for creating styled React components."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "The code imports and uses the `(0,o.useWeb3React)` hook, a core part of the @web3-react library for accessing web3 context like `account` and `chainId`."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "The code uses functions like `(0,p.TH)().search` (likely `useLocation().search`), `(0,d.rU)` (likely the `Link` component), and `(0,a.TH)().pathname` (likely `useLocation().pathname`) for routing."
+        },
+        {
+          "name": "@reduxjs/toolkit or Redux",
+          "motivation": "The code uses functions like `(0,k.uB)()` and `(0,x.T)()`, which are likely `useDispatch` hooks, and dispatches actions like `(0,u.dA)()` and `(0,p.dA)()`, indicating the use of Redux for state management, possibly with @reduxjs/toolkit."
+        },
+        {
+          "name": "BigNumber Library (e.g., ethers.js BigNumber, bn.js)",
+          "motivation": "The code performs BigNumber operations using functions like `l().equal(...)`, `l().BigInt(0)`, and `l().greaterThan(...)`. The variable `l` likely references a BigNumber library, common in web3 applications for handling large numbers."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "The code uses the pattern `(0,r.cC,{id:\"...\"})` multiple times, which is the standard way to use the `FormattedMessage` component or `useIntl` hook from `react-intl` for internationalization."
+        }
+      ]
+    },
+    {
+      "file": "static/js/2860.30c91fb1.chunk.js",
+      "occurences": [
+        {
+          "name": "pako",
+          "motivation": "```javascript\n// Presence of deflate/inflate/gzip functions and constants:\ne.Deflate=u,e.deflate=_,e.deflateRaw=function(t,e){return(e=e||{}).raw=!0,_(t,e)},e.gzip=function(t,e){return(e=e||{}).gzip=!0,_(t,e)}\ne.Inflate=d,e.inflate=c,e.inflateRaw=function(t,e){return(e=e||{}).raw=!0,c(t,e)},e.ungzip=c\n// Explicit mentions in info strings:\ne.deflateInfo=\"pako deflate (from Nodeca project)\"\ne.inflateInfo=\"pako inflate (from Nodeca project)\"\n// Use of zlib constants (e.g., Z_OK, Z_FINISH, Z_DEFLATED):\nif(a!==s.Z_OK)throw new Error(o[a]);\no=e===~~e?e:!0===e?s.Z_FINISH:s.Z_NO_FLUSH\n```"
+        },
+        {
+          "name": "JPEG Decoder",
+          "motivation": "```javascript\n// Module 86059 defines a class-like structure for JPEG decoding:\nvar e=function(){...}\ne.prototype={load:function(t){...},parse:function(e){...},getData:function(t,e){...},copyToImageData:function(t,e){...}}\n// Contains logic specific to JPEG decoding like Huffman tables, DCT (Discrete Cosine Transform) related constants and processing steps.\n// Includes a method `load` that uses XMLHttpRequest to fetch JPEG data.\n// Includes methods like `parse`, `getData`, `copyToImageData` typical for image decoding.\n```"
+        },
+        {
+          "name": "JPEG Encoder",
+          "motivation": "```javascript\n// Module 70344 defines functions for JPEG encoding:\nfunction e(t){...}\nthis.encode=function(t,i){...}\n// Contains logic specific to JPEG encoding like quantization tables (o, h), Huffman tables (z, A, B, E, S, C, I, T), and DCT processing.\n// Exports an object containing the encoded data, width, and height.\n```"
+        },
+        {
+          "name": "PNG Decoder",
+          "motivation": "```javascript\n// Module 84562 defines a class-like structure for PNG decoding:\nvar i=function(){function t(t){...}}\nt.load=function(e){return new t(e)},t\n// Contains methods specific to PNG structure like `readUInt32`, handling chunks (IHDR, PLTE, IDAT, tRNS, tEXt, IEND), palette decoding, and filter methods.\n// Uses the 'pako' library for inflation: `n().inflate(e.imgData)` where `n()` likely resolves to the pako module.\n```"
+        }
+      ]
+    },
+    {
+      "file": "static/js/3007.be6da783.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses React hooks like `useState`, `useMemo`, `useEffect` (imported via `n(13712)` which corresponds to the `react` package in webpack builds) and JSX syntax (`(0,s.jsx)`)."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code uses the `(0,x.default)(...)` syntax combined with `.withConfig({displayName:..., componentId:...})` (e.g., `(0,x.default)(I.m0).withConfig(...)`, `(0,x.default)(v.hl).withConfig(...)`), which is characteristic of `styled-components`."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "The code imports and uses the `useWeb3React` hook from `n(80815)` (`(0,r.useWeb3React)()`), a key component of the `@web3-react/core` library."
+        },
+        {
+          "name": "@uniswap/sdk-core",
+          "motivation": "The code utilizes classes and constants like `Percent`, `CurrencyAmount`, `ChainId`, `V2_FACTORY_ADDRESSES` from `n(15387)`, and `Token` (likely `d.D` from `n(86545)`), which are part of the Uniswap SDK core."
+        },
+        {
+          "name": "@uniswap/v2-sdk",
+          "motivation": "The code uses `Pair` and `computePairAddress` from `n(30112)` (e.g., `new r.Pair(...)`, `(0,r.computePairAddress)`) and references `V2_FACTORY_ADDRESSES`, indicating usage of the Uniswap V2 SDK."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "The code creates a contract instance using `new s.vU(o.abi)` where `s` is `n(45433)`, which corresponds to `ethers.Contract` or a similar abstraction, commonly used for interacting with smart contracts."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "The code frequently uses `(0,s.jsx)(i.cC, {id: \"...\"})` where `i` is `n(12204)`. This pattern strongly suggests the use of `react-intl`'s `FormattedMessage` component for internationalization."
+        }
+      ]
+    },
+    {
+      "file": "static/js/3064.ff7b0887.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "Code uses JSX syntax (`(0,i.jsx)(...)`, `(0,i.jsxs)(...)`) and `(0,k.useState)`, `(0,k.useMemo)`, `(0,k.useEffect)`, `(0,k.useCallback)`, `(0,i.forwardRef)` which are standard React features/hooks."
+        },
+        {
+          "name": "uniswap/sdk-core",
+          "motivation": "Code imports and uses classes like `Fraction`, `Percent`, `CurrencyAmount`, `Token`, `Price` from `t(15387)` and `ChainId` from `t(15387)`."
+        },
+        {
+          "name": "uniswap/v3-sdk",
+          "motivation": "Code imports and uses V3 specific elements like `computePoolAddress`, `Pool`, `FeeAmount`, `priceToClosestTick`, `TickMath`, `Position` from `t(35206)` and interacts with V3 pool logic."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "Code imports and uses the `useWeb3React` hook from `t(80815)`."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Code uses `styled.button`, `styled.span`, `styled.div`, `styled.main` syntax from `t(87253)` and the `useTheme` hook, indicative of styled-components."
+        },
+        {
+          "name": "jsbi",
+          "motivation": "Code uses `I().BigInt()`, `I().divide()`, `I().multiply()`, `I().equal()`, `I().subtract()`, `c().EQ()` patterns (from `t(44998)`), which strongly suggest the use of the JSBI library for BigInt operations, often used with Uniswap SDKs."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "Code imports `vU` likely representing `ethers.Interface` from `t(45433)` to interact with contract ABIs (`new i.vU(s.Mt)`). It also uses patterns typical of ethers contract interaction (`estimateGas`, method calls like `approve`, `multicall`), likely via custom hooks (`t(600)`) abstracting contract instances (`m.estimateGas`, `Qe.estimateGas`, `Qe.multicall`). The `provider.send(\"eth_signTypedData_v4\", ...)` call (`j.send(...)` in the minified code) is also a standard way to interact with an ethers provider."
+        },
+        {
+          "name": "Translation/i18n Library",
+          "motivation": "Code uses a component `r.cC` (from `t(12204)`) with an `id` prop (`(0,i.jsx)(r.cC,{id:\"...\"})`) for rendering text, a common pattern for internationalization libraries like `react-intl` or similar."
+        },
+        {
+          "name": "Multicall/State Management Hooks",
+          "motivation": "Code uses custom hooks like `Wk` and `_Y` from `t(61646)` and `t(600)` to fetch contract data (`totalSupply`, `nonces`, `getReserves`, `slot0`, `liquidity`, `token0`, `token1`). These likely wrap multicall functionality for efficient data fetching."
+        }
+      ]
+    },
+    {
+      "file": "static/js/3095.5b6b72ff.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses JSX syntax like `(0,i.jsxs)` and `(0,i.jsx)`, which are characteristic of React components compiled with the modern JSX transform. The overall structure defines a functional component (`function x(){...}`)."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code uses tagged template literals with `.withConfig` calls (e.g., `o.default.img.withConfig({displayName:\"NotFound__Image\",componentId:\"sc-83cf57c6-0\"})` and `o.default.div.withConfig(...)`). This is the standard API for creating styled components with the `styled-components` library."
+        },
+        {
+          "name": "React Router",
+          "motivation": "The code uses a component `a.Hm` with an `as` prop referencing `s.rU` (`as: s.rU`) and a `to` prop (`to:\"/\"`). This pattern is commonly used to style React Router's `Link` component (likely represented by `s.rU`) using `styled-components`."
+        },
+        {
+          "name": "Internationalization Library",
+          "motivation": "The code uses `(0, t.cC)` calls with `id` props containing unique identifiers like `\"yduHrq\"` and `\"GTK9OW\"`. This strongly suggests an internationalization library (like `react-intl` or similar) is being used to render translated text based on message IDs."
+        }
+      ]
+    },
+    {
+      "file": "static/js/398.780d504a.chunk.js",
+      "occurences": [
+        {
+          "name": "react",
+          "motivation": "```javascript\nconst [r, c] = (0, _.useState)((() => e));\nconst o = (0, _.useRef)();\nconst s = (0, _.useCallback)((e => { ... }), [t, n]);\n(0, _.useEffect)((() => { ... }), [e]);\nconst u = (0, r.useCallback)((e => { n(parseInt(e.target.value)) }), [n]);\nreturn (0, i.jsx)(...);\n```\nDetected usage of React hooks like `useState`, `useRef`, `useCallback`, `useEffect` (likely aliased as `_` and `r`) and JSX syntax (`(0, i.jsx)`)."
+        },
+        {
+          "name": "react-router",
+          "motivation": "```javascript\nconst { tokenId: n } = (0, $.UO)();\nconst t = (0, $.TH)();\nreturn (0, i.jsx)($.Fg, { to: { ...t, pathname: \"/pools\" }, replace: !0 });\nimport { rU as Link } from 'react-router-dom'; // Implied by (0,h.default)(a.rU)\n```\nDetected usage of hooks likely corresponding to `useParams` (`$.UO`), `useLocation` (`$.TH`), and the `Navigate` component (`$.Fg`). Also uses a component `a.rU` which is often `Link` from react-router, styled via styled-components."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "```javascript\nconst { account: r, chainId: C, provider: I } = (0, a.useWeb3React)();\n```\nDetected direct call to the `useWeb3React` hook, a core part of the `@web3-react` library for connecting to Web3 providers."
+        },
+        {
+          "name": "redux",
+          "motivation": "```javascript\nconst e = (0, W.T)(); // Likely useDispatch\nreturn { onPercentSelect: (0, _.useCallback)((n => { e((0, D.o)({ percent: n })) }), [e]) };\nconst { percent: te } = R(); // R calls (0,W.C), likely useSelector\n```\nDetected usage of hooks likely corresponding to `useDispatch` (`(0, W.T)`) and `useSelector` (`(0,W.C)` via `R`), and dispatching actions (`(0, D.o)`)."
+        },
+        {
+          "name": "@uniswap/sdk-core",
+          "motivation": "```javascript\nconst s = new r.Fraction(o().BigInt(1), o().BigInt(1e6));\nconst ee = new o.Percent(5, 100);\nconst p = new o.Percent(r, 100);\nconst g = d && h ? o.CurrencyAmount.fromRawAmount(n ? d : (0, N.B)(d), h) : void 0;\n```\nDetected usage of classes like `Fraction`, `Percent`, and `CurrencyAmount` which are core components of the `@uniswap/sdk-core` library (imported via `o` and `r`)."
+        },
+        {
+          "name": "@uniswap/v3-sdk",
+          "motivation": "```javascript\nx = (0, _.useMemo)((() => l && e?.liquidity && \"number\" === typeof e?.tickLower && \"number\" === typeof e?.tickUpper ? new s.Position({ pool: l, liquidity: e.liquidity.toString(), tickLower: e.tickLower, tickUpper: e.tickUpper }) : void 0), [l, e]);\nconst { calldata: n, value: t } = s.NonfungiblePositionManager.removeCallParameters(ie, { ... });\n```\nDetected usage of `Position` class and `NonfungiblePositionManager.removeCallParameters` static method from the `@uniswap/v3-sdk` library (imported via `s`)."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "```javascript\nconst y = h.default.div.withConfig({ displayName: \"NavigationTabs__Tabs\", componentId: \"sc-ee271e70-0\" })`...`;\nconst j = (0, h.default)(a.rU).withConfig({ ... })`...`;\nconst c = t(87253).default.input.withConfig({ ... })`...`;\nconst s = (0, i.default)(o.Tz).withConfig({ ... })`...`;\n```\nDetected extensive use of the `styled.div`, `styled.span`, `styled(Component)` syntax with `.withConfig` which is characteristic of `styled-components` (imported via `h`, `B`, `i`, `t(87253)`)."
+        },
+        {
+          "name": "@lingui/react",
+          "motivation": "```javascript\nreturn (0, i.jsx)(b, { children: (0, i.jsx)(r.cC, { id: \"LCFvJr\" }) });\nreturn (0, i.jsx)(c.cC, { id: \"ma87bD\" });\n```\nDetected usage of a component likely aliased as `cC` (imported via `r` and `c`) being used with an `id` prop for rendering translated strings, which is the pattern used by `@lingui/react`'s `Trans` component."
+        },
+        {
+          "name": "jsbi/BigInt",
+          "motivation": "```javascript\nconst s = new r.Fraction(o().BigInt(1), o().BigInt(1e6));\n```\nDetected usage of `o().BigInt(...)`. While `BigInt` is native, the `o()` wrapper strongly suggests the use of the `jsbi` library, which is commonly used by Uniswap SDKs for consistent BigInt handling across environments."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "```javascript\nconst { ..., provider: I } = (0, a.useWeb3React)();\n...\nconst i = { to: ke.address, data: n, value: t };\nconst c = await I.getSigner().getChainId();\nI.getSigner().estimateGas(i).then((e => { ... });\nreturn I.getSigner().sendTransaction(n).then((e => { ... });\n```\nDetected retrieval of a provider object (`I`) from `useWeb3React`. Methods like `getSigner()`, `getChainId()`, `estimateGas()`, and `sendTransaction()` are called on this provider/signer object, which are standard methods in the `ethers.js` library."
+        }
+      ]
+    },
+    {
+      "file": "static/js/4457.a9db3c0c.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses `(0,a.jsx)` which is the standard compiled output for React's JSX syntax."
+        },
+        {
+          "name": "@web3-react/core (or similar Web3 hook library)",
+          "motivation": "The code imports and uses the `useWeb3React` hook (`(0,d.useWeb3React)`) which is characteristic of the @web3-react library or similar libraries providing React hooks for interacting with Web3 providers."
+        },
+        {
+          "name": "React Router (or similar routing library)",
+          "motivation": "The code uses a component `t.Fg` with `to` and `replace` props (`(0,a.jsx)(t.Fg,{to:`/add/${e}`,replace:!0})`), which strongly suggests a routing library like React Router for declarative navigation."
+        }
+      ]
+    },
+    {
+      "file": "static/js/4836.f6203fd5.chunk.js",
+      "occurences": [
+        {
+          "name": "react",
+          "motivation": "Code contains `(0,t.jsx)`, `(0,t.jsxs)`, `(0,M.useState)`, `(0,M.useRef)`, `(0,M.useEffect)`, `(0,M.useMemo)`, `(0,M.useCallback)` which are indicative of React function components and hooks."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Code extensively uses tagged template literals with `.withConfig({displayName:..., componentId:...})` applied to elements like `L.default.div`, `s.default.button`, `L.default.canvas`, which is the standard pattern for `styled-components`."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "The hook `(0,a.useWeb3React)()` is used to get `chainId`, `account`, and `provider`, which is the primary hook exported by `@web3-react/core`."
+        },
+        {
+          "name": "ethers",
+          "motivation": "Usage of `r.O$.from` suggests `ethers.BigNumber`. Calls like `v.getSigner().getChainId()`, `v.getSigner().estimateGas(r)`, and `v.getSigner().sendTransaction(i)` are standard ethers.js operations on a provider/signer object (`v` is likely the provider obtained from `useWeb3React`). The use of `callStatic` (`t.callStatic.collect`) on a contract instance (`t`) also points to ethers."
+        },
+        {
+          "name": "@uniswap/sdk-core",
+          "motivation": "Presence of classes like `o.ChainId`, `r.CurrencyAmount`, `o.Percent`, `o.Fraction`, `t.Fraction`. Variables `o` and `r` appear to reference modules containing these core Uniswap SDK types."
+        },
+        {
+          "name": "@uniswap/v3-sdk",
+          "motivation": "Usage of `d.Position` and `d.NonfungiblePositionManager.collectCallParameters`. Variable `d` appears to reference the Uniswap V3 SDK module."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "The code uses components like `(0,t.jsx)(r.cC,{id:\"...\"})` and `(0,t.jsx)(s.cC,{id:\"...\"})`. This pattern of using a component (likely `FormattedMessage` or similar, aliased as `cC`) with an `id` prop is characteristic of `react-intl` for internationalization."
+        }
+      ]
+    },
+    {
+      "file": "static/js/5253.0d264f2f.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses `(0,a.jsxs)` and `(0,a.jsx)`, which are the transpiled forms of React's JSX syntax used for creating UI elements. Imports like `t(42893)` likely reference the React library."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code uses patterns like `l.default.div.withConfig({displayName:\"...\", componentId:\"...\"})` followed by tagged template literals (e.g., `` `...` ``) for styling components. `l` (from `t(87253)`) likely represents the styled-components library."
+        },
+        {
+          "name": "react-markdown",
+          "motivation": "The code utilizes `(0,a.jsx)(c(), {source: \"...\"})` where `c` (from `t(51871)`) is invoked as a component with a `source` prop containing markdown text. This is the standard usage pattern for the `react-markdown` library."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "The code includes `<... as={p.rU} to=\"/\">` where `p.rU` (likely from `t(41440)`) represents the `Link` component and the `to` prop specifies the navigation target, characteristic of `react-router-dom`."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "The code uses `(0,a.jsx)(s.cC,{id:\"3LK7dH\"})`. The component `s.cC` (likely from `t(12204)`) taking an `id` prop is a common pattern for internationalization libraries like `react-intl` (specifically, the `FormattedMessage` component or a wrapper around it)."
+        }
+      ]
+    },
+    {
+      "file": "static/js/624.780464fc.chunk.js",
+      "occurences": [
+        {
+          "name": "react",
+          "motivation": "Code uses JSX syntax (`(0,t.jsx)`) which is characteristic of React."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Code utilizes `styled.main.withConfig(...)` and template literals for styling, indicating the use of styled-components."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "Code imports and uses the `useWeb3React` hook (`(0,c.useWeb3React)`) to interact with wallet connections and blockchain context."
+        },
+        {
+          "name": "@uniswap/sdk-core / @uniswap/v2-sdk / @sushiswap/sdk",
+          "motivation": "Code utilizes concepts like `Token`, `Percent`, `Pair`, `V2_FACTORY_ADDRESSES`, `getLiquidityValue`, and interacts with V2 liquidity pools (`/migrate/v2/`, `/remove/v2/`, `(0,Z.OY)` likely `useV2Pairs`). The specific mention of `SushiSwap LP Token` and `SLP` suggests interaction with SushiSwap V2 contracts, likely using a related SDK."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "Code uses utility functions like `keccak256` (`n(82534)`), `pack` (`n(82534)`), and potentially `getCreate2Address` (`n(23586)`), which are commonly provided by the ethers.js library for blockchain interactions and cryptographic operations. It likely also provides the BigNumber implementation used (`A().greaterThanOrEqual`)."
+        },
+        {
+          "name": "@lingui/react",
+          "motivation": "Code uses a component pattern `<d.cC id=\"...\" />` (`n(12204)`) for rendering text, which is typical for internationalization libraries like Lingui for handling translations via message IDs."
+        },
+        {
+          "name": "react-feather",
+          "motivation": "Code imports and uses components like `$.Z` (`n(96315)`) and `w.Z` (`n(83931)`) with size props, suggesting the use of an icon library like React Feather."
+        },
+        {
+          "name": "bignumber.js (or similar)",
+          "motivation": "Code uses methods like `greaterThanOrEqual` (`A().greaterThanOrEqual`) on numerical values (`n(44998)`), indicating the use of a BigNumber library to handle potentially large numerical values common in DeFi calculations."
+        }
+      ]
+    },
+    {
+      "file": "static/js/6668.3d48a4bd.chunk.js",
+      "occurences": [
+        {
+          "name": "@noble/secp256k1",
+          "motivation": "The code extensively uses constants and functions specific to the secp256k1 elliptic curve:\n*   Prime field modulus `It=BigInt(\"0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f\")`\n*   Group order `Ot=BigInt(\"0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141\")`\n*   Generator point coordinates (`Gx`, `Gy`)\n*   Curve equation parameters (`a=0`, `b=7`)\n*   Point operations (`ProjectivePoint` class with `add`, `double`, `multiply`, `negate`, `toAffine`)\n*   Signature handling (`Signature` class, DER/Compact format handling via `ut.toSig`, `ut.hexFromSig`, recovery bit logic)\n*   Key generation (`randomPrivateKey`) and validation (`isValidPrivateKey`)\n*   Specific optimizations like Koblitz curve endomorphism (`endo: {beta, splitScalar}`)\n*   Hash-to-curve implementations (`hashToCurve`, `encodeToCurve` using `SSWU`)\nThe final export `Nt=function(...){...}(...)` encapsulates these features, consistent with how `@noble/secp256k1` is structured."
+        },
+        {
+          "name": "@noble/hashes",
+          "motivation": "The code includes concrete implementations for cryptographic hash functions and HMAC:\n*   SHA256: Implemented in `class E extends w` using standard constants `y` (K constants) and `m` (initial hash values), and the SHA2 core processing loop.\n*   HMAC: Implemented in `class vt extends d` and the helper function `St=(t,e,n)=>new vt(t,e).update(n).digest()`, following the standard HMAC construction using inner and outer hash calls.\n*   Utility functions for byte/hex/bigint conversions (`O`, `q`, `U`, `L`, `T`, `N`, `k`, `C`) commonly bundled with hash libraries are present. The structure `At(t){return{hash:t,hmac:(...),randomBytes:p}}` likely provides a unified interface for hash functions, characteristic of `@noble/hashes`."
+        }
+      ]
+    },
+    {
+      "file": "static/js/7708.23ea4d99.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "```javascript\n(0,i.jsx)(...)\n(0,h.useMemo)(...)\n(0,h.useState)(...)\n(0,h.useCallback)(...)\n(0,h.useEffect)(...)\n(0,l.useMemo)(...)\n```\nMultiple uses of JSX syntax (`jsx`, `jsxs`) and React hooks (`useState`, `useCallback`, `useMemo`, `useEffect`, `useRef`) are present throughout the code."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "```javascript\nconst s=t(87253).default.input.withConfig({displayName:\"Slider__StyledRangeInput\",componentId:\"sc-2b24fd52-0\"})\n...\nae=(0,I.useTheme)()\n```\nThe code uses `styled.input.withConfig` which generates `componentId`s, a pattern specific to `styled-components`. It also utilizes the `useTheme` hook (`(0,I.useTheme)`)."
+        },
+        {
+          "name": "@web3-react/core (or similar)",
+          "motivation": "```javascript\nconst{account:e}=(0,i.useWeb3React)()\nconst{account:a,chainId:u,provider:E}=(0,o.useWeb3React)()\n```\nThe `useWeb3React` hook is imported and used to access account, chain ID, and provider information, which is the core functionality of `@web3-react`."
+        },
+        {
+          "name": "ethers.js (likely)",
+          "motivation": "```javascript\nreturn E.send(\"eth_signTypedData_v4\",[a,x]).then(r.splitSignature).then(...)\n...\nconst d=await Promise.all(a.map((e=>we.estimateGas[e](...c)...))\n...\nawait we[e](...c,{gasLimit:n}).then(...)\n```\nThe code uses `provider.send` for signing typed data, calls `splitSignature` (a common ethers utility), and interacts with contracts using methods like `estimateGas` and sending transactions (`we[e](...c)` where `we` is likely a contract instance). These patterns strongly suggest the use of `ethers.js`."
+        },
+        {
+          "name": "@uniswap/sdk-core",
+          "motivation": "```javascript\nconst te=new o.Percent(5,100)\nlet I=new o.Percent(\"0\",\"100\")\n...\n?o.CurrencyAmount.fromRawAmount(g,d.getLiquidityValue(g,p,u,!1).quotient):void 0\n...\nconst i=new(t(15387).Fraction)(1,1)\n```\nThe code explicitly uses classes like `Percent`, `CurrencyAmount`, and `Fraction` (imported via `t(15387)` which corresponds to `o` and the direct `t(15387).Fraction` call), which are core components of the `@uniswap/sdk-core` library."
+        },
+        {
+          "name": "@uniswap/v2-sdk (likely)",
+          "motivation": "```javascript\n[,d]=(0,Z.Oo)(e,n)\n...\nconst y={[O.g.LIQUIDITY_PERCENT]:I,[O.g.LIQUIDITY]:u&&I&&I.greaterThan(\"0\")?o.CurrencyAmount.fromRawAmount(u.currency,I.multiply(u.quotient).quotient):void 0,[O.g.CURRENCY_A]:g&&I&&I.greaterThan(\"0\")&&m?o.CurrencyAmount.fromRawAmount(g,I.multiply(m.quotient).quotient):void 0,[O.g.CURRENCY_B]:x&&I&&I.greaterThan(\"0\")&&C?o.CurrencyAmount.fromRawAmount(x,I.multiply(C.quotient).quotient):void 0};\n...\n[\"1 \",l?.symbol,\" = \",se?ue.priceOf(se).toSignificant(6):\"-\",\" \",x?.symbol]\n```\nThe code involves fetching pair data (likely via `(0,Z.Oo)` which seems to correspond to `getPair`), calculating liquidity values based on percentages, and fetching token prices from the pair (`ue.priceOf(se)`), all of which are functionalities provided by the Uniswap V2 SDK for interacting with V2 liquidity pools."
+        },
+        {
+          "name": "bignumber.js (or similar)",
+          "motivation": "```javascript\nc=t.n(a)\n...\nc().greaterThanOrEqual(c().BigInt(b.amount),e.quotient)\n...\nB=t.n(z)\nB().greaterThanOrEqual(p.quotient,u.quotient)\n```\nThe code uses methods like `greaterThanOrEqual` and references `BigInt` (`c().BigInt`) when comparing large numerical values (token amounts, quotients). This indicates the use of a big number library."
+        },
+        {
+          "name": "Webpack",
+          "motivation": "```javascript\n\"use strict\";(self.webpackChunk_darkflorist_horswap=self.webpackChunk_darkflorist_horswap||[]).push([[7708],{...\n```\nThe code is wrapped in a structure characteristic of Webpack's runtime, specifically `self.webpackChunk_...push(...)`, indicating it's part of a Webpack bundle."
+        }
+      ]
+    },
+    {
+      "file": "static/js/8668.997d0f0e.chunk.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "```javascript\n(self.webpackChunk_darkflorist_horswap=self.webpackChunk_darkflorist_horswap||[]).push(...)\n```\nThis is the characteristic bootstrap code used by Webpack to manage and load JavaScript chunks."
+        },
+        {
+          "name": "ajv",
+          "motivation": "```javascript\nconst r=a(93834).default // points to ucs2length\n...\na(93834).default // function definition uses require(\"ajv/dist/runtime/ucs2length\")\n```\nThe code imports a function (`ucs2length`) from `ajv/dist/runtime/ucs2length`. Furthermore, the structure of the functions `s`, `u`, `l`, `y`, `g`, `P`, and `w` strongly suggests they are compiled validation functions generated by `ajv`. They perform rigorous checks on data structures against a predefined schema, including type checks, property existence, length constraints, and pattern matching (e.g., checking `chainId`, `address`, `decimals`, `name`, `symbol`, `tokens`, `version`)."
+        }
+      ]
+    },
+    {
+      "file": "static/js/968.53d8f84f.chunk.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "Code contains `(0,t.jsx)`, `(0,t.jsxs)`, `(0,g.useState)`, `(0,g.useMemo)`, `(0,g.useCallback)` which are common patterns in transpiled React code. `(0,C.useState)` is explicitly React's `useState` hook."
+        },
+        {
+          "name": "react-router",
+          "motivation": "Presence of functions like `(0,r.UO)` (likely `useParams`), `(0,r.s0)` (likely `useNavigate`), `(0,r.TH)` (likely `useLocation`), and `(0,r.Fg)` (likely `Navigate` component). URL manipulation like `/add/v2/${e}/${i}` is typical for routing."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Usage of `(0,p.default).div.withConfig`, `.withConfig({displayName:\"...\", componentId:\"...\"})`, and `(0,R.useTheme)` strongly indicates the use of styled-components for CSS-in-JS."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "The hook `(0,d.useWeb3React)` is explicitly imported and used to get web3 context like `chainId`, `account`, and `provider`."
+        },
+        {
+          "name": "Ethers.js / Viem",
+          "motivation": "Extensive use of blockchain interaction patterns: `F().BigInt(0)`, `d.O$.from(...)` (likely `ethers.BigNumber.from`), contract interactions (`Le.estimateGas.addLiquidityETH`, `Le.addLiquidityETH`), gas limit calculation (`(0,G.y)(e)`), transaction submission/handling (`Ze(e,i)`), hex string conversion (`Se.toHexString()`), and BigInt/BigNumber comparisons (`F().equal(...)`). The provider obtained from `useWeb3React` is used for these operations (`Le` appears to be a contract instance initialized with the provider)."
+        },
+        {
+          "name": "@uniswap/sdk-core / @uniswap/v2-sdk",
+          "motivation": "Heavy use of concepts and classes like `CurrencyAmount`, `Percent`, `Price`, `Token`, `Pair` (e.g., `(0,q.Oo)` fetches pair data, `p` represents a pair with methods like `priceOf`, `getLiquidityMinted`, `reserve0`, `reserve1`). Field names like `I.gN.CURRENCY_A`, `I.gN.CURRENCY_B` are typical in Uniswap SDK contexts. Slippage calculation `(0,H.u)` and reference to `(0,R.E)` (likely `getEtherscanLink`) are also indicative."
+        },
+        {
+          "name": "Redux / Redux Toolkit",
+          "motivation": "Patterns like `(0,L.C)((e=>e.mint))` (selector, likely `useSelector`), `(0,L.T)()` (likely `useDispatch`), and dispatching actions `i((0,I.LC)(...))` suggest state management with Redux."
+        },
+        {
+          "name": "react-intl",
+          "motivation": "The code uses `(0,s.cC,{id:\"...\"})` which is the characteristic pattern for rendering translated messages using `FormattedMessage` from react-intl."
+        }
+      ]
+    },
+    {
+      "file": "static/js/9838.b9093077.js",
+      "occurences": [
+        {
+          "name": "Coinbase Wallet SDK",
+          "motivation": "The code explicitly defines and uses classes like `CoinbaseWalletSDK`, `WalletSDKRelay`, `WalletSDKConnection`, and `WalletSDKUI`. It references `window.coinbaseWalletExtension` and `window.walletLinkExtension`. The SDK manages connections to the Coinbase Wallet mobile app or browser extension, primarily via WalletLink."
+        },
+        {
+          "name": "Preact",
+          "motivation": "The code uses `(0,o.h)` for rendering, where `o` is resolved from `n(78131)`, and `(0,a.useState)`, `(0,a.useEffect)`, etc., where `a` is resolved from `n(93561)`. These patterns strongly indicate the use of Preact for UI components, likely within the Coinbase Wallet SDK's UI flows (modals, popups)."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively uses RxJS patterns like `Observable`, `Subject`, `BehaviorSubject`, `Subscription`, and pipeable operators (`filter`, `map`, `switchMap`, `timeoutWith`, `catchError`, etc.) imported from modules `n(79512)` and `n(75279)`. This is primarily used within the `WalletSDKConnection` for managing WebSocket communication and state."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "The codebase includes numerous modules that correspond to `@ethersproject` packages (e.g., `abi`, `providers`, `contracts`, `bignumber`, `bytes`, `hash`, `signing-key`, `transactions`). Classes like `BaseProvider`, `JsonRpcProvider`, `Contract`, `ContractFactory`, `Interface`, `BigNumber`, and utility functions like `getAddress`, `hexlify`, `arrayify`, `keccak256` are characteristic of ethers.js. It's used for interacting with the Ethereum blockchain, handling wallets, and processing transactions."
+        },
+        {
+          "name": "@uniswap/sdk-core / v2-sdk / v3-sdk / router-sdk / permit2-sdk",
+          "motivation": "The code includes modules related to Uniswap V2 (`n(30112)` - Pair, Route, Trade), V3 (`n(35206)` - Pool, Position, Route, Trade, TickLibrary), the Universal Router (`n(73293)` - SwapRouter, defines UNIVERSAL_ROUTER_ADDRESS), and Permit2 (`n(85338)` - AllowanceTransfer). This indicates interaction with Uniswap protocols for swapping or liquidity provision."
+        },
+        {
+          "name": "@safe-global/safe-apps-sdk / @safe-global/safe-apps-provider",
+          "motivation": "The code imports from modules that likely correspond to the Safe Apps SDK (`n(2278)`) and exports `SafeAppProvider` (`n(52746)`, `n(51072)`). This suggests integration capabilities with Gnosis Safe or Safe{Wallet}."
+        },
+        {
+          "name": "QR Code Generator",
+          "motivation": "Module `n(7122)` is used to generate QR codes (`new a.default({...})`) within the `ConnectContent` component (`n(68014)`) for the WalletLink connection process."
+        },
+        {
+          "name": "Elliptic / Noble Crypto Libraries",
+          "motivation": "Imports related to `bn.js` (`n(15979)`), `elliptic` (`n(35983)`), `@noble/hashes` (`n(91234)`, `n(63120)`, `n(38057)`), `@noble/curves` (`n(26256)`), and various crypto utilities (`n(88727)`, `n(70837)`) indicate the use of low-level cryptographic functions for hashing (keccak256, sha256, ripemd160), key management (SigningKey), and elliptic curve operations (secp256k1)."
+        },
+        {
+          "name": "UI/Styling Libraries",
+          "motivation": "Imports related to `@emotion/react` (`n(29389)`), `@emotion/cache` (`n(55787)`), `@emotion/styled` (`n(12882)`), `@reach/dialog` (`n(73293)`), `@reach/portal` (`n(92870)`), `@reach/utils` (`n(22477)`), `react-focus-lock` (`n(61604)`), `react-remove-scroll` (`n(41432)`), and `@styled-system/props` (`n(56871)`) show the use of these libraries for creating and styling the user interface components, managing focus, and handling modals/dialogs."
+        },
+        {
+          "name": "React",
+          "motivation": "The code includes React's internal symbols (`Symbol.for(\"react.element\")`, `Symbol.for(\"react.portal\")`, etc.) and hooks (`useState`, `useEffect`, `useContext`, `useRef`). It also references `createElement`, `forwardRef`, `PureComponent`, suggesting React is the core UI library."
+        },
+        {
+          "name": "viem",
+          "motivation": "The code imports and utilizes functions typical of `viem`, such as `createClient`, `http`, `webSocket`, `publicActions`, `walletActions`, `getContract`, ENS resolution functions (`getEnsAddress`, `getEnsName`, etc.), ABI utilities (`encodeFunctionData`, `decodeFunctionResult`), and various error types (`CallExecutionError`, `ContractFunctionExecutionError`)."
+        },
+        {
+          "name": "web3-react",
+          "motivation": "The code includes connectors like `GnosisSafe`, `MetaMask`, `CoinbaseWallet`, and `Network` from `@web3-react` packages, along with the `Web3ReactProvider` and associated hooks (`useWeb3React`), indicating its use for wallet management."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Presence of `ServerStyleSheet`, `StyleSheetManager`, `ThemeContext`, `ThemeProvider`, `createGlobalStyle`, and the `styled` component factory pattern strongly suggests the use of styled-components for CSS-in-JS."
+        },
+        {
+          "name": "Zustand",
+          "motivation": "Imports related to `createStore` and `useStore` from `zustand` (`e.exports=n(39061)`) and the devtools middleware (`import { devtools } from 'zustand/middleware'`) are present."
+        },
+        {
+          "name": "Redux / Redux Persist",
+          "motivation": "The code references `createStore` from `redux` (`e=n(56353)` which exports `createStore`) and includes `redux-persist` logic (`persist/REHYDRATE`, `persist/PERSIST`, `createPersistoid`)."
+        },
+        {
+          "name": "graphql-request",
+          "motivation": "The code includes the `GraphQLClient`, `rawRequest`, and `request` functions, typical of the `graphql-request` library for making GraphQL queries."
+        },
+        {
+          "name": "ethers.js / BN.js",
+          "motivation": "The code contains extensive big number arithmetic operations (`BigNumber`, `BN.prototype`, `imuln`, `iaddn`, `isBN`, etc.) characteristic of `BN.js` or a similar library often bundled with older versions of ethers.js or web3.js. Given the presence of other Ethereum-related code, this is likely for handling blockchain numbers."
+        },
+        {
+          "name": "IPFS/IPLD Libraries (cid, multiformats, etc.)",
+          "motivation": "The code includes explicit references to CID creation and validation (`CID`, `@ipld/js-cid/CID`), multibase encoding/decoding (`multibase`), multicodec handling, and multihash functions (`multihashes`), indicating interaction with IPFS/IPLD data structures."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "Presence of `Observable`, `Subject`, `ReplaySubject`, `BehaviorSubject`, `Subscription`, and various operators (`pipe`, `map`, `filter`, `auditTime`, etc.) points to the use of RxJS for reactive programming."
+        },
+        {
+          "name": "js-sha3 / hash.js",
+          "motivation": "Imports and usage of `keccak256`, `sha256`, `sha512`, etc. are found, likely from `js-sha3` (based on the structure in 38057) or a similar hashing library."
+        },
+        {
+          "name": "buffer",
+          "motivation": "The code includes a polyfill for the Node.js `Buffer` class (`t.Buffer=u`, `Buffer.isBuffer`), commonly the `buffer` npm package used in browser environments."
+        },
+        {
+          "name": "whatwg-fetch",
+          "motivation": "The code includes a polyfill for the `fetch` API (`fetch.polyfill = !0`), likely the `whatwg-fetch` package."
+        },
+        {
+          "name": "qs",
+          "motivation": "The code contains logic for parsing and stringifying query strings (`parse`, `stringify` in module 78346) that matches the API of the `qs` library."
+        },
+        {
+          "name": "Uniswap SDKs (Universal Router, V2/V3 SDKs)",
+          "motivation": "The code includes ABIs and likely interacts with contracts named `UniversalRouter.sol`, `ISwapRouter02.sol`, `IApproveAndCall.sol`, `UniswapV3Pool.sol`, `UniswapV2Pair.sol`, suggesting the use of Uniswap SDKs."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "static/js/9838.b9093077.js",
+      "occurences": [
+        {
+          "count": 4
+        }
+      ]
+    },
+    {
+      "file": "static/js/main.d983ef71.js",
+      "occurences": [
+        {
+          "count": 8
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

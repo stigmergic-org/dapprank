@@ -1,0 +1,468 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibhrf4bdze56ljg3rpilr7lf2p2itofxpi75irf7ziuyja6tbtaqa",
+  "timestamp": 1745428069,
+  "blockNumber": 22332539,
+  "rootMimeType": "inode/directory",
+  "totalSize": 28625105,
+  "favicon": "favicon.ico",
+  "title": "NEXUM CODEX LABS",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Playfair+Display+SC:700"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Lato:400,700"
+          }
+        ]
+      },
+      {
+        "file": "index2.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Playfair+Display+SC:700"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css?family=Lato:400,700"
+          }
+        ]
+      }
+    ],
+    "externalMedia": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "iframe",
+            "url": "https://www.youtube.com/embed/cliMourBj8I?si=vFC6gvGR9GtC7OBa"
+          },
+          {
+            "type": "img",
+            "url": "https://www.free-website-hit-counter.com/zc.php?d=9&id=7440&s=16"
+          }
+        ]
+      },
+      {
+        "file": "index2.html",
+        "occurences": [
+          {
+            "type": "iframe",
+            "url": "https://www.youtube.com/embed/cliMourBj8I?si=vFC6gvGR9GtC7OBa"
+          },
+          {
+            "type": "img",
+            "url": "https://www.free-website-hit-counter.com/zc.php?d=8&id=6179&s=7"
+          }
+        ]
+      }
+    ]
+  },
+  "networkingPurity": [
+    {
+      "file": "js/autocomplete.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[configurable url from options]"
+          ],
+          "library": "jQuery",
+          "type": "self",
+          "motivation": "The code uses `$.ajax` (which is jQuery's wrapper for `XMLHttpRequest`) inside the `lookup` function to fetch autocomplete suggestions. \n*   The URL is determined by the `this.opts.url` variable, which is set during plugin initialization via options or a `data-url` attribute. The actual URL is therefore configurable.\n*   The type is classified as 'self' because autocomplete components typically fetch data from the application's own backend API, although it could be configured as 'auxiliary'.\n*   The data sent is the input field's name and current value (`this.$element.attr('name') + '=' + this.$element.val()`) via a POST request."
+        }
+      ]
+    },
+    {
+      "file": "js/infinite-scroll.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[configured url]"
+          ],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "The code uses `$.ajax` (which is a jQuery wrapper typically around XMLHttpRequest) within the `getData` function. The URL is specified by `this.opts.url`, which is determined by the plugin's configuration options (`url` option, defaulting to `false` but expected to be set during initialization). Data (`limit`, `offset`) is sent via POST request body (`type: 'post'`, `data: 'limit=' + this.opts.limit + '&offset=' + this.opts.offset`). The type is 'auxiliary' because the URL is user-configured and likely points to an API endpoint for fetching more content, not a specific RPC or bundler endpoint."
+        }
+      ]
+    },
+    {
+      "file": "js/kube.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIGURED_URL]"
+          ],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "```\nThe `Autocomplete` plugin uses `$.ajax({ url: this.opts.url, ... })` to fetch suggestions. `$.ajax` is jQuery's wrapper around `XMLHttpRequest`. The actual URL is determined by the `url` option passed during initialization or via a data attribute (`this.opts.url`).\n```"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIGURED_URL]"
+          ],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "```\nThe `InfinityScroll` plugin uses `$.ajax({ url: this.opts.url, ... })` to fetch more content. `$.ajax` is jQuery's wrapper around `XMLHttpRequest`. The actual URL is determined by the `url` option passed during initialization or via a data attribute (`this.opts.url`). Data (`limit`, `offset`) is passed via the `data` parameter.\n```"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIGURED_URL]"
+          ],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "```\nThe `Livesearch` plugin uses `$.ajax({ url: this.opts.url, ... })` to fetch search results. `$.ajax` is jQuery's wrapper around `XMLHttpRequest`. The actual URL is determined by the `url` option passed during initialization or via a data attribute (`this.opts.url`). Search parameters and optional form data are passed via the `data` parameter.\n```"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIGURED_URL]"
+          ],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "```\nThe `Modal` plugin can fetch content via AJAX if the `content` option is a URL string (not starting with '#'). It uses `$.ajax({ url: this.opts.content, ... })`. `$.ajax` is jQuery's wrapper around `XMLHttpRequest`. The actual URL is determined by the `content` option passed during initialization or via a data attribute (`this.opts.content`).\n```"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIGURED_URL]"
+          ],
+          "library": "otherwise",
+          "type": "auxiliary",
+          "motivation": "```\nThe `Upload` plugin uses the native `XMLHttpRequest` object directly to send file data. It creates an instance using `new XMLHttpRequest()` and sends data via `xhr.open('POST', this.opts.url)` and `xhr.send(formData)`. The actual URL is determined by the `url` option passed during initialization or via a data attribute (`this.opts.url`). The file data is sent within a FormData object.\n```"
+        }
+      ]
+    },
+    {
+      "file": "js/kube.min.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic url from data-url or options]"
+          ],
+          "library": "jQuery (via $.ajax in Autocomplete plugin)",
+          "type": "auxiliary",
+          "motivation": "`The Autocomplete plugin uses jQuery's b.ajax (which wraps XMLHttpRequest) to fetch suggestions. The URL is dynamically configured via the 'url' option (this.opts.url), which can be set through data attributes or JavaScript initialization. The call sends the input field name and value as POST data: b.ajax({url: this.opts.url, type: \"post\", data: this.$element.attr(\"name\")+\"=\"+this.$element.val(), ...})`"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic url from data-url or options]"
+          ],
+          "library": "jQuery (via $.ajax in InfinityScroll plugin)",
+          "type": "auxiliary",
+          "motivation": "`The InfinityScroll plugin uses jQuery's b.ajax (which wraps XMLHttpRequest) to load more content. The URL is dynamically configured via the 'url' option (this.opts.url). The call sends limit and offset as POST data: b.ajax({url: this.opts.url, type: \"post\", data: \"limit=\"+this.opts.limit+\"&offset=\"+this.opts.offset, ...})`"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic url from data-url or options]"
+          ],
+          "library": "jQuery (via $.ajax in Livesearch plugin)",
+          "type": "auxiliary",
+          "motivation": "`The Livesearch plugin uses jQuery's b.ajax (which wraps XMLHttpRequest) to perform searches as the user types. The URL is dynamically configured via the 'url' option (this.opts.url). The call sends the query ('q' or input name) and optional parameters/form data as POST data: b.ajax({url: this.opts.url, type: \"post\", data: c, ...})`"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic url from data-content or options]"
+          ],
+          "library": "jQuery (via $.ajax in Modal plugin)",
+          "type": "auxiliary",
+          "motivation": "`The Modal plugin uses jQuery's b.ajax (which wraps XMLHttpRequest) to load modal content from a URL if the 'content' option (this.opts.content) is a URL string (and not starting with '#'). The call is a GET request: b.ajax({url: this.opts.content, cache: false, success: ...})`"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic url from data-url or options]"
+          ],
+          "library": "Kube UI Framework Plugins (Upload plugin)",
+          "type": "auxiliary",
+          "motivation": "`The Upload plugin uses a native XMLHttpRequest directly to upload files. The URL is dynamically configured via the 'url' option (this.opts.url). The call sends FormData containing the file as POST data: var f=new XMLHttpRequest(); f.open(\"POST\", this.opts.url); ... f.send(d)`"
+        }
+      ]
+    },
+    {
+      "file": "js/livesearch.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "Configurable via options (this.opts.url)"
+          ],
+          "library": "jQuery",
+          "type": "auxiliary",
+          "motivation": "The `search` function uses `$.ajax` (a jQuery method which typically utilizes `XMLHttpRequest` for HTTP requests) to send data. The URL is determined by the plugin's configuration option `this.opts.url`. Data is constructed from the input field's value (`this.$element.val()`) and potentially additional parameters (`this.opts.params`) or serialized forms (`this.opts.appendForms`), and sent via a POST request."
+        }
+      ]
+    },
+    {
+      "file": "js/upload.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic based on plugin options]"
+          ],
+          "library": "jQuery (plugin)",
+          "type": "auxiliary",
+          "motivation": "The `sendData` function explicitly creates and uses a `new XMLHttpRequest()` object. It sends a `POST` request (`xhr.open('POST', this.opts.url)`) with file data packaged in `FormData`. The target URL is determined by the `this.opts.url` value, which is configurable via options passed to the jQuery plugin (`this.loadOptions`). Since the URL is not hardcoded and depends on how the plugin is invoked, it's marked as dynamic. Given it's a file upload plugin, the endpoint is likely an auxiliary service or a path relative to the current domain (`self`), classified here as `auxiliary` by default.",
+          "motivation_markdown": "The `sendData` function explicitly creates and uses a `new XMLHttpRequest()` object.\n```javascript\nvar xhr = new XMLHttpRequest();\nxhr.open('POST', this.opts.url);\n// ...\nxhr.send(formData);\n```\nIt sends a `POST` request with file data packaged in `FormData`. The target URL is determined by the `this.opts.url` value, which is configurable via options passed to the jQuery plugin (`this.loadOptions` merges options from `$.Upload.opts`, `this.$element.data()`, and passed `options`). Since the URL is not hardcoded and depends on how the plugin is invoked, it's marked as dynamic. Given it's a file upload plugin, the endpoint is likely an auxiliary service or a path relative to the current domain (`self`), classified here as `auxiliary` by default."
+        }
+      ]
+    },
+    {
+      "file": "js/validate.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "this.opts.url"
+          ],
+          "library": "jQuery",
+          "type": "self",
+          "motivation": "The `send` method utilizes `$.ajax`, which typically uses `XMLHttpRequest` under the hood. The URL for the request is dynamically set from the plugin's options (`this.opts.url`). The default value for `this.opts.url` is `false`, meaning a network call only happens if a URL is provided during initialization (e.g., via options or a `data-url` attribute). The `data` sent is `this.$element.serialize()`, typical for submitting form data, often to a relative path on the same domain (`self`)."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$()` function syntax, which is characteristic of jQuery. Specifically, `$(function() { ... })` is used as a shorthand for `$(document).ready()`, and DOM elements are selected and manipulated using jQuery selectors like `$(\"#typed\")` and `$(\".reset\")`."
+        },
+        {
+          "name": "Typed.js",
+          "motivation": "The code explicitly calls the `.typed()` method on a jQuery-selected element (`$(\"#typed\")`). This method is the core function provided by the Typed.js library for creating typing animations."
+        }
+      ]
+    },
+    {
+      "file": "index2.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$()` function syntax, which is characteristic of jQuery. Specifically, `$(function() { ... })` is used as a shorthand for `$(document).ready()`, and DOM elements are selected and manipulated using jQuery selectors like `$(\"#typed\")` and `$(\".reset\")`."
+        },
+        {
+          "name": "Typed.js",
+          "motivation": "The code explicitly calls the `.typed()` method on a jQuery-selected element (`$(\"#typed\")`). This method is the core function provided by the Typed.js library for creating typing animations."
+        }
+      ]
+    },
+    {
+      "file": "js/accordion.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the common jQuery plugin pattern `(function($) { ... })(jQuery);`. It extensively uses `$` for selecting elements (`$(el)`, `$(this)`, `$('.accordion-title')`, etc.), manipulating the DOM (`.append`, `.addClass`, `.removeClass`, `.show`, `.hide`, `.attr`), handling events (`.on`, `e.preventDefault`), and AJAX/utility functions (`$.fn.accordion`, `$.data`, `$.extend`, `$.proxy`, `$._data`). The comment `// Plugin\n$.fn.accordion = function(options)` explicitly defines a jQuery plugin."
+        }
+      ]
+    },
+    {
+      "file": "js/autocomplete.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$` alias extensively, wraps itself in `(function($){ ... })(jQuery);`, and utilizes numerous jQuery methods like `$.fn.autocomplete`, `$.data`, `$.extend`, `$.ajax`, `$.proxy`, `$()`, `.on()`, `.append()`, `.val()`, `.addClass()`, `.removeClass()`, etc. This is characteristic jQuery plugin development."
+        },
+        {
+          "name": "Imperavi Kube Autocomplete",
+          "motivation": "The header comment explicitly mentions `http://imperavi.com/kube/` and `Copyright (c) 2009-2014, Imperavi LLC.` The plugin is named `$.Autocomplete` and follows the structure of a component potentially belonging to the Kube framework by Imperavi."
+        }
+      ]
+    },
+    {
+      "file": "js/buttons.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in a `(function($){ ... })(jQuery);` closure, a standard pattern for jQuery plugins. It extensively uses `$` for selecting elements (e.g., `$(el)`, `$(this.opts.target)`), manipulating the DOM (`.addClass`, `.removeClass`, `.val`), handling events (`.click`, `$(window).on`), and using jQuery utility functions (`$.fn.buttons`, `$.data`, `$.extend`, `$.proxy`, `$.inArray`)."
+        }
+      ]
+    },
+    {
+      "file": "js/check-all.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in `(function($){ ... })(jQuery);`, a common pattern for jQuery plugins. It extensively uses jQuery functions like `$.fn.checkAll`, `$.data`, `$.proxy`, `$.extend`, `$(selector)`, `.on()`, `.prop()`, `.val()`, `.each()`, `.closest()`, `.addClass()`, `.removeClass()`, `.filter()`, and `.size()."
+        }
+      ]
+    },
+    {
+      "file": "js/dropdown.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in `(function($) { ... })(jQuery);`, a common pattern for jQuery plugins. It extensively uses jQuery functions like `$.fn.dropdown`, `$.data`, `$.extend`, `$(selector)`, `.on()`, `.off()`, `.css()`, `.addClass()`, `.removeClass()`, `.append()`, `.hide()`, `.show()`, `.innerHeight()`, `.innerWidth()`, `.offset()`, `.position()`, `.closest()`, `.hasClass()`, `.width()`, `.height()`, and `$.proxy`."
+        }
+      ]
+    },
+    {
+      "file": "js/filterbox.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in a self-executing anonymous function `(function($){ ... })(jQuery);`, a standard pattern for jQuery plugins.\nIt extensively uses the `$` symbol for DOM manipulation (`$(el)`, `$(document)`, etc.) and jQuery methods like `$.fn.filterbox`, `$.data`, `$.extend`, `.on()`, `.find()`, `.each()`, `.proxy()`, `.hide()`, `.after()`, `.append()`, `.val()`, `.addClass()`, `.removeClass()`, `.show()`, `.attr()`, `.text()`, `.position()`, `.scrollTop()`, `.css()`."
+        }
+      ]
+    },
+    {
+      "file": "js/infinite-scroll.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the common jQuery pattern `(function($) { ... })(jQuery);` to define a plugin. It extensively uses jQuery functions like `$.fn.infinityScroll`, `$.data`, `$.extend`, `$.ajax`, `$.proxy`, and DOM manipulation/event handling methods like `$(...)`, `.children()`, `.last()`, `.on()`, `.off()`, `.hide()`, `$.proxy`."
+        }
+      ]
+    },
+    {
+      "file": "js/kube.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "```\nThe code extensively uses the `$` symbol for selecting DOM elements and manipulating them (e.g., `$(el)`, `$.fn`, `$.extend`, `$.proxy`, `$(window).on`, etc.). This is the characteristic syntax of the jQuery library.\nThe code defines multiple plugins (Accordion, Autocomplete, Buttons, CheckAll, Dropdown, Filterbox, InfinityScroll, Livesearch, Message, Modal, NavigationFixed, NavigationToggle, Tabs, Textfit, Tooltip, Upload) using the standard jQuery plugin pattern: `$.fn.pluginName = function(...) { ... }` and `$.PluginName = function(...) { ... }`.\n```"
+        },
+        {
+          "name": "Kube UI Framework components (jQuery Plugins)",
+          "motivation": "```\nThe code includes multiple distinct UI components (Accordion, Autocomplete, Buttons, etc.) defined as jQuery plugins. \nThe initial comments in the file mention `http://imperavi.com/kube/` and `Copyright (c) 2009-2014, Imperavi LLC.`, strongly suggesting these components are part of the Kube UI framework by Imperavi, implemented as jQuery plugins.\n```"
+        }
+      ]
+    },
+    {
+      "file": "js/kube.min.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "`The code extensively uses the '$' or 'b' alias (passed as 'jQuery' in the IIFE) for DOM manipulation, event handling (e.g., .on(), .click()), AJAX calls (b.ajax), plugin definition patterns (b.fn.pluginName), and utility functions (b.extend, b.proxy, b.each). This is characteristic of jQuery usage.`"
+        },
+        {
+          "name": "Kube UI Framework Plugins (jQuery based)",
+          "motivation": "`The code defines multiple jQuery plugins within the Kube framework namespace (Accordion, Autocomplete, Buttons, CheckAll, Dropdown, Filterbox, InfinityScroll, Livesearch, Message, Modal, NavigationFixed, NavigationToggle, Progress, Tabs, Textfit, Tooltip, Upload). These are built on top of jQuery, extending its functionality for UI components.`"
+        }
+      ]
+    },
+    {
+      "file": "js/livesearch.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in a standard jQuery plugin structure `(function($){...})(jQuery);` and extensively uses jQuery methods and conventions like `$.fn.livesearch`, `$.data`, `$.extend`, `$()`, `$.ajax`, `$.proxy`, `.on()`, `.after()`, `.append()`, `.hide()`, `.show()`, `.val()`, etc."
+        }
+      ]
+    },
+    {
+      "file": "js/message.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the common jQuery plugin pattern `(function($){...})(jQuery);`. It extensively uses jQuery functions like `$.fn`, `$.data`, `$.extend`, `$.proxy`, `$(selector)`, `.on()`, `.off()`, `.addClass()`, `.removeClass()`, `.hasClass()`, `.fadeIn()`, `.fadeOut()`, `$._data`, etc."
+        }
+      ]
+    },
+    {
+      "file": "js/navigation-fixed.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `(function($){ ... })(jQuery);` pattern, which is characteristic of jQuery plugins. It defines a plugin using `$.fn.navigationFixed`, utilizes jQuery selectors (`$(el)`, `$(window)`), and employs various jQuery methods like `.each()`, `.data()`, `.offset()`, `.scroll()`, `.extend()`, `$._data()`, `.addClass()`, `.removeClass()`, and `.on()`."
+        }
+      ]
+    },
+    {
+      "file": "js/progress.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in an immediately invoked function expression (IIFE) `(function($) { ... })(jQuery);`, a standard pattern for creating jQuery plugins or modules. Inside the function, `$` is used to select and manipulate DOM elements (`$('#tools-progress')`, `$(document.body).append()`, `.fadeIn()`, `.find()`, `.css()`, `.fadeOut()`), which are core jQuery functionalities."
+        }
+      ]
+    },
+    {
+      "file": "js/site.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$` function extensively for DOM selection (`$('a[href*=#]:not([href=#])')`, `$(this.hash)`, `$('html,body')`), event handling (`click()`), accessing element properties (`target.length`, `target.offset().top`), and animation (`animate()`). The wrapper `$(function() { ... })` is the standard jQuery shorthand for the document ready event."
+        }
+      ]
+    },
+    {
+      "file": "js/tabs.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in an immediately invoked function expression (IIFE) that takes `$` as an argument: `(function($){ ... })(jQuery);`. It extensively uses `$` for DOM selection (`$(el)`, `this.$element.find('a')`), manipulation (`$(hash).hide()`, `$(hash).show()`), event handling (`$el.on('click', ...)`, `$(window).on('load.tools.tabs', ...)`), and extending jQuery's functionality (`$.fn.tabs`, `$.Tabs`)."
+        }
+      ]
+    },
+    {
+      "file": "js/textfit.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in a self-executing anonymous function `(function($) { ... })(jQuery);`, which is a standard pattern for jQuery plugins. It also uses jQuery functions like `$.fn.textfit`, `$.data`, `$(el)`, `this.$element.css`, `$.extend`, `this.$element.data()`, `$(window).on`, and the selector `$('[data-tools=\"textfit\"]')`."
+        }
+      ]
+    },
+    {
+      "file": "js/tooltip.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in an Immediately Invoked Function Expression (IIFE) `(function($) { ... })(jQuery);`, which is the standard pattern for creating jQuery plugins. It utilizes various jQuery functions and methods like `$.fn.tooltip`, `$.data`, `$.extend`, `$(el)`, `.on()`, `.attr()`, `.offset()`, `.append()`, `.show()`, `.hide()`, and `$(function() { ... })` for DOM manipulation and event handling."
+        }
+      ]
+    },
+    {
+      "file": "js/typed.min.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in an immediately invoked function expression (IIFE) that takes `window.jQuery` as an argument, aliased as `t`. It extensively uses `t` for DOM manipulation (`t(s)`, `t('<span...>')`, `t.fn.typed`) and utility functions (`t.extend`), which are characteristic patterns of jQuery plugins."
+        },
+        {
+          "name": "Typed.js (jQuery Plugin)",
+          "motivation": "The code defines a constructor `s` and attaches methods like `init`, `build`, `typewrite`, `backspace`, `reset` to its prototype. It then registers itself as a jQuery plugin using `t.fn.typed = function(o){...}`. The functionality provided (simulating typing text) and the options (`typeSpeed`, `backSpeed`, `strings`, `loop`, `showCursor`, `cursorChar`, etc.) are consistent with the Typed.js library, specifically a version designed as a jQuery plugin."
+        }
+      ]
+    },
+    {
+      "file": "js/upload.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in a `(function($) { ... })(jQuery);` structure, a common pattern for jQuery plugins. It extensively uses jQuery methods like `$.fn.upload`, `$.data`, `$.extend`, `$.proxy`, `$.parseJSON`, and DOM manipulation/event handling methods prefixed with `$`, such as `$(el)`, `this.$element.after()`, `this.$droparea.on()`, etc."
+        }
+      ]
+    },
+    {
+      "file": "js/validate.js",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code is wrapped in a standard jQuery plugin structure `(function($) { ... })(jQuery);`. It defines a jQuery plugin using `$.fn.validate` and makes extensive use of jQuery functions like `$()`, `.each()`, `.data()`, `.extend()`, `.find()`, `.addClass()`, `.submit()`, `.on()`, `.off()`, `.ajax()`, etc."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

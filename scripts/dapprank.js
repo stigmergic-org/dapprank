@@ -994,6 +994,8 @@ async function geminiAnalysisWithChunking(scriptText, filePath) {
 
             const results = [];
             for (const chunk of chunks) {
+                // Wait 1 minute between chunk analysis to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 60000));
                 const result = await geminiAnalysisWithChunking(chunk, filePath);
                 results.push(result);
             }

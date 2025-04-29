@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "contentHash": "bafybeif5zssrereds6hkw62e3lbs3fkhe4pnsg7ctwh4bzneytnjidncve",
+  "timestamp": 1745957008,
+  "blockNumber": 22376973,
+  "rootMimeType": "inode/directory",
+  "totalSize": 10015043,
+  "favicon": "favicon.ico",
+  "title": "seedit",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/ccip-CYrYUcKd.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "{url_from_OffchainLookup_error_with_placeholders}"
+          ],
+          "library": "otherwise",
+          "type": "auxiliary",
+          "motivation": "```markdown\nThe function `T` (identified as `ccipRequest`) iterates through an array of `urls` provided via its arguments. Inside the loop, it calls `fetch(t.replace(\"{sender}\",r).replace(\"{data}\",c), ...)`. \n- The `urls` originate from the `OffchainLookup` revert data, passed from function `D`. \n- These URLs are templates containing `{sender}` and/or `{data}` placeholders which are replaced before the `fetch` call.\n- The request method is dynamically set to 'GET' or 'POST' based on the URL template structure.\n- Data (`c`, `r`) is passed either in the URL (GET) or as a JSON request body (POST).\n- These URLs point to CCIP Read (EIP-3668) off-chain gateways specified by a smart contract, classifying them as `auxiliary` service endpoints.\n- The `fetch` call is made directly within the application logic function `T`, not abstracted within a high-level library function call visible in this specific snippet.\n```"
+        }
+      ]
+    },
+    {
+      "file": "workbox-96411c29.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "Workbox",
+          "type": "auxiliary",
+          "motivation": "The `fetch` method is called within the `R` class (likely `FetchWrapper`) used by various Workbox strategies (`CacheFirst`, `StaleWhileRevalidate`, `PrecacheStrategy` represented by classes `Y`, `t.CacheFirst`, `t.StaleWhileRevalidate`). These strategies use `fetch` to retrieve resources from the network, either for initial caching (precaching during install) or during runtime request handling (e.g., cache miss, stale-while-revalidate background update).\n\nThe specific URLs fetched are determined dynamically based on the `Request` object being handled by the service worker's router (`a`) and the configured routes or precache manifest. No hardcoded URLs are present in this library code itself. The type is marked `auxiliary` as these fetches handle general web resources defined by the application's routing and precaching rules, which could be same-origin (`self`) or cross-origin assets."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "assets/ccip-CYrYUcKd.js",
+      "occurences": [
+        {
+          "name": "viem",
+          "motivation": "```markdown\nThe code imports multiple minified functions (`l`, `m`, `y`, `k`, `b`, `O`, `E`, `L`, `h`, `x`) from a bundled file (`./index-BOFGqy5r.js`). The usage patterns strongly suggest functions from the `viem` library:\n- `l` (aliased as `B`) is used as a base class for custom errors (`M`, `R`, `S`), similar to `ViemError`.\n- `k` is used to decode ABI error data (`k({data: o, abi: [$]})`), matching `decodeErrorResult`.\n- `O` is used to make a blockchain call (`O(c, { ... })`), resembling `call`.\n- `E` and `L` are used for ABI encoding (`E([p, L(...)])`), similar to `encodeAbiParameters` or related functions.\n- `b` is used for address comparison (`b(i, t)`), matching `isAddressEqual`.\n- `h` is used as an error class for HTTP requests (`h({ ... })`), matching `HttpRequestError`.\n- `x` checks if a value is hex (`x(e)`), matching `isHex`.\n- `m` and `y` are used for formatting (`m(f)`, `y(r)`), potentially `formatUrl` and `stringify`.\n- The overall structure involves handling blockchain interactions, errors, and ABI data, consistent with `viem`'s purpose.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/vendor-BVZ8Lot9.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code includes multiple references to React's internal symbols like `Symbol.for(\"react.fragment\")`, `Symbol.for(\"react.component\")`, etc. It defines components using patterns like `y.prototype.isReactComponent={}`. It extensively uses functions aliased to `d` which correspond to React APIs like `d.createElement`, `d.createContext`, `d.useRef`, `d.useState`, `d.useCallback`, `d.useContext`, `d.useMemo`, `d.useEffect`, `d.useLayoutEffect`. The version `19.1.0` is explicitly mentioned (`g.version=\"19.1.0\"`). The `ct()` function clearly sets up the React library environment. The `__REACT_DEVTOOLS_GLOBAL_HOOK__` is referenced."
+        },
+        {
+          "name": "React DOM",
+          "motivation": "The code initializes ReactDOM in the `ht()` function, which depends on the React library (`e=De()`). It defines ReactDOM-specific APIs under the alias `U`, such as `U.createPortal`, `U.flushSync`, `U.preconnect`, `U.prefetchDNS`, `U.preinit`. It references `__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE`. The version `19.1.0` is explicitly mentioned (`U.version=\"19.1.0\"`)."
+        },
+        {
+          "name": "Remix Router / React Router",
+          "motivation": "The code contains copyright notices for `@remix-run/router v1.9.0` and `React Router v6.16.0`. It defines and uses routing concepts like `history` actions (`k.Pop`, `k.Push`, `k.Replace`), `popstate` event listeners, path matching (`gt`, `xt`, `Ot`), route configuration (`me`), and navigation functions (`l.pushState`, `l.replaceState`, `Ke`). It defines React components and hooks specific to React Router, such as `rr` (Router), `gr` (Routes), `tr` (Route), `fr` (Link), `Er` (NavLink), `Ke` (useNavigate hook), `G` (useLocation hook), `mr` (useParams hook), `Wt` (Outlet component), and context providers (`z.Provider`, `oe.Provider`, `B.Provider`)."
+        }
+      ]
+    },
+    {
+      "file": "workbox-96411c29.js",
+      "occurences": [
+        {
+          "name": "Workbox",
+          "motivation": "The code contains multiple strings referencing Workbox modules and versions, such as `\"workbox:core:7.2.0\"`, `\"workbox:routing:7.2.0\"`, `\"workbox:strategies:7.2.0\"`, `\"workbox:expiration:7.2.0\"`, `\"workbox:cacheable-response:7.2.0\"`, and `\"workbox:precaching:7.2.0\"`. It also defines classes and functions (`Router`, `RegExpRoute`, `Strategy`, `CacheFirst`, `StaleWhileRevalidate`, `PrecacheController`, `registerRoute`, `precacheAndRoute`) that directly correspond to the Workbox service worker library's API and concepts for routing, caching strategies, and precaching."
+        },
+        {
+          "name": "idb (or similar IndexedDB wrapper)",
+          "motivation": "The code includes sophisticated wrapper functions (`k`, `B`, `O`) and a `Proxy` (`N`) specifically designed to simplify interactions with IndexedDB APIs (`IDBDatabase`, `IDBTransaction`, `IDBRequest`, `IDBCursor`). This pattern, particularly the promise-based handling of IDB requests and transactions, and the proxying for method access (like `store.put()` via `transaction.store.put()`), strongly resembles the functionality provided by the `idb` library by Jake Archibald, suggesting its use or the inclusion of similar custom code."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

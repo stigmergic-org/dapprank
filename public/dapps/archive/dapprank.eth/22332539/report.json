@@ -1,0 +1,130 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibm6vp5v7g2xbjqyp5kdrejjnpipq75xauvwh627okxjnwxk2q6iy",
+  "timestamp": 1745424626,
+  "blockNumber": 22332539,
+  "rootMimeType": "inode/directory",
+  "totalSize": 12566417,
+  "favicon": "favicon.ico",
+  "title": "Dapp Rank - Benchmarks Censorship Resistance",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "721.e71308e7ff412a118d8f.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "ccip_read_gateway_url_template"
+          ],
+          "library": null,
+          "type": "auxiliary",
+          "motivation": "The code explicitly uses `fetch` within the `w` async function to make HTTP requests. \n\nThe URL is dynamically constructed using `o.replace(\"{sender}\",a).replace(\"{data}\",e)`, where `o` is an element from the `urls` array derived from the `OffchainLookup` revert data. These URLs point to external gateways specified by the contract for off-chain data retrieval (EIP-3668 CCIP-Read). Placeholders `{sender}` and `{data}` are replaced before the call. The request method is determined dynamically ('GET' if url contains '{data}', otherwise 'POST'). For 'POST' requests, a JSON body containing `sender` and `data` is included."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "configured_rpc_endpoint"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "The code calls `(0, s.T)(e, { ... })`, which is identified as a `viem` function (likely `readContract` or `call`). This function executes a read-only call (`eth_call`) to the smart contract specified by `to: n`. \n\nSuch calls require communication with an Ethereum RPC endpoint. The specific URL is not present in the snippet but is configured within the `viem` client instance (`e`). `viem` typically uses `fetch` internally for HTTP/HTTPS RPC endpoints."
+        }
+      ]
+    },
+    {
+      "file": "index.b26b4f2b9a6f924f9b7b.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "/dapps/index/",
+            "/dapps/archive/{dapp_name}/"
+          ],
+          "library": "Custom",
+          "type": "self",
+          "motivation": "The code calls `V(\"/dapps/index/\")` and `V(\"/dapps/archive/\".concat(n,\"/ \"))`. The `V` function internally calls `fetch(o)` where `o` is constructed as `\"\".concat(n,\"?format=car\")`. These URLs are relative paths (`/dapps/...`), indicating requests to the same domain hosting the script. They fetch CAR files containing dapp data."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://mainnet.gateway.tenderly.co/"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "The function `j()` which configures the viem client includes a hardcoded URL `o=\"https://mainnet.gateway.tenderly.co/\".concat(\"...\")`. This URL is then used to create a viem transport `(0,C.L)(o)`, which internally uses `fetch` to make Ethereum RPC calls. The API key part is omitted as requested."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://delegated-ipfs.dev/routing/v1/providers/{cid}"
+          ],
+          "library": "Custom",
+          "type": "auxiliary",
+          "motivation": "The code contains a function that explicitly fetches `\"https://delegated-ipfs.dev/routing/v1/providers/\".concat(n)`, where `n` is a content hash (CID). This call retrieves IPFS provider information (seeders) for a given CID from a public gateway, which is an auxiliary service for displaying seeder counts."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "721.e71308e7ff412a118d8f.js",
+      "occurences": [
+        {
+          "name": "viem",
+          "motivation": "The code utilizes functional patterns (`(0, i.W)`, `(0, h.xW)`, etc.) for ABI decoding (`abi:[k]`), hex manipulation (`(0, h.xW)`, `(0, p.h)`), type checking (`(0, y.q)`), address utilities (`(0, f.h)`), and error handling (`n.C`, `l.Ci`) characteristic of `viem`. It also imports specific error types and utilities often found within `viem`'s structure (e.g., `HttpRequestError` like `l.Ci`). The function `(0, s.T)` likely corresponds to `viem`'s `readContract` or `call` for interacting with smart contracts."
+        }
+      ]
+    },
+    {
+      "file": "index.b26b4f2b9a6f924f9b7b.js",
+      "occurences": [
+        {
+          "name": "viem",
+          "motivation": "The code uses functions like `(0,C.L)` (likely `http` transport), `(0,B.I)` (likely `custom` transport for `window.ethereum`), `(0,b.l)` (likely `createClient`), `(0,f.N)` (likely `fallback` transport), `(0,x.p)` (likely `encodeFunctionData`), `(0,I.k)` (likely `namehash`), and `(0,v.n)` (likely `decodeFunctionResult`), which are characteristic patterns for viem functions when bundled with webpack. It also interacts with Ethereum RPC endpoints and uses standard ABI formats."
+        },
+        {
+          "name": "@ipld/car",
+          "motivation": "The code includes `s.fromBytes(a,{verify:!0})` where `s=new _.v`. The variable `_` points to a module containing `v`. This pattern, along with reading CAR format (`?format=car` fetch) and extracting roots and blocks (`d.roots`, `d.blocks`), suggests the use of a CAR reader library like `@ipld/car`."
+        },
+        {
+          "name": "ipfs-unixfs",
+          "motivation": "The code uses `(0,P.Si)(t)` likely to create a filesystem interface (`fs`) where `t` includes a `blockstore` and `getCodec` function. It then uses `fs.ls(o)` and `fs.cat(e, {path: t})`. This interaction pattern with a blockstore and UnixFS-like operations (ls, cat) points towards the use of `ipfs-unixfs` or a similar library."
+        },
+        {
+          "name": "multiformats",
+          "motivation": "The code handles CIDs (`y.TO.decode(t).toV1().toString(k.base32)`), involves codecs (`getCodec` function returning modules represented by R, N, Y, L which likely correspond to dag-pb, raw, json, cbor based on typical IPLD usage), and works with block data (`e.put(h.cid, h.payload)`). These are core concepts handled by the `multiformats` suite of libraries."
+        },
+        {
+          "name": "uint8arrays",
+          "motivation": "The code uses `(0,O.xW)(r)` to concatenate what appears to be an array of Uint8Array chunks (`r.push(A)` where `A=h` and `h` is from `n.cat(...)`), which is a common pattern for the `concat` function from the `uint8arrays` library."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "index.b26b4f2b9a6f924f9b7b.js",
+      "occurences": [
+        {
+          "count": 14
+        }
+      ]
+    }
+  ],
+  "fallbacks": [
+    {
+      "file": "index.b26b4f2b9a6f924f9b7b.js",
+      "occurences": [
+        {
+          "type": "rpc",
+          "motivation": "The function `j()` contains code `n=function(n){...new URLSearchParams(window.location.search)...t=\"ds-rpc-\".concat(n),r=e.get(t);return r?...}(1)` which explicitly checks for the query parameter `ds-rpc-1` to get a fallback RPC URL for chain ID 1 (Ethereum mainnet). This URL, if present, is used to configure a viem transport `i.push((0,C.L)(n))`."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibz7xfqvfyo3eyfulvzkpaz33oj2vxevmfeunql3fjt5alkgsxifu",
+  "timestamp": 1745426489,
+  "blockNumber": 22332539,
+  "rootMimeType": "inode/directory",
+  "totalSize": 1768502,
+  "favicon": "favicon.ico",
+  "title": "Hugo Dias - Porto, Portugal, Protocol Labs",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [],
+  "libraryUsage": [],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

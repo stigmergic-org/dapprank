@@ -1,0 +1,675 @@
+{
+  "version": 2,
+  "contentHash": "bafybeif4x6kpbhkbcftz55ktu6xmczg6i3nltxpfmr7pkfyhoysi4ntav4",
+  "timestamp": 1745604769,
+  "blockNumber": 22347505,
+  "rootMimeType": "inode/directory",
+  "totalSize": 20840849,
+  "favicon": "",
+  "title": "Kleros Scout",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "FileViewer.7262fd60.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "react-doc-viewer / pdf.js",
+          "type": "auxiliary",
+          "motivation": "The `sh` function, used by various file loaders (`rh`, `ah`, `oh`), calls `fetch(t, {signal: e, headers: s})` where `t` is the `documentURI`. This fetches the content of the document being viewed."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "react-doc-viewer / pdf.js",
+          "type": "auxiliary",
+          "motivation": "The `lh` function calls `fetch(a, {method: s || a.startsWith(\"blob:\") ? \"GET\" : \"HEAD\", ...})` where `a` is the `currentDocument.uri`. This likely fetches metadata (like content-type) via a HEAD request before loading the full document."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "pdf.js (likely)",
+          "type": "auxiliary",
+          "motivation": "The `Ay` class constructor calls `fetch(i, vy(this._headers, this._withCredentials, this._abortController))` where `i` is the document URL. This appears to be part of the `PDFFetchStream` implementation used for fetching the main PDF document."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "pdf.js (likely)",
+          "type": "auxiliary",
+          "motivation": "The `xy` class constructor calls `fetch(s, vy(this._headers, this._withCredentials, this._abortController))` where `s` is the document URL and headers include a `Range` request. This is part of the PDF stream handling for fetching specific byte ranges."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "react-doc-viewer / pdf.js",
+          "type": "auxiliary",
+          "motivation": "The `Sd` function provides an `XMLHttpRequest` fallback for fetching data. It's called with the document URI `t`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "pdf.js (likely)",
+          "type": "auxiliary",
+          "motivation": "The `_y` class (`PDFNetworkStream` used in older/fallback scenarios) creates `XMLHttpRequest` instances to fetch the document URL (`this.url`) and supports range requests via `setRequestHeader(\"Range\", ...)`."
+        }
+      ]
+    },
+    {
+      "file": "FileViewer.85a04169.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "react-doc-viewer",
+          "type": "auxiliary",
+          "motivation": "The `sh` function uses `fetch(t)` where `t` is the `documentURI` (derived from the `url` prop passed to the FileViewer component) to fetch the document content for rendering.\n```javascript\nsh=({documentURI:t,signal:e,fileLoaderComplete:i,readerTypeFunction:n,headers:s})=>fetch(t,{signal:e,headers:s}).then(...)\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "react-doc-viewer",
+          "type": "auxiliary",
+          "motivation": "The `lh` function uses `fetch(a, {method: s || a.startsWith(\"blob:\") ? \"GET\" : \"HEAD\", ...})` where `a` is the `documentURI` to perform a HEAD request (unless it's a blob or prefetch is specified) to determine the file type from the 'content-type' header if not already known.\n```javascript\nfetch(a,{method:s||a.startsWith(\"blob:\")?\"GET\":\"HEAD\",signal:r,headers:null==t?void 0:t.requestHeaders}).then(...)\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[CMap URI]"
+          ],
+          "library": "pdfjs-dist",
+          "type": "auxiliary",
+          "motivation": "The `kd` class (derived from `Uu` - BaseCMapReaderFactory) calls `_fetchData` which uses the `Sd` helper. `Sd` uses `fetch(t)` where `t` is constructed as `baseUrl + t + (this.isCompressed ? \".bcmap\" : \"\")`. This fetches CMap files required by pdf.js.\n```javascript\nkd extends Uu{_fetchData(t,e){return Sd(t,this.isCompressed?\"arraybuffer\":\"text\")...}}\n// Sd uses fetch\nSd=(t,e=\"text\")=>fetch(i)...\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[font URI]"
+          ],
+          "library": "pdfjs-dist",
+          "type": "auxiliary",
+          "motivation": "The `Ed` class (derived from `Vu` - BaseStandardFontDataFactory) calls `_fetchData` which uses the `Sd` helper. `Sd` uses `fetch(t)` where `t` is constructed as `baseUrl + t`. This fetches standard font data required by pdf.js.\n```javascript\nEd extends Vu{_fetchData(t){return Sd(t,\"arraybuffer\")...}}\n// Sd uses fetch\nSd=(t,e=\"text\")=>fetch(i)...\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "pdfjs-dist",
+          "type": "auxiliary",
+          "motivation": "The `Ay` class (part of pdf.js network stream handling for browsers) uses `fetch(i, ...)` where `i` is the document URL to fetch the full PDF document content.\n```javascript\nfetch(i,vy(this._headers,this._withCredentials,this._abortController)).then(...)\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "pdfjs-dist",
+          "type": "auxiliary",
+          "motivation": "The `xy` class (part of pdf.js network stream handling for browsers) uses `fetch(s, ...)` where `s` is the document URL, along with a `Range` header, to fetch specific byte ranges of the PDF document.\n```javascript\nthis._headers.append(\"Range\",`bytes=${e}-${i-1}`);\nfetch(s,vy(this._headers,this._withCredentials,this._abortController)).then(...)\n```"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[document URI]"
+          ],
+          "library": "pdfjs-dist",
+          "type": "auxiliary",
+          "motivation": "The `_y` class (part of pdf.js network stream handling) uses `new XMLHttpRequest()` and `e.open(\"GET\", this.url)` as a fallback or alternative mechanism, primarily for Node.js or specific browser scenarios, to fetch the full PDF document content.\n```javascript\nconst e=new XMLHttpRequest;\ne.open(\"GET\",this.url)\n```"
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CMap URI]",
+            "[font URI]"
+          ],
+          "library": "pdfjs-dist",
+          "type": "auxiliary",
+          "motivation": "The `Sd` helper function uses `new XMLHttpRequest()` and `s.open(\"GET\", t, !0)` as a fallback mechanism (e.g., if fetch fails or isn't suitable for the context) to fetch CMap or font data URLs.\n```javascript\nconst s=new XMLHttpRequest;s.open(\"GET\",t,!0)\n```"
+        }
+      ]
+    },
+    {
+      "file": "index-BIqdkLuE.10e54a57.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[dynamic URL from options]"
+          ],
+          "library": "Node.js 'http'/'https' polyfill/bundle (stream-http like)",
+          "type": "auxiliary",
+          "motivation": "The code contains a polyfill for Node.js's http/https module. Within its `ClientRequest` implementation (`_n`), it creates an `XMLHttpRequest` instance (`u=e._xhr=new o.c.XMLHttpRequest`) and calls `u.open(e._opts.method,e._opts.url,!0)` and `u.send(n)`. The URL (`e._opts.url`) is determined dynamically based on the options passed to the `request` function."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[dynamic URL from options]"
+          ],
+          "library": "Node.js 'http'/'https' polyfill/bundle (stream-http like)",
+          "type": "auxiliary",
+          "motivation": "As an alternative path within the same `ClientRequest` implementation (`_n`), the code uses `fetch`: `o.c.fetch(e._opts.url,{method:e._opts.method,headers:i,body:n||void 0,...})`. The URL (`e._opts.url`) is determined dynamically based on the options passed to the `request` function. This provides a modern alternative to `XMLHttpRequest` within the Node.js http polyfill."
+        }
+      ]
+    },
+    {
+      "file": "index-BIqdkLuE.9dae7798.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "Node.js `http` / `https` polyfill",
+          "type": "auxiliary",
+          "motivation": "The code uses `o.c.fetch(e._opts.url, ...)` within the `_onFinish` method of its `http.ClientRequest` polyfill (`_n`). The URL (`e._opts.url`) is determined dynamically based on the options passed to the `request` or `get` functions of the polyfill. It's used as a backend for the Node.js-style HTTP interface, likely for arbitrary HTTP requests made by the application logic using this polyfill. Since the specific URL depends on runtime usage, it's classified as auxiliary."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "Node.js `http` / `https` polyfill",
+          "type": "auxiliary",
+          "motivation": "The code uses `new o.c.XMLHttpRequest` and its methods (`open`, `send`, `setRequestHeader`, etc.) within the `_onFinish` method of its `http.ClientRequest` polyfill (`_n`) as an alternative backend to `fetch`. The URL (`e._opts.url`) passed to `u.open(e._opts.method, e._opts.url, !0)` is determined dynamically from the options provided to the polyfill's `request` or `get` functions. Similar to the fetch usage, it enables arbitrary HTTP requests, classified as auxiliary."
+        }
+      ]
+    },
+    {
+      "file": "index.5017d0be.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cdn.kleros.link/*"
+          ],
+          "library": "react-query / unknown",
+          "type": "auxiliary",
+          "motivation": "Calls like `fetch(\"https://cdn.kleros.link\"+(null==h||...))` are made to retrieve metadata files (like policy URIs and logo URIs) referenced in TCR data, likely triggered by `useQuery` hooks."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://kleros-api.netlify.app/.netlify/functions/upload-to-ipfs"
+          ],
+          "library": "unknown",
+          "type": "auxiliary",
+          "motivation": "Direct `fetch` call to `https://kleros-api.netlify.app/.netlify/functions/upload-to-ipfs?operation=${t}&pinToGraph=${n}` is used for uploading evidence or item data to IPFS via a Kleros API endpoint. The `HT` function wraps this call."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.studio.thegraph.com/query/61738/legacy-curate-gnosis/v0.1.1"
+          ],
+          "library": "graphql-request",
+          "type": "auxiliary",
+          "motivation": "The code uses `(0,jo.request)({url:_a,document:c,variables:{...}})` where `_a` is hardcoded to this URL. This fetches data from The Graph subgraph for Kleros Curate on Gnosis chain."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.gnosischain.com"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "A JsonRpcProvider (`aE` class) is instantiated with `https://rpc.gnosischain.com`. This provider is used later for on-chain calls like fetching arbitrator costs (`_T` function) or registry deposits (`dE` function)."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "http://localhost:8545"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The JsonRpcProvider implementation (`aE` class) has a default constructor argument `null==e&&(e=\"http://localhost:8545\")`, indicating this is a potential RPC endpoint if none is specified."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://gasstation.polygon.technology/v2",
+            "https://gasstation-testnet.polygon.technology/v2"
+          ],
+          "library": "ethers.js",
+          "type": "auxiliary",
+          "motivation": "The `ax` function creates a plugin (`ex`) that fetches fee data from these specific Polygon Gas Station URLs using the `FetchUrlFeeDataPlugin` mechanism within ethers.js."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The EIP-1193 provider (`KT` class) uses the injected `ethereum.request` method (`Ka(this,GT).call(this,e.method,e.params||[])`) to send RPC calls. The specific URL depends on the connected wallet/provider."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The JsonRpcProvider (`aE` class) uses its configured connection (`Ka(this,sE)`) to send RPC requests via `_send`. The URL is determined during instantiation (e.g., Gnosis RPC or localhost default)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "ethers.js",
+          "type": "auxiliary",
+          "motivation": "The `Jy` class wraps `fetch` calls for potentially generic HTTP requests, including CCIP reads (`ccipReadFetch`). The URLs are dynamic based on transaction data and resolver responses."
+        }
+      ]
+    },
+    {
+      "file": "index.f3e81699.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.studio.thegraph.com/query/61738/legacy-curate-gnosis/v0.1.1"
+          ],
+          "library": "graphql-request",
+          "type": "auxiliary",
+          "motivation": "The code uses `(0,jo.request)` which corresponds to the imported `graphql-request` library. The URL `_a` is explicitly defined as the The Graph Subgraph endpoint for `legacy-curate-gnosis` on Gnosis chain."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cdn.kleros.link"
+          ],
+          "library": "other",
+          "type": "auxiliary",
+          "motivation": "A direct `fetch` call is made to URLs starting with `https://cdn.kleros.link`. This is used to retrieve metadata files (like policy URIs) stored on the Kleros CDN."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://kleros-api.netlify.app/.netlify/functions/upload-to-ipfs"
+          ],
+          "library": "other",
+          "type": "auxiliary",
+          "motivation": "A direct `fetch` call is made to a Netlify function endpoint (`https://kleros-api.netlify.app/.../upload-to-ipfs`) likely used for uploading evidence or item data to IPFS via Kleros infrastructure."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "http://localhost:8545",
+            "https://rpc.gnosischain.com"
+          ],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The code defines `aE` which extends `oE` (likely `JsonRpcProvider` from ethers). `aE` calls `_send` which uses a connection object (`Qa(this,sE)`) initialized with a URL (defaulting to `http://localhost:8545` or configured, e.g., `https://rpc.gnosischain.com`). This pattern is typical for making JSON-RPC calls via fetch in ethers."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "ethers",
+          "type": "auxiliary",
+          "motivation": "The code contains logic for EIP-3668 CCIP Read (`Xa(this,Ky,Zy).call(this,...)`). This involves making `fetch` calls (wrapped in the `Jy` class) to external URLs provided by a smart contract (`s.urls`) to resolve off-chain data. The specific URLs are determined at runtime based on contract data."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "FileViewer.7262fd60.js",
+      "occurences": [
+        {
+          "name": "react",
+          "motivation": "The code uses React hooks like `(0,o.useContext)`, `(0,o.forwardRef)`, `(0,o.useEffect)`, `(0,o.useState)`, `(0,o.useMemo)` and JSX syntax like `(0,a.jsx)`."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code uses tagged template literals for styling (`tl.div`, `tl.button`, `tl.a`), functions like `keyframes`, `ThemeProvider`, `StyleSheetManager`, and patterns like `styled.div.attrs`, strongly indicating the use of styled-components."
+        },
+        {
+          "name": "react-doc-viewer",
+          "motivation": "The code defines components like `FileViewer`, `ProxyRenderer`, and uses concepts like `pluginRenderers`, `DocViewerRenderers`, and `DocViewer`. It explicitly imports components related to document viewing and rendering plugins (`o.D`, `o.b`, `l.default`), which are characteristic of `react-doc-viewer`."
+        },
+        {
+          "name": "pdf.js",
+          "motivation": "The code references `pdfjsLib` (`oc=globalThis.pdfjsLib={}`) and uses its API components like `getDocument`, `renderTextLayer`, `AnnotationLayer`, and internal structures/constants (e.g., `OPS`, `PasswordResponses`, `RenderingCancelledException`). This is often used directly or wrapped by libraries like `react-pdf` or `react-doc-viewer`."
+        },
+        {
+          "name": "mustache.js",
+          "motivation": "The code contains a bundled version of mustache.js, identifiable by comments like `/*!\n * mustache.js - Logic-less {{mustache}} templates with JavaScript\n * http://github.com/janl/mustache.js\n */` and usage of its API like `Gl = new Vl` (where `Vl` is the `Writer` class) and methods like `Gl.render` and `Gl.parse`."
+        },
+        {
+          "name": "react-markdown",
+          "motivation": "The code includes a markdown plugin (`6TX10`) that explicitly imports and uses `a.ReactMarkdown` via `(0,r.default)(a.ReactMarkdown)` for rendering markdown content."
+        },
+        {
+          "name": "Buffer",
+          "motivation": "The code includes a polyfill/browser implementation of the Node.js `Buffer` module, identifiable by the comment `/*!\n * The buffer module from node.js, for the browser.\n * ...\n */` and definitions like `t.Buffer=h`, `t.SlowBuffer`."
+        }
+      ]
+    },
+    {
+      "file": "FileViewer.85a04169.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses JSX syntax `(0,r.jsx)(...)` and React hooks like `(0,o.useState)`, `(0,o.useEffect)`, `(0,o.useReducer)`, `(0,o.useContext)`, `(0,o.useMemo)`, `(0,o.useCallback)`, `(0,o.useRef)`, `(0,o.forwardRef)`. Parcel's module registration `n.register(\"lBpE3\", ...)` likely bundles React."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code extensively uses tagged template literals for styling (`r.default.div(h||(h=u\\`...\\`))`, `tl.button(c||(c=Y\\`...\\`))`). It imports `styled-components` features (`tl = Zo(t)` where `Zo` calls `Jo(Xo, t)`, and `Xo` uses `new Ho(...)` which relates to styled component creation). The presence of `ga = ... || \"data-styled\"` and `va = \"data-styled-version\"` attributes further confirms its use."
+        },
+        {
+          "name": "react-doc-viewer",
+          "motivation": "The code defines components and functions related to document viewing, such as `DocViewerRenderers`, PDF plugin logic (`pdfPluginLoading`, `pdfPluginPageNumber`), document navigation (`NEXT_DOCUMENT`, `PREVIOUS_DOCUMENT`), and various renderers (Image, CSV, Markdown, PDF via pdfjs). The main exported component `HT` (`(0,o.memo)($T)`) seems to be the `DocViewer` itself."
+        },
+        {
+          "name": "pdfjs-dist",
+          "motivation": "The code includes `globalThis.pdfjsLib={}` and populates it with numerous pdf.js specific constants and classes (`OPS`, `AnnotationMode`, `RenderingCancelledException`, `GlobalWorkerOptions`, `getDocument`, etc.). It also fetches CMaps and standard fonts, typical pdf.js operations."
+        },
+        {
+          "name": "mustache.js",
+          "motivation": "The code explicitly includes comments identifying `mustache.js` (`/*!\n * mustache.js - Logic-less {{mustache}} templates with JavaScript\n * http://github.com/janl/mustache.js\n */`) and defines objects and functions mirroring the Mustache API (`Gl={name:\"mustache.js\",version:\"4.2.0\"}`, `Gl.render`). It's used for internationalization (`il={en:{...}}`, `Gl.render(s[i],n)` within `Xl` hook)."
+        },
+        {
+          "name": "buffer",
+          "motivation": "The code includes a polyfill for the Node.js `Buffer` module, indicated by comments (`/*!\n * The buffer module from node.js, for the browser.\n ... */`) and definitions like `t.Buffer=h`, `h.alloc`, `h.fromByteArray`."
+        },
+        {
+          "name": "react-markdown",
+          "motivation": "The code imports `react-markdown` (`n.register(\"Pfr7b\",...)` likely contains it) and uses it via a styled wrapper: `(0,r.default)(a.ReactMarkdown)`. This is used in the Markdown renderer (`d=({mainState:{currentDocument:t}})=>{... (0,s.jsx)(u,{children:i}) ...}`)."
+        }
+      ]
+    },
+    {
+      "file": "index-BIqdkLuE.10e54a57.js",
+      "occurences": [
+        {
+          "name": "Node.js 'stream' polyfill/bundle",
+          "motivation": "The code extensively defines and uses classes like `Readable`, `Writable`, `Duplex`, `Transform`, `PassThrough`, mirroring the Node.js `stream` module API. Functions like `p(Vr,Gr)` resemble `util.inherits` used with stream classes."
+        },
+        {
+          "name": "Node.js 'http'/'https' polyfill/bundle (stream-http like)",
+          "motivation": "The code defines a `ClientRequest` class (`_n=u.exports=function(e){...}`) that uses `XMLHttpRequest` (`e._xhr=new o.c.XMLHttpRequest`) and `fetch` (`o.c.fetch(e._opts.url,{...})`) internally to mimic the Node.js `http.request` behavior. It exports functions `s.request` and `s.get` which align with the Node.js `http` module."
+        },
+        {
+          "name": "Node.js 'buffer' polyfill/bundle",
+          "motivation": "The code uses `Buffer` extensively (`i=x.Buffer`, `i.from`, `i.isBuffer`, `i.allocUnsafe`). It also includes the `safe-buffer` logic (`/*! safe-buffer. MIT License...`)."
+        },
+        {
+          "name": "Node.js 'util' polyfill/bundle",
+          "motivation": "Features like `util.inherits` (pattern `p(e,t)`), `util.format` (`e.format=function(e){...}`), `util.inspect` (`e.inspect=s`), `util.types` (`e.types=N`), and `util.promisify` (`e.promisify=function(e){...}`) are implemented or referenced."
+        },
+        {
+          "name": "Node.js 'events' polyfill/bundle",
+          "motivation": "The code defines a `v.EventEmitter` class with methods like `on`, `emit`, `removeListener`, `once`, `listenerCount`, matching the Node.js `events` module."
+        },
+        {
+          "name": "Node.js 'url' polyfill/bundle",
+          "motivation": "The code imports `Tn` using `const Tn=(0,o.a)(i.u)` and later uses it as `a` in `a.parse(e)` within the `s.request` function, consistent with using the Node.js `url.parse` function."
+        }
+      ]
+    },
+    {
+      "file": "index-BIqdkLuE.9dae7798.js",
+      "occurences": [
+        {
+          "name": "Parcel Bundler Runtime",
+          "motivation": "The code includes a runtime wrapper (`parcelRequirec45d`) characteristic of modules bundled by Parcel."
+        },
+        {
+          "name": "Node.js `events` polyfill",
+          "motivation": "The code defines and uses a class named `EventEmitter` (`v.EventEmitter=v`) with methods like `on`, `emit`, `removeListener`, mirroring the Node.js `events` module functionality. It's assigned via `y.exports` and used by stream classes."
+        },
+        {
+          "name": "Node.js `util` polyfill",
+          "motivation": "The code includes functions like `inherits`, `inspect`, `format`, `deprecate`, `promisify`, and type checking functions (`isArray`, `isBuffer`, etc.) commonly found in the Node.js `util` module. This is visible in the `L` variable and its associated functions (`p=f.exports`, `e.inherits=p`, `e.inspect=s`, etc.)."
+        },
+        {
+          "name": "Node.js `stream` polyfill",
+          "motivation": "The code defines `Readable`, `Writable`, `Duplex`, `Transform`, and `PassThrough` classes (`sn.Readable=sn`, `sn.Writable=wr()`, `sn.Duplex=_r()`, `sn.Transform=Ur`, `sn.PassThrough=Yr`) mimicking the Node.js `stream` module API. It uses `EventEmitter` and buffer logic extensively."
+        },
+        {
+          "name": "Node.js `buffer` polyfill",
+          "motivation": "The code references `Buffer` (`var i=x.Buffer`), checks for buffer instances (`i.isBuffer(e)`), and uses buffer methods like `from`, `alloc`, `copy`, `toString`. This suggests a polyfill for the Node.js `Buffer` class, potentially using `safe-buffer` (explicitly mentioned in comments `/*! safe-buffer...`) or a similar implementation (`Rr={exports:{}}`, `Or()` function)."
+        },
+        {
+          "name": "Node.js `string_decoder` polyfill",
+          "motivation": "The code defines a `StringDecoder` class (`Ar.StringDecoder=r`) used within the stream implementation (`this.decoder=new u(t.encoding)`), matching the functionality of the Node.js `string_decoder` module."
+        },
+        {
+          "name": "Node.js `http` / `https` polyfill",
+          "motivation": "The code defines `request`, `get`, `ClientRequest`, `IncomingMessage` (`s.request`, `s.get`, `s.ClientRequest=t`, `s.IncomingMessage=r.IncomingMessage`) and uses `XMLHttpRequest` (`t=new o.c.XMLHttpRequest`) and `fetch` (`o.c.fetch`) internally to mimic the Node.js `http` and `https` module interfaces for making HTTP requests in the browser."
+        },
+        {
+          "name": "Node.js `url` polyfill",
+          "motivation": "The code uses `Tn=(0,o.a)(i.u)` and later `a.parse(e)` within the `http` polyfill's `request` function, which mirrors the behavior of the Node.js `url.parse` method for handling URL strings."
+        }
+      ]
+    },
+    {
+      "file": "index-DFn6bF3J.1b835ef2.js",
+      "occurences": [
+        {
+          "name": "Parcel Loader",
+          "motivation": "The code uses `parcelRequirec45d` and `e.register`, which are characteristic patterns of the Parcel bundler's module loading runtime system."
+        },
+        {
+          "name": "Node.js `https` module wrapper/polyfill",
+          "motivation": "The code imports modules referenced as `c.s` and `c.r`. It iterates over properties of `c.s` (`t` in the inner function) and calls methods like `t.request.call` and `t.get.call`. It also uses `r.parse` (`c.r.parse`). This pattern, especially the `request` and `get` methods and URL parsing, strongly suggests interaction with Node.js's built-in `https` and `url` modules, likely polyfilled or shimmed for a browser environment. The code defines wrapper functions that enforce the HTTPS protocol before calling the underlying `https.request` or `https.get`."
+        }
+      ]
+    },
+    {
+      "file": "index-DFn6bF3J.9086af96.js",
+      "occurences": [
+        {
+          "name": "HTTPS Request Client (Bundled)",
+          "motivation": "```javascript\nvar p=e(\"aztYz\");\n// ...\nvar t=p.s,r=p.r;\n// ...\ni(e){if(\"string\"==typeof e&&(e=r.parse(e)),e.protocol||(e.protocol=\"https:\"),\"https:\"!==e.protocol)throw new Error(...)\n// ...\no.request=function(e,r){return e=i(e),t.request.call(this,e,r)}\no.get=function(e,r){return e=i(e),t.get.call(this,e,r)}\n```\nThe code imports a module (`p` from `aztYz`) which provides methods for parsing URLs (`p.r.parse`) and making HTTP requests (`p.s.request`, `p.s.get`). It wraps these methods, specifically enforcing the 'https:' protocol. This pattern suggests a bundled version of a library providing Node.js-like `https` and `url` functionality for the browser."
+        }
+      ]
+    },
+    {
+      "file": "index.5017d0be.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code includes numerous references to `React.createElement`, `React.Component`, `React.useState`, `React.useRef`, `React.useContext`, `React.forwardRef`, `React.memo`, `React.Fragment`, `React.useEffect`, `React.useCallback`, `React.useMemo`, `React.useLayoutEffect`, and minified React production code patterns like `react.production.min.js` and `react-jsx-runtime.production.min.js`."
+        },
+        {
+          "name": "ReactDOM",
+          "motivation": "The code imports `createRoot` and `hydrateRoot` from a module identified as `react-dom.production.min.js`. It also uses `s(bK).render(...)` which corresponds to ReactDOM's rendering logic."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code defines components using `c.default.div` and `c.default.button`, utilizes tagged template literals for CSS (`zE=e=>e`), references `createGlobalStyle`, and includes attributes like `data-styled-version`."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "The code contains logic for routing, including history management (`Jn.Pop`, `Jn.Push`, `Jn.Replace`), context providers related to navigation (`Er`, `kr`, `Ar`), hooks like `useNavigate` (minified as `Or`), and parsing/creating paths (`pr`, `or`, `sr`). The comment `React Router DOM v6.22.3` is also present."
+        },
+        {
+          "name": "@tanstack/react-query",
+          "motivation": "The code defines classes and functions consistent with react-query's core concepts: `sW` (likely `QueryClient`), `HV` (likely `QueryCache`), `nW` (likely `MutationCache`), `vo` (`QueryObserver`), `KV` (`Mutation`), `yo` (`Query`). It uses terms like `queryKey`, `queryHash`, `staleTime`, `gcTime`, `refetchOnWindowFocus`, `fetchQuery`, `prefetchQuery`, `invalidateQueries`, `setQueryData`, `getQueryData`, `useQuery` pattern (minified as `Uo`)."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "The code includes classes and functions related to Ethereum interactions, such as `Wm` (likely `Interface`), `Bm` (likely `AbiCoder`), `bw` (likely `Transaction`), `ag` (likely `Block`), `ug` (likely `Log`), `dg` (likely `TransactionReceipt`), `hg` (likely `TransactionResponse`), `bh` (likely `SigningKey`), `nE`/`oE`/`aE`/`KT`/`jG` (likely related to JsonRpcProvider/EIP-1193 providers), `gh` (likely `Signature`), and methods like `getAddress`, `getBlockNumber`, `getTransaction`, `sendTransaction`, `estimateGas`, `resolveName`, `lookupAddress`, `encodeFunctionData`, `decodeFunctionResult`, `encodeFilterTopics`, `decodeEventLog`."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The code contains a class (minified as `i`) for arbitrary-precision integers, performing operations like add (`iadd`), subtract (`isub`), multiply (`mul`, `imul`), divide/modulo (`divmod`, `modrn`), power (`pow`), comparison (`cmp`), bitwise operations (`iand`, `ior`, `ixor`), and conversions (`toString`, `toNumber`, `toArray`). This matches the functionality and patterns of bn.js."
+        },
+        {
+          "name": "buffer",
+          "motivation": "The code includes a polyfill or implementation of the Node.js `Buffer` class (minified as `r` and `h`), with methods like `from`, `alloc`, `allocUnsafe`, `isBuffer`, `concat`, `slice`, `copy`, `write`, `readUIntLE`, `readIntBE`, etc."
+        },
+        {
+          "name": "base-x",
+          "motivation": "The code defines functions for encoding and decoding using a specific alphabet (`xw=\"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz\"`), consistent with base-x libraries, specifically Base58 via `VI` module (`oP.default.encode`, `oP.default.decode`)."
+        },
+        {
+          "name": "text-encoding",
+          "motivation": "The code includes implementations or polyfills for `TextEncoder` and `TextDecoder` (minified within module `7bUqw` and used elsewhere, e.g., `sP.TextDecoder`), used for UTF-8 encoding/decoding."
+        },
+        {
+          "name": "uuid",
+          "motivation": "The code contains a function (`UB` within module `jB`) that generates version 4 UUIDs using `crypto.getRandomValues` or a fallback, matching the structure of uuid libraries."
+        },
+        {
+          "name": "borsh",
+          "motivation": "The code defines classes `cP` (likely `BinaryWriter`) and `fP` (likely `BinaryReader`) and functions `ZI.serialize` and `ZI.deserialize` for serializing and deserializing data structures based on a schema, which is characteristic of the Borsh serialization format."
+        },
+        {
+          "name": "@emotion/react / @emotion/styled",
+          "motivation": "The code utilizes CSS-in-JS patterns, including `css` prop handling (`w_`), style generation (`A_`), keyframes (`zF`), theme context (`g_`), and internal emotion identifiers like `__EMOTION_TYPE_PLEASE_DO_NOT_USE__` and `data-emotion` attributes, consistent with Emotion libraries."
+        },
+        {
+          "name": "react-select",
+          "motivation": "The code includes a complex component (`ZU`) with state management for options, selection, focus, input value, and menu state. It uses props like `options`, `value`, `onChange`, `getOptionLabel`, `getOptionValue`, `isMulti`, `isSearchable`, `filterOption`, `components`, `styles`, `classNamePrefix`. It renders components like `Control`, `Menu`, `Option`, `MultiValue`, `SingleValue`, `Placeholder`, `Input`, `DropdownIndicator`, `ClearIndicator`, matching the structure and functionality of react-select."
+        },
+        {
+          "name": "humanize-duration",
+          "motivation": "The code contains a large dictionary (`r`) mapping language codes (like `en`, `es`, `fr`) to functions that provide pluralization for time units (years, months, weeks, days, etc.). It defines a function `p` that takes a duration and options (like `language`, `units`, `round`) to produce a human-readable string. This is the core functionality of humanize-duration."
+        },
+        {
+          "name": "graphql-request",
+          "motivation": "The code defines a class (`xa`, likely `GraphQLClient`) with methods `request`, `rawRequest`, and `batchRequests`. It uses `gql` template literal tag (minified) and handles GraphQL responses, including error handling specific to GraphQL (`pa.ClientError`)."
+        },
+        {
+          "name": "@solana/web3.js",
+          "motivation": "The code includes classes like `xM` (PublicKey), `jM` (Transaction), `_M` (Message), `tN` (SystemProgram), `uL` (StakeProgram), `cL` (VoteProgram), `QN` (Keypair), and Solana-specific functions like `createProgramAddressSync`, `findProgramAddressSync`, constants like program IDs (`Stake1111...`, `Vote1111...`), and instruction layouts (`eN`, `aL`, `lL`)."
+        },
+        {
+          "name": "@noble/hashes",
+          "motivation": "The code contains implementations for various hash functions: SHA-256 (`$I`), SHA-512 (`KC`), Keccak (`pR`), RIPEMD-160 (`Oc`), and HMAC (`wR`). It includes utility functions for byte manipulation common in cryptographic libraries (`cu`, `aC`)."
+        },
+        {
+          "name": "@noble/curves",
+          "motivation": "The code includes implementations for elliptic curves, specifically secp256k1 (`yR.secp256k1`) and ed25519 (`tC.ed25519`). It defines point arithmetic (`ProjectivePoint`, `ExtendedPoint`), scalar multiplication, signature schemes (ECDSA for secp256k1, EdDSA for ed25519), Schnorr signatures (`yR.schnorr`), and utilities like point compression/decompression and hash-to-curve (`rf`, `eI`)."
+        },
+        {
+          "name": "@solana/buffer-layout",
+          "motivation": "The code defines classes like `xP` (Layout), `TP` (UInt), `CP` (UIntBE), `OP` (Int), `IP` (IntBE), `MP` (NearUInt64), `NP` (NearUInt64BE), `LP` (NearInt64), `DP` (NearInt64BE), `_P` (Float), `FP` (FloatBE), `UP` (Double), `jP` (DoubleBE), `zP` (Sequence), `qP` (Structure), `WP` (Union), `GP` (VariantLayout), `QP` (BitStructure), `ZP` (Blob), `YP` (CString), `XP` (UTF8), matching the API of `@solana/buffer-layout` (or the original `buffer-layout`). It's used extensively for defining Solana instruction layouts."
+        }
+      ]
+    },
+    {
+      "file": "index.f3e81699.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code extensively uses `React.createElement`, `React.Component`, `React.useState`, `React.useEffect`, `React.useRef`, `React.useContext`, `React.forwardRef`, and defines symbols like `Symbol.for('react.element')` and `Symbol.for('react.fragment')`."
+        },
+        {
+          "name": "React DOM",
+          "motivation": "The code includes functions like `createRoot`, `hydrateRoot`, `findDOMNode`, and `createPortal`, which are characteristic of `react-dom`."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "Presence of `styledComponentId`, `createGlobalStyle`, functions like `styled.div`, usage of tagged template literals for CSS definitions (`(e=>e)` followed by backticks with CSS), and mentions of `data-styled` attributes strongly indicate the use of `styled-components` or a similar CSS-in-JS library."
+        },
+        {
+          "name": "@tanstack/react-query",
+          "motivation": "The code includes terms and patterns associated with `react-query`, such as `QueryClient`, `QueryClientProvider`, `useQuery`, `defaultQueryOptions`, `queryCache`, `mutationCache`, `ensureQueryData`, `fetchQuery`, `invalidateQueries`, `setQueryData`, `useMutation` (implied by `MutationCache`)."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "The code uses `React.createContext(null)` for routing contexts (`xr`, `kr`, `Er`, `Ar`), mentions routing concepts like `basename`, `navigator`, `location`, and actions like `PUSH`, `POP`, `REPLACE`."
+        },
+        {
+          "name": "graphql-request",
+          "motivation": "The code contains references to `GraphQLClient`, `ClientError`, `gql`, and makes calls like `(0,jo.request)` which match the pattern of using `graphql-request` for GraphQL queries."
+        },
+        {
+          "name": "@solana/web3.js",
+          "motivation": "The code defines and uses classes like `PublicKey`, `Transaction`, `SystemProgram`, `StakeProgram`, `VoteProgram`, mentions Solana-specific concepts like `lamports`, `recentBlockhash`, `nonceInfo`, Sysvar public keys (`SysvarC1ock111...`, `SysvarRent111...` etc.), and uses Solana's base58 encoding (`bs58`)."
+        },
+        {
+          "name": "ethers",
+          "motivation": "The code includes classes and functions like `Interface`, `AbiCoder`, `Contract`, `Provider` (specifically `JsonRpcProvider`, `Eip1193Provider`), `Signer` (`JsonRpcSigner`), `computeHmac`, `keccak256`, `recoverPublicKey`, `resolveName`, `TypedDataEncoder`, `SigningKey`, `computeAddress`, `decodeRlp`, `encodeRlp`, `hexlify`, `stripZerosLeft`."
+        },
+        {
+          "name": "react-toastify",
+          "motivation": "The presence of components like `ToastContainer` (`oQ`), functions like `toast` (`mQ`), hooks like `useToastContainer`, `useToast`, and CSS class names like `Toastify__toast`, `Toastify__progress-bar` strongly suggest the use of `react-toastify`."
+        }
+      ]
+    },
+    {
+      "file": "url-Dkx9cvHv.06e765f8.js",
+      "occurences": [
+        {
+          "name": "punycode",
+          "motivation": "The code includes a full implementation of punycode (v1.4.1), including functions like `decode`, `encode`, `toASCII`, and `toUnicode`. This is evident from the variable `h` being assigned an object with these properties and the associated logic (`function L`, `function E`, etc.) within the self-invoking function wrapper."
+        },
+        {
+          "name": "querystring",
+          "motivation": "The code defines functions for encoding (`w`, aliased as `d`) and decoding (`b`, aliased as `g`) query strings, mimicking the behavior of Node.js's `querystring` module or similar libraries. These functions handle splitting/joining by delimiters (`&`, `=`), encoding/decoding components, and managing array values. The `j` object explicitly maps `decode`, `encode`, `parse`, `stringify` to these internal functions."
+        },
+        {
+          "name": "url",
+          "motivation": "The code defines a `URL` parsing and manipulation class (`function I`) with methods like `parse`, `format`, `resolve`, and `resolveObject`. This mirrors the functionality of Node.js's `url` module or the browser's `URL` API. It handles protocols, hosts, pathnames, queries, hashes, etc. It also references the global `URL` and `URLSearchParams` (`Z.URL`, `Z.URLSearchParams`) suggesting it might act as a polyfill or wrapper."
+        }
+      ]
+    },
+    {
+      "file": "url-Dkx9cvHv.0c2a9ee4.js",
+      "occurences": [
+        {
+          "name": "URL Parsing Library (Node.js `url` polyfill/bundle)",
+          "motivation": "The code defines functions and classes like `parse`, `format`, `resolve`, `resolveObject`, `Url`, `URL`, `URLSearchParams`, and includes logic for `punycode` and `querystring` parsing (`K = j`, `j={decode:b,encode:w,...}`). This closely mirrors the API and functionality of the Node.js `url` module, suggesting it's either a direct bundle, a polyfill, or a similar implementation for URL manipulation in the browser."
+        },
+        {
+          "name": "punycode",
+          "motivation": "The code explicitly includes a section with `h={version:\"1.4.1\",ucs2:{decode:T,encode:I},decode:L,encode:E,toASCII:...,toUnicode:...}` and mentions `punycode` (`r.punycode=h`). This section implements the Punycode standard (RFC 3492) for encoding/decoding internationalized domain names."
+        },
+        {
+          "name": "querystring",
+          "motivation": "The code defines functions `b=g=function(t,e,r,n){...}` (parsing/decoding) and `w=d=function(t,e,r,n){...}` (stringifying/encoding) which mimic the behavior of Node.js's `querystring` module for handling URL query strings. These are later assigned to `j={decode:b,encode:w,parse:g,stringify:d,...}` and used by the URL parsing logic (`K=j`)."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "index.5017d0be.js",
+      "occurences": [
+        {
+          "count": 7
+        }
+      ]
+    },
+    {
+      "file": "index.f3e81699.js",
+      "occurences": [
+        {
+          "count": 7
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

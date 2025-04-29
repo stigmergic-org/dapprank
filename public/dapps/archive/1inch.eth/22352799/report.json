@@ -1,0 +1,2483 @@
+{
+  "version": 2,
+  "contentHash": "bafybeiamycew6nenpodnk4spapgy7epr5ykexcxp4x66kcgeu5sxuu5t7y",
+  "timestamp": 1745665581,
+  "blockNumber": 22352799,
+  "rootMimeType": "inode/directory",
+  "totalSize": 29136102,
+  "favicon": "favicon-32x32.png",
+  "title": "1inch - DeFi / DEX aggregator on Ethereum, Binance Smart Chain, Optimism, Polygon, Arbitrum",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "assets/bitski/callback.html",
+        "occurences": [
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/bitski@0.10.8/dist/callback.js"
+          }
+        ]
+      },
+      {
+        "file": "assets/embedded-mode/index.html",
+        "occurences": [
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.5.1/dist/web3.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/web3modal@1.9.4/dist/index.min.js"
+          },
+          {
+            "type": "script",
+            "url": "https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "1036.e064628c831f12e5.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "http://localhost:8545"
+          ],
+          "library": "ethers.js / @0xproject/utils",
+          "type": "rpc",
+          "motivation": "The `JsonRpcProvider` (module `57`) uses `fetchJson` (likely wrapping `fetch`). The default connection URL is `http://localhost:8545` if no other URL is provided during instantiation. This is a standard local Ethereum RPC endpoint."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://mainnet.infura.io/v3/",
+            "https://ropsten.infura.io/v3/",
+            "https://rinkeby.infura.io/v3/",
+            "https://goerli.infura.io/v3/",
+            "https://kovan.infura.io/v3/",
+            "https://mainnet.infura.io/",
+            "https://ropsten.infura.io/",
+            "https://rinkeby.infura.io/",
+            "https://goerli.infura.io/",
+            "https://kovan.infura.io/"
+          ],
+          "library": "ethers.js / @0xproject/utils",
+          "type": "rpc",
+          "motivation": "The `InfuraProvider` (module `55`), which extends `JsonRpcProvider`, constructs URLs based on the network name and a project ID or legacy API access token. These point to Infura's Ethereum RPC endpoints."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.etherscan.io",
+            "https://api-ropsten.etherscan.io",
+            "https://api-rinkeby.etherscan.io",
+            "https://api-kovan.etherscan.io",
+            "https://api-goerli.etherscan.io"
+          ],
+          "library": "ethers.js / @0xproject/utils",
+          "type": "auxiliary",
+          "motivation": "The `EtherscanProvider` (module `52`) uses `fetchJson` (likely wrapping `fetch`) to call the Etherscan API. The `baseUrl` is determined by the network name, and various API actions (`module=proxy`, `module=account`, `module=stats`, `module=logs`) are called via query parameters. These are auxiliary service calls, not direct RPC or bundler interactions."
+        }
+      ]
+    },
+    {
+      "file": "3602.86031e2f3773b05d.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.bitski.com/v1/web3/mainnet",
+            "https://api.bitski.com/v1/web3/rinkeby",
+            "https://api.bitski.com/v1/web3/kovan"
+          ],
+          "library": "web3-provider-engine / @bitski/js-sdk",
+          "type": "rpc",
+          "motivation": "These URLs are defined as `rpcUrl` for different networks (`G`, `S`, `I`) and are used by the `FetchSubprovider` (class `F`, part of `web3-provider-engine` integrated into the Bitski SDK) to send standard Ethereum JSON-RPC requests via HTTP POST to Bitski's backend infrastructure. Authentication tokens (`Authorization: Bearer ...`) are added for methods requiring authentication."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.bitski.com/v1/web3/mainnet/*",
+            "https://api.bitski.com/v1/web3/rinkeby/*",
+            "https://api.bitski.com/v1/web3/kovan/*"
+          ],
+          "library": "web3-provider-engine / @bitski/js-sdk",
+          "type": "rpc",
+          "motivation": "The custom subprovider `st` is designed to handle specific read-only RPC methods (`eth_getBlockByNumber`, `eth_blockNumber`, `net_Version`, `eth_getLogs`) via HTTP GET requests. It constructs the URL by appending the method name and parameters to the base `rpcUrl` (e.g., `https://api.bitski.com/v1/web3/mainnet/eth_blockNumber?params=[%22latest%22]`). This is likely an optimization strategy within the Bitski provider."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://account.bitski.com/.well-known/openid-configuration"
+          ],
+          "library": "app-auth-helper-js / @bitski/js-sdk",
+          "type": "auxiliary",
+          "motivation": "Used by `AuthorizationServiceConfiguration.fetchFromIssuer` (likely from `app-auth-helper-js` via the Bitski SDK) to retrieve the OpenID Connect discovery document from the Bitski authorization server. This provides endpoints needed for the OAuth flow."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://account.bitski.com/oauth2/token"
+          ],
+          "library": "app-auth-helper-js / @bitski/js-sdk",
+          "type": "auxiliary",
+          "motivation": "Called by `BaseTokenRequestHandler.performTokenRequest` (likely from `app-auth-helper-js` via the Bitski SDK). This URL, defined in the default configuration `we`, is the OAuth token endpoint used to exchange an authorization code or refresh token for an access token."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://www.bitski.com/v1/logout"
+          ],
+          "library": "@bitski/js-sdk",
+          "type": "auxiliary",
+          "motivation": "The `Fe.requestSignOut` function in the Bitski SDK calls this endpoint via POST to log the user out by invalidating the session/token on the Bitski server."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://account.bitski.com/userinfo"
+          ],
+          "library": "@bitski/js-sdk",
+          "type": "auxiliary",
+          "motivation": "The `Fe.requestUserInfo` function in the Bitski SDK calls this endpoint (defined in the default configuration `we`) with an access token (`Authorization: Bearer ...`) to retrieve information about the authenticated user."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.bitski.com/v1/transactions"
+          ],
+          "library": "@bitski/js-sdk",
+          "type": "auxiliary",
+          "motivation": "The `Ve.submitTransaction` function within the Bitski SDK POSTs transaction details (wrapped in a specific format including `kind`, `payload`, `context`) to this endpoint. This initiates the Bitski signing flow, typically involving an iframe or popup for user confirmation."
+        }
+      ]
+    },
+    {
+      "file": "4500.bf82ea18c0172da6.js",
+      "occurences": [
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://<subdomain>.bridge.walletconnect.org",
+            "<USER_PROVIDED_BRIDGE_URL>"
+          ],
+          "library": "WalletConnect v1 SDK",
+          "type": "auxiliary",
+          "motivation": "The code establishes a WebSocket connection within the `_socketCreate` method using `new X(e)` where `X` is `WebSocket`. The URL `e` is derived from `this._url`, which is initialized from `this.bridge`. The bridge URL is either configured via `connectorOpts.bridge`, parsed from a WalletConnect URI (`wc:`), or defaults to a random URL from the `W` array (`https://<random_subdomain>.bridge.walletconnect.org`). The URL is transformed to use the `wss` protocol before connection. This WebSocket is the primary communication channel for WalletConnect v1 sessions."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<PUSH_SERVER_URL>/new"
+          ],
+          "library": "WalletConnect v1 SDK",
+          "type": "auxiliary",
+          "motivation": "The code conditionally calls `fetch` inside the `_registerPushServer` function if `pushServerOpts` are provided during initialization. It makes a POST request to `pushServerOpts.url + '/new'` to register the client for push notifications. The exact URL depends on the configuration passed to the constructor."
+        }
+      ]
+    },
+    {
+      "file": "5625.f13fabff94ddbe7d.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "connect.trezor.io API endpoints"
+          ],
+          "library": "Trezor Connect / Fetch API Polyfill",
+          "type": "auxiliary",
+          "motivation": "The code includes a `fetch` polyfill (module `49148`) that utilizes `XMLHttpRequest` for making network requests. While direct calls using `fetch` or `XMLHttpRequest` from the application logic within *this specific chunk* are not apparent, the Trezor Connect library (`85625`, `5641`) exposes methods like `blockchainGetCurrentFiatRates`, `blockchainGetFiatRatesForTimestamps`, `getSettings`, etc. These methods interact with the Trezor Connect iframe (loaded from `connect.trezor.io`), which in turn communicates with Trezor's backend APIs or potentially configured blockchain backends. Therefore, `XMLHttpRequest` calls are expected to originate indirectly via the Trezor Connect library, likely targeting Trezor API endpoints hosted on domains like `connect.trezor.io` for functionalities like fetching fiat rates or device/account information. The exact URLs are not specified in this code but are inferred based on the library's purpose."
+        }
+      ]
+    },
+    {
+      "file": "5961.adfe03b00de8a12b.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://<network>.infura.io/v3/",
+            "<CUSTOM_RPC_URL>"
+          ],
+          "library": "Internal HTTP Provider / @metamask/json-rpc-engine",
+          "type": "rpc",
+          "motivation": "```javascript\nconst u=(0,t.getFromWindow)(\"XMLHttpRequest\")||c.XMLHttpRequest;\nclass x extends(f()){ // f is EventEmitter\n  // ...\n  send(n,h){\n    // ...\n    const w=new u; // new XMLHttpRequest()\n    w.open(\"POST\",this.url,!0);\n    w.setRequestHeader(\"Content-Type\",\"application/json\");\n    // ...\n    w.send(JSON.stringify(n));\n  }\n}\n// ... in main class 'r' ...\nthis.http=new b(this.rpcUrl); // b is class x\nthis.http.send(n)\n// ...\nthis.updateRpcUrl(this.chainId,T||\"\")\n(h=h||(0,t.getRpcUrl)(n,{infuraId:this.infuraId,custom:this.rpc||void 0}))\n```\nThe code defines a class `x` (aliased as `b`) that uses `XMLHttpRequest` to send POST requests with JSON payloads to `this.url`. An instance of this class (`this.http`) is created in the main WalletConnect provider class (`r`), and its URL (`this.rpcUrl`) is determined by calling `getRpcUrl` helper, which uses the provided `chainId`, `infuraId`, or a custom `rpc` object/URL map passed during initialization. This is used for sending non-signing Ethereum JSON-RPC requests."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "https://bridge.walletconnect.org",
+            "<CUSTOM_BRIDGE_URL>"
+          ],
+          "library": "@walletconnect/browser",
+          "type": "auxiliary",
+          "motivation": "```javascript\nthis.bridge=\"https://bridge.walletconnect.org\"\n// ...\nthis.bridge=n.connector?n.connector.bridge:n.bridge||\"https://bridge.walletconnect.org\";\n// ...\nthis.wc=n.connector||new y.default({bridge:this.bridge,qrcodeModal:this.qrcode?this.qrcodeModal:void 0,qrcodeModalOptions:this.qrcodeModalOptions,...});\n```\nThe code initializes and uses the `@walletconnect/browser` library (`y.default`). WalletConnect v1 protocol relies on a WebSocket connection to a bridge server for signaling between the dApp and the mobile wallet. The `bridge` option in the constructor specifies the URL for this connection, defaulting to `https://bridge.walletconnect.org`. The underlying `@walletconnect/browser` library establishes and manages this WebSocket connection internally."
+        }
+      ]
+    },
+    {
+      "file": "6132.f1c02611246abe46.js",
+      "occurences": [
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://connect.mewapi.io",
+            "wss://connect2.mewapi.io/staging"
+          ],
+          "library": "socket.io-client / WebSockets API",
+          "type": "auxiliary",
+          "motivation": "The code establishes WebSocket connections using `new WebSocket(Se)` within a wrapper class (`S`). The URL `Se` is dynamically constructed but uses base URLs like `wss://connect.mewapi.io` and `wss://connect2.mewapi.io/staging`, which appear to be signaling or backend servers for the MEWconnect protocol. These are likely managed via `socket.io-client` or direct WebSocket usage."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "engine.io-client (dependency of socket.io-client)",
+          "type": "auxiliary",
+          "motivation": "The code initializes `new XMLHttpRequest` within the polling transport logic (`PollingXHR.Request`), likely part of the `engine.io-client` used by `socket.io-client` as a fallback transport mechanism. The specific URLs are constructed dynamically based on the connection parameters (`this.uri()`)."
+        },
+        {
+          "method": "RTCPeerConnection",
+          "urls": [
+            "stun:global.stun.twilio.com:3478"
+          ],
+          "library": "simple-peer / WebRTC API",
+          "type": "auxiliary",
+          "motivation": "The code instantiates `new this._wrtc.RTCPeerConnection(this.config)`. While the primary URL isn't directly passed, the `config` object typically contains `iceServers` URLs, including STUN servers like `stun:global.stun.twilio.com:3478?transport=udp`, used for NAT traversal in WebRTC connections."
+        }
+      ]
+    },
+    {
+      "file": "6265.687c1fa8aa266e5e.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "this.rpcUri"
+          ],
+          "library": "FetchSubprovider (part of Web3ProviderEngine ecosystem)",
+          "type": "rpc",
+          "motivation": "The `AuthereumProvider` (module `63355`) initializes a `FetchSubprovider` (module `61121`) with `rpcUrl: this.rpcUri`. The `rpcUri` is determined either from the `config` object passed to Authereum or by calling `authereum.getRpcUri()`. The `handleRequest` method within `AuthereumProvider` ultimately delegates network calls for RPC methods to this `rpcSubProvider`, which internally uses `fetch` to communicate with the specified RPC endpoint."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "this._webUri"
+          ],
+          "library": "Authereum",
+          "type": "auxiliary",
+          "motivation": "The `_openPopupOrRedirect` function in module `46688` uses `window.open` or `window.location.href` to navigate to URLs constructed using `this._webUri` (e.g., via `_getAuthenticateUri`). While not a direct `fetch` call in the list, `window.location.href` causes a network request. `_webUri` is dynamically configured based on network or user config and points to the Authereum web interface for authentication/signing flows."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "this._xsUri"
+          ],
+          "library": "Authereum",
+          "type": "auxiliary",
+          "motivation": "The Authereum SDK (module `46688`) creates iframes (`_getOrCreateMainIframe`, `_loadNotificationsIframe`) whose `src` attribute is set to URLs derived from `this._xsUri` (e.g., `https://kovan.x.authereum.com`). Setting the `src` initiates a network request to load the iframe content. This URL points to the Authereum cross-domain communication service."
+        }
+      ]
+    },
+    {
+      "file": "6488.64cc6fb1060c9646.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "other",
+          "type": "rpc",
+          "motivation": "The code calls `this.ethContractService.callViewContract(...)`. This service abstracts blockchain interactions, which inherently require network calls to an Ethereum RPC endpoint. While the specific method (`fetch` or `XMLHttpRequest`) is not directly visible, `fetch` is the modern standard and most likely used internally by the underlying web3 library or service. The specific URL is determined by runtime configuration (e.g., connected wallet) and is not hardcoded in this snippet."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "other",
+          "type": "rpc",
+          "motivation": "The code calls `this.simpleSendTransactionService.sendTransaction(...)`. This service sends transactions to the blockchain, requiring network communication with an Ethereum RPC endpoint (e.g., via `eth_sendRawTransaction`). As with `callViewContract`, the underlying network call (likely `fetch`) is abstracted. The specific URL depends on runtime configuration."
+        }
+      ]
+    },
+    {
+      "file": "7832.d24c3186a9be12a5.js",
+      "occurences": [
+        {
+          "method": "t.sign (U2F API)",
+          "urls": [
+            "location.origin"
+          ],
+          "library": "@ledgerhq/hw-transport-u2f / u2f-api",
+          "type": "auxiliary",
+          "motivation": "*   The `exchange` method within the U2F transport class calls `(0,t.sign)(m,c/1e3)`. \n*   The `t.sign` function originates from the imported `u2f-api` library (`h(31367)`).\n*   This function initiates a U2F signing ceremony via the browser's U2F API or a related browser extension.\n*   The data structure `m` passed to `t.sign` contains `{ appId: location.origin }`. The `appId` (representing the current website's origin) is a crucial parameter for the U2F protocol, identifying the relying party.\n*   While not a standard HTTP fetch/XHR call, `t.sign` triggers communication external to the script (to the browser's security key API/extension) based on this origin identifier."
+        }
+      ]
+    },
+    {
+      "file": "7953.cd40b6d75f323f7a.js",
+      "occurences": [
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/getInfo/<address>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/getInfo', and an address variable, then passes it to `this.httpClient.get`. This pattern fetches strategy information."
+        },
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/user/<address>/<userAddress>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/user', a strategy address, and a user address, then passes it to `this.httpClient.get`. This likely fetches user-specific earnings data."
+        },
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/stats/apy/<address>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/stats/apy', and an address, then passes it to `this.httpClient.get` with `groupByParam` and `timezoneOffset` query parameters. This fetches APY statistics."
+        },
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/stats/earnings/<address>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/stats/earnings', and an address, then passes it to `this.httpClient.get` with `groupByParam` and `timezoneOffset` query parameters. This fetches pool earnings statistics."
+        },
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/stats/user-earnings/<address>/<userAddress>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/stats/user-earnings', a strategy address, and a user address, then passes it to `this.httpClient.get` with `groupByParam` and `timezoneOffset` query parameters. This fetches user earnings statistics."
+        },
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/stats/totalValueLocked/<address>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/stats/totalValueLocked', and an address, then passes it to `this.httpClient.get` with `groupByParam` and `timezoneOffset` query parameters. This fetches TVL statistics."
+        },
+        {
+          "method": "this.httpClient.get",
+          "urls": [
+            "[earnStrategiesApiEndpoint]/<chainId>/stats/volume/<address>"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "The code constructs a URL using a base endpoint (`ke.N.earnStrategiesApiEndpoint`), chain ID, '/stats/volume', and an address, then passes it to `this.httpClient.get` with `groupByParam` and `timezoneOffset` query parameters. This fetches trading volume statistics."
+        },
+        {
+          "method": "this.ethContractService.callViewContract",
+          "urls": [],
+          "library": "Custom/Angular Service",
+          "type": "rpc",
+          "motivation": "The code calls `this.ethContractService.callViewContract` with an ABI, contract address, method name, and parameters. This is a typical pattern for making read-only calls (like `eth_call`) to an Ethereum smart contract via an RPC endpoint. The specific URL is not present but inferred."
+        },
+        {
+          "method": "this.ethContractService.getContractEncodeABI",
+          "urls": [],
+          "library": "Custom/Angular Service",
+          "type": "rpc",
+          "motivation": "The code calls `this.ethContractService.getContractEncodeABI` to encode data for a contract call. While this itself doesn't make a network request, the result is immediately passed to `this.simpleSendTransactionService.sendTransaction` which does, indicating an RPC interaction pattern."
+        },
+        {
+          "method": "this.simpleSendTransactionService.sendTransaction",
+          "urls": [],
+          "library": "Custom/Angular Service",
+          "type": "rpc",
+          "motivation": "The code calls `this.simpleSendTransactionService.sendTransaction` with transaction parameters (`to`, `data`). This service likely handles submitting transactions (`eth_sendTransaction`) to the blockchain via an RPC endpoint. The specific URL is not present but inferred."
+        }
+      ]
+    },
+    {
+      "file": "8020.7b90659a7d29a642.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://dispatch.pokt.network/v1/dispatch"
+          ],
+          "library": "@pokt-network/pocket-js",
+          "type": "auxiliary",
+          "motivation": "An `axios.post` call is made using an instance created with `baseURL: c.dispatchNodeURL` (`https://dispatch.pokt.network`) and path `c.dispatchPath` (`/v1/dispatch`) (from `h(53)`). Axios uses XMLHttpRequest in browser environments (adapter found in `h(99)`). This endpoint is used by the Pocket Network SDK to discover service nodes."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://dispatch.pokt.network/v1/report"
+          ],
+          "library": "@pokt-network/pocket-js",
+          "type": "auxiliary",
+          "motivation": "An `axios.post` call is made using an instance created with `baseURL: u.dispatchNodeURL` (`https://dispatch.pokt.network`) and path `u.reportPath` (`/v1/report`) (from `h(53)`). Axios uses XMLHttpRequest in browser environments (adapter found in `h(99)`). This endpoint is used by the Pocket Network SDK to report nodes."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/v1/relay/"
+          ],
+          "library": "@pokt-network/pocket-js",
+          "type": "rpc",
+          "motivation": "An `axios.post` call is made to `u.relayPath` (`/v1/relay/`) using a `baseURL` derived from discovered Pocket Network node IPs (`o.ipPort`). Axios uses XMLHttpRequest in browser environments (adapter found in `h(99)`). This is the primary path for sending RPC requests via the Pocket Network."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://mainnet.infura.io/v3/",
+            "https://ropsten.infura.io/v3/",
+            "https://rinkeby.infura.io/v3/",
+            "https://goerli.prylabs.net",
+            "https://rpc1.ubiqscan.io",
+            "https://testnet-rpc.thundercore.com:8544",
+            "https://public-node.rsk.co",
+            "https://public-node.testnet.rsk.co",
+            "https://kovan.infura.io/v3/",
+            "https://ethereumclassic.network",
+            "https://sokol.poa.network",
+            "https://core.poa.network",
+            "https://dai.poa.network",
+            "https://mainnet-rpc.thundercore.com",
+            "https://rpc.fusenet.io",
+            "https://node.mainnet.lightstreams.io",
+            "https://rpc-mainnet.matic.network",
+            "https://rpc-mumbai.matic.today",
+            "https://alpha.ethereum.matic.network",
+            "https://testnet2.matic.network"
+          ],
+          "library": "web3-provider-engine",
+          "type": "rpc",
+          "motivation": "The code defines a map `w` containing various network configurations, each with a `nodeUrl`. The `web3-provider-engine` instance (`h(104)`) uses a provider that ultimately calls `this.widget.communication.relay($, this.config)` if a Pocket provider is not configured. This uses `penpal` (`h(107)`) to communicate with the Portis iframe (`https://widget.portis.io`), which then makes the actual HTTP request (likely XMLHttpRequest or Fetch) to the configured `nodeUrl` from the `w` map. The list includes various known public RPC endpoints."
+        }
+      ]
+    },
+    {
+      "file": "9179.6abd7e621148e38c.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.wallet.coinbase.com/rpc/v2/getFeatureFlags"
+          ],
+          "library": "WalletLink (Coinbase Wallet SDK)",
+          "type": "auxiliary",
+          "motivation": "Found in module `81579` within the `LinkFlow` constructor. This call fetches feature flag configuration for the WalletLink UI from a Coinbase API endpoint."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://mainnet-infura.wallet.coinbase.com",
+            "https://ropsten-infura.wallet.coinbase.com",
+            "https://rinkeby-infura.wallet.coinbase.com",
+            "https://kovan-infura.wallet.coinbase.com",
+            "https://goerli-node.wallet.coinbase.com",
+            "https://optimism-node.wallet.coinbase.com",
+            "https://optimism-mainnet.wallet.coinbase.com",
+            "https://polygon-mainnet-infura.wallet.coinbase.com",
+            "https://polygon-mumbai-infura.wallet.coinbase.com",
+            "https://bsc-dataseed.binance.org",
+            "https://data-seed-prebsc-1-s1.binance.org:8545",
+            "https://rpcapi.fantom.network",
+            "https://rpc.testnet.fantom.network",
+            "https://l2-mainnet.wallet.coinbase.com?targetName=arbitrum",
+            "https://rinkeby.arbitrum.io/rpc",
+            "https://rpc.xdaichain.com",
+            "https://api.avax.network/ext/bc/C/rpc",
+            "https://api.avax-test.network/ext/bc/C/rpc"
+          ],
+          "library": "WalletLink (Coinbase Wallet SDK)",
+          "type": "rpc",
+          "motivation": "Found in module `65264` (`WalletLinkProvider._handleAsynchronousMethods`). The code calls `window.fetch(this._jsonRpcUrl, ...)` to send JSON-RPC requests. `this._jsonRpcUrl` is a variable, but its value often defaults to or is set using the URLs defined in module `53083` (`EthereumChain.rpcUrl`) based on the selected chain ID. The listed URLs are the default RPC endpoints provided within the code."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://www.walletlink.org/rpc"
+          ],
+          "library": "WalletLink (Coinbase Wallet SDK)",
+          "type": "auxiliary",
+          "motivation": "Found in module `60102` (`RxWebSocket.connect`) which is used by `76607` (`WalletLinkConnection`). A WebSocket connection is established to the WalletLink relay server. The URL is derived from the `walletLinkUrl` configuration option (defaulting to `https://www.walletlink.org`) and appending `/rpc`, then changing the protocol to `wss`."
+        }
+      ]
+    },
+    {
+      "file": "9976.7483edb980501c5e.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "[RPC_URL]"
+          ],
+          "library": "Web3 Provider/Subprovider Framework (@0x/subproviders & utils)",
+          "type": "rpc",
+          "motivation": "```markdown\nThe `RPCSubprovider` class (imported from `y(14699)`) is designed to send JSON-RPC requests to a remote Ethereum node. It uses `C.fetchAsync` (where `C` is `y(77128)`, likely `@0x/utils` wrapping `fetch`) to send POST requests to the `_rpcUrl` configured during its instantiation. The payload (`f`) constructed contains standard JSON-RPC fields (`id`, `jsonrpc`, `method`, `params`).\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/embedded-mode/index.html#inline-script-2",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://web3-node.1inch.io",
+            "https://bsc-nodes.1inch.io",
+            "https://bor-nodes.1inch.io"
+          ],
+          "library": "WalletConnect Provider",
+          "type": "rpc",
+          "motivation": "These URLs are explicitly configured as RPC endpoints for different chains (1, 56, 137) within the `WalletConnectProvider` options: `{ rpc: { 1: '...', 56: '...', 137: '...' } }`. Although the direct `fetch` call is not visible in this snippet, the WalletConnect provider (or the wallet connected via WalletConnect) will use these URLs to make RPC requests, most commonly via HTTPS, for which `fetch` or `XMLHttpRequest` are standard methods. `fetch` is assumed as the more modern standard."
+        }
+      ]
+    },
+    {
+      "file": "main.69edf8d23afd2e97.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "web3-providers-http / request",
+          "type": "rpc",
+          "motivation": "Modules `57104`, `69918`, `88096`, `32094`, `13510` contain logic to create and send `XMLHttpRequest` objects. The URL is determined by the `host` or `uri` property/option, typically set during provider instantiation (e.g., `http://localhost:8545`). Requests are sent via POST with `Content-Type: application/json` and carry JSON-RPC payloads."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3-providers-http / request",
+          "type": "rpc",
+          "motivation": "Module `67957` contains logic that utilizes `fetch` for making network requests. The URL is specified in the options (`_opts.url`). It constructs HTTP requests (likely POST for RPC) with method, headers, and body based on the configuration, sending JSON-RPC payloads."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [],
+          "library": "web3-providers-ws",
+          "type": "rpc",
+          "motivation": "Module `17068` implements a WebSocket provider using `w3cwebsocket` (from module `40109`). It establishes a connection to a WebSocket server using the URL provided during instantiation (`this.url`) for sending and receiving JSON-RPC messages."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "https://configs.1inch.io/frontend/common-config.json"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code calls `this.httpClient.get(\"https://configs.1inch.io/frontend/common-config.json\")` to fetch configuration."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/reverse-lookup",
+            "/lookup"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code calls `this.httpClient.get(`${c.N.domainApiEndpoint}/reverse-lookup?address=${b}`)` and `this.httpClient.get(`${c.N.domainApiEndpoint}/lookup?name=${b}`)`. The `domainApiEndpoint` is not defined explicitly but the relative paths suggest auxiliary API calls for ENS/domain resolution."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/flashbots",
+            "/broadcast",
+            "/x/"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "self",
+          "motivation": "The code constructs URLs like `this.buildTxGatewayUrl(\"flashbots\")`, `this.buildTxGatewayUrl(\"broadcast\")`, and `${R.N.txGatewayEndpoint}/1/x/${de}/${le}` and POSTs to them using `this.http.post` or `this.httpClient.post`. These appear to be internal or self-hosted API endpoints for transaction handling."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/distribution/",
+            "/v2/"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code constructs URLs using `R.N.distributionApiEndpoint` like `${R.N.distributionApiEndpoint}/v2/${a}` and `${R.N.distributionApiEndpoint}/${a}` and calls them via `this.distributionApiService.getMerkleProofForUrl$`, which likely uses an underlying HTTP client."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/chart/"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code calls `this.http.get(`${Ta.N.chartsApiEndpoint}/chart/...`)` to fetch chart data."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/swap/build"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "self",
+          "motivation": "The code calls `this.httpClient.post(L.N.swapBuilderApiUrl+`/${W}/${$}/swap/build`,...)` to build swap transactions, indicating an internal API."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "https://api.coingecko.com/api/v3/coins/markets",
+            "https://api.coingecko.com/api/v3/coins/"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code makes GET requests to `https://api.coingecko.com/api/v3/coins/...` using `this.http.get`, likely to fetch token market data and prices."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "https://api.coingecko.com/api/v3/simple/price"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code makes GET requests to `https://api.coingecko.com/api/v3/simple/price?...` using `this.http.get` to fetch USD prices for native currencies."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/v1.1/"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code makes calls using base URLs like `O.N.balancesEndpoint`, `O.N.synthetixBalancesEndpoint`, `O.N.tokenPricesEndpoint`, `O.N.governanceGraphApiEndpoint`, `O.N.liquidityProtocolGraphApiEndpoint`, `O.N.farmingEndpoint`. These all point to sub-paths like `/v1.1/` or `/v1.2/` under base domains (likely `balances.1inch.io`, `token-prices.1inch.io`, `governance.1inch.io`), fetching auxiliary data like balances, prices, and protocol info."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/v1.0/",
+            "/v1.2/"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code builds URLs using base endpoints like `O.N.pathfinderEndpoint`, `O.N.pathfinderEndpointBsc`, etc., combined with paths like `/v1.0/quote` or `/v1.2/chain/.../router/v4/quotes`. These are used to fetch swap quotes and routing information."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://api_direct.gasprice.io/v1/realtime"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "auxiliary",
+          "motivation": "The code defines a WebSocket configuration `this.webSocketConfig` with `url: L.N.gasPriceIOWsEndpoint` which resolves to `wss://api_direct.gasprice.io/v1/realtime`. It uses `new Pe(Z,ge)` which likely wraps the native WebSocket API to connect for real-time gas prices."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://ws-web3-node.1inch.io/",
+            "wss://ws-bsc-nodes.1inch.io/",
+            "wss://bor-ws-nodes.1inch.io/",
+            "wss://optimism-nodes.1inch.io/ws/",
+            "wss://arbitrum-nodes.1inch.io/ws"
+          ],
+          "library": "Web3.js",
+          "type": "rpc",
+          "motivation": "The code uses `new (a().providers.WebsocketProvider)(F)` where `F` is derived from configuration like `be.N.ethereumWsNodeEndpoint`, `be.N.bscWsNodeEndpoint`, etc., pointing to various chain-specific WebSocket RPC endpoints."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via JsonRpcProvider abstraction)",
+          "urls": [
+            "https://web3-node.1inch.io",
+            "https://bsc-nodes.1inch.io",
+            "https://bor-nodes.1inch.io",
+            "https://optimism-nodes.1inch.io",
+            "https://arbitrum-nodes.1inch.io"
+          ],
+          "library": "Web3.js",
+          "type": "rpc",
+          "motivation": "The code initializes providers using `new ve({url: be.N.<chain>NodeEndpoint}, ...)` which corresponds to creating Web3.js providers connected to specific HTTP RPC endpoints defined in the configuration (`be.N`). These providers are used for blockchain interactions."
+        },
+        {
+          "method": "fetch or XMLHttpRequest (via http/httpClient abstraction)",
+          "urls": [
+            "/release-meta.json"
+          ],
+          "library": "unknown (likely underlying browser API or framework abstraction)",
+          "type": "self",
+          "motivation": "The code calls `this.http.get(`${location.origin}/release-meta.json`)` to fetch application version metadata relative to the current domain."
+        },
+        {
+          "method": "get",
+          "urls": [
+            "https://api.coingecko.com/api/v3/simple/price"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.get(N).pipe(...)` where `N` is derived from `this.activeConnectionQuery.getApiEndpoint(\"coingeckoUsdPrice\")`. This likely fetches token prices in USD from CoinGecko's API."
+        },
+        {
+          "method": "get",
+          "urls": [
+            "https://token-prices.1inch.io/v1.1/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.get(N).pipe(...)` where `N` is derived from `this.activeConnectionQuery.getApiEndpoint(\"pricesApiUrl\")`. This likely fetches token prices (potentially in ETH) from a 1inch API endpoint."
+        },
+        {
+          "method": "post",
+          "urls": [
+            "https://token-prices.1inch.io/v1.1/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.post(v,w,{headers:o}).pipe(...)` where `v` is derived from `this.activeConnectionQuery.getApiEndpoint(\"pricesApiUrl\")`. It posts a list of token addresses (`w`) to fetch prices for custom tokens from a 1inch API endpoint."
+        },
+        {
+          "method": "get",
+          "urls": [
+            "https://api.1inch.io/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.get(`${L}/${F}`).pipe(...)` where `L` is derived from `this.activeConnectionQuery.getApiEndpointOnce(\"synthetixBalancesApiUrl\")`. This fetches Synthetix token balances for a given address (`F`) from a 1inch API, likely versioned (e.g., v4.0) and chain-specific."
+        },
+        {
+          "method": "get",
+          "urls": [
+            "https://history.1inch.io/history/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.get(Re,{params:...})` where `Re` is constructed using `b.N.historyApiEndpoint` and includes chain ID and wallet address (`/history/${q}/${Ce}`). This fetches transaction history from a 1inch API."
+        },
+        {
+          "method": "get",
+          "urls": [
+            "https://api.1inch.io/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.get(F.N.locationSignaturesApiEndpoint+\"/location\").pipe(...)`. This fetches the user's geographical location from a 1inch API, likely for compliance or regional feature gating."
+        },
+        {
+          "method": "get",
+          "urls": [
+            "https://api.1inch.io/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.get(F.N.locationSignaturesApiEndpoint+\"/terms-check\",{params:{address:Be}}).pipe(...)`. This checks the status of terms of service acceptance for a given address via a 1inch API."
+        },
+        {
+          "method": "post",
+          "urls": [
+            "https://api.1inch.io/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.post(F.N.locationSignaturesApiEndpoint+\"/terms-accept\",{signature:Ve,address:Be}).pipe(...)`. This submits a signature to accept the terms of service for a given address via a 1inch API."
+        },
+        {
+          "method": "post",
+          "urls": [
+            "https://ll-swap-api.1inch.io/v1.1/logging/ledger"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Code calls `this.httpClient.post(e.N.ledgerLiveLoggingEndpoint,F).subscribe(...)`. This sends logging data related to Ledger Live swaps to a specific 1inch API endpoint."
+        }
+      ]
+    },
+    {
+      "file": "ngsw-worker.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "ngsw.json"
+          ],
+          "library": "Angular Service Worker",
+          "type": "self",
+          "motivation": "The `Driver.fetchLatestManifest` function explicitly fetches `ngsw.json` with a cache-busting query parameter (`?ngsw-cache-bust=...`) relative to the service worker scope. This is used to check for updates to the application manifest.\n```javascript\nconst res = await this.safeFetch(this.adapter.newRequest('ngsw.json?ngsw-cache-bust=' + Math.random()));\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<Asset URLs from ngsw.json>"
+          ],
+          "library": "Angular Service Worker",
+          "type": "auxiliary",
+          "motivation": "The `AssetGroup` classes (`PrefetchAssetGroup`, `LazyAssetGroup`) fetch resources defined in the `assetGroups` section of the `ngsw.json` manifest. URLs can be explicitly listed (`config.urls`) or match patterns (`config.patterns`). Fetching occurs during initialization (`initializeFully` for prefetch groups, or based on `updateMode` for lazy groups) and on-demand when a request matches (`handleFetch` calling `fetchAndCacheOnce`). The type can be `self` for relative URLs within the application origin or `auxiliary` for external resources (e.g., CDNs, fonts), depending on the manifest configuration. URLs are normalized relative to the service worker scope. Cache-busting (`?ngsw-cache-bust=...`) may be added.\n```javascript\n// PrefetchAssetGroup during initialization\nawait this.fetchAndCacheOnce(req, false);\n// AssetGroup handling a fetch request\nconst res = await this.fetchAndCacheOnce(this.adapter.newRequest(req.url));\n// Underlying fetch call\nconst res = await this.scope.fetch(req);\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<Data URLs from ngsw.json>"
+          ],
+          "library": "Angular Service Worker",
+          "type": "auxiliary",
+          "motivation": "The `DataGroup` class handles requests matching patterns defined in the `dataGroups` section of `ngsw.json`. It fetches these URLs from the network based on the configured strategy (`freshness` or `performance`) and timeout settings (`handleFetchWithPerformance`, `handleFetchWithFreshness`). These URLs typically point to API endpoints (`auxiliary`), but could also be `self` depending on the patterns. The fetch might be wrapped in a timeout race.\n```javascript\n// DataGroup fetching with timeout\nconst [timeoutFetch, networkFetch] = this.networkFetchWithTimeout(req);\n// Underlying fetch call\nconst networkFetch = this.scope.fetch(req);\n```"
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<Navigation Request URL>"
+          ],
+          "library": "Angular Service Worker",
+          "type": "auxiliary",
+          "motivation": "The `AppVersion.handleFetch` method directly fetches the original navigation request URL (`req`) using `this.scope.fetch(req)` if the `navigationRequestStrategy` in `ngsw.json` is set to `'freshness'`. This attempts to get the latest version of the page directly from the network before falling back to the cache or index file. The type is `self` if the navigation is within the app's origin, or `auxiliary` otherwise.\n```javascript\nif (this.manifest.navigationRequestStrategy === 'freshness') {\n  try {\n    return await this.scope.fetch(req);\n  } catch {\n    // ... fallback logic ...\n  }\n}\n```"
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "1036.e064628c831f12e5.js",
+      "occurences": [
+        {
+          "name": "ethers.js",
+          "motivation": "The code explicitly references `ethers.utils.Interface` in module `17487`."
+        },
+        {
+          "name": "@0xproject/utils / 0x-protocol/utils",
+          "motivation": "Code includes modules like `assert` (23958), `abiUtils` (82281), `addressUtils` (19194), `BigNumber` (68352), `hexUtils` (49671), `logUtils` (32965), `RevertError` and specific revert error types (54381, 90197, 72745, etc.), `signTypedDataUtils` (81255), `providerUtils` (95754). These utilities and error types are characteristic of the 0x library ecosystem."
+        },
+        {
+          "name": "ajv / JSON Schema Validator",
+          "motivation": "Module `23430` imports `AJV` and `SchemaValidator`, and module `44052` defines a `SchemaValidator` class that uses `ajv` internally for validating data against JSON schemas (`r.schemas`)."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "Module `17977` (and related modules like `99428`) contains the implementation of the `bn.js` library, used for arbitrary-precision integer arithmetic."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "Module `12` imports various sub-modules like `./elliptic/utils`, `./elliptic/curve`, `./elliptic/ec`, indicating the use of the `elliptic` library for EC cryptography."
+        },
+        {
+          "name": "js-sha3",
+          "motivation": "Module `40` explicitly imports and uses `js-sha3`, likely for Keccak hashing (used in `keccak256` utility)."
+        },
+        {
+          "name": "hash.js",
+          "motivation": "Module `26` imports submodules from `./hash/`, suggesting the use of the `hash.js` library for SHA hashing algorithms (e.g., SHA256, SHA512)."
+        },
+        {
+          "name": "core-js",
+          "motivation": "Numerous modules (e.g., `18351`, `17822`, `52014`, `87305`, `11569`, `6034`, `70198`, `83552`, `17822`, `61140`, `48028`, `90968`) provide polyfills and shims for standard JavaScript features like `Object`, `Promise`, `Symbol`, iterators (`Array.prototype[Symbol.iterator]`, `String.prototype[Symbol.iterator]`), `Object.setPrototypeOf`, `Object.getPrototypeOf`, etc. This pattern is characteristic of `core-js`."
+        }
+      ]
+    },
+    {
+      "file": "1050.600434e48e472a44.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` pattern, which is characteristic of Webpack's module loading and chunking mechanism. The code defines a module within this structure."
+        }
+      ]
+    },
+    {
+      "file": "115.7b604c1fc05acb70.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of Webpack's runtime for loading chunks."
+        }
+      ]
+    },
+    {
+      "file": "1165.0a8400289fa8a00e.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push()` structure, which is characteristic of modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "1470.16dde02f97d8714e.js",
+      "occurences": [
+        {
+          "name": "@ledgerhq/hw-app-eth",
+          "motivation": "The code imports and uses a class identified as `l.default` (from `g(93977)`) with methods like `getAddress`, `signPersonalMessage`, and `signTransaction`, which are characteristic of the Ledger Hardware Wallet Ethereum application interface library used to communicate with Ledger devices."
+        },
+        {
+          "name": "web3-provider-engine HookedWalletSubprovider",
+          "motivation": "The code defines and instantiates a class (`n()` from `g(55129)`) that implements the subprovider interface with methods like `handleRequest`, `getAccounts`, `signTransaction`, `signPersonalMessage`, `validateSender`, and uses `emitPayload` to interact with a provider engine. This pattern matches the `HookedWalletSubprovider` from `web3-provider-engine`."
+        },
+        {
+          "name": "@ethereumjs/tx or ethereumjs-tx",
+          "motivation": "The code imports and uses a class `o.YW` (from `g(37082)` -> `g(89920)`) to construct and serialize Ethereum transactions, including handling EIP-155 signatures and chain IDs. Methods like `serialize`, `hash`, `sign`, `getSenderAddress`, and property definitions match those found in Ethereum transaction libraries."
+        },
+        {
+          "name": "@ethereumjs/util or ethereumjs-util",
+          "motivation": "The code makes extensive use of utility functions for buffer manipulation (`toBuffer`, `bufferToHex`, `setLengthLeft`), cryptographic hashing (`keccak256`, `rlphash`), RLP encoding/decoding (`rlp.encode`), address generation (`publicToAddress`), and elliptic curve cryptography (`ecsign`, `ecrecover`, `secp256k1` functions re-exported) typically provided by this library (seen in modules `g(14283)`, `g(28369)`, `g(79543)`, `g(20076)`, etc.)."
+        },
+        {
+          "name": "eth-sig-util",
+          "motivation": "The code includes functions (in `g(40781)`) like `recoverPersonalSignature`, `signTypedData`, `recoverTypedSignature`, `typedSignatureHash`, and `personalSign`, which are specific functionalities provided by the `eth-sig-util` library for handling Ethereum message signing standards."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The code uses a library (`g(72757)`) aliased often as `BN` for handling large number arithmetic, which is essential for Ethereum values (e.g., `new l.BN(...)`, `.cmp()`, `.mul()`, `.iadd()`). This is characteristic of `bn.js`."
+        },
+        {
+          "name": "Buffer",
+          "motivation": "The code frequently uses `Buffer` (e.g., `g(23939).Buffer`, `c.from(...)`, `c.concat(...)`) for handling binary data, indicating the use of the Node.js `Buffer` object or a polyfill."
+        },
+        {
+          "name": "ethereumjs-abi or similar",
+          "motivation": "The code contains functions (in `g(11614)`) for ABI encoding and decoding, such as `rawEncode`, `rawDecode`, `soliditySHA3`, and type parsing (`bytes`, `uint256`, etc.), suggesting the use of an ABI handling library."
+        }
+      ]
+    },
+    {
+      "file": "1508.65709bbef9fca162.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "1572.ff115c70eefc1071.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the structure `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)`, which is characteristic of Webpack's module loading system, specifically customized for the '1inch' project."
+        },
+        {
+          "name": "Ethereum Smart Contract ABI",
+          "motivation": "The core of the code is `JSON.parse('[...]')` where the JSON string contains a detailed structure defining functions (name, inputs, outputs, type, stateMutability), events, and a constructor. This matches the standard format for an Ethereum smart contract Application Binary Interface (ABI), likely used by a web3 library (though the library itself isn't present in *this* file) to interact with the contract."
+        }
+      ]
+    },
+    {
+      "file": "196.f68601396bff343a.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of Webpack's module loading and chunking mechanism."
+        }
+      ]
+    },
+    {
+      "file": "2026.83472c6f282332e5.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` structure, which is characteristic of code bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "2148.b0b83ad0c7c2497c.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a characteristic pattern for code bundled using Webpack, specifically within the 1inch project context."
+        }
+      ]
+    },
+    {
+      "file": "2226.c45396af19c106ae.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a standard pattern for code bundled by Webpack. This specific chunk defines a module within that bundle."
+        }
+      ]
+    },
+    {
+      "file": "2346.da34ecb2629ec2bc.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code is wrapped in a Webpack module structure: `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push([[2346],{...}])`. This indicates it's part of a larger application bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "2362.15418c698e86589b.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push([[2362],{...}])` pattern, which is the standard way Webpack uses to load asynchronous chunks of code in a browser environment. This indicates the overall application is built using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "2418.1677e18fe31416f8.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code is wrapped in `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)`, which is the standard structure for modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "2828.c5a9fcdc216e5e50.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` structure, which is characteristic of Webpack's module loading and chunking mechanism."
+        }
+      ]
+    },
+    {
+      "file": "2858.dd3caf2cd7f55966.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code uses Angular's Ivy rendering engine, indicated by the presence of minified functions like `t.\\u0275\\u0275defineComponent`, `t.\\u0275\\u0275elementStart`, `t.\\u0275\\u0275inject`, `t.\\u0275\\u0275pipe`, and decorators like `@Component`, `@Input`, `@Output`, `@Injectable` (represented by minified forms like `o.\\u0275cmp`, `t.Input`, `t.Output`, `o.\\u0275prov`). It also uses Angular-specific modules like `t.ElementRef`, `t.ChangeDetectorRef`, `R.NgControl`, and dependency injection patterns."
+        },
+        {
+          "name": "Taiga UI",
+          "motivation": "The code utilizes numerous components and directives prefixed with `tui-`, such as `tui-input-count`, `tuiTable`, `tuiThead`, `tuiTh`, `tuiTd`, `tui-svg`, `tuiIconButton`, `tuiHintDirection`, `tuiRowOf`. It also references Taiga UI specific injection tokens like `TUI_DATE_FILLER` (minified as `ye`) and styling patterns associated with the library (e.g., `data-tui-host-size`)."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively uses RxJS patterns and operators. Evidence includes the use of `Observable` (implied by `pipe`, `subscribe`), `Subscription` (e.g., `this.subscriptions=new Kt.w0`, `this.subscriptions.unsubscribe()`), operators like `pipe()`, `map()` (minified as `V.U`), `switchMap()` (minified as `oe.w`), `takeUntil()` (minified as `re.R`), `startWith()` (minified as `at.O`), `shareReplay()` (minified as `Et.B`), and subjects/event emitters (e.g., `new t.EventEmitter`). Imports like `c(82079)` likely correspond to RxJS."
+        },
+        {
+          "name": "Transloco",
+          "motivation": "The code uses the `transloco` pipe (e.g., `t.\\u0275\\u0275pipeBind1(2,4,\"moneyMarket.stats.net-apy-title\")`) and the `transloco` directive (e.g., `transloco=\"moneyMarket.stats.supply-balance-title\"`) for internationalization, indicating the use of the Transloco library (`@ngneat/transloco`). Imports like `c(68180)` likely correspond to this library."
+        },
+        {
+          "name": "Webpack",
+          "motivation": "The code structure starts with `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push([[2858],{...}])`, which is the characteristic structure of code bundled by Webpack, specifically using its chunk loading mechanism."
+        }
+      ]
+    },
+    {
+      "file": "2959.60c0ef43c6006bda.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code uses Angular's specific syntax and decorators like `ɵfac` (factory), `ɵcmp` (component definition), `ɵdir` (directive definition), `ɵɵdefineComponent`, `ɵɵdirectiveInject`, `EventEmitter`, `Input`, `Output`, `forwardRef`, template syntax (`*ngIf`, `[property]`, `(event)`), and dependency injection patterns."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively uses RxJS patterns and operators. Evidence includes `new s.X(null)` (likely `Subject` or `BehaviorSubject`), `new v.w0` (likely `Subscription`), the `.pipe()` method, and chained operators like `(0,E.BX)`, `(0,O.x)`, `(0,f.w)`, `(0,h.of)`, `(0,C.b)`, and the `.subscribe()` method."
+        },
+        {
+          "name": "Transloco",
+          "motivation": "The code includes template attributes like `transloco=\"field.balance\"` and `transloco=\"uni.button.max\"`, which are characteristic of the Transloco internationalization library for Angular."
+        },
+        {
+          "name": "Taiga UI",
+          "motivation": "The code uses components and directives prefixed with `tui`, such as `tuiLet`, `tuiHint`, and `tuiHintDirection`. These are specific to the Taiga UI component library for Angular."
+        }
+      ]
+    },
+    {
+      "file": "3089.8a9587fd8c3dc213.js",
+      "occurences": [
+        {
+          "name": "Underscore.js",
+          "motivation": "The code defines a variable `t` and assigns numerous utility functions to it (`t.each`, `t.map`, `t.reduce`, `t.filter`, `t.find`, `t.isObject`, `t.isArray`, `t.isFunction`, etc.), closely matching the Underscore.js API. It explicitly sets `t.VERSION=\"1.9.1\"`. It also uses typical UMD patterns, attempting to assign the library to `_._` or `module.exports`, which is characteristic of Underscore."
+        }
+      ]
+    },
+    {
+      "file": "3129.e5dee30dafffa4f1.js",
+      "occurences": [
+        {
+          "name": "Webpack Module System",
+          "motivation": "The code uses the `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` structure, which is characteristic of Webpack's module loading and bundling system."
+        }
+      ]
+    },
+    {
+      "file": "3283.b3a9aaf33a7d9653.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push([[...],{...}])` pattern, which is characteristic of Webpack's module bundling and loading system."
+        },
+        {
+          "name": "Regenerator Runtime / Async Await Polyfill",
+          "motivation": "The code uses `var r=h(607).default;` followed by `r(function*(n,c,f){...})`. This pattern, combined with `yield`, indicates the use of async/await syntax transpiled to generator functions, typically requiring a runtime helper like Babel's regenerator-runtime."
+        },
+        {
+          "name": "BN.js",
+          "motivation": "Module `11803` references `i.BN` and performs big number operations (`new o(...)`, `.cmp()`, `.iaddn()`, `.imul()`), characteristic of the `bn.js` library common in Ethereum-related JavaScript."
+        },
+        {
+          "name": "Ethereum Utilities (e.g., ethereumjs-util)",
+          "motivation": "Module `11803` uses functions like `i.defineProperties`, `i.bufferToInt`, `i.rlphash`, `i.publicToAddress`, `i.ecrecover`, `i.ecsign`, which are common cryptographic and utility functions for Ethereum interactions, often found in libraries like `ethereumjs-util`."
+        },
+        {
+          "name": "Buffer Polyfill",
+          "motivation": "Module `11803` explicitly references `h(23939).Buffer`, indicating the use of the Node.js `Buffer` API, likely via a browser polyfill."
+        },
+        {
+          "name": "JSON RPC Middleware Helpers",
+          "motivation": "Modules `59620`, `70546`, and `17620` define logic for creating middleware (`createBlockCacheMiddleware`), determining cache behavior for Ethereum RPC methods (`cacheTypeForPayload`, `blockTagForPayload`, `canCache`), and managing middleware execution flow. This suggests a custom or library-based JSON-RPC middleware system (potentially inspired by `json-rpc-engine`)."
+        }
+      ]
+    },
+    {
+      "file": "3360.b26afe540f0be48d.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push()` pattern, which is characteristic of code bundled by Webpack. This specific chunk exports a JSON ABI."
+        }
+      ]
+    },
+    {
+      "file": "3491.d0e6ace9a8d4a7a2.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of code bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "3555.796159ae4f518130.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch = self.webpackChunk_1inch || []).push(...)` structure. This is a common pattern for modules bundled by Webpack, where `webpackChunk_1inch` likely represents the name assigned to the webpack runtime chunk array for this specific application (1inch)."
+        }
+      ]
+    },
+    {
+      "file": "3570.8600915d9be1c03a.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch = self.webpackChunk_1inch || []` and `.push([[...],{...}])` pattern, which is characteristic of JavaScript code bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "3602.86031e2f3773b05d.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code is structured using Webpack's bundling mechanism, as indicated by the presence of `self.webpackChunk_1inch` and the modular structure (e.g., `function(R,r,c){...}`)."
+        },
+        {
+          "name": "@bitski/js-sdk",
+          "motivation": "The code explicitly imports and uses the `Bitski` class and associated components like `AuthenticationError`, `AuthenticationStatus`, `OAuthSignInMethod`, `ConnectButtonSize`. It implements Bitski's authentication flow using classes like `Fe` (OAuthManager), `je` (AuthProvider), `Ve` (TransactionSigner), `De` (TokenStore), and `Le` (UserStore), which are characteristic of the Bitski SDK."
+        },
+        {
+          "name": "web3-provider-engine",
+          "motivation": "There is extensive use of classes and patterns from `web3-provider-engine`, such as `ProviderEngine` (in class `E`), `Subprovider` (base class for many components like `u`, `o`, `l`, `F`, `Ke`, `vt`, `st`), `FetchSubprovider` (class `F` and `Je`), `BlockCacheSubprovider`, `FilterSubprovider`, `SubscriptionSubprovider`, `InflightCacheSubprovider`, `SanitizerSubprovider`, and `DefaultFixtureSubprovider`. These are core building blocks of this library."
+        },
+        {
+          "name": "eth-block-tracker",
+          "motivation": "The code utilizes block tracking functionality, specifically referencing `BlockTracker` (e.g., `o.default` imported from `50749` which wraps `eth-block-tracker`), often used within `web3-provider-engine` or similar provider implementations to monitor new blocks."
+        },
+        {
+          "name": "async",
+          "motivation": "The code employs asynchronous control flow patterns characteristic of the `async` library or compatible utilities. Examples include retry logic (`B()` using `async-retry` equivalent from `47139`, `Ye()` using `async-retry` equivalent from `98286`) and waterfall patterns (`Xe()` using `async.waterfall` equivalent from `89038`)."
+        },
+        {
+          "name": "uuid",
+          "motivation": "The function `pt` (defined near `me`, `ue`, `ct`) implements the generation of version 4 UUIDs using `crypto.getRandomValues`, matching the functionality provided by the `uuid` library. This is used, for instance, in `createBitskiTransaction` to generate unique transaction IDs."
+        },
+        {
+          "name": "app-auth-helper-js",
+          "motivation": "The code includes classes and patterns specific to OAuth clients, such as `AuthorizationRequest`, `AuthorizationRequestHandler`, `RedirectRequestHandler`, `TokenRequest`, `BaseTokenRequestHandler`, `JQueryRequestor`, `FetchRequestor`, and `AuthorizationServiceConfiguration`. These are components of the `app-auth-helper-js` library, likely utilized as a dependency within the Bitski SDK for handling OAuth interactions."
+        }
+      ]
+    },
+    {
+      "file": "3621.131ef9c3e6e32eee.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` pattern, which is characteristic of Webpack's module loading system. It pushes a module definition onto this array."
+        },
+        {
+          "name": "Uniswap V2 Pair ABI",
+          "motivation": "The code exports a JSON string which is parsed into an object. This object is a standard Ethereum contract ABI. Based on function names like `getReserves`, `swap`, `mint`, `burn`, `token0`, `token1`, `factory`, and `DOMAIN_SEPARATOR`, it corresponds to the Uniswap V2 Pair contract interface."
+        }
+      ]
+    },
+    {
+      "file": "3717.e0e66db5d6830f0d.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of Webpack's module loading and bundling system."
+        }
+      ]
+    },
+    {
+      "file": "3737.423e738acb94398a.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` pattern, which is characteristic of modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "3755.f28d226a9e80e84e.js",
+      "occurences": [
+        {
+          "name": "Lodash",
+          "motivation": "The code includes a large number of functions and patterns characteristic of the Lodash library (`_.`, `u.`, `u.VERSION=\"4.17.21\"`, function names like `debounce`, `throttle`, `cloneDeep`, `isEqual`, `memoize`, etc.). The structure strongly suggests an embedded or bundled version of Lodash."
+        },
+        {
+          "name": "Webpack",
+          "motivation": "The code starts with `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)`, which is the standard boilerplate used by Webpack to load chunks of JavaScript code dynamically."
+        }
+      ]
+    },
+    {
+      "file": "3759.a4f91092de519a5a.js",
+      "occurences": [
+        {
+          "name": "webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of webpack's module loading and chunking system."
+        }
+      ]
+    },
+    {
+      "file": "376.ad835935c453f3a0.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of code bundled using Webpack. This specific file is a module within a larger Webpack bundle."
+        }
+      ]
+    },
+    {
+      "file": "3875.d8505ec2ef41fafb.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push` structure, which is characteristic of Webpack's module loading and chunking mechanism."
+        }
+      ]
+    },
+    {
+      "file": "4079.2784ed408cf274aa.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a common pattern for JavaScript code bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "4170.ac4fc8666f3bae7d.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` pattern, which is characteristic of Webpack's dynamic chunk loading mechanism used to bundle JavaScript modules for web applications."
+        }
+      ]
+    },
+    {
+      "file": "4196.74738aed0e5be0e8.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of Webpack's module loading system for bundling JavaScript modules."
+        }
+      ]
+    },
+    {
+      "file": "4440.e62cbc98e7f0d0ce.js",
+      "occurences": [
+        {
+          "name": "bignumber.js",
+          "motivation": "The code defines a `BigNumber` constructor and prototype with methods like `plus`, `minus`, `times`, `div`, `mod`, `pow`, `sqrt`, `toFixed`, `toExponential`, `toString`, configuration options (`DECIMAL_PLACES`, `ROUNDING_MODE`, `EXPONENTIAL_AT`, etc.), and error messages (`[BigNumber Error]`) that are characteristic of the `bignumber.js` library by Michael Mclaughlin. The code structure strongly suggests it's either the library itself or a vendored version."
+        }
+      ]
+    },
+    {
+      "file": "4443.3c3ec7bc21c854d2.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack. This indicates Webpack is used as the module bundler."
+        }
+      ]
+    },
+    {
+      "file": "4500.bf82ea18c0172da6.js",
+      "occurences": [
+        {
+          "name": "WalletConnect v1 SDK",
+          "motivation": "The code implements the WalletConnect v1 protocol. Key indicators include:\n*   Usage of terms like `bridge`, `handshakeTopic`, `clientId`, `peerId`, `peerMeta`.\n*   Methods like `createSession`, `approveSession`, `rejectSession`, `updateSession`, `killSession`.\n*   Parsing and formatting of WalletConnect URIs (`wc:<topic>@<version>?bridge=...&key=...`).\n*   Implementation of `wc_sessionRequest` and `wc_sessionUpdate` methods.\n*   Use of WebSocket communication with a bridge server.\n*   Explicit mention of `qrcodeModal` for displaying the connection URI.\n*   The protocol version is explicitly set to `1` (`this.version=1`).\n*   Internal crypto functions (`encrypt`, `decrypt`) are implemented matching the v1 specification."
+        }
+      ]
+    },
+    {
+      "file": "4724.837f2aecd520882f.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code is wrapped in `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)`, which is a characteristic pattern of Webpack's code splitting and module loading mechanism. The `webpackChunk_1inch` name suggests it's part of a bundle specific to the 1inch application."
+        }
+      ]
+    },
+    {
+      "file": "5042.6dc18a8b50364eed.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push()` structure. This pattern is characteristic of JavaScript code bundled using Webpack, where chunks of code are pushed into a runtime array (`webpackChunk_1inch`) for lazy loading or code splitting."
+        }
+      ]
+    },
+    {
+      "file": "5093.0e95e2ce6b245060.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` pattern, which is characteristic of Webpack's module loading and chunking system. This specific file appears to be a chunk containing data (an ABI)."
+        }
+      ]
+    },
+    {
+      "file": "517.e94be64e701ea574.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push` structure, which is characteristic of modules bundled by Webpack."
+        },
+        {
+          "name": "Chainlink Aggregator ABI",
+          "motivation": "The core content of the module is a JSON string `e.exports=JSON.parse('[...]')`. This JSON string contains a standard Ethereum contract ABI. Function names like `latestAnswer`, `getAnswer`, `chainlinkCallback`, `requestRateUpdate` and event names like `ChainlinkRequested`, `ChainlinkFulfilled`, `AnswerUpdated`, `NewRound` strongly suggest this is an ABI for interacting with a Chainlink Price Feed Aggregator contract."
+        }
+      ]
+    },
+    {
+      "file": "5349.658d6a98d064c0da.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a standard pattern for code bundled by Webpack. The `_1inch` suffix suggests it's part of the 1inch project's build."
+        }
+      ]
+    },
+    {
+      "file": "5368.50f19ffefc3cacde.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack. The primary content of this specific chunk is a large JSON string representing a smart contract ABI."
+        }
+      ]
+    },
+    {
+      "file": "5390.875102d7dd01b0cc.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "5563.a5a28af42f02e119.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a standard pattern for Webpack's runtime chunk loading mechanism. This indicates the code is part of a larger application bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "5625.f13fabff94ddbe7d.js",
+      "occurences": [
+        {
+          "name": "Trezor Connect",
+          "motivation": "The code extensively uses objects, methods, constants, and patterns associated with the Trezor Connect library. Examples include `TrezorConnect.init`, `TrezorConnect.call`, `TrezorConnect.manifest`, references to `connect.trezor.io` for loading `iframe.html`, `popup.html`, and `webusb.html`, definitions of Trezor-specific events (`DEVICE_EVENT`, `UI_EVENT`, `TRANSPORT_EVENT`), error codes (`ERRORS.TypedError`), and methods like `ethereumGetAddress`, `signTransaction`, etc., all within the `TrezorConnect` namespace or related modules (`5641`, `86940`, `12439`, `85625`)."
+        },
+        {
+          "name": "Fetch API Polyfill",
+          "motivation": "Module `49148` provides a polyfill for the `fetch` API. It checks for the existence of native features (`Headers`, `Request`, `Response`, `fetch`) and defines them if they are missing, using `XMLHttpRequest` internally for the actual network request."
+        }
+      ]
+    },
+    {
+      "file": "5645.f36d4f367673bccc.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a standard pattern for code bundled by Webpack. It's part of a larger application bundle managed by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "5961.adfe03b00de8a12b.js",
+      "occurences": [
+        {
+          "name": "@walletconnect/browser",
+          "motivation": "```javascript\n// Import statement likely corresponds to WalletConnect\nvar y=g(64500);\n\n// Instantiation with WalletConnect-specific options\nthis.wc=n.connector||new y.default({bridge:this.bridge,qrcodeModal:this.qrcode?this.qrcodeModal:void 0,qrcodeModalOptions:this.qrcodeModalOptions,storageId:null==n?void 0:n.storageId,signingMethods:null==n?void 0:n.signingMethods,clientMeta:null==n?void 0:n.clientMeta});\n\n// Usage of WalletConnect-specific methods and properties\nconst m=yield h.getWalletConnector();\nyield (yield n.getWalletConnector()).killSession()\nyield (yield h.getWalletConnector()).sendCustomRequest(n);\nh.on(\"connect\",(T,P)=>{...});\nh.on(\"disconnect\",m=>{...});\nh.on(\"session_update\",(m,w)=>{...});\n```\nThe code explicitly imports and instantiates a WalletConnect connector, using typical configuration options like `bridge`, `qrcodeModal`, `clientMeta`, and methods like `killSession`, `sendCustomRequest`, and event handlers like `connect`, `disconnect`, `session_update`."
+        },
+        {
+          "name": "@walletconnect/qrcode-modal",
+          "motivation": "```javascript\n// Import statement likely corresponds to the QR code modal\nvar i=g.n(E); // where E=g(58480)\n\n// Initialization and usage within WalletConnect options\nthis.qrcodeModal=i(),\nthis.qrcodeModalOptions=void 0,\n// ...\nthis.wc=n.connector||new y.default({bridge:this.bridge,qrcodeModal:this.qrcode?this.qrcodeModal:void 0,qrcodeModalOptions:this.qrcodeModalOptions,...});\n```\nThe code imports a module (`58480`) aliased as `i` and assigns its result (`i()`) to `this.qrcodeModal`. This variable is then passed as the `qrcodeModal` option during the WalletConnect connector instantiation, a standard pattern for integrating the QR code modal."
+        },
+        {
+          "name": "EventEmitter",
+          "motivation": "```javascript\nvar d=g(89124),f=g.n(d);\n\n// Class extending the imported EventEmitter\nclass x extends(f()){...}\n\n// Usage of EventEmitter methods\nthis.emit(\"error\",P);\nthis.emit(\"payload\",U);\n// ...\nsuper({pollingInterval:n.pollingInterval||8e3});\nthis.emit(\"error\",m);\nthis.emit(\"connect\");\n```\nThe code imports a module (`89124`) aliased as `f`, which is identified as an EventEmitter implementation (`d.EventEmitter=d`). Classes within the code (`x`, `r`) extend this EventEmitter and use its methods (`.emit`, `.on`, `super()` constructor call which likely calls the EventEmitter constructor)."
+        },
+        {
+          "name": "@metamask/json-rpc-engine / ProviderEngine",
+          "motivation": "```javascript\nvar v=g(92106); // ProviderEngine base class\nvar r=class extends v{ // Main class extends ProviderEngine\n  constructor(n){ \n    super({pollingInterval:n.pollingInterval||8e3});\n    // ...\n    this.addProvider(new p(...)); // Adding subproviders\n    this.addProvider(new C);\n    // ...\n  }\n  // ...\n  this.emitPayload({method:\"eth_sendRawTransaction\",params:[e]},function(n,h){...}); // emitPayload is characteristic\n}\n```\nThe core structure revolves around a class extending a base class from module `92106`. This base class (`v`) uses a `_blockTracker`, handles `sendAsync`, manages `_providers` (subproviders) via `addProvider`, and uses `emitPayload`. This architecture is characteristic of `@metamask/json-rpc-engine` or the original `web3-provider-engine`."
+        },
+        {
+          "name": "EthereumJS Utils / eth-sig-util",
+          "motivation": "```javascript\nconst i=g(82521); // Likely ethereumjs-util or similar\nconst f=g(69553); // Likely eth-sig-util\n\n// Usage of utility functions\ni.toBuffer(...);\ni.fromRpcSig(...);\ni.ecrecover(...);\ni.hashPersonalMessage(...);\ni.ecsign(...);\nf.recoverPersonalSignature(e)\nf.personalSign(...)\nf.recoverPersonalSignature(...)\nf.typedSignatureHash(...)\nf.signTypedData(...)\nf.recoverTypedSignature(...)\n```\nThe code imports and uses various cryptographic and utility functions commonly found in libraries like `@ethereumjs/util` (or older `ethereumjs-util`) and `eth-sig-util`. Examples include buffer conversions (`toBuffer`), RLP/RPC signature handling (`fromRpcSig`), signature recovery (`ecrecover`, `recoverPersonalSignature`, `recoverTypedSignature`), message hashing (`hashPersonalMessage`), and signing (`ecsign`, `personalSign`, `signTypedData`)."
+        },
+        {
+          "name": "ethers-like ABI Coder / solidity-sha3",
+          "motivation": "```javascript\nconst y=g(42693); // Imports sha3/abi functions\n\n// Usage\ny.soliditySHA3([\"bytes32\",\"bytes32\"],[y.soliditySHA3(new Array(c.length).fill(\"string\"),b),y.soliditySHA3(x,u)])\ni.rawEncode(r.args,e)\ni.rawDecode(r.retargs,e)\ni.solidityPack(a,e)\ni.soliditySHA3(a,e)\n```\nModule `42693` (which uses `72813`) provides functions like `soliditySHA3`, `rawEncode`, `rawDecode`, and `solidityPack`, which are used for ABI encoding/decoding and hashing according to Solidity rules. This functionality is similar to libraries like `ethers.js/abi` or the standalone `ethereumjs-abi` / `abi-coder` or `solidity-sha3`."
+        },
+        {
+          "name": "BN.js",
+          "motivation": "```javascript\nvar E=g(72757); // Likely BN.js import\ns.BN=d; // Exporting BN\n\n// Usage\nnew E(a,10);\nnew E(2).pow(new E(r[1]))\n```\nThe code imports module `72757` (aliased as `E` or `d`) and explicitly exports it as `BN`. It's then used to create and manipulate large numbers (`new E(...)`, `.pow`, `.mul`, `.mod`, etc.), which is the core functionality of `bn.js`."
+        }
+      ]
+    },
+    {
+      "file": "6119.c612438c88ee0478.js",
+      "occurences": [
+        {
+          "name": "regenerator-runtime",
+          "motivation": "The code explicitly defines and assigns `regeneratorRuntime`. This polyfill is used to enable async/await and generator functions in environments that don't natively support them. The entire code block provided seems to be the standard implementation of `regenerator-runtime`."
+        },
+        {
+          "name": "Webpack",
+          "motivation": "The code is wrapped in `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push([[6119],{...}])`, which is the characteristic structure used by Webpack to load code chunks dynamically."
+        }
+      ]
+    },
+    {
+      "file": "6132.f1c02611246abe46.js",
+      "occurences": [
+        {
+          "name": "BN.js",
+          "motivation": "The code includes numerous operations and checks characteristic of BN.js, such as `n.isBN`, `new n(`, `n.prototype`, `n.max`, `n.min`, `iadd`, `isub`, `imul`, `idivn`, `umod`, `ushln`, `ushrn`, `toTwos`, `fromTwos`, indicating its use for arbitrary-precision integer arithmetic, common in blockchain interactions."
+        },
+        {
+          "name": "ethereumjs-util / secp256k1 / ethereum-cryptography",
+          "motivation": "The code contains functions like `privateKeyVerify`, `publicKeyCreate`, `publicKeyConvert`, `ecsign`, `ecrecover`, `hashPersonalMessage`, `privateToPublic`, `publicToAddress`, `keccak256`, `rlphash`. These functions are standard cryptographic operations for Ethereum, often found in libraries like `ethereumjs-util`, its dependencies (`secp256k1`), or newer libraries like `@ethereumjs/util` or `@ethereumjs/tx`."
+        },
+        {
+          "name": "keccak",
+          "motivation": "Direct calls to `keccak256` and `keccak512` (e.g., `A.keccak256(o)`) are present, indicating the use of a Keccak hashing library, either standalone or as part of a larger Ethereum utility library."
+        },
+        {
+          "name": "simple-peer / WebRTC",
+          "motivation": "The code extensively uses WebRTC functionalities, including instantiating `RTCPeerConnection`, `RTCSessionDescription`, `RTCIceCandidate`. It handles signaling (`signal`, `connect`, `data`, `error`, `close`), ICE states, and data channels, strongly suggesting the use of a WebRTC wrapper library like `simple-peer` or direct interaction with the WebRTC API. The presence of error codes like `ERR_WEBRTC_SUPPORT` and `ERR_PC_CONSTRUCTOR` associated with `simple-peer` is observed."
+        },
+        {
+          "name": "socket.io-client",
+          "motivation": "The code shows patterns typical of `socket.io-client`, including instantiation with `io()`, event handling with `.on()` and `.emit()`, connection management (`connect`, `disconnect`), and specific event names like `connect`, `disconnect`, `error`, `reconnect_attempt`, `packet`, `confirmation`. The presence of a `Manager` and `Socket` class structure further supports this identification."
+        },
+        {
+          "name": "web3-utils / lodash",
+          "motivation": "The code utilizes utility functions commonly found in `web3-utils` or similar libraries, such as `isBN`, `isHexStrict`, `sha3`/`keccak256`, `toBN`, `toChecksumAddress`, `numberToHex`, `hexToNumber`, `utf8ToHex`, `hexToUtf8`. Additionally, patterns resembling `lodash` (`_`, `each`, `map`, `find`, `filter`, `isObject`, `isArray`, etc.) are present, often bundled within web3 libraries."
+        },
+        {
+          "name": "qrcode",
+          "motivation": "The code includes a call `Ge.toCanvas(_, V, ...)` where `Ge` seems to reference a QR code generation library (likely `qrcode`) used to display connection information visually."
+        },
+        {
+          "name": "EventEmitter",
+          "motivation": "The code utilizes an event emitter pattern with methods like `on`, `emit`, `removeListener`, `once`, `listeners`. This could be Node.js's built-in `events` module (polyfilled/browserified) or a standalone library like `eventemitter3`."
+        }
+      ]
+    },
+    {
+      "file": "6218.b49a90f64228cd02.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a common pattern for code bundled using Webpack. This indicates Webpack is used as the module bundler."
+        },
+        {
+          "name": "Ethereum Contract ABI",
+          "motivation": "The core of the code is `JSON.parse` called on a large string. This string contains a standard Ethereum smart contract ABI (Application Binary Interface), defining the functions, events, and structures of a contract (likely a Mooniswap pair contract based on the function names like `swap`, `deposit`, `withdraw`, `getReturn`, and references to `mooniswapFactoryGovernance`). This ABI data is used by web3 libraries to interact with the contract, although the specific interaction library (like ethers.js or web3.js) isn't directly used *within this specific snippet*."
+        }
+      ]
+    },
+    {
+      "file": "6265.687c1fa8aa266e5e.js",
+      "occurences": [
+        {
+          "name": "Authereum",
+          "motivation": "The code explicitly imports and uses `Authereum` (module `46688`), `AuthereumProvider` (module `63355`), and `AuthereumSigner` (module `29125`). It references Authereum-specific concepts like login keys, admin keys, iframes (`authereum__x-iframe`, `authereum__x-notification-iframe`), and communicates with URLs like `x.authereum.com`."
+        },
+        {
+          "name": "Web3ProviderEngine",
+          "motivation": "The code imports `Web3ProviderEngine` from module `36839`. The `AuthereumProvider` class extends `s.default` which resolves to `Web3ProviderEngine`."
+        },
+        {
+          "name": "HookedWalletSubprovider",
+          "motivation": "The code imports `HookedWalletSubprovider` from module `63314` and uses it as `this.walletSubprovider` within the `AuthereumProvider`. It handles signing operations."
+        },
+        {
+          "name": "FetchSubprovider",
+          "motivation": "The code imports `FetchSubprovider` from module `61121` and instantiates it as `this.rpcSubProvider`, using it to handle RPC requests."
+        },
+        {
+          "name": "BlockTracker (eth-block-tracker)",
+          "motivation": "Module `36839` references `eth-block-tracker` (`new b({provider:..., pollingInterval:...})`), and the `AuthereumProvider` uses `this._blockTracker`."
+        },
+        {
+          "name": "Penpal",
+          "motivation": "Module `46688` imports Penpal (`b=B(U(59163))`) and uses `b.default.connectToChild` for iframe communication, which is characteristic of Penpal."
+        },
+        {
+          "name": "BN.js",
+          "motivation": "Modules `57531` and `58481` contain the BN.js library for arbitrary-precision integer arithmetic, commonly used in Ethereum contexts."
+        },
+        {
+          "name": "eth-sig-util",
+          "motivation": "Module `33155` contains functions like `personalSign`, `recoverPersonalSignature`, `signTypedData`, `recoverTypedSignature`, which are characteristic of `eth-sig-util`."
+        },
+        {
+          "name": "ethereumjs-util / @ethereumjs/util",
+          "motivation": "Various modules (e.g., `82521`, `48231`, `44109`) use utility functions common to EthereumJS libraries, such as `addHexPrefix`, `isValidAddress`, `toBuffer`, `bufferToHex`, `ecrecover`, `ecsign`, `publicToAddress`, `privateToPublic`, `hashPersonalMessage`."
+        },
+        {
+          "name": "eth-lib (abi/solidity SHA3)",
+          "motivation": "Modules `9127` and `29649` implement ABI encoding/decoding and `soliditySHA3`/`solidityPack`, consistent with `eth-lib` or similar ABI libraries."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "Module `81794` and related sub-modules (`27382`, `93130`, `25154`, `49858`, `31596`, `94642`, `45237`, `86389`, `38442`, `12793`, `44481`, `64409`) implement elliptic curve cryptography operations (specifically SECP256k1 and Ed25519 are mentioned or implied by curve parameters)."
+        },
+        {
+          "name": "js-sha3",
+          "motivation": "Module `35762`/`40` implements the Keccak hashing algorithm, likely the `js-sha3` library."
+        },
+        {
+          "name": "hash.js",
+          "motivation": "Module `38138` and related sub-modules implement various hashing algorithms (SHA1, SHA256, SHA512, RIPEMD160) and HMAC, characteristic of the `hash.js` library."
+        },
+        {
+          "name": "qs",
+          "motivation": "Module `83758` imports `qs` (`s=B(U(95669))`) and uses it (`s.default.parse`) for query string parsing."
+        },
+        {
+          "name": "uuid",
+          "motivation": "Module `9865`/`8871` imports and uses functions for generating UUIDs (specifically v4 and v5)."
+        },
+        {
+          "name": "Webpack",
+          "motivation": "The code structure starts with `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)`, indicating it's bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "6326.0b419035b1b664e7.js",
+      "occurences": [
+        {
+          "name": "EventEmitter",
+          "motivation": "The code imports module `h(73602)`, which defines a class (`p`) with methods like `on`, `once`, `emit`, `removeListener`, `listenerCount`, `eventNames`, `addListener`, characteristic of an EventEmitter implementation. The `IFrameEthereumProvider` class extends this imported class (`g.EventEmitter`)."
+        }
+      ]
+    },
+    {
+      "file": "6330.b70569dc3582a167.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push` structure, which is a standard pattern for loading JavaScript modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "6346.1a8b8600e4740654.js",
+      "occurences": [
+        {
+          "name": "EventEmitter",
+          "motivation": "The code imports and uses an `EventEmitter` class (from module `5628`) as the base class for `IFrameEthereumProvider`. This is evident from the inheritance (`C(o, c)` where `c` is `g.EventEmitter`) and usage of methods like `emit`, `on`, etc. The implementation in module `5628` resembles the standard Node.js EventEmitter pattern."
+        },
+        {
+          "name": "IFrameEthereumProvider",
+          "motivation": "The core functionality revolves around the definition and export of the `IFrameEthereumProvider` class (in module `60955`). This class is designed to act as an EIP-1193 provider that communicates with a parent frame via `postMessage`."
+        }
+      ]
+    },
+    {
+      "file": "6385.17bb0810263bf919.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a characteristic pattern for code bundled and loaded using Webpack."
+        },
+        {
+          "name": "Ethereum Interaction Library (e.g., ethers.js, web3.js)",
+          "motivation": "The code's primary purpose is to parse and export a Solidity contract ABI (Application Binary Interface). ABIs are used by libraries like ethers.js or web3.js to interact with smart contracts on the Ethereum blockchain. While not directly called in this snippet, the presence and purpose of the ABI strongly imply the use of such a library elsewhere in the application that consumes this module."
+        }
+      ]
+    },
+    {
+      "file": "6488.64cc6fb1060c9646.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code uses Angular's specific syntax and features, such as dependency injection (`e.\\u0275\\u0275inject`, `e.\\u0275\\u0275defineInjectable`), component decorators (`@Component` implicitly via `e.\\u0275\\u0275defineComponent`), template syntax (`*ngIf`, `[formControl]`, `(click)`), and imports from `@angular/core` (e.g., `r(9538)`, `r(789)`), `@angular/common` (`r(2006)`), `@angular/forms` (`r(43459)`), and `@angular/router` (`r(9538)`)."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively uses RxJS observables (`new z.X(!1)`, `pipe`, `subscribe`), operators (e.g., `(0,U.h)`, `(0,m.w)`, `(0,K.d)`, `(0,x.U)`, `(0,V.q)`, `(0,H.x)`, `(0,I.b)`, `(0,J.K)` referencing minified operator functions from imports like `r(65191)`, `r(30805)`, `r(55272)`), and subjects (`z.X` which is likely `BehaviorSubject`)."
+        },
+        {
+          "name": "Taiga UI",
+          "motivation": "Imports references like `r(68180)` (`@taiga-ui/core`), `r(13329)` (`@taiga-ui/kit`), `r(45291)` (`@taiga-ui/cdk`), `r(81372)` (`@taiga-ui/icons`), `r(12915)` (`@taiga-ui/addon-table`) and template directives like `tuiLet` indicate the use of the Taiga UI component library for Angular."
+        },
+        {
+          "name": "Transloco",
+          "motivation": "Imports reference `r(28029)` (`@transloco/transloco`) and the use of the `transloco` pipe (`e.\\u0275\\u0275pipe(2,\"transloco\")`) in templates indicate the use of the Transloco internationalization library."
+        },
+        {
+          "name": "Web3.js utilities",
+          "motivation": "The code uses functions like `p.uk.utils.toBN`, `p.uk.utils.keccak256`, `p.uk.eth.accounts.sign`, and `(0,p._5)(u).toLowerCase()` (likely `toChecksumAddress`), characteristic of Web3.js or a similar Ethereum utility library (referenced via the minified variable `p` from import `r(85036)`)."
+        },
+        {
+          "name": "Buffer",
+          "motivation": "The code imports and uses the Buffer library (`r(23939).Buffer`), specifically `Z.from(...)` and `Z.slice(...)`, for handling binary data, likely related to cryptographic operations or data encoding."
+        }
+      ]
+    },
+    {
+      "file": "6681.c18f17a0c2598ba1.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of Webpack's chunk loading mechanism. This indicates that Webpack is used as the module bundler for the project."
+        }
+      ]
+    },
+    {
+      "file": "6761.32ce67f7336a0ec0.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "6872.2b8626ee3ef9104e.js",
+      "occurences": [
+        {
+          "name": "@ledgerhq/hw-transport",
+          "motivation": "markdown: The code defines a base class `t` (within `86872`) that mirrors the structure and methods of the Ledger `Transport` class, including `exchange`, `on`, `off`, `emit`, `setScrambleKey`, `close`, `decorateAppAPIMethods`, `setExchangeTimeout`, and error handling using specific error types like `TransportError`, `TransportStatusError`, `TransportRaceCondition`, `DisconnectedDeviceDuringOperation` found in module `n(44263)` which corresponds to `@ledgerhq/errors`."
+        },
+        {
+          "name": "@ledgerhq/hw-transport-webhid",
+          "motivation": "markdown: The code defines a class `j` (within `86872`) that extends the base transport class `t`. This class explicitly uses the WebHID API (`navigator.hid`) for communication, as seen in functions `L` (isSupported check), `S` (get hid object), `O` (requestDevice), `y` (getDevices), and the core `exchange` implementation which uses `this.device.sendReport` and listens to `inputreport` events. The `open` static method also utilizes `navigator.hid`. This aligns with the functionality of `@ledgerhq/hw-transport-webhid`."
+        },
+        {
+          "name": "@ledgerhq/logs",
+          "motivation": "markdown: The code contains a deprecation warning `r.warn(\"setDebugMode is deprecated. use @ledgerhq/logs instead...\")`. Additionally, calls like `(0,ie.c)(\"apdu\", \"=> \"+F.toString(\"hex\"))` suggest a logging mechanism is in use, likely from this library, where `ie` is resolved from `n(98405)`."
+        },
+        {
+          "name": "semver",
+          "motivation": "markdown: The code imports module `n(64828)` as `c` and uses it via `o = n.n(c)`. It then calls methods like `o().lt(o().coerce(x),\"2.0.0\")` within device definitions (`B`). Module `n(64828)` and its dependencies (`n(94126)`, `n(20555)`, `n(66700)`, etc.) contain characteristic `semver` parsing and comparison logic (like `compare`, `lt`, `gt`, `coerce`, `Range`, `Comparator`)."
+        },
+        {
+          "name": "lru-cache",
+          "motivation": "markdown: Module `n(42098)` defines a class that implements an LRU (Least Recently Used) cache, including methods like `set`, `get`, `peek`, `del`, `reset`, `prune`, and managing `maxAge`, `length`, and `dispose`. This matches the features of the `lru-cache` library."
+        },
+        {
+          "name": "eventemitter3",
+          "motivation": "markdown: The base transport class `t` initializes an event emitter `this._events=new(u())` (where `u` is likely `EventEmitter3` resolved from `n(95446)`) and uses standard event emitter methods like `on(T,G)`, `off(T,G)`, and `emit(T,...G)` for handling events like `unresponsive`, `responsive`, and `disconnect`."
+        },
+        {
+          "name": "@babel/runtime/regenerator or similar",
+          "motivation": "markdown: The extensive use of `(0,a.Z)(function*(){...})` pattern (where `a` comes from `n(3291)`) indicates the code uses transpiled async/await functions, which typically rely on a regenerator runtime helper."
+        }
+      ]
+    },
+    {
+      "file": "6910.34508c9715da226b.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch = self.webpackChunk_1inch || []` pattern and `push` method, which is the standard way Webpack uses to load and define JavaScript modules dynamically (chunks) in the browser."
+        }
+      ]
+    },
+    {
+      "file": "6946.1e3f6ddfdbe1af2f.js",
+      "occurences": [
+        {
+          "name": "Webpack (Module System)",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push` structure. This pattern is characteristic of Webpack's mechanism for dynamically loading code chunks, indicating that the code is part of a larger application bundled with Webpack."
+        }
+      ]
+    },
+    {
+      "file": "6949.8e68b13180ad7829.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` array and the `.push()` method, which is characteristic of the module loading system used by Webpack to dynamically load code chunks."
+        }
+      ]
+    },
+    {
+      "file": "6958.a973478d570687da.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of code bundled using Webpack. This specific file appears to be a chunk containing JSON data (a contract ABI) loaded by the Webpack runtime."
+        }
+      ]
+    },
+    {
+      "file": "7126.a9688d893cd71385.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push` structure, which is characteristic of Webpack's module loading system for code splitting."
+        }
+      ]
+    },
+    {
+      "file": "7206.12fcc5dfafb2687f.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "7226.7d820629464a1ccd.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` structure, which is a characteristic pattern used by Webpack to load and manage JavaScript modules dynamically."
+        }
+      ]
+    },
+    {
+      "file": "7383.111d1957f31d2c7a.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]` pattern. This is a common structure generated by the Webpack module bundler to manage JavaScript chunks and their dependencies."
+        }
+      ]
+    },
+    {
+      "file": "7466.1c40262ea78ed63b.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the pattern `self.webpackChunk_1inch = self.webpackChunk_1inch || []` followed by `.push([[...], {...}])`. This is the standard way Webpack manages and loads JavaScript modules (chunks) dynamically in a web environment."
+        }
+      ]
+    },
+    {
+      "file": "7633.1953cf1ab4896a7e.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` pattern, which is characteristic of modules bundled by Webpack."
+        }
+      ]
+    },
+    {
+      "file": "7832.d24c3186a9be12a5.js",
+      "occurences": [
+        {
+          "name": "@ledgerhq/hw-transport",
+          "motivation": "*   The code defines a base class `te` which is extended by the main transport class `r`. \n*   `te` includes methods characteristic of `@ledgerhq/hw-transport`, such as `exchange`, `setScrambleKey`, `close`, `on`, `off`, `emit`, `setExchangeTimeout`, `setExchangeUnresponsiveTimeout`, and `decorateAppAPIMethods`."
+        },
+        {
+          "name": "@ledgerhq/hw-transport-u2f",
+          "motivation": "*   The code specifically imports `u2f-api` (via `h(69566)` -> `h(31367)` -> `h(35167)`), which is used by `@ledgerhq/hw-transport-u2f`.\n*   It defines a class `r` extending the base transport `te` and implements the `exchange` method using `t.sign` (where `t` is the imported `u2f-api`).\n*   It includes U2F-specific logic like handling `appId: location.origin`, encoding/decoding data with base64url (`J` function), and using `scrambleKey`."
+        },
+        {
+          "name": "u2f-api / u2f-api-polyfill",
+          "motivation": "*   The code directly imports and uses functions like `t.sign`, `t.register`, `t.isSupported` from `h(69566)`, which wraps `h(31367)`. \n*   Module `31367` explicitly uses `h(35167)` which defines constants and methods (`t.sign`, `t.register`, `t.getMessagePort`, `t.getChromeRuntimePort_`, `t.getIframePort_`) for interacting with the U2F browser API or the Chrome extension (`kmendfapggjehodndflmmgagdbamhnfd`).\n*   It provides wrappers (`u`) around the native `window.u2f` or the extension communication."
+        },
+        {
+          "name": "EventEmitter / eventemitter3",
+          "motivation": "*   The base transport class `te` initializes `this._events = new(d())` where `d` is likely an EventEmitter constructor (`d = h.n(a)`, `a = h(95446)`).\n*   It uses standard event emitter methods: `this._events.on(n,o)`, `this._events.removeListener(n,o)`, `this._events.emit(n,...o)`."
+        },
+        {
+          "name": "Buffer",
+          "motivation": "*   The code imports `Buffer` via `h(23939).Buffer` and assigns it to `W` and `K`.\n*   It extensively uses `Buffer` methods like `W.from`, `W.concat`, `W.alloc`, `F.readUInt16BE`, `v.toString('base64')`, `K.from(..., 'hex')`, `K.alloc(...)`."
+        }
+      ]
+    },
+    {
+      "file": "792.5daaf6da97767bee.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack. This specific chunk primarily exports JSON data (a contract ABI)."
+        }
+      ]
+    },
+    {
+      "file": "7953.cd40b6d75f323f7a.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code uses Angular decorators like `@Component`, `@NgModule`, `@Injectable`, `@Input`, `@Output`, and core classes/functions like `s.EventEmitter`, `s.ElementRef`, `s.Injector`, `s.NgZone`, `s.ChangeDetectorRef`. It also uses Angular's component lifecycle methods and dependency injection patterns."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively uses RxJS operators like `pipe`, `map`, `filter`, `switchMap`, `combineLatest`, `startWith`, `take`, `catchError`, `distinctUntilChanged`, and classes like `Observable`, `Subject`, `BehaviorSubject`."
+        },
+        {
+          "name": "Taiga UI",
+          "motivation": "The code utilizes components with the `tui-` prefix, such as `tuiDropdown`, `tuiObscured`, `tuiHostedDropdownHost`, `tuiOption`, `tuiTab`, `tui-tabs`, and `tui-underline`, which are characteristic of the Taiga UI library."
+        },
+        {
+          "name": "Akita",
+          "motivation": "The code uses patterns like `TradingStrategiesQuery`, `TradingStrategiesStore`, `ActiveConnectionQuery`, `WalletConnectionQuery`, `TokenBalanceQuery`, `TxHistoryQuery` along with methods like `selectAll`, `getEntity`, `updateActive`, `add`, `update`, suggesting the use of the Akita state management library."
+        },
+        {
+          "name": "Transloco",
+          "motivation": "The code uses the `| transloco` pipe and `transloco` attributes within HTML templates, indicating the use of the Transloco library for internationalization in Angular."
+        },
+        {
+          "name": "Lightweight Charts",
+          "motivation": "The code references `(0,vh.C2)` which corresponds to `createChart` from Lightweight Charts. It also uses related methods like `addAreaSeries`, `setData`, `timeScale`, and `applyOptions`, confirming its use."
+        }
+      ]
+    },
+    {
+      "file": "7997.a98e461191667b62.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of code bundled and chunked using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "8020.7b90659a7d29a642.js",
+      "occurences": [
+        {
+          "name": "web3-provider-engine",
+          "motivation": "The code explicitly uses classes like `ProviderEngine` (in `h(104)`) and various subproviders like `NonceSubprovider` (`h(55)`), `HookedWalletSubprovider` (`h(108)`), `SubscriptionSubprovider` (`h(109)`), `FilterSubprovider` (`h(94)`), `BlockCacheSubprovider` (`h(215)`), `BlockTracker` (`h(176)`), which are core components of `web3-provider-engine`."
+        },
+        {
+          "name": "@pokt-network/pocket-js",
+          "motivation": "The code includes classes like `Wallet`, `Relay`, `Dispatch`, and `Report` (references found in `h(54)`, `h(97)`, `h(103)`, `h(254)`, `h(275)`). These are components of the Pocket Network SDK used for interacting with the Pocket Network."
+        },
+        {
+          "name": "axios",
+          "motivation": "The code uses `axios.create` and `axios.post` (references found in `h(51)`, `h(103)`, `h(254)`, `h(275)`), indicating the use of the Axios HTTP client library, particularly within the Pocket Network integration."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code makes calls to `ec` (Elliptic Curve) methods like `new(h(36).ec)(\"secp256k1\")`, `keyFromPrivate`, `keyFromPublic`, `sign`, `verify`, `recoverPubKey`, which are characteristic of the `elliptic` library for cryptographic operations."
+        },
+        {
+          "name": "nacl",
+          "motivation": "The code references `nacl` functions like `n.secretbox`, `n.box`, `n.sign` (in `h(247)`). This indicates the use of a NaCl library (like `tweetnacl-js` or a similar implementation) for cryptographic functions (encryption, signing)."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The code imports and uses a Big Number library, aliased as `t.BN` (in `h(4)`), with methods like `new BN(...)`, `.cmp()`, `.add()`, `.mul()`, `.div()`, `.umod()`, `.toArrayLike()`, consistent with `bn.js`."
+        },
+        {
+          "name": "eth-sig-util",
+          "motivation": "The code utilizes functions like `TypedDataUtils`, `signTypedDataLegacy`, `recoverTypedSignatureLegacy`, `personalSign`, `recoverPersonalSignature`, `signTypedData_v4` (found within `h(227)`), which are part of the `eth-sig-util` library for handling Ethereum message signing."
+        },
+        {
+          "name": "penpal",
+          "motivation": "The code uses `E.a.connectToChild` (where `E.a` comes from `h(107)` which defines `penpal`) to establish communication with an iframe (`https://widget.portis.io`), characteristic of the `penpal` library for cross-origin iframe communication."
+        }
+      ]
+    },
+    {
+      "file": "8085.f8936b40fc37ecfd.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of code bundled by Webpack."
+        },
+        {
+          "name": "FunWallet SDK",
+          "motivation": "The code defines and uses classes like `FunWalletEmbed`, references a global `window.funwallet` object, contains constants like `i.ENCRYPTED_JWT_KEY=\"ejwt\"`, defines methods like `d.getWalletURL()`, `d.getAppId()`, `d.buildUpWalletInstanceURL()`, and includes specific enums like `MessageExecutors`, `MessageListeners`, etc., all related to a \"FunWallet\" system. It appears to be a custom SDK for integrating this wallet."
+        }
+      ]
+    },
+    {
+      "file": "8127.e748a6a45a5a9cae.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` pattern, which is characteristic of code bundled by Webpack. The `_1inch` part suggests it's specifically part of the 1inch application's bundle."
+        }
+      ]
+    },
+    {
+      "file": "8222.a8ecb77c00941de6.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push` structure, which is the standard mechanism for loading asynchronous chunks in applications bundled with Webpack."
+        }
+      ]
+    },
+    {
+      "file": "8393.b681c966403ee7a0.js",
+      "occurences": [
+        {
+          "name": "@gnosis.pm/safe-apps-sdk",
+          "motivation": "The code includes class names like `Communicator`, `Eth`, `TXs`, `Safe`, methods like `sendTransactions`, `rpcCall`, `getSafeInfo`, `getTxBySafeTxHash`, `getSafeBalances`, and references internal package details (`JSON.parse('{\"name\":\"@gnosis.pm/safe-apps-sdk\",\"version\":\"4.0.0\"...'`) which are characteristic of the Gnosis Safe Apps SDK. It uses `window.parent.postMessage` to communicate with the parent Gnosis Safe interface."
+        }
+      ]
+    },
+    {
+      "file": "8422.42762699228fa440.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack."
+        },
+        {
+          "name": "Uniswap V2 Router ABI",
+          "motivation": "The code exports a JSON parse result (`n.exports=JSON.parse(...)`). The parsed JSON string contains a standard ABI structure with function names like `addLiquidity`, `addLiquidityETH`, `swapExactTokensForTokens`, `WETH`, `factory`, etc., which are canonical functions for a Uniswap V2 (or compatible) Router contract."
+        }
+      ]
+    },
+    {
+      "file": "8914.3fa3f7466e44bfb1.js",
+      "occurences": [
+        {
+          "name": "secp256k1",
+          "motivation": "The code includes modules that perform Elliptic Curve Cryptography operations specifically for the secp256k1 curve. Functions like `privateKeyVerify`, `publicKeyCreate`, `sign`, `verify`, `recover`, `ecdh`, and the instantiation `new a(\"secp256k1\")` (where `a` is likely `elliptic.ec`) strongly indicate the use of the `secp256k1` library or a similar implementation based on the `elliptic` library."
+        },
+        {
+          "name": "Buffer",
+          "motivation": "The code extensively uses `Buffer` (e.g., `f=L(76342).Buffer`, `f.isBuffer`, `f.alloc`, `f.from`, `f.concat`, `.copy`) for handling binary data, which is common in cryptographic operations. This is likely the Node.js `Buffer` API or a polyfill."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "Module `41141` explicitly creates an elliptic curve context using `new a(\"secp256k1\")`, where `a` is imported via `L(50594).ec`. This pattern is characteristic of the `elliptic` library."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "Module `41141` uses `new x(...)` where `x` is imported via `L(72757)`. The methods called on these objects (`.cmp`, `.toRed`, `.redSqr`, `.redIMul`, `.redIAdd`, `.redSqrt`, `.isOdd`, `.redNeg`, `.sub`, `.umod`, `.invm`, `.iadd`, `.isub`, `.imul`, `.isZero`, `.toArrayLike`) are typical of the `bn.js` library used for arbitrary-precision integer arithmetic, often used alongside `elliptic`."
+        }
+      ]
+    },
+    {
+      "file": "9179.6abd7e621148e38c.js",
+      "occurences": [
+        {
+          "name": "Preact",
+          "motivation": "The code includes modules (e.g., 98328, 34210) that export functions like `createElement`, `Component`, `useState`, `useEffect`, `useRef`, which are characteristic APIs of Preact (or React, but given the context of web components and bundle size often seen with WalletLink integrations, Preact is likely)."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code includes modules (e.g., 7878, 33699) that export RxJS classes and operators like `Observable`, `Subject`, `BehaviorSubject`, `Subscription`, `pipe`, `filter`, `map`, `switchMap`, etc. This indicates the use of RxJS for managing asynchronous operations and events reactively."
+        },
+        {
+          "name": "WalletLink (Coinbase Wallet SDK)",
+          "motivation": "The code explicitly defines and uses `WalletLink`, `WalletLinkProvider`, `WalletLinkRelay`, `WalletLinkConnection`, `WalletLinkSdkUI` (e.g., modules 22535, 65264, 73461, 57264, 29179). It interacts with WalletLink-specific concepts like relay servers, session management, and QR code flows for connecting to the Coinbase Wallet mobile app."
+        },
+        {
+          "name": "clsx/classnames",
+          "motivation": "Module 30762 contains a function identical in behavior to the `clsx` or `classnames` libraries, used for conditionally joining CSS class names. This pattern is common in component-based UI development."
+        },
+        {
+          "name": "qrcode-svg",
+          "motivation": "Module 49006 contains code consistent with the `qrcode-svg` library, used for generating QR codes as SVG images, likely for the WalletLink connection flow."
+        },
+        {
+          "name": "eth-sig-util",
+          "motivation": "Module 38660 exports `TypedDataUtils` and functions like `hashForSignTypedData_v3`, `hashForSignTypedData_v4`, which are part of the `eth-sig-util` library, used for handling Ethereum typed data signing (EIP-712)."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "Module 22819 contains the `bn.js` library, used for arbitrary-precision integer arithmetic, essential for handling large numbers in Ethereum (e.g., wei values, gas)."
+        },
+        {
+          "name": "@metamask/eth-rpc-errors",
+          "motivation": "Module 58185 exports `ethErrors`, `errorCodes`, `EthereumRpcError`, and `EthereumProviderError` which are defined by the `@metamask/eth-rpc-errors` package for standardizing Ethereum RPC error handling."
+        },
+        {
+          "name": "@metamask/json-rpc-engine & related filter/block-tracker libs",
+          "motivation": "Module 75074 defines a `SubscriptionManager` that utilizes dependencies (like `eth-json-rpc-filters` (97547), `eth-block-tracker` (67967)) commonly used with `@metamask/json-rpc-engine` for managing Ethereum subscriptions (`eth_subscribe`) and filters, although the engine itself isn't directly instantiated in the provided snippet."
+        }
+      ]
+    },
+    {
+      "file": "9255.725e15701bdde439.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses `self.webpackChunk_1inch`, which is a characteristic pattern of code bundled by Webpack. This file is a module within a larger Webpack bundle for the 1inch application."
+        },
+        {
+          "name": "Contract ABI Definition",
+          "motivation": "The core of the file is `e.exports=JSON.parse('[...]')`, where the JSON string represents a standard Ethereum contract Application Binary Interface (ABI). This file provides data, specifically an ABI, likely intended for use with a web3 library (like ethers.js or web3.js) in other parts of the application, but does not contain execution logic itself."
+        }
+      ]
+    },
+    {
+      "file": "935.0163117aaaf73f79.js",
+      "occurences": [
+        {
+          "name": "bn.js",
+          "motivation": "The code includes a large inline module (identified as `12179`) that defines a `BN` class and associated prototype methods (`add`, `sub`, `mul`, `div`, `mod`, `pow`, `invm`, `gcd`, `egcd`, `isNeg`, `toString`, `toNumber`, etc.). This API is characteristic of the `bn.js` library used for arbitrary-precision arithmetic, commonly used in Ethereum contexts."
+        },
+        {
+          "name": "js-sha3",
+          "motivation": "The code includes an inline module (identified as `45307`) that contains references like `JS_SHA3_NO_NODE_JS` and implements various hashing functions including `keccak_256` and SHA3 variants (`sha3_224`, `sha3_256`, `sha3_384`, `sha3_512`, `keccak_256`, `shake_128`, `shake_256`). This module structure and function names are characteristic of the `js-sha3` library."
+        },
+        {
+          "name": "buffer",
+          "motivation": "The code frequently uses `Buffer` (e.g., `$.Buffer` in module `71752` which is `I(23939).Buffer`, `Buffer.from`, `Buffer.concat`). Module `71752` explicitly imports and uses `Buffer` from `I(23939)`. This indicates the use of the Node.js `buffer` module or its polyfill for browser environments."
+        },
+        {
+          "name": "qs",
+          "motivation": "Module `90529` (`Nr`) implements query string parsing (`parse` function, aliased as `Et` and later `br` in module `90935`) and stringifying (`stringify` function, aliased as `Cr` in module `90935`). The API and functionality closely resemble the `qs` library."
+        },
+        {
+          "name": "@walletconnect/utils",
+          "motivation": "Module `90935` exports a large number of utility functions specifically designed for WalletConnect operations. These include `parseWalletConnectUri`, `isWalletConnectSession`, `getWalletRegistryUrl`, `getDappRegistryUrl`, `saveMobileLinkInfo`, `mobileLinkChoiceKey`, `formatRpcError`, `payloadId`, `signingMethods`, `reservedEvents`, etc. This strongly suggests the inclusion of utility functions from a WalletConnect library, likely `@walletconnect/utils` or a similar internal package."
+        }
+      ]
+    },
+    {
+      "file": "9615.d6126a1ed8d841ea.js",
+      "occurences": [
+        {
+          "name": "Fortmatic SDK",
+          "motivation": "```markdown\nThe code includes numerous identifiers specific to the Fortmatic SDK, such as class names (`Fortmatic`, `FmProvider`, `FmIframeController`), error types (`FortmaticError`, `RpcError`), constants (`FmPayloadMethod`, `FmIncomingWindowMessage`, `WIDGET_URL`, `PHANTOM_URL`), and methods (`sendFortmaticAsync`, `loginWithMagicLink`, `enable`). An embedded package.json string confirms the library name and version: `\"name\":\"fortmatic\",\"version\":\"2.2.1\"`. The code dynamically creates an iframe pointing to Fortmatic's domains (`https://x2.fortmatic.com` or `https://auth.fortmatic.com`) for handling user interactions and blockchain communication.\n```"
+        }
+      ]
+    },
+    {
+      "file": "968.15bf30f6960238ce.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is a characteristic pattern for modules bundled using Webpack. This chunk specifically pushes data (`[968],{20968:t=>{...}}`) into the Webpack runtime."
+        }
+      ]
+    },
+    {
+      "file": "9719.8fcded81c74408db.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of Webpack's module bundling and asynchronous chunk loading system."
+        }
+      ]
+    },
+    {
+      "file": "9833.9a229e455625a22a.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push` pattern, which is characteristic of Webpack's module loading system for code splitting (chunks)."
+        },
+        {
+          "name": "Ethereum Smart Contract ABI",
+          "motivation": "The core of the code is `JSON.parse` applied to a string containing a standard Ethereum contract ABI definition. This ABI describes the interface (functions, events, state variables) of a smart contract, likely a Merkle Distributor for token claims."
+        }
+      ]
+    },
+    {
+      "file": "9865.5ecf8cc91a677eab.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code structure `(self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` is characteristic of JavaScript code bundled using Webpack, specifically for managing code chunks or modules within the 1inch application."
+        }
+      ]
+    },
+    {
+      "file": "9890.5f7d56033a1e9ff5.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of modules bundled by Webpack. It's pushing a chunk `[9890]` with module ID `49890`."
+        }
+      ]
+    },
+    {
+      "file": "9949.d5e8a420611aafa1.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch` structure, which is characteristic of JavaScript code bundled using Webpack."
+        }
+      ]
+    },
+    {
+      "file": "9955.c5503a294e4792cd.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push` pattern, which is characteristic of code bundled by Webpack. The `_1inch` suffix suggests it's part of the 1inch application's bundle."
+        }
+      ]
+    },
+    {
+      "file": "9976.7483edb980501c5e.js",
+      "occurences": [
+        {
+          "name": "Web3 Provider/Subprovider Framework (@0x/subproviders & utils)",
+          "motivation": "```markdown\nThe code defines and exports numerous classes like `Web3ProviderEngine`, `Subprovider`, `BaseWalletSubprovider`, `RPCSubprovider`, `LedgerSubprovider`, `MetamaskSubprovider`, `TrezorSubprovider`, `MnemonicWalletSubprovider`, `PrivateKeyWalletSubprovider`, `NonceTrackerSubprovider`, etc. (imports `y(39381)`, `y(143)`, `y(28280)`, `y(14699)`, `y(142)`, `y(5529)`, `y(26526)`, `y(22323)`, `y(41818)`, `y(47457)`). These components form a system for routing Ethereum RPC requests. It also utilizes utility functions from `y(77128)` for provider standardization (`providerUtils`), address checks (`addressUtils`), and typed data signing (`signTypedDataUtils`).\n```"
+        },
+        {
+          "name": "@ledgerhq/hw-transport-u2f",
+          "motivation": "```markdown\nThe `ledgerEthereumBrowserClientFactoryAsync` function (in `y(39976)`) explicitly imports `y(64320)` (`M`) and calls `M.default.create()` which corresponds to `@ledgerhq/hw-transport-u2f`'s create method. This transport is then used to instantiate the Ledger Ethereum client (`y(83832)`).\n```"
+        },
+        {
+          "name": "Trezor Connect Client API",
+          "motivation": "```markdown\nThe `TrezorSubprovider` class (`y(26526)`) constructor takes an object with a `trezorConnectClientApi` property. It then uses this API object to call methods like `ethereumSignTransaction`, `ethereumSignMessage`, and `getPublicKey`, indicating a direct dependency on the Trezor Connect library's interface for interacting with Trezor devices.\n```"
+        },
+        {
+          "name": "@0x/web3-wrapper",
+          "motivation": "```markdown\nThe `MetamaskSubprovider` (`y(5529)`) and `SignerSubprovider` (`y(8083)`) both instantiate and utilize `M.Web3Wrapper` (where `M` is `y(97865)`). They use its methods like `getNodeVersionAsync`, `getAvailableAddressesAsync`, `callAsync`, `sendTransactionAsync`, and `sendRawPayloadAsync` to interact with an underlying web3 provider.\n```"
+        },
+        {
+          "name": "Ganache Provider",
+          "motivation": "```markdown\nThe `GanacheSubprovider` (`y(84895)`) uses `I.provider(T)` where `I` is the import from `y(82363)`. This is characteristic of initializing a Ganache provider (likely `ganache-core` or similar) for local blockchain simulation.\n```"
+        },
+        {
+          "name": "ethereumjs-tx / @ethereumjs/tx",
+          "motivation": "```markdown\nImports transaction-related classes like `TransactionFactory`, `Transaction`, `FeeMarketEIP1559Transaction`, `AccessListEIP2930Transaction` from `y(55036)`. These are used in various subproviders (`DebugSubprovider`, `LedgerSubprovider`, `PrivateKeyWalletSubprovider`, `NonceTrackerSubprovider`) for creating, parsing, and manipulating Ethereum transactions.\n```"
+        },
+        {
+          "name": "ethereumjs-util / @ethereumjs/util",
+          "motivation": "```markdown\nThe code extensively uses utility functions imported via `y(84483)` (and related modules like `y(44475)`, `y(66091)`, `y(6785)`, etc.). These functions cover buffer/hex conversions (`toBuffer`, `bufferToHex`), address manipulation (`publicToAddress`, `privateToAddress`, `isValidAddress`), cryptographic operations (`keccak256`, `ecsign`, `ecrecover`, `hashPersonalMessage`), and RLP encoding (`rlp`).\n```"
+        },
+        {
+          "name": "@ethereumjs/common",
+          "motivation": "```markdown\nImports `Hardfork`, `Chain` from `y(62941)` and uses `getCommonForChain` from `y(61951)`. This is used by several subproviders (`LedgerSubprovider`, `PrivateKeyWalletSubprovider`, `MetamaskSubprovider`, `TrezorSubprovider`) to create chain-specific `Common` objects, essential for handling transaction signing correctly, especially with EIP-1559.\n```"
+        },
+        {
+          "name": "bn.js",
+          "motivation": "```markdown\nImports and uses the `BN` class (likely `bn.js` via `y(252)` and potentially others like `y(77128)` which might wrap it). This is fundamental for handling arbitrarily large integers required for Ethereum values, nonces, gas calculations, etc., throughout the subproviders.\n```"
+        }
+      ]
+    },
+    {
+      "file": "9982.cd2f901f71179002.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code uses the `self.webpackChunk_1inch.push` structure, which is a clear indicator of code bundled using Webpack, specifically configured for the '1inch' project."
+        }
+      ]
+    },
+    {
+      "file": "assets/embedded-mode/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Web3Modal",
+          "motivation": "The code explicitly initializes `Web3Modal` using `const Web3Modal = window.Web3Modal.default;` and creates an instance: `const web3Modal = new Web3Modal(...)`."
+        },
+        {
+          "name": "WalletConnect Provider",
+          "motivation": "The code imports and configures `WalletConnectProvider` within the `providerOptions` for Web3Modal: `package: window.WalletConnectProvider.default`."
+        },
+        {
+          "name": "Web3.js",
+          "motivation": "The code creates an instance of Web3.js after a provider is connected: `const web3 = new window.Web3(provider);` and uses its methods like `web3.eth.getAccounts()`."
+        },
+        {
+          "name": "EthereumJsonRpcManager",
+          "motivation": "The code creates an instance of `EthereumJsonRpcManager`: `const ethereumJsonRpcManager = new EthereumJsonRpcManager();` and calls its methods (`init`, `onConnect`, `disconnect`). This appears to be a custom class or part of another library used for managing JSON-RPC communication, likely with the iframe."
+        }
+      ]
+    },
+    {
+      "file": "assets/smartbanner/smartbanner.min.js",
+      "occurences": [
+        {
+          "name": "smartbanner.js",
+          "motivation": "The code includes a header comment `/*! * smartbanner.js v1.16.0 <https://github.com/ain/smartbanner.js> */`. The entire codebase defines the functionality for displaying a smart app banner, consistent with the purpose of smartbanner.js."
+        },
+        {
+          "name": "jQuery Mobile (detection/integration)",
+          "motivation": "The code explicitly checks for the presence of jQuery Mobile using `typeof global.$ !== \"undefined\" && global.$.mobile !== \"undefined\"` within the `Detector.jQueryMobilePage` function. It adapts its behavior, such as event binding (`$(document).on(\"pagebeforeshow\", ...)`), if jQuery Mobile is detected. It doesn't bundle jQuery Mobile itself but integrates with it if available."
+        }
+      ]
+    },
+    {
+      "file": "common.d065a5a002386047.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "```markdown\nThe code utilizes webpack's module loading system, as evidenced by the `self.webpackChunk_1inch=self.webpackChunk_1inch||[]).push(...)` structure and the use of `__webpack_require__` for internal module resolution. This indicates the code is part of a larger application bundle managed by Webpack.\n```"
+        },
+        {
+          "name": "Angular",
+          "motivation": "```markdown\nThe code exhibits patterns strongly associated with the Angular framework, particularly its dependency injection system and component/service definitions. Keywords like `.ɵfac` (factory), `.ɵprov` (provider definition), `.ɵɵinject` (dependency injection), `.ɵɵdefineInjectable`, `.ɵɵdefinePipe`, and `.ɵɵdefineNgModule` are Angular-specific compiler outputs/runtime features.\n```"
+        },
+        {
+          "name": "RxJS",
+          "motivation": "```markdown\nThe code makes extensive use of Reactive Extensions for JavaScript (RxJS). This is clear from the frequent use of observable streams (`$`), the `.pipe()` method for chaining operators, and various RxJS operators like `map` (e.g., `(0,n.U)`), `filter` (e.g., `(0,f.x)`), `switchMap` (e.g., `(0,r.w)`), `catchError` (e.g., `(0,c.K)`), `tap` (e.g., `(0,i.b)`), `delay` (e.g., `(0,n.g)`), `combineLatest` (e.g., `(0,i.D)`), `of` (e.g., `(0,a.of)`), and the use of `BehaviorSubject` (imported as `c.X`).\n```"
+        },
+        {
+          "name": "js-sha256",
+          "motivation": "```markdown\nModule `76929` contains a complete implementation of the SHA-256 and HMAC-SHA256 hashing algorithms. It includes the characteristic constants (`K` array), initialization vectors, and the core hashing logic (functions like `Sha256.prototype.update`, `Sha256.prototype.hash`, `Sha256.prototype.hex`). The structure and exported functions (`sha256`, `sha224`, `sha256.hmac`, `sha224.hmac`) match the `js-sha256` library.\n```"
+        },
+        {
+          "name": "uuid",
+          "motivation": "```markdown\nModule `44708` generates universally unique identifiers (UUIDs). It references module `74499` for obtaining random bytes (using `crypto.getRandomValues` or a Math.random fallback) and module `78341` for formatting the bytes into the standard UUID string representation. This pattern is characteristic of UUID generation libraries like `uuid`, specifically generating version 4 UUIDs based on the code (`u[6]=15&u[6]|64`, `u[8]=63&u[8]|128`).\n```"
+        },
+        {
+          "name": "Web3 Interaction Library (Abstraction)",
+          "motivation": "```markdown\nThe code contains numerous classes and services designed for blockchain interaction, such as `LimitOrderBuilder`, `LimitOrderProtocolFacade`, `WalletService`, `MultiCallService`, `SimpleSendTransactionService`, `ApproveTransactionService`. These handle concepts like contract calls (`viewCall$`), transaction sending (`sendTransaction`, `contractApproveTransaction`), wallet addresses, chain IDs, and signing (`buildOrderSignature`). While the specific underlying library (e.g., ethers.js, web3.js) is not explicitly imported or named in this snippet, these services act as abstractions over such a library to communicate with an Ethereum-compatible blockchain via RPC.\n```"
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-3",
+      "occurences": [
+        {
+          "name": "Intercom",
+          "motivation": "The code explicitly defines `window.initIntercom` and `window.intercomSettings`. It includes a standard Intercom initialization snippet which checks for an existing `window.Intercom` object and dynamically loads the Intercom widget script (`https://widget.intercom.io/widget/zgn72x6y`) if it's not present. The code also calls `Intercom('update', w.intercomSettings)`."
+        }
+      ]
+    },
+    {
+      "file": "main.69edf8d23afd2e97.js",
+      "occurences": [
+        {
+          "name": "@1inch/limit-order-protocol-utils",
+          "motivation": "The code imports and utilizes components like `LimitOrderBuilder`, `LimitOrderPredicateBuilder`, `LimitOrderProtocolFacade`, and references constants/structs such as `ORDER_STRUCTURE`, `RFQ_ORDER_STRUCTURE`, `EIP712_DOMAIN`, `LimitOrderProtocolMethods` from the 1inch Limit Order Protocol SDK. Specific functions like `buildLimitOrder`, `buildRFQOrder`, `fillLimitOrder`, `fillRFQOrder`, `checkPredicate`, `and`, `or`, `eq`, `gt`, `lt`, `nonceEquals`, `timestampBelow` are referenced or implemented based on this protocol."
+        },
+        {
+          "name": "@1inch/permit-signed-utils",
+          "motivation": "The code includes classes and functions like `Eip2612PermitUtils`, `buildPermitSignature`, `buildPermitCallData`, `buildDaiLikePermitSignature`, `buildDaiLikePermitCallData`, and constants like `EIP_2612_PERMIT_ABI`, `DAI_EIP_2612_PERMIT_ABI`, `DAI_LIKE_PERMIT_TYPEHASH`, `EIP_2612_PERMIT_SELECTOR`, `DAI_PERMIT_SELECTOR` which are characteristic of this library for handling ERC20 permit signatures."
+        },
+        {
+          "name": "Akita",
+          "motivation": "The code contains references to `AkitaStores`, `AkitaQueries`, `StoreConfig`, `EntityStore`, `QueryEntity`, `Store`, `Query`, `$$stores`, and `$$queries`. It uses Akita's state management patterns like stores, queries, entity stores, and transaction management (`@StoreConfig`, `EntityStore`, `QueryEntity`, `Store`, `Query`, `At()`, `Ht()`). DevTools integration via `window.__REDUX_DEVTOOLS_EXTENSION__` specific to Akita's structure is also present."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively uses RxJS patterns and objects like `Observable`, `BehaviorSubject`, `Subject`, and operators such as `pipe`, `map`, `filter`, `subscribe`, `switchMap`, `take`, `tap`, `distinctUntilChanged`, `withLatestFrom`, `skip`, `startWith`, `shareReplay`, `timeout`. It's integrated with Akita for reactive state management and used in other asynchronous operations."
+        },
+        {
+          "name": "Web3.js / Ethers.js (or similar interface)",
+          "motivation": "The code defines connectors (`PrivateKeyProviderConnector`, `Web3ProviderConnector`) that interact with a `web3Provider` object. It uses methods like `web3Provider.eth.Contract`, `web3Provider.eth.call`, `web3Provider.eth.abi.decodeParameter`, `web3Provider.eth.abi.decodeParameters`, and `web3Provider.extend` to add custom RPC methods (`eth_signTypedData_v4`). This indicates interaction with an underlying Web3 library."
+        },
+        {
+          "name": "BN.js / @ethersproject/bignumber",
+          "motivation": "The code utilizes a BigNumber library, evident from operations like `.addn`, `.subn`, `.muln`, `.divn`, `.modn`, `.eqn`, `.gten`, `.ltn`, `.iadd`, `.isub`, `.mul`, `.div`, `.pow`, `.umod`, `.invm`, `.toRed`, `fromRed`, `.fromTwos`, `.toTwos`, and instantiation patterns like `new r(1).iushln(...)`, `new i.default(...)`."
+        },
+        {
+          "name": "@metamask/eth-sig-util",
+          "motivation": "The code directly uses functions like `signTypedData_v4`, `recoverTypedSignature_v4`, and `TypedDataUtils.hashStruct`, which are characteristic of this library for handling EIP-712 signatures."
+        },
+        {
+          "name": "ethereumjs-util / @ethereumjs/util",
+          "motivation": "Utility functions commonly found in this library are used, such as `keccak256`, `publicToAddress`, `privateToAddress`, `isValidAddress`, `toChecksumAddress`, `ecrecover`, `ecsign`, `bufferToHex`, `toBuffer`, `hashPersonalMessage`, `isValidSignature`, `fromRpcSig`, `toRpcSig`."
+        },
+        {
+          "name": "@ethereumjs/tx / ethereumjs-tx",
+          "motivation": "The code includes classes and factories for creating and managing Ethereum transactions, such as `TransactionFactory`, `BaseTransaction`, `FeeMarketEIP1559Transaction` (EIP-1559), and `AccessListEIP2930Transaction` (EIP-2930)."
+        },
+        {
+          "name": "@ethereumjs/common / ethereumjs-common",
+          "motivation": "The code uses a `Common` class instance (`this.common`) to manage chain and hardfork context, check for active EIPs (`common.isActivatedEIP(1559)`), get parameters based on hardforks (`common.param(\"gasPrices\", ...)`), and compare hardforks (`common.gteHardfork(...)`). References to specific hardforks like `Istanbul`, `London`, `Berlin`, `SpuriousDragon` are present."
+        },
+        {
+          "name": "bip39 / hdkey / @ethersproject/hdnode",
+          "motivation": "The presence of functions like `entropyToMnemonic`, `mnemonicToEntropy`, `mnemonicToSeed` and the `HDNode` class with methods like `derivePath` and `fromMnemonic` indicates the use of libraries for hierarchical deterministic wallets based on BIP39 mnemonics."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "Low-level elliptic curve cryptography operations like `ecsign`, `ecrecover`, `keyFromPrivate`, `keyFromPublic`, `sign`, `verify`, `recoverPubKey` strongly suggest the use of the elliptic library, likely as a dependency for `ethereumjs-util` or `@metamask/eth-sig-util`."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "The code extensively uses patterns and functions characteristic of `ethers.js`, including `BigNumber`, ABI coding (`AbiCoder`, `defaultAbiCoder`, `ParamType`, `Fragment`), contract interaction utilities (`Interface`), utils (`arrayify`, `hexlify`, `getAddress`, `id`, `keccak256`), and logging (`Logger`). Found in modules like `12624`, `93353`, `38113`, `4466`, `2708`, `18115`, `17884`, `28668`, `38475`, `14188`, `42931`."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "Minified code for `bn.js` is present in module `56126` (and referenced in `58420` and `46606`). It includes characteristic functions for arbitrary-precision integer arithmetic like `cmp`, `mul`, `add`, `sub`, `div`, `mod`, `pow`, and operations within a reduction context (`red`, `toRed`)."
+        },
+        {
+          "name": "punycode",
+          "motivation": "Minified code for `punycode` is present in modules `8131`, `40618`, and `44770`. This is typically used for handling Internationalized Domain Names (IDNs), often in the context of ENS (Ethereum Name Service)."
+        },
+        {
+          "name": "localforage (or similar)",
+          "motivation": "Minified code in module `8390` includes logic for multiple storage backends (IndexedDB, WebSQL, localStorage), which is characteristic of `localforage` or similar storage abstraction libraries."
+        },
+        {
+          "name": "readable-stream / stream-browserify",
+          "motivation": "Multiple modules (`69203`, `14548`, `67919`, `25914`, `21746`, `3064`, `96105`, `18030`, `88285`, `44769`, `88664`, `98934`, `90641`, `47108`, `53767`, `11031`, `46586`, `82351`, `45308`, `29719`, `99904`, `73511`, `67396`, `69590`, `39205`, `11558`, `19232`, `87272`, `32597`, `8944`, `18132`, `4291`, `85001`, `68971`, `49186`, `12534`, `97110`, `39242`, `72328`, `86563`, `77263`, `30479`, `23646`, `17798`, `12295`, `60930`, `35238`, `53953`, `85887`) contain implementations of Node.js stream classes (`Readable`, `Writable`, `Duplex`, `Transform`, `PassThrough`), commonly bundled for browser environments."
+        },
+        {
+          "name": "crypto-browserify (and dependencies)",
+          "motivation": "Numerous modules (`440`, `31703`, `89105`, `71737`, `62489`, `82362`, `88040`, `2227`, `29846`, `56297`, `81950`, `18366`, `42495`, `74603`, `38863`, `55108`, `81970`, `36367`, `85237`, `56343`, `53915`, `64571`, `70351`, `44435`, `71052`, `79765`, `18788`, `40789`, `32721`, `38975`, `97733`, `57385`, `84275`, `59765`, `42685`, `25863`, `93420`, `66760`, `77494`, `50594`) contain implementations of cryptographic functions (SHA, RIPEMD, HMAC, PBKDF2, AES, etc.) and utilities, commonly bundled via `crypto-browserify`."
+        },
+        {
+          "name": "multiformats (multicodec, multihash, base-x)",
+          "motivation": "Modules `37709`, `10128`, `51131`, `49908`, `68310`, `70139`, `98032`, `95056`, `88342`, `27490`, `36192`, `14524`, `54698`, `51053`, `95854`, `1270`, `42884`, `47857`, `43987` contain code for handling multicodec tables, multihash encoding/decoding, and various base encodings (base16, base32, base58, base64), which are components of the multiformats ecosystem."
+        },
+        {
+          "name": "js-sha3",
+          "motivation": "Modules `6493`, `87073`, `6558`, `14075`, `99017`, `4058`, `3670`, `89841` include implementations of Keccak and SHA3 hash functions, consistent with the `js-sha3` library."
+        },
+        {
+          "name": "eth-sig-util",
+          "motivation": "Module `35532` contains minified code for Ethereum signature utilities, including `personal_sign`, `recoverPersonalSignature`, `signTypedData`, and `recoverTypedSignature`, characteristic of `eth-sig-util`."
+        },
+        {
+          "name": "web3-providers (http, ws, ipc)",
+          "motivation": "Modules `14125`, `389`, `62732`, `57104`, `87210`, `17068`, `40109`, `47162`, `16950`, `69918`, `73456`, `4942`, `32868`, `67957`, `80192`, `49186`, `7945` contain logic for managing HTTP, WebSocket, and potentially IPC connections for interacting with Ethereum nodes, handling JSON-RPC requests, batching, and provider management, similar to `web3-providers-*` packages."
+        },
+        {
+          "name": "web3-core-requestmanager",
+          "motivation": "Logic for managing JSON-RPC requests, batching, and provider interaction is found within module `14125`, reflecting the functionality of `web3-core-requestmanager`."
+        },
+        {
+          "name": "eth-ens-resolver",
+          "motivation": "Modules `8859`, `57051`, `75262`, `78595`, `62109`, `65699`, `67176` contain code specifically for interacting with the Ethereum Name Service (ENS) registry and resolvers, including methods like `getResolver`, `getAddress`, `setContenthash`."
+        },
+        {
+          "name": "ethereumjs-util / eth-lib",
+          "motivation": "Modules like `4105`, `53451`, `81970`, `41862`, `72757`, `81307`, `82585`, `41824`, `60064`, `293`, `46606`, `62103`, `94561`, `88304`, `26175`, `71957`, `47395`, `36367`, `53987`, `43932`, `93420`, `77494`, `66760`, `50594` contain various utility functions for Ethereum development, such as address validation (`isAddress`, `toChecksumAddress`), hex manipulation (`isHex`, `toHex`, `hexToBytes`), number conversions (`toBN`, `hexToNumber`), cryptographic hashing (`sha3`, `keccak256`), and elliptic curve operations, similar to libraries like `ethereumjs-util` or `eth-lib`."
+        },
+        {
+          "name": "ethjs-unit",
+          "motivation": "Module `58420` contains code for converting between different Ethereum units (Wei, Gwei, Ether), including a `unitMap` and functions like `fromWei` and `toWei`, characteristic of the `ethjs-unit` library."
+        },
+        {
+          "name": "EventEmitter",
+          "motivation": "Modules `95446`, `20473`, `68971`, `79291`, `30479`, `95137` contain implementations of the EventEmitter pattern, commonly used for event handling in JavaScript libraries and Node.js environments."
+        },
+        {
+          "name": "lightweight-charts",
+          "motivation": "Module `59970` contains code related to rendering charts, including classes and methods like `ChartApi`, `PriceScaleApi`, `TimeScaleApi`, `addAreaSeries`, `addBarSeries`, `addCandlestickSeries`, `addHistogramSeries`, `addLineSeries`, specific rendering logic (e.g., `_drawBackground`, `_drawGrid`), and formatting logic, which strongly indicates the use of the `lightweight-charts` library."
+        },
+        {
+          "name": "ngx-clipboard",
+          "motivation": "Module `33679` includes classes like `ClipboardService` and `ClipboardDirective`, along with related Dependency Injection tokens and logic for copying text to the clipboard, characteristic of the `ngx-clipboard` Angular library."
+        },
+        {
+          "name": "ngx-device-detector",
+          "motivation": "Module `58005` contains logic for detecting browser, OS, and device information based on the user agent string. It includes constants like `BROWSERS`, `OS`, `DEVICES` and classes like `DeviceDetectorService`, indicating the use of `ngx-device-detector` or a similar library."
+        },
+        {
+          "name": "ngx-google-analytics",
+          "motivation": "Module `71539` contains classes like `GoogleAnalyticsService` and `GoogleAnalyticsModule`, functions for sending events (`event`, `pageView`, `appView`, `exception`), and logic for initializing Google Analytics tracking via `gtag.js`, characteristic of the `ngx-google-analytics` Angular library."
+        },
+        {
+          "name": "bignumber.js",
+          "motivation": "The code uses `A.O$ = e.O$` which corresponds to `BigNumber` from the ethers library, which itself might use bignumber.js internally or provide a similar API. Modules `28668` and `38475` also handle large number arithmetic."
+        },
+        {
+          "name": "buffer",
+          "motivation": "The code extensively uses `Buffer` objects and their methods (e.g., `Buffer.from`, `Buffer.concat`, `Buffer.isBuffer`, `.toString('hex')`). This is evident in modules like `23939`, `90339`, `65204`, `76342`, `92091`."
+        },
+        {
+          "name": "process",
+          "motivation": "The code references `process.nextTick` and `process.browser` in modules like `53767`, indicating the inclusion of the `process` polyfill for browser environments."
+        },
+        {
+          "name": "querystring",
+          "motivation": "Modules `95669`, `10837`, `59712` contain logic for parsing and stringifying URL query strings, matching the functionality of the `querystring` module."
+        },
+        {
+          "name": "url",
+          "motivation": "Module `7533` (and referenced by `42218`) contains code for parsing and formatting URLs, similar to the Node.js `url` module."
+        },
+        {
+          "name": "request",
+          "motivation": "Module `10225` provides a simplified HTTP request interface, potentially a browserified version or shim for the `request` library."
+        },
+        {
+          "name": "rxjs",
+          "motivation": "Modules like `56439` (Observable), `3843` (Subscriber, SafeSubscriber), `82079` (Subscription), `2286` (Subject), `44259` (ReplaySubject), `65191` (BehaviorSubject), and numerous operator functions (`map`, `filter`, `tap`, `scan`, `mergeMap`, `switchMap`, `take`, `takeLast`, etc.) found across various modules indicate the use of RxJS for reactive programming."
+        },
+        {
+          "name": "Web3.js",
+          "motivation": "The code contains references like `l.uk.eth.Contract` and `l.uk.eth.accounts.privateKeyToAccount`, which strongly map to `web3.eth.Contract` and `web3.eth.accounts` structures in Web3.js. It also uses `new (a().providers.WebsocketProvider)(F)` which is characteristic of Web3.js WebSocket provider instantiation."
+        },
+        {
+          "name": "BN.js",
+          "motivation": "The code uses `n.O$.from()` frequently, which resembles `BN.from()` or `ethers.BigNumber.from()`. Given the clearer evidence for Web3.js, `BN.js` (often bundled with Web3.js v1) is a likely candidate for handling large numbers."
+        },
+        {
+          "name": "Angular",
+          "motivation": "The code extensively uses Angular features and syntax, including decorators like `@Component`, `@Directive`, `@NgModule`, dependency injection (`inject`, `ɵɵinject`), lifecycle hooks (`ngOnInit`, `ngOnDestroy`, `ngAfterViewInit`), template syntax (`*ngIf`, `*ngFor`), and core modules (`EventEmitter`, `ChangeDetectorRef`). Angular's compiled output patterns (e.g., `ɵɵdefineComponent`, `ɵɵelementStart`) are prevalent throughout the file."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code heavily utilizes RxJS for managing asynchronous operations and state. This is evident through the use of `Observable`, `Subject`, `BehaviorSubject`, operators like `pipe`, `map`, `switchMap`, `filter`, `tap`, `take`, `debounceTime`, `combineLatest`, `of`, and subscription management (`subscribe`, `unsubscribe`, `Subscription`)."
+        },
+        {
+          "name": "Akita",
+          "motivation": "While the library name isn't explicitly mentioned, the code employs state management patterns characteristic of Akita, such as defining stores (`EntityStore`, `Store`) and queries (`QueryEntity`, `Query`). Decorators like `@StoreConfig` and methods like `.update()`, `.select()`, `.getValue()` are commonly used in Akita applications."
+        },
+        {
+          "name": "Transloco",
+          "motivation": "The code includes usage of the `transloco` pipe (e.g., `pipe(4,\"transloco\")`) and dependency injection of `TranslocoService` (e.g., `n.\\u0275\\u0275directiveInject(h.Vn)` where `h.Vn` likely corresponds to TranslocoService). Translation keys like `swapConfirmSettings.gasPrice.gwei-value` are also used."
+        },
+        {
+          "name": "Angular Material / CDK",
+          "motivation": "The code references components and directives prefixed with `mat-` and `cdk-`, such as `mat-slide-toggle`, `mat-dialog`, `mat-carousel`, `mat-expansion-panel`, `cdkFocusMonitor`, `cdkPortalOutlet`, `cdkObserveContent`, `cdkScrollable`. This indicates the use of the Angular Material component library and the Component Dev Kit (CDK)."
+        },
+        {
+          "name": "Taiga UI (TUI)",
+          "motivation": "The code contains references to components and directives prefixed with `tui-`, such as `tui-input-slider`, `tuiHint`, `tuiLet`. This suggests the use of the Taiga UI component library for Angular."
+        },
+        {
+          "name": "BigNumber.js / ethers BigNumber",
+          "motivation": "The code includes calls like `n.O$.from(a)`, `e.O$.from(a)` which are typical minified representations of `BigNumber.from(value)`, used for handling large integers required in blockchain interactions (e.g., token amounts)."
+        }
+      ]
+    },
+    {
+      "file": "ngsw-worker.js",
+      "occurences": [
+        {
+          "name": "Angular Service Worker",
+          "motivation": "The code includes copyright headers referencing `https://angular.io/license`, uses terminology specific to Angular Service Worker (`ngsw.json`, `AppVersion`, `AssetGroup`, `DataGroup`), and the filename `ngsw-worker.js` is the standard name for the Angular Service Worker script. The entire structure implements a service worker based on Angular's configuration and caching strategies."
+        }
+      ]
+    },
+    {
+      "file": "runtime.69606faf13635b87.js",
+      "occurences": [
+        {
+          "name": "Webpack Runtime",
+          "motivation": "The code contains characteristic Webpack bootstrapping and module loading functions like `f` (likely `__webpack_require__`), `f.m` (modules), `f.c` (cache - though named `g` here), `f.d` (defineProperty), `f.r` (define __esModule), `f.t` (create react module?), `f.e` (ensureChunk), `f.u` (chunk URL), `f.l` (loadScript), `f.p` (publicPath), and `f.O` (webpack runtime integration). The pattern `self.webpackChunk_1inch=self.webpackChunk_1inch||[]` is the standard mechanism for Webpack chunk loading."
+        },
+        {
+          "name": "Angular (implied)",
+          "motivation": "The code includes the string `trustedTypes.createPolicy(\"angular#bundler\",e)`. This indicates that the application is likely built using the Angular framework, as this naming convention (`angular#bundler`) is typical for Trusted Types policies created within Angular applications bundled with tools like Webpack (via Angular CLI)."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "main.69edf8d23afd2e97.js",
+      "occurences": [
+        {
+          "count": 3
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

@@ -1,0 +1,976 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibiwjx53xdsn6zvhdu5oh5ygrjp5g7toi3f25ltosyptbljnvjfdu",
+  "timestamp": 1745666298,
+  "blockNumber": 22352799,
+  "rootMimeType": "inode/directory",
+  "totalSize": 18280671,
+  "favicon": "favicon-light-mode.png",
+  "title": "CoW Swap | The smartest way to trade cryptocurrencies",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/@safe-global-CRqML-Eq.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "RPC Endpoint (derived from JsonRpcProvider connection)"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The `Bs` (JsonRpcProvider) class uses an internal `send` method which calls `Ns` (fetchJson), which in turn calls `C1` (_fetchData) and `sP` (_fetchData wrapper), finally executing the native `fetch` function. The URL is determined by the `connection` property passed during provider instantiation. These are standard JSON-RPC calls."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "CCIP-Read URL (derived from ENS resolution)"
+          ],
+          "library": "ethers.js",
+          "type": "auxiliary",
+          "motivation": "The code contains logic for CCIP-Read (`ccipReadFetch`) within the Provider classes, which involves making `fetch` requests to URLs specified in ENS records during name resolution or offchain lookups. These URLs are dynamically determined."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "Safe Transaction Service API Endpoint (e.g., /v1/about, /v1/safes/{address}/multisig-transactions/)"
+          ],
+          "library": "@safe-global/protocol-kit or similar Safe SDK",
+          "type": "auxiliary",
+          "motivation": "The `mM` class (likely Safe Transaction Service client, instantiated via `Iz.default`) uses a `sendRequest` function (from `t9`) which wraps the native `fetch`. The URLs are constructed from a base `txServiceUrl` and specific API paths to interact with the Safe Transaction Service backend."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "WebSocket RPC Endpoint (derived from WebSocketProvider connection)"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The `yp` (WebSocketProvider) class establishes a WebSocket connection using `new n0(this.connection.url)` (where `n0` is WebSocket) and uses its `send` method for RPC calls (e.g., `eth_subscribe`). The URL is determined by the connection info passed during provider instantiation."
+        }
+      ]
+    },
+    {
+      "file": "assets/Balances-B4M-rc7U.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://raw.githubusercontent.com/gnosis/locked-gno-cow-merkle-distro/main/mainnet/chunk_*.json",
+            "https://raw.githubusercontent.com/gnosis/locked-gno-cow-merkle-distro/main/gnosisChain/chunk_*.json"
+          ],
+          "library": "other",
+          "type": "auxiliary",
+          "motivation": "The `fn` function explicitly calls `fetch` with a constructed URL `https://raw.githubusercontent.com/gnosis/locked-gno-cow-merkle-distro/${ln}/${n}`. The variable `ln` is hardcoded to `\"main\"`. The variable `n` is constructed dynamically based on chain information (`dn[t]`) and address hashing (`un(c,o)`), resulting in paths like `mainnet/chunk_1.json` or `gnosisChain/chunk_0.json`. This fetches Merkle proof data for GNO locking."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-C2aZCUBl.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "<RPC_URL>"
+          ],
+          "library": "@coinbase/wallet-sdk",
+          "type": "rpc",
+          "motivation": "```javascript\nlet t=class{\n    async makeEthereumJSONRPCRequest(n,i){\n        // ...\n        return window.fetch(i,{method:\"POST\",body:JSON.stringify(n),mode:\"cors\",headers:{\"Content-Type\":\"application/json\"}})\n            // ...\n    }\n};\n// ...\nasync _handleAsynchronousMethods(p){ \n    // ...\n    return(await this.initializeRelay()).makeEthereumJSONRPCRequest(p,this.jsonRpcUrl)\n}\n```\nThe `makeEthereumJSONRPCRequest` method in `WalletSDKRelayAbstract` (class `t` in `Kc`) uses `window.fetch` to make POST requests. This method is called by the `CoinbaseWalletProvider` (class `b` in `Ai`) to handle standard JSON-RPC methods, passing `this.jsonRpcUrl`. The URL is typically an Ethereum RPC endpoint provided during SDK initialization or retrieved from local storage."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "<LINK_API_URL>/rpc"
+          ],
+          "library": "@coinbase/wallet-sdk",
+          "type": "auxiliary",
+          "motivation": "```javascript\nlet g=class{\n    constructor(c,u,f,m,b=WebSocket){\n        // ...\n        const w=new o.RxWebSocket(f+\"/rpc\",b); // o is uv (RxWebSocket), f is linkAPIUrl, b is WebSocket class\n        this.ws=w,\n        // ...\n    }\n    // ...\n};\nZt.WalletSDKConnection=g\n```\nThe `WalletSDKConnection` class (class `g` in `Zt`) internally uses `RxWebSocket` (from `uv`) which wraps the native `WebSocket` API. It connects to a URL constructed by appending '/rpc' to the `linkAPIUrl` (provided during SDK setup). This WebSocket is essential for the WalletLink protocol, relaying messages between the dapp and the mobile wallet."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Dr7Q3zSY.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "./data/config.json",
+            "./data/coins.json",
+            "./data/bridge/releases.json",
+            "./data/firmware/1/releases.json",
+            "./data/firmware/2/releases.json"
+          ],
+          "library": "Trezor Connect",
+          "type": "self",
+          "motivation": "```markdown\nThese URLs are defined within the configuration constants (`z.config={...assets:[...]}`) used during the initialization of the Trezor Connect library (`(0,h.parseConnectSettings)` which uses `di()` containing `z.config`). They point to relative paths, indicating resources loaded from the same origin as the script, likely via `fetch` or `XMLHttpRequest` by the Trezor Connect library to get configuration and metadata.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-hcE3Ipwo.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://barn.api.cow.fi/*/api/v1/*",
+            "https://api.cow.fi/*/api/v1/*"
+          ],
+          "library": "@cowprotocol/contracts",
+          "type": "auxiliary",
+          "motivation": "The `call$3` function, part of the bundled `@cowprotocol/contracts`, uses `fetch$1` (an alias for fetch) to interact with the CoW Protocol API endpoints (`/orders`, `/quote`, etc.) on different networks, hosted at `barn.api.cow.fi` or `api.cow.fi`. Data is typically sent as JSON in the request body for POST requests."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.thegraph.com/subgraphs/name/cowprotocol/cow",
+            "https://api.thegraph.com/subgraphs/name/cowprotocol/cow-gc"
+          ],
+          "library": "graphql-request",
+          "type": "auxiliary",
+          "motivation": "The bundled `graphql-request` library uses `fetch` (via `fetch$1` or `zt.default`) to send GraphQL queries (POST or GET). Specific instances (`subgraphClient` in the code) are used to query CoW Protocol subgraphs hosted on The Graph."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://mainnet.infura.io/v3/",
+            "https://rpc.gnosis.gateway.fm",
+            "https://arbitrum-mainnet.infura.io/v3/",
+            "https://base-mainnet.infura.io/v3/",
+            "https://sepolia.infura.io/v3/"
+          ],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "Ethers.js's `JsonRpcProvider` (instantiated via `new JsonRpcProvider(RPC_URLS[chainId])` or within `Web3Provider$1`) uses `fetch` (via `_fetchData`) to make JSON-RPC calls. The code defines `RPC_URLS` containing Infura and Gnosis endpoints used for blockchain interaction."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cloudflare-ipfs.com/ipfs/*",
+            "https://ipfs.io/ipfs/*"
+          ],
+          "library": "axios (via browserPonyfillExports)",
+          "type": "auxiliary",
+          "motivation": "The `D$4` function uses `fetch` (likely the ponyfill `browserPonyfillExports` wrapping `fetch`) to fetch documents (e.g., app data JSON) from IPFS gateways based on a provided CID. The `uriToHttp` function also resolves IPFS/IPNS URIs to `ipfs.io`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.blocknative.com/gasprices/blockprices",
+            "https://gnosis.blockscout.com/api/v1/gas-price-oracle",
+            "https://arbitrum.blockscout.com/api/v1/gas-price-oracle",
+            "https://base.blockscout.com/api/v1/gas-price-oracle"
+          ],
+          "library": "unknown",
+          "type": "auxiliary",
+          "motivation": "The code defines `GAS_FEE_ENDPOINTS` with URLs for fetching gas prices from Blocknative and Blockscout APIs. These URLs are likely used with `fetch` to get real-time gas price information."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cms.cow.fi/api/announcements",
+            "https://cms.cow.fi/api/solvers",
+            "https://cms.cow.fi/api/tax-free-assets"
+          ],
+          "library": "openapi-fetch (bundled)",
+          "type": "auxiliary",
+          "motivation": "The `getCmsClient` function utilizes a bundled `openapi-fetch` client configured with `CMS_BASE_URL` ('https://cms.cow.fi/api'). This client uses `fetch` internally to retrieve data from various CMS endpoints like `/announcements`, `/solvers`, and `/tax-free-assets` using GET requests."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.pinata.cloud/pinning/pinJSONToIPFS"
+          ],
+          "library": "axios (via browserPonyfillExports)",
+          "type": "auxiliary",
+          "motivation": "The `uploadMetadataDocToIpfsLegacy` function (part of the `MetadataApi` SDK, likely bundled from `@cowprotocol/app-data`) uses `fetch` (via `browserPonyfillExports`) to POST JSON data to the Pinata IPFS pinning service API."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.country.is"
+          ],
+          "library": "unknown",
+          "type": "auxiliary",
+          "motivation": "The `TokensListsUpdater` component explicitly makes a `fetch` call to `https://api.country.is` to determine the user's country, potentially for geo-blocking or localization purposes."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://files.cow.fi/tokens/CowSwap.json",
+            "https://raw.githubusercontent.com/cowprotocol/token-lists/*",
+            "https://tokens.honeyswap.org",
+            "https://curvefi.github.io/curve-assets/*.json",
+            "https://static.optimism.io/optimism.tokenlist.json",
+            "https://raw.githubusercontent.com/balancer/tokenlists/*",
+            "https://ipfs.io/ipns/tokens.uniswap.org"
+          ],
+          "library": "SWR",
+          "type": "auxiliary",
+          "motivation": "The `fetchTokenList` function uses `fetch` to download token list JSON files. These fetches are managed by SWR hooks (`useSearchList`, `TokensListsUpdater`) which use URLs defined in `DEFAULT_TOKENS_LISTS`, `LP_TOKEN_LISTS`, and potentially user-added URLs or ENS resolved content hashes pointing to IPFS via gateways."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://bff.barn.cow.fi/proxies/tokens"
+          ],
+          "library": "graphql-request",
+          "type": "auxiliary",
+          "motivation": "The `GQL_CLIENT` instance of `GraphQLClient` (from `graphql-request`) is configured with `BASE_URL$1` set to `${BFF_BASE_URL}/proxies/tokens`, indicating GraphQL queries are sent to this backend-for-frontend endpoint via `fetch`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "whatwg-fetch",
+          "type": "auxiliary",
+          "motivation": "An `XMLHttpRequest` object is created within the bundled `whatwg-fetch` polyfill (`yn` function) to provide `fetch` functionality in environments where it's not natively supported. The specific URL depends on how the polyfilled `fetch` is called by other parts of the application."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "./index-C2aZCUBl.js",
+            "./@1inch-gxWjkVZZ.js",
+            "./web3-BVRPY3DS.js",
+            "./index-CWce9Gt8.js",
+            "./browser-Cj-9sRjz.js",
+            "./@safe-global-CRqML-Eq.js",
+            "./metamask-sdk-Bq1OWiFQ.js",
+            "./@uniswap-C8NJp6ZI.js",
+            "./@sentry-B4eJ84ct.js",
+            "./index-Dr7Q3zSY.js",
+            "./index-wvmzXT2c.js",
+            "./getAccountsList-auI8I6-c.js",
+            "./index-O5HCWFUh.js",
+            "./ajv-CMpqBxKx.js",
+            "./index-Crmx8Hsn.js",
+            "./ajv-C5IVenln.js",
+            "./index-S2O8G2mk.js",
+            "./index-CxJ1srZ3.js",
+            "./vault-D1MBbYB3.js",
+            "./priceLegacy-D9tD_8Or.js",
+            "./RoutesApp-DLuQ6U7A.js"
+          ],
+          "library": "browser/vite",
+          "type": "self",
+          "motivation": "The initial script uses `fetch` for preloading JavaScript module dependencies relative to the current page, based on the `__vite__fileDeps` array defined at the top of the file. This is part of the build tooling (Vite) and browser's module loading mechanism."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-mI2QZVJi.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://explorer-api.walletconnect.com"
+          ],
+          "library": "@web3modal/core",
+          "type": "auxiliary",
+          "motivation": "The code calls `H.getWallets` to fetch wallet listings for the explorer view. This function is imported and likely part of the Web3Modal Core library (`@web3modal/core`). It's assumed to use `fetch` internally to retrieve data from a WalletConnect API endpoint, most likely related to the explorer service (e.g., `https://explorer-api.walletconnect.com`). Parameters like `page`, `entries`, `search`, `version`, and `chains` are passed to control the data fetched."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-wvmzXT2c.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "otherwise",
+          "type": "rpc",
+          "motivation": "The code defines a function `is` (exported as `fetchFromProvider`) which internally calls a wrapper function `rs` (assigned to `ns.default`). This wrapper `rs` uses the browser's `fetch` API (via the `ts` function) when not in a Node.js environment. `fetchFromProvider` sends JSON-RPC requests (`{method:r.method,params:r.params,jsonrpc:\"2.0\",id:1}`) to a URL determined dynamically by the `fs` (`getProvider`) function, which takes the provider URL or object as input from the caller. No specific target URLs are hardcoded within this snippet for this call."
+        }
+      ]
+    },
+    {
+      "file": "assets/priceLegacy-D9tD_8Or.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.1inch.io/v5.0/*"
+          ],
+          "library": "1inch API Interaction Logic / Axios Rate Limit",
+          "type": "auxiliary",
+          "motivation": "```markdown\nThe code constructs a URL by combining a base URL from the `H` map (`https://api.1inch.io/v5.0/${chainId}`) with a path (e.g., `/quote?...`). This URL is then passed to the `V` function, which is a rate-limited wrapper likely using `fetch` (or `XMLHttpRequest` via Axios) internally to make GET requests to the 1inch API for price quotes. The URL is classified as auxiliary because it serves a supporting role (price data) rather than being a core RPC or bundler endpoint.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/vault-D1MBbYB3.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://barn.api.cow.fi/{network}/api/v1/orders",
+            "https://api.cow.fi/{network}/api/v1/orders"
+          ],
+          "library": "CowSwap SDK / API Client",
+          "type": "auxiliary",
+          "motivation": "The code uses an internal function `$` which wraps the imported function `fe` (likely a fetch wrapper). This function is called by `Be` to make a `POST` request for placing CowSwap orders. The URL is constructed dynamically using a base URL derived from `Pe(environment, network)` and appending the path `/api/v1/orders`. `{network}` represents the blockchain network (e.g., mainnet, sepolia). Order data is sent in the request body as JSON."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://barn.api.cow.fi/{network}/api/v1/orders/{uid}",
+            "https://api.cow.fi/{network}/api/v1/orders/{uid}"
+          ],
+          "library": "CowSwap SDK / API Client",
+          "type": "auxiliary",
+          "motivation": "The code uses an internal function `$` which wraps the imported function `fe` (likely a fetch wrapper). This function is called by `$e` to make a `GET` request (implicit method) to fetch CowSwap order status by its UID. The URL is constructed dynamically using a base URL derived from `Pe(environment, network)` and appending the path `/api/v1/orders/{uid}`. `{network}` represents the blockchain network, and `{uid}` is the order identifier."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://barn.api.cow.fi/{network}/api/v1/quote",
+            "https://api.cow.fi/{network}/api/v1/quote"
+          ],
+          "library": "CowSwap SDK / API Client",
+          "type": "auxiliary",
+          "motivation": "The code uses an internal function `$` which wraps the imported function `fe` (likely a fetch wrapper). This function is called by `te` to make a `POST` request to get a quote from the CowSwap API. The URL is constructed dynamically using a base URL derived from `Pe(environment, network)` and appending the path `/api/v1/quote`. `{network}` represents the blockchain network. Quote request parameters are sent in the request body as JSON."
+        }
+      ]
+    },
+    {
+      "file": "assets/web3-BVRPY3DS.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/bzz-raw:/",
+            "/bzz:/"
+          ],
+          "library": "node-fetch / cross-fetch / XMLHttpRequest polyfill",
+          "type": "auxiliary",
+          "motivation": "The code contains a custom request function (`f`) that wraps `XMLHttpRequest`. Calls to this function are made with URLs constructed dynamically, involving base URLs (represented by `D` in the code, likely configured elsewhere) and specific paths like `/bzz-raw:/` and `/bzz:/` followed by hashes. These paths relate to the Swarm protocol (bzz). The exact host is not determined from the snippet, so only the identifiable paths are listed."
+        }
+      ]
+    },
+    {
+      "file": "service-worker.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "/index.html"
+          ],
+          "library": "Workbox (Offline Fallback Handler)",
+          "type": "self",
+          "motivation": "The `He` function, used as a handler for navigation requests (`Ve` route), explicitly fetches `P` which is defined as `self.location.origin+\"/index.html\"`. This occurs when checking for updates or fetching the initial page for the offline fallback."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "Precaching URLs"
+          ],
+          "library": "Workbox (Precache Strategy)",
+          "type": "self",
+          "motivation": "The `p._handleInstall` method within the `CacheFirst` strategy (`p` extends `H`) used for precaching calls `t.fetch(e)`. The URLs (`e`) are iterated from the `_urlsToCacheKeys` map, which is populated by the `precache()` call (`Re` -> `D().precache(s)`). The manifest list (`ht`) provided contains relative URLs for application assets (JS, CSS, images, fonts, HTML)."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "General/Intercepted Request URLs"
+          ],
+          "library": "Workbox (Strategy Handler)",
+          "type": "self",
+          "motivation": "The core `he.fetch` method within the Workbox strategy handler (`he`) calls `fetch(n, ...)` where `n` is the Request object being handled. Similarly, `p._handleFetch` (network fallback for CacheFirst) calls `t.fetch(new Request(e,...))`. These intercept requests made by the application. While they *could* intercept any type of request (RPC, auxiliary, etc.), the service worker's primary role here, based on the routing configured (`Ve`, asset caching), is handling navigation (`self`) and asset (`self`) requests. The fetch call itself is generic within the library code."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "assets/@safe-global-CRqML-Eq.js",
+      "occurences": [
+        {
+          "name": "ethers.js",
+          "motivation": "The code extensively uses patterns and functionalities characteristic of ethers.js v5, such as:\n*   Classes like `V` (Logger), `re` (BigNumber wrapper), `xs` (FixedFormat), `Ut` (FixedNumber), `_i` (SigningKey), `Uh` (Interface), `y1` (BaseContract), `tA` (ContractFactory), `Wr` (HDNode), `Ds` (Provider), `ba` (Signer), `pp` (BaseProvider), `Bs` (JsonRpcProvider), `yp` (WebSocketProvider), `Qa` (Wallet).\n*   Utility functions for bytes manipulation (`ne`, `ae`, `lt`, `Je`), hashing (`ct`, `sp`, `To`, `ei`), RLP (`Es`, `rp`), addresses (`ut`, `b0`, `p4`), ABI encoding/decoding (`n1`, `zt`, `_n`, `Hn`), transaction handling (`Wh`, `p1`), signing (`_i`, `f1`), units (`F1`, `I1`), and JSON wallets (`w1`, `pA`, `mA`, `gA`).\n*   Importing `elliptic` (`yS`) and `bn.js` (`i0=Ke.BN`) which are core dependencies.\n*   Constants like `E4` (AddressZero) and `Xm` (HashZero).\n*   The overall structure aligns with ethers.js v5 modules (logger, bytes, bignumber, hash, address, abi, providers, contracts, wallet, etc.)."
+        },
+        {
+          "name": "@safe-global/protocol-kit or similar Safe SDK",
+          "motivation": "The code imports functionality likely related to Gnosis Safe:\n*   `Iz` is imported and used as `new Iz.default(...)` which appears to instantiate a client for the Safe Transaction Service API (`mM` class).\n*   Functions like `getTxServiceBaseUrl` (`mp.getTxServiceBaseUrl`) are present.\n*   The presence of Safe contract ABIs (`sI`, `hI`, `xI`, `BI`, `DI`, `qI`, `KI`) and related factory/library ABIs (`aO`, `lO`, `gO`, `TO`, `$O`, `VO`, `QO`, `sD`, `hD`, `xD`, `BD`, `ID`, `qD`, `lR`, `bR`, `AR`, `kR`, `zR`, `NR`, `GR`, `Tm`, `Cm`, `Bm`, `Sm`, `Pm`, `Am`, `Im`, `Om`, `Dm`, `Rm`, `jm`) strongly suggests the use of a Safe SDK."
+        },
+        {
+          "name": "fetch (native or polyfill)",
+          "motivation": "The code utilizes `fetch` for network requests:\n*   A function `sP` explicitly wraps `fetch`.\n*   The `sendRequest` function imported into `t9` uses a `fetch` import (`r.default`).\n*   Ethers.js providers (`Bs` - JsonRpcProvider) use internal helpers (`Ns`, `C1`, `sP`) that ultimately rely on `fetch` to make RPC calls.\n*   CCIP-Read functionality within ethers.js directly calls `fetch`."
+        }
+      ]
+    },
+    {
+      "file": "assets/@uniswap-C8NJp6ZI.js",
+      "occurences": [
+        {
+          "name": "Custom BigInt Implementation",
+          "motivation": "The code defines a class `f extends Array` that mimics the functionality of the native `BigInt` type. It includes static methods like `BigInt(t)`, `multiply(t, e)`, `add(t, e)`, `subtract(t, e)`, `divide(t, e)`, `remainder(t, e)`, `exponentiate(t, e)`, `leftShift(t, e)`, `signedRightShift(t, e)`, `bitwiseAnd(t, e)`, `bitwiseOr(t, e)`, `bitwiseXor(t, e)`, `asIntN(t, e)`, `asUintN(t, e)`, `toString(t)`, `toNumber(t)`, etc., along with internal helper methods starting with `__`. This suggests a polyfill or custom implementation for environments where native BigInt might not be fully supported or for specific performance characteristics."
+        },
+        {
+          "name": "Decimal.js",
+          "motivation": "The code includes variables like `ae={precision:20,rounding:4,...}` which are default configuration options for Decimal.js. It defines functions like `Wt(o)` that create a constructor whose prototype (`r.prototype=m`) is populated with methods common in Decimal.js (`absoluteValue`, `comparedTo`, `decimalPlaces`, `dividedBy`, `exp`, `ln`, `log`, `pow`, `sqrt`, `toDecimalPlaces`, `toExponential`, `toFixed`, `toPrecision`, etc.). String constants like `\"[DecimalError] \"` are also present."
+        },
+        {
+          "name": "Big.js",
+          "motivation": "The code includes a factory function `Vt()` which creates a constructor (`o`) whose prototype (`o.prototype=y`) is populated with methods characteristic of Big.js (`abs`, `cmp`, `div`, `eq`, `gt`, `gte`, `lt`, `lte`, `minus`, `mod`, `plus`, `pow`, `round`, `sqrt`, `times`, `toExponential`, `toFixed`, `toPrecision`, `toString`). It also references Big.js specific error messages like `yt=\"[big.js] \"` and configuration properties like `o.DP=ce`, `o.RM=ge`."
+        },
+        {
+          "name": "Safe Global utility (getAddress)",
+          "motivation": "The code imports `oe` from `'./@safe-global-CRqML-Eq.js'` and uses it within the `Ue` function (`try{return oe(o)}catch...`). This function `Ue` appears to be validating or checksumming an Ethereum address, a common operation when dealing with Safe contracts. The function `oe` is likely the `getAddress` utility (or a similar function) often found in Ethereum libraries like ethers.js, but here it's imported from a module named suggestive of Safe Global's libraries."
+        },
+        {
+          "name": "Uniswap Token List Schema",
+          "motivation": "The code defines constants like `Zt=\"http://json-schema.org/draft-07/schema#\"`, `Kt=\"https://uniswap.org/tokenlist.schema.json\"`, `St=\"Uniswap Token List\"`, and a detailed JSON schema structure (`It`, `ee`, `je`) matching the Uniswap Token List standard. This indicates the code likely interacts with or validates data conforming to this standard."
+        },
+        {
+          "name": "Fraction/Currency/Price classes",
+          "motivation": "The code defines classes `it` (Fraction), `ke` (CurrencyAmount extending Fraction), and `He` (Price extending Fraction). These classes manage arithmetic operations on fractional values, often representing token amounts or prices, using the BigInt/Decimal libraries. They include methods like `add`, `subtract`, `multiply`, `divide`, `toFixed`, `toSignificant`."
+        }
+      ]
+    },
+    {
+      "file": "assets/Balances-B4M-rc7U.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses `l.useMemo`, `l.useCallback`, `l.useState`, `l.useEffect`, `l.useRef` which are React hooks (minified as `l` from the import `import{r as l}from\"./@sentry-B4eJ84ct.js\";` which likely re-exports React). It also uses JSX syntax (`e.jsx`, `e.jsxs`)."
+        },
+        {
+          "name": "Wagmi / Web3 Hooks",
+          "motivation": "The code imports and uses hooks like `S` (likely `useWeb3React` or `useAccount` / `useChainId` from Wagmi/ethers based on usage like `const{chainId:t}=S()`, `const{account:t}=S()`) and `ue` (likely `useContract` from Wagmi/ethers based on usage like `const{contract:o}=ge()`, where `ge=()=>ue(z,De,!0)`)."
+        },
+        {
+          "name": "TanStack Query / React Query",
+          "motivation": "The code imports and uses `F` (likely `useQuery`) for data fetching and caching, as seen in `F(t&&n?[\"useVCowData.swappableBalanceOf\",t,n]:null,async([,f,C])=>C.swappableBalanceOf(f))`."
+        },
+        {
+          "name": "Redux Toolkit",
+          "motivation": "The code imports `Oe` (likely `useDispatch`) and `ye` (likely `useSelector`) and uses them (`const n=Oe()`, `return ye(n=>n.cowToken.swapVCowStatus)`), which are standard hooks in Redux Toolkit for state management."
+        },
+        {
+          "name": "@uniswap/sdk-core",
+          "motivation": "The code imports `V` (likely `Token`) from `'./@uniswap-C8NJp6ZI.js'` and uses it to create `Token` instances: `V.fromRawAmount(a,n.toString())`."
+        },
+        {
+          "name": "Styled Components / Emotion",
+          "motivation": "The code imports `Ne` (likely `styled`) and uses it to create styled components: `const sn=Ne.div.withConfig(...)`."
+        },
+        {
+          "name": "Ethers.js",
+          "motivation": "Although not directly imported by name, the code heavily relies on contract interactions (`o.estimateGas.swapAll`, `o.swapAll`, `d.balances(i)`, `c.claim`, `s.claim`, `h.wait()`) which are typically performed using ethers.js instances, likely configured and provided via the Wagmi/Web3 hooks."
+        }
+      ]
+    },
+    {
+      "file": "assets/browser-Cj-9sRjz.js",
+      "occurences": [
+        {
+          "name": "debug",
+          "motivation": "```markdown\nThe code implements the functionality of the popular `debug` library. Key indicators include:\n- Definition of functions like `enable`, `disable`, `enabled`, `log`, `selectColor`, `formatArgs`, `save`, `load`, `useColors`, `storage`, `humanize`.\n- Use of namespaces for selective logging (`function t(e){... l.namespace=e ...}`).\n- Interaction with `localStorage` (`s.storage.setItem(\"debug\", o)`) to persist debug settings.\n- Formatting log output with colors and time differences (`formatArgs`, `humanize`, `t.colors`).\n- The overall structure, including the `O()` function and the IIFE wrapping the browser-specific logic (`(function(i,s){...})(v,v.exports)`), closely matches the standard browser build of the `debug` package.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Bms7DzC8.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "```javascript\nimport{r as R,R as E}from\"./@sentry-B4eJ84ct.js\";\n// ...\nfunction G(s,A){R.useEffect(()=>{/*...*/},[])}\n// ...\nfunction z(){\n  const[s,A]=R.useState(!0)\n  // ...\n  R.useEffect(()=>{/*...*/},[])\n  // ...\n  return E.createElement(\"div\",{/*...*/})\n}\n```\n The code imports `R` and `E`. `R.useEffect` and `R.useState` are standard React hooks. `E.createElement` is the underlying function often used by JSX transpilation in React."
+        },
+        {
+          "name": "Styled Components",
+          "motivation": "```javascript\nimport{gk as k,l as T,ff as F,eZ as v,fq as x}from\"./index-hcE3Ipwo.js\";\n// ...\nconst b=v(x).withConfig({displayName:\"CowRunner__Wrapper\",componentId:\"sc-vh8j49-0\"})([\"min-height:initial;.icon-offline{display:none;}h1,p{text-align:center;}\",\"{h1{animation:blinker 0.6s cubic-bezier(1,0,0,1) infinite alternate;}}@keyframes blinker{to{opacity:0;}}\"],F);\n```\nThe code uses a pattern `v(x).withConfig({...})([...])` where `v` and `x` are imported. This pattern, especially with `.withConfig` and tagged template literals for CSS, is characteristic of CSS-in-JS libraries like Styled Components or Emotion. The `componentId` starting with `sc-` strongly suggests Styled Components."
+        },
+        {
+          "name": "Sentry",
+          "motivation": "```javascript\nimport{r as R,R as E}from\"./@sentry-B4eJ84ct.js\";\n```\nThe code explicitly imports from a file named `./@sentry-B4eJ84ct.js`, clearly indicating the inclusion of the Sentry error tracking library, likely bundled into this local file."
+        },
+        {
+          "name": "Chrome T-Rex Runner Game Logic",
+          "motivation": "```javascript\nclass d{/* Cloud logic */}\nclass I{/* DistanceMeter logic */}\nclass B{/* GameOverPanel logic */}\nclass U{/* Horizon logic */}\nclass m{/* HorizonLine logic */}\nclass r{/* NightMode logic */}\nclass p{/* Obstacle logic */}\nclass o{/* Trex logic */}\nlet l=class n{/* Runner logic */}\nwindow.Runner=l;\n```\nA large portion of the code defines classes (`Runner`, `Trex`, `Horizon`, `Obstacle`, `DistanceMeter`, `Cloud`, `NightMode`, `GameOverPanel`, etc.) and functions that replicate the gameplay mechanics, graphics rendering (using Canvas API), and state management of the offline Chrome Dinosaur game (T-Rex Runner). It references sprite sheets (`Runner.imageSprite`, `Runner.spriteDefinition`) and game configurations (`Runner.config`, `o.config`, etc.)."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-C2aZCUBl.js",
+      "occurences": [
+        {
+          "name": "@coinbase/wallet-sdk",
+          "motivation": "```javascript\nimport{c as L}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nvar ft={};\n// ...\nconst t=Pl(),e=Dl(),n=Ai(),i=n0(),s=gv(),o=mv(),a=Oe(),h=r.LINK_API_URL||\"https://www.walletlink.org\",l=r.SDK_VERSION||Tv.version||\"unknown\";\nlet g=class El{\n    constructor(c){\n        // ... uses CoinbaseWalletSDK internal classes and logic\n    }\n    makeWeb3Provider(c=\"\",u=1){\n        // ... returns provider, potentially from this SDK\n    }\n    // ... other SDK methods\n};\nft.CoinbaseWalletSDK=g;\n// ...\nconst ry=Ll({__proto__:null,get CoinbaseWallet(){return Cl},default:sr},[sr]);\nexport{ry as i};\n```\nIdentified classes like `CoinbaseWalletSDK` (in `ft`), `CoinbaseWalletProvider` (in `gt`), `WalletSDKConnection` (in `Zt`), `WalletSDKRelayEventManager` (in `er`), `WalletSDKUI` (in `Lt`) and usage of WalletLink specific logic and URLs (`linkAPIUrl`). The code structure heavily relies on internal components typical of this SDK."
+        },
+        {
+          "name": "@web3-react/coinbase-wallet",
+          "motivation": "```javascript\nimport{d as Il}from\"./index-hcE3Ipwo.js\";\n// ...\nconst Dv=Il;\n// ...\nclass Bv extends Dv.Connector{\n    // ... Connector implementation specific to Coinbase Wallet\n}\nCl=sr.CoinbaseWallet=Bv;\n```\nThe main connector class `Bv` extends `Dv.Connector`. `Dv` is imported as `Il` from `./index-hcE3Ipwo.js`, which corresponds to `@web3-react/types` or `@web3-react/core`. The connector `Bv` is then assigned to `sr.CoinbaseWallet`, indicating it's the `@web3-react/coinbase-wallet` connector implementation."
+        },
+        {
+          "name": "@web3-react/core",
+          "motivation": "```javascript\nimport{d as Il}from\"./index-hcE3Ipwo.js\";\n// ...\nconst Dv=Il;\n// ...\nclass Bv extends Dv.Connector{\n    // ... Connector implementation\n}\n```\nThe base `Connector` class (`Dv.Connector`) used by `@web3-react/coinbase-wallet` (class `Bv`) likely originates from `@web3-react/core` or its associated types package (`@web3-react/types`) imported as `Il`."
+        },
+        {
+          "name": "rxjs",
+          "motivation": "```javascript\nconst r=en,t=Cs;\n// ...\nthis.dappDefaultChainSubject=new o.BehaviorSubject(1)\n// ...\nthis.subscriptions.add(S.incomingEvent$.pipe((0,a.filter)(R=>R.event===\"Web3Response\")).subscribe({next:this.handleIncomingEvent}))\n// ... many more uses of pipe, operators (filter, skip, map, mergeMap, flatMap, catchError, timeoutWith, retry, distinctUntilChanged, switchMap, take, tap), Subjects, and Subscriptions\n```\nExtensive use of `rxjs` classes (`BehaviorSubject`, `Subject`, `Subscription`, `Observable`, `ReplaySubject`, `timer`, `iif`, `from`, `of`, `throwError`, `empty`) and pipeable operators (`filter`, `skip`, `map`, `mergeMap`, `flatMap`, `catchError`, `timeoutWith`, `retry`, `distinctUntilChanged`, `switchMap`, `take`, `tap`, `timeoutWith`) imported via `en` and `Cs` modules."
+        },
+        {
+          "name": "semver",
+          "motivation": "```javascript\nimport{ab as he,ac as ur,ad as Vc,ae as ke,af as Hi,ag as $i,ah as Jr,ai as Hc,aj as $c,ak as zc,al as Al,am as Tl,an as Nl,ao as Ol,ap as jl}from\"./@safe-global-CRqML-Eq.js\";\n// ... inside lh() function (imported via oi)\nparse:i,valid:s,clean:o,inc:a,diff:h,major:l,minor:g,patch:d,prerelease:c,compare:u,rcompare:f,compareLoose:m,compareBuild:b,sort:w,rsort:p,gt:v,lt:_,eq:E,neq:C,gte:y,lte:S,cmp:k,coerce:R,Comparator:M,Range:T,satisfies:N,toComparators:j,maxSatisfying:I,minSatisfying:x,minVersion:O,validRange:B,outside:V,gtr:J,ltr:pe,intersects:z,simplifyRange:ie,subset:ue,SemVer:e\n// ... used in On module (dh)\n```\nImported functions like `compare` (`ur`), `satisfies` (`Jr`), `gt` (`Hi`), `gtr` (`sh`), `valid` (`Wd`), `validRange` (`ih`), `SemVer` (`he`), etc., typically used for version comparisons. These are bundled within `./@safe-global-CRqML-Eq.js` and re-exported/used in the `lh` module."
+        },
+        {
+          "name": "superstruct",
+          "motivation": "```javascript\nimport{a as at,y as Vi}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nconst Ge=at(Nd);\n// ...\nconst r=Ge;\n// ...\n(0,r.assert)(l,g)\n(0,r.is)(l,r.HexStruct)\n(0,e.assertStruct)(E,r.JsonRpcNotificationStruct)\n// ... extensive use of struct definitions (string(), number(), object(), pattern(), size(), refine(), coerce(), define(), etc.)\n```\nImported via `at` from `./@1inch-gxWjkVZZ.js` and used extensively for schema validation with functions like `assertStruct`, `is`, `define`, `coerce`, `create`, `refine`, `pattern`, `size`, `object`, `string`, `number`, `optional`, etc."
+        },
+        {
+          "name": "preact",
+          "motivation": "```javascript\nconst r=ce,t=vr;\n// ...\nconst i=s=>{const[o,a]=(0,t.useState)(\"\");return(0,t.useEffect)(()=>{/*...*/}),o?(0,r.h)(\"img\",{src:o,alt:\"QR Code\"}):null};\n// ...\n(0,n.render)((0,n.h)(\"div\",null,(0,n.h)(r.SnackbarContainer,{/*...*/})),this.root)\n```\nDetected UI rendering functions `h` (imported as `Ni` initially, then used via `ce`), `render` (`xu`) and hooks like `useState` (`ul`), `useEffect` (`wp`), `useCallback` (`Cp`) within UI components like `ConnectDialog`, `Snackbar`, `QRCode` (imported via `ce` and `vr`)."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "```javascript\nimport{b as Ur}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nconst t=r(Ur);\n// ...\n(0,l.ensureBN)(p.value)\nnew e.default(0) // where e is bn.js\n```\nImported via `Ur` from `./@1inch-gxWjkVZZ.js` and used for BigNumber operations, specifically through `ensureBN` helper and direct instantiation `new e.default(...)`."
+        },
+        {
+          "name": "buffer",
+          "motivation": "```javascript\nimport{j as H}from\"./@1inch-gxWjkVZZ.js\";\n// ...\n(0,l.ensureBuffer)(p.data)\nH.from(I,\"utf8\")\nH.allocUnsafe(d)\n```\nImported via `H` from `./@1inch-gxWjkVZZ.js` and used for buffer operations like `H.from`, `H.allocUnsafe`, `H.isBuffer`."
+        },
+        {
+          "name": "sha.js",
+          "motivation": "```javascript\nimport{a as at,y as Vi,x as Rl}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nthis._key=new r.sha256().update(`${this._id}, ${this._secret} WalletLink`).digest(\"hex\") // where r is Rl (sha.js)\n```\nImported via `Rl` from `./@1inch-gxWjkVZZ.js` and used for SHA hashing: `new r.sha256()`."
+        },
+        {
+          "name": "keccak",
+          "motivation": "```javascript\nimport{k as kl}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nr(\"keccak\"+c).update(d).digest() // where r is kl (keccak)\n```\nImported via `kl` from `./@1inch-gxWjkVZZ.js` and used for Keccak hashing: `r(\"keccak\"+c)...`."
+        },
+        {
+          "name": "qs",
+          "motivation": "```javascript\nimport{r as Ml}from\"./index-CWce9Gt8.js\";\n// ...\nconst e=Vl(),\n// ... inside Vl()\nvar r=ql(),t=Wl(),e=Zi();return mn={formats:e,parse:t,stringify:r}\n// ...\nconst z=(0,e.stringify)({[pe]:I,secret:x,server:O,v:V,chainId:J});\n```\nImported via `Vl` module (which includes `ql` and `Wl` referencing `./index-CWce9Gt8.js`) and used for query string stringifying: `(0,e.stringify)(...)` in the `createQrUrl` function."
+        },
+        {
+          "name": "debug",
+          "motivation": "```javascript\nimport{b as xl}from\"./browser-Cj-9sRjz.js\";\n// ...\nconst e=(0,r(xl).default)(\"metamask\");\n```\nImported via `xl` from `./browser-Cj-9sRjz.js` and used to create namespaced debuggers: `(0,r(xl).default)(\"metamask\")`."
+        },
+        {
+          "name": "events",
+          "motivation": "```javascript\nimport{n as Wc}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nclass n extends r.EventEmitter // where r is Wc\n// ...\nlet b=class extends t.default // where t is Qr, which wraps Wc\n```\nNode.js 'events' module polyfill or similar (`EventEmitter`) imported via `Wc` from `./@1inch-gxWjkVZZ.js` and used as a base class for multiple classes like `CoinbaseWalletProvider`."
+        },
+        {
+          "name": "eth-rpc-errors / @metamask/rpc-errors",
+          "motivation": "```javascript\nconst i=Gr(),\n// ...\nthrow i.standardErrors.provider.unauthorized({})\n// ...\nconst t=Fl(),e=Gi(),n=Qc();\n// ...\nconst e=Eh();\n```\nDetected usage of standardized Ethereum RPC errors and codes (`Gr`, `Fl`, `Ui`, `errorCodes`, `ethErrors`, `serializeError`, `standardErrors`, `standardErrorCodes`, `getMessageFromCode`) imported via helper modules (`Gr`, `cn`, `un`, `ci` etc.)."
+        },
+        {
+          "name": "eth-block-tracker",
+          "motivation": "```javascript\nconst r=En;\n// ...\nconst t=r(Yi()),e=r(Jl()),n=Xc(),i=fh(),s=(0,i.createModuleLogger)(i.projectLogger,\"polling-block-tracker\"),o=(0,t.default)(),a=1e3;\nlet h=class extends n.BaseBlockTracker\n// ...\nconst t=r(Yi()),e=Xc(),n=(0,t.default)();\nlet i=class extends e.BaseBlockTracker\n```\nDetected block tracker classes `PollingBlockTracker` (in `St`) and `SubscribeBlockTracker` (in `kt`), inheriting from `BaseBlockTracker` (`Xc`), imported via `En`."
+        },
+        {
+          "name": "json-rpc-engine",
+          "motivation": "```javascript\nconst {createAsyncMiddleware:t,createScaffoldMiddleware:e}=pu();\n// ...\nconst r=fu();\n// ...\nlet n=class Me extends t.default // where t is wh (EventEmitter)\n// ...\nconst t=Ot; // where Ot imports fu (JsonRpcEngine)\n```\nDetected `JsonRpcEngine` class (in `fu`) and middleware patterns (`createAsyncMiddleware`, `createScaffoldMiddleware`, `mergeMiddleware`) imported via `ci` (`pu`)."
+        },
+        {
+          "name": "@metamask/eth-sig-util",
+          "motivation": "```javascript\nconst r=Yc(),t=Hl(),e={/*...*/},n={/*...*/},i=(/*...*/);\n// ...\nwn={TYPED_MESSAGE_SCHEMA:e,TypedDataUtils:n,hashForSignTypedDataLegacy:function(s){return i(s.data)},hashForSignTypedData_v3:function(s){return n.hash(s.data,!1)},hashForSignTypedData_v4:function(s){return n.hash(s.data)}};\n// ...\nconst E=g.default.hashForSignTypedData_v4({data:_}); // where g is $l\n```\nDetected `TypedDataUtils` and related functions (`hashForSignTypedDataLegacy`, `hashForSignTypedData_v3`, `hashForSignTypedData_v4`) used for signing typed data, imported/defined within the `$l` module (`wn`)."
+        },
+        {
+          "name": "tslib",
+          "motivation": "```javascript\nimport{y as Vi}from\"./@1inch-gxWjkVZZ.js\";\n// ...\nvar Xe=L&&L.__awaiter||function(r,t,e,n){ ... };\nvar ji=function(r,t){return ji=Object.setPrototypeOf|| ... };\n```\nImported via `Vi` and used for TypeScript helper functions like `__awaiter`, `__generator`, `__importDefault`, `__decorate`, `__classPrivateFieldSet`, `__classPrivateFieldGet`, `__createBinding`, `__exportStar`."
+        },
+        {
+          "name": "semaphore",
+          "motivation": "```javascript\nconst r=Ih().Mutex,\n// ...\nconst w=new r\n// ...\nconst t=bu(); // default export is Semaphore\n```\nDetected `Mutex` and `Semaphore` classes used for concurrency control, imported via `di` (`Ih`, `bu`)."
+        },
+        {
+          "name": "@metamask/utils",
+          "motivation": "```javascript\nconst r=hh(); // Imports utils\n// ...\nconst t=Kr(); // Hex utils\n// ...\nconst e=uu(); // Bytes utils\n// ...\nconst r=xn(); // JSON RPC utils\n```\nDetected utility functions like `assertIsHexString`, `bytesToHex`, `stringToBytes`, `assertIsBytes`, `hexToBytes`, `add0x`, `remove0x`, JSON-RPC validation structs (`JsonRpcRequestStruct`, `JsonRpcResponseStruct`), assertion utils (`assert`, `assertStruct`) bundled within `./index-CWce9Gt8.js` -> `In` (`hh` function)."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-C4szzBLZ.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses `i.jsxs` and `i.jsx` which are standard outputs from JSX transpilation (like Babel) targeting the React runtime. `i` is likely an alias for the React module."
+        },
+        {
+          "name": "styled-components",
+          "motivation": "The code uses `o(r).withConfig({displayName:..., componentId:...})([...])`. This pattern, especially `withConfig`, `displayName`, and `componentId`, is characteristic of the `styled-components` library for creating styled React components (`o` likely being `styled` and `r` a base element/component)."
+        },
+        {
+          "name": "Sentry",
+          "motivation": "The code explicitly imports a module with `@sentry` in its path: `import \"./@sentry-B4eJ84ct.js\";`. This indicates the inclusion and potential use of the Sentry error tracking library."
+        },
+        {
+          "name": "Uniswap SDK/Components",
+          "motivation": "The code explicitly imports a module with `@uniswap` in its path: `import \"./@uniswap-C8NJp6ZI.js\";`. This indicates the inclusion of code related to the Uniswap protocol, likely the SDK or related UI components."
+        },
+        {
+          "name": "1inch SDK/Components",
+          "motivation": "The code explicitly imports a module with `@1inch` in its path: `import \"./@1inch-gxWjkVZZ.js\";`. This indicates the inclusion of code related to the 1inch Network, likely their aggregation protocol SDK."
+        },
+        {
+          "name": "Web3 Library (e.g., ethers.js/web3.js)",
+          "motivation": "The code explicitly imports a module with `web3` in its path: `import \"./web3-BVRPY3DS.js\";`. This signifies the use of a Web3 library for interacting with Ethereum or compatible blockchains."
+        },
+        {
+          "name": "Safe{Core} SDK",
+          "motivation": "The code explicitly imports a module with `@safe-global` in its path: `import \"./@safe-global-CRqML-Eq.js\";`. This indicates the use of the Safe{Core} SDK for interacting with Safe smart accounts."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-CWce9Gt8.js",
+      "occurences": [
+        {
+          "name": "get-intrinsic",
+          "motivation": "The code utilizes imported functions `jt` (aliased from `D`) and `te` (aliased from `E`). The `jt` function is used with strings like `\"%TypeError%\"`, `\"%WeakMap%\"`, and `\"%Map%\"`. This specific `%IntrinsicName%` syntax is the signature way the `get-intrinsic` library retrieves JavaScript intrinsic objects safely.\n```javascript\nvar w=jt() // w assigned from imported jt\n// ...\nN=w(\"%TypeError%\"),\nS=w(\"%WeakMap%\",!0),\nh=w(\"%Map%\",!0),\n```"
+        },
+        {
+          "name": "object-inspect",
+          "motivation": "The code contains a detailed object inspection implementation within the `ot` function. It handles various JavaScript types (primitives, Objects, Arrays, Maps, Sets, WeakMaps, WeakSets, Dates, Errors, RegExp, BigInt, Symbols, DOM Nodes), detects circular references, respects custom inspection functions (`X.custom`, `e.inspect`), and supports formatting options like `depth`, `quoteStyle`, `maxStringLength`, `indent`, and `numericSeparator`. This functionality closely mirrors the features and behavior of the `object-inspect` library.\n```javascript\nvar X=bt // bt is imported as t\n// ...\nst=X.custom // Checks for a custom inspect symbol\n// ...\n// Handles options:\nm(r,\"quoteStyle\")\nm(r,\"maxStringLength\")\nm(r,\"customInspect\")\nm(r,\"indent\")\nm(r,\"numericSeparator\")\n// ...\n// Handles various types like Array, Error, Map, Set, WeakMap, WeakSet, Number, BigInt, Boolean, String, Symbol, Date, RegExp\nif(Y(e)){ /* Array */ }\nif(Dt(e)){ /* Error */ }\nif(Gt(e)){ /* Map */ }\nif(Vt(e)){ /* Set */ }\nif(xt(e))return Z(\"WeakMap\");\nif(Jt(e))return Z(\"WeakSet\");\n// ... etc.\n```"
+        },
+        {
+          "name": "side-channel",
+          "motivation": "The code defines a function `ne` that returns an object (`P`) implementing `assert`, `get`, `has`, and `set` methods. This object acts as a side channel, associating data with objects without modifying them, using `WeakMap` if available, falling back to `Map`, and further falling back to a simple linked-list structure attached to a dummy object if neither is available. It uses the identified `get-intrinsic` mechanism (`jt`, `te`) to access Map/WeakMap methods. This pattern is the exact implementation provided by the `side-channel` library.\n```javascript\n// ft is the core implementation returned by ne\nft=function(){ \n  // ... uses WeakMap (S) or Map (h) obtained via get-intrinsic (w/jt)\n  if(S&&o&&(typeof o==\"object\"||typeof o==\"function\")){\n    if(l)return q(l,o) // q is WeakMap.prototype.get\n  }else if(h){\n    if(f)return M(f,o) // M is Map.prototype.get\n  }else if(a)return H(a,o) // H is custom getter for fallback\n  // ... similar logic for set and has\n}\nreturn P // The side channel object\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Crmx8Hsn.js",
+      "occurences": [
+        {
+          "name": "1inch-related Library",
+          "motivation": "Code imports a function `g` as `f` from a file named `./@1inch-gxWjkVZZ.js`. The file name strongly suggests it's related to the 1inch Network/protocol."
+        },
+        {
+          "name": "Build/Framework Utility",
+          "motivation": "Code imports a function `g5` as `s` from `./index-hcE3Ipwo.js`. This appears to be a utility or part of the application's core logic or framework, likely generated during the build process, as indicated by the hashed filename."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Dr7Q3zSY.js",
+      "occurences": [
+        {
+          "name": "Trezor Connect",
+          "motivation": "```markdown\nThe code explicitly imports and uses functions and constants related to Trezor Connect (`connect.trezor.io`, `TrezorError`, `ERROR_CODES`, `IFRAME.INIT`, `POPUP.LOADED`, `trezor-webusb-button`, methods like `cardanoGetAddress`, `ethereumGetAddress`, `signTransaction`, `requestLogin`, etc.). It sets up communication with an iframe/popup hosted potentially on `connect.trezor.io` and handles messages specific to the Trezor Connect protocol.\n```"
+        },
+        {
+          "name": "EventEmitter",
+          "motivation": "```markdown\nThe code initializes an object `f` using `new i.default` (where `i` is imported via `e.__importDefault(Vn)`). It then uses standard EventEmitter methods like `.on`, `.off`, `.emit`, and `.removeAllListeners` on this object `f` to handle events (`DEVICE_EVENT`, `TRANSPORT_EVENT`, `UI_EVENT`, `POPUP.CLOSED`). This indicates the use of an EventEmitter pattern, likely Node's built-in module or a compatible library bundled/polyfilled for the browser.\n```"
+        },
+        {
+          "name": "tslib",
+          "motivation": "```markdown\nThe code includes helper functions like `__extends`, `__assign`, `__awaiter`, `__generator`, `__importStar`, `__importDefault` which are standard TypeScript runtime helpers, typically bundled via the `tslib` library during compilation from TypeScript to JavaScript.\n```"
+        },
+        {
+          "name": "Buffer Polyfill/Shim",
+          "motivation": "```markdown\nThe code imports `pr` from `./@1inch-gxWjkVZZ.js` and uses it like `pr.alloc(...)` and in functions like `Ei` (`reverseBuffer`), which mirrors the Node.js `Buffer` API. This suggests a polyfill or shim for the `Buffer` object is included for browser compatibility.\n```"
+        },
+        {
+          "name": "1inch Utility/Internal Library",
+          "motivation": "```markdown\nMultiple core functionalities (EventEmitter, Buffer shim, tslib helpers) are imported from a single file named `./@1inch-gxWjkVZZ.js`. This suggests the presence of an internal utility library or a bundle created by tooling associated with 1inch.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-S2O8G2mk.js",
+      "occurences": [
+        {
+          "name": "1inch Library/Utilities",
+          "motivation": "```markdown\nThe code imports functions (`g` aliased as `f`) from a file named `./@1inch-gxWjkVZZ.js`. The `@1inch` prefix in the filename strongly suggests the use of a library or utility code associated with the 1inch Network.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/index-hcE3Ipwo.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "Code imports `reactExports`, `React$2`, `React$3` and uses JSX syntax (`jsxProd`, `jsxRuntimeExports.jsx`, `jsxRuntimeExports.jsxs` calls)."
+        },
+        {
+          "name": "React Router",
+          "motivation": "Imports functions and components like `useLocation`, `useNavigate`, `useParams`, `HashRouter`, `Link`, `NavLink`, `Outlet`, `Route`, `Routes` from the React Router library, bundled within the code."
+        },
+        {
+          "name": "React Redux",
+          "motivation": "Uses functions like `useDispatch`, `useSelector`, `Provider` from React Redux, likely bundled or re-exported."
+        },
+        {
+          "name": "Redux Toolkit",
+          "motivation": "Imports functions like `createSlice`, `createAction`, `createReducer`, `configureStore`, `getDefaultMiddleware`, `isAnyOf` which are characteristic of Redux Toolkit."
+        },
+        {
+          "name": "Sentry",
+          "motivation": "Imports Sentry-specific functions like `captureException`, `init`, `BrowserTracing`, `configureScope` and uses `ErrorBoundary$1` from the `@sentry-B4eJ84ct.js` bundle."
+        },
+        {
+          "name": "Styled Components",
+          "motivation": "Imports `styled` from `styledComponents_browser_esm` (a bundled version) and uses tagged template literals (`_styled$1.div`, `_styled$1.button`, etc.) for styling."
+        },
+        {
+          "name": "Styled System",
+          "motivation": "Imports functions like `compose`, `space`, `typography`, `color`, `layout`, `flexbox`, `border`, `background`, `position` from `require$$2` (likely `@styled-system/theme-get` or similar styled-system utilities) and uses them within styled components."
+        },
+        {
+          "name": "Uniswap SDK Core",
+          "motivation": "Imports classes like `Token$1`, `Fraction`, `Percent`, `CurrencyAmount`, `Price`, `TradeType$2` from the `@uniswap-C8NJp6ZI.js` bundle, which are core components of the Uniswap SDK."
+        },
+        {
+          "name": "Safe Core SDK",
+          "motivation": "Imports modules like `SafeApiKit`, `Web3Provider$1` (likely `safe-ethers-lib`), `Wallet` from the `@safe-global-CRqML-Eq.js` bundle. Uses `GnosisSafe` connector from `@web3-react/gnosis-safe`."
+        },
+        {
+          "name": "Ethers.js",
+          "motivation": "Imports classes like `Contract`, `Interface`, `BigNumber$1`, `JsonRpcProvider`, `Wallet` and functions like `getAddress$1`, `getAddress`, `keccak256`, `defaultAbiCoder`, `serializeTransaction`, `verifyTypedData` from `@safe-global-CRqML-Eq.js` and other bundles, which are characteristic of Ethers.js (likely used internally or re-exported by Safe SDK)."
+        },
+        {
+          "name": "web3-react",
+          "motivation": "The code imports and uses connectors (`GnosisSafe`, `Network`, `MetaMaskSDK`, `WalletConnectV2`, `Injected`, `CoinbaseWallet`) and hooks (`initializeConnector`, `useWeb3React`) from a bundled version of `@web3-react` libraries."
+        },
+        {
+          "name": "graphql-request",
+          "motivation": "The code bundles `graphql-request` (in variable `dist$b`) which is used for making GraphQL API calls, specifically seen for interacting with The Graph subgraphs via a `GraphQLClient` instance."
+        },
+        {
+          "name": "graphql-ws",
+          "motivation": "The code bundles `graphql-ws` (imported via `requireGraphqlWs`) used for establishing WebSocket connections for GraphQL subscriptions, although no active usage is directly visible in the provided snippet."
+        },
+        {
+          "name": "Ajv",
+          "motivation": "Files named `ajv-CMpqBxKx.js` and `ajv-C5IVenln.js` are imported, indicating the use of the Ajv JSON schema validator, used for validating AppData JSON schemas."
+        },
+        {
+          "name": "merkletreejs",
+          "motivation": "Code related to Merkle trees, specifically `StandardMerkleTree` found in the `dist$a` bundle, suggests usage of a library like `merkletreejs` for Merkle proof generation or verification (e.g., for airdrops)."
+        },
+        {
+          "name": "@cowprotocol/contracts",
+          "motivation": "The code bundles `@cowprotocol/contracts` (in variable `esm$1`), exporting functions and classes like `Api`, `SettlementEncoder`, `signOrder`, `domain`, etc., used for interacting with the CoW Protocol."
+        },
+        {
+          "name": "@cowprotocol/app-data",
+          "motivation": "Uses classes and functions like `MetadataApi`, `generateAppDataDoc`, `appDataToCid`, `stringifyDeterministic` from the `dist$9` bundle, likely originating from `@cowprotocol/app-data` for handling order metadata."
+        },
+        {
+          "name": "@cowprotocol/token-lists",
+          "motivation": "Imports and uses functions like `validateTokenList`, `fetchTokenList`, `getTokenLogoUrls` and constants related to token lists (e.g., `DEFAULT_TOKENS_LISTS`), suggesting interaction with token list standards and fetching."
+        },
+        {
+          "name": "Jotai",
+          "motivation": "Uses Jotai's state management functions like `atom`, `useAtom`, `useAtomValue`, `useSetAtom`, `atomWithStorage`, `atomWithReset`, `atomWithDefault` extensively throughout the application state management logic."
+        },
+        {
+          "name": "SWR",
+          "motivation": "Uses the `useSWR` hook for data fetching and caching, particularly for fetching token lists, ENS data, balances, and allowances."
+        },
+        {
+          "name": "immer",
+          "motivation": "The code includes the `immer` library (variable `fn`), commonly used with Redux Toolkit for simplifying immutable state updates."
+        },
+        {
+          "name": "qs",
+          "motivation": "Imports the `qs` library (variable `qs`) for query string parsing and stringifying, used in the GraphQL client and CMS client."
+        },
+        {
+          "name": "openapi-fetch",
+          "motivation": "Uses a bundled version of `openapi-fetch` (within `lib$1`) to create the `CmsClient` for interacting with the CoW CMS API."
+        },
+        {
+          "name": "whatwg-fetch",
+          "motivation": "The code includes a polyfill section for the `fetch` API, likely from the `whatwg-fetch` library, providing fetch functionality in older environments via `XMLHttpRequest`."
+        },
+        {
+          "name": "react-feather",
+          "motivation": "Imports various icon components like `AlertCircle`, `ArrowDown`, `CheckCircle`, `X`, `Copy`, `Settings`, `ExternalLink` directly by name, which is characteristic of the `react-feather` icon library."
+        },
+        {
+          "name": "react-inlinesvg",
+          "motivation": "Imports and uses the `InlineSVG` component from a bundled version (`imageExternal`), used for rendering SVG images inline."
+        },
+        {
+          "name": "ethersproject/abi",
+          "motivation": "Uses `defaultAbiCoder` extensively for ABI encoding and decoding, originating from Ethers.js or its sub-packages like `@ethersproject/abi`."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-mI2QZVJi.js",
+      "occurences": [
+        {
+          "name": "Lit",
+          "motivation": "The code uses `LitElement` (imported as `E` which extends `_t`, itself extending `HTMLElement`), decorators like `@T` (for `customElements.define`), `@A` (for properties), `@W` (for state), and Lit's templating syntax (`f\\```, `B\\```, `O\\```). It also references `litElementVersions`, `litHtmlVersions`, and `reactiveElementVersions`."
+        },
+        {
+          "name": "@web3modal/ui",
+          "motivation": "The code defines numerous custom elements prefixed with `wcm-` (e.g., `wcm-modal`, `wcm-button`, `wcm-text`, `wcm-qrcode`, `wcm-wallet-button`, `wcm-connect-wallet-view`, etc.), which are characteristic of Web3Modal's UI components. It heavily utilizes WalletConnect concepts and state management (`Mt.state`, `Y.state`, `vt.state`, `H`, `P`, `C`, `be`) imported from other modules within the Web3Modal bundle."
+        },
+        {
+          "name": "motion-one",
+          "motivation": "The code imports and uses animation functions like `wt` (likely `animate`), references animation concepts like `duration`, `delay`, `easing`, `playState`, `currentTime`, and uses `performance.now()` and `requestAnimationFrame` within animation logic (like in the `Yr` class), which are typical of the `motion-one` library."
+        },
+        {
+          "name": "QR Code Generation Library",
+          "motivation": "The code contains extensive logic for QR code generation, including modules for different encoding modes (Numeric, Alphanumeric, Byte, Kanji - `ct`, `Zi`, `Ki`, `Gi`, `ts`), error correction levels (`Re`), version calculations (`ln`), polynomial math (`sn`), and rendering logic (`ae`, `tn`, `gn`, `fn`, `jo`). The variable `ae` is used to call methods like `create`, `toCanvas`, `toDataURL`, and `toString`, suggesting a dedicated QR code library (potentially `node-qrcode` or similar, bundled)."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-wvmzXT2c.js",
+      "occurences": [
+        {
+          "name": "@noble/hashes",
+          "motivation": "The code includes implementations or wrappers for various hashing algorithms like SHA256 (`Br.sha256`), SHA224 (`Br.sha224`), Keccak variants (`he.keccak_224`, `he.keccak_256`, etc.), and HMAC (`Ii.hmac`). It uses utility functions common in Noble libraries like `rotr`, `toBytes`, `bytesToHex`, `wrapConstructor`. The structure of hash classes (`Jr.SHA2`, `he.Keccak`) resembles the Noble libraries."
+        },
+        {
+          "name": "@noble/curves",
+          "motivation": "The code contains extensive elliptic curve cryptography operations, specifically for secp256k1 (`li.secp256k1`). It defines field arithmetic (`Dt.Field`, `Dt.FpPow`), point operations (`Hn.weierstrassPoints`, `ProjectivePoint` class with `add`, `double`, `multiply`), ECDSA/Schnorr signature logic (`t.schnorr`, `o`, `u`, `d`), and utilities like `validateObject`, `bytesToNumberBE`, `numberToBytesBE`, `hashToPrivateScalar`, `mapToCurveSimpleSWU` which are characteristic of the `@noble/curves` library."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The code includes a large section (`Vn.exports`) implementing arbitrary-precision integer arithmetic. It defines a class (`a`) with methods like `iadd`, `isub`, `imul`, `divmod`, `red`, `toRed`, `fromRed`, `mont`, `egcd`, `invm`, `pow`, bitwise operations, and number conversions (`toString`, `toNumber`, `toArrayLike`). This structure and the specific method names strongly suggest the `bn.js` library is embedded or polyfilled."
+        },
+        {
+          "name": "ethereumjs-util / @ethereumjs/util",
+          "motivation": "The code includes functions for Ethereum address manipulation (`qn.isValidAddress`, `qn.toChecksumAddress`, `qn.privateToAddress`, `qn.publicToAddress`, `qn.generateAddress`, `qn.generateAddress2`), RLP encoding/decoding (`Ge.RLP`), Keccak-256 hashing (`Ke.keccak256`), handling Ethereum types like `Account` (`qn.Account`) and `Address` (`qr.Address`), and various buffer/hex utilities (`vr` object, e.g., `toBuffer`, `bufferToHex`, `bufferToBigInt`, `setLengthLeft`). These functionalities are core to `ethereumjs-util`."
+        },
+        {
+          "name": "eth-sig-util",
+          "motivation": "The code implements EIP-712 typed data signing (`Ji.signTypedData`, `Ji.recoverTypedSignature`, `Ji.TypedDataUtils`, `Ji.SignTypedDataVersion`). It includes functions for hashing typed data (`Ji.typedSignatureHash`, `t.TypedDataUtils.eip712Hash`), handling different versions (`V1`, `V3`, `V4`), encoding data structures, and recovering signers. It also includes personal signing methods (`lr.personalSign`, `lr.recoverPersonalSignature`). These are the primary features of `eth-sig-util`."
+        },
+        {
+          "name": "Buffer",
+          "motivation": "The code frequently uses `Buffer` operations like `yt.from`, `yt.isBuffer`, `yt.concat`, `yt.byteLength`, and buffer instance methods like `copy`, `slice`, `toString('hex')`, `fill`. This indicates the use of the Node.js Buffer API, possibly polyfilled for browser environments (the `yt` alias seems to point to buffer-related functions)."
+        },
+        {
+          "name": "nacl / tweetnacl",
+          "motivation": "The code includes cryptographic functions related to Curve25519, Salsa20, and Poly1305 (`rf.exports`). Specifically, it references `crypto_secretbox`, `crypto_secretbox_open`, `crypto_box`, `crypto_box_open`, `crypto_scalarmult`, `crypto_sign`, `crypto_sign_open`, and associated constants (`crypto_secretbox_KEYBYTES`, `crypto_box_PUBLICKEYBYTES`, etc.). This is characteristic of the NaCl library or its JavaScript port, `tweetnacl-js`. The `ze` object wraps this functionality for encryption/decryption (`encrypt`, `decrypt`) using the `x25519-xsalsa20-poly1305` algorithm."
+        },
+        {
+          "name": "url",
+          "motivation": "The code contains URL parsing logic within the `Xo` function (assigned to `gr`), including methods like `parse`, `format`, `resolve`, `resolveObject`, and handling of protocol, host, pathname, search, hash, etc. This mirrors the functionality of the Node.js `url` module or the browser's URL API."
+        },
+        {
+          "name": "qs",
+          "motivation": "The code includes functions for stringifying (`Fo`, assigned to `xn`) and parsing (`Wo`, assigned to `bn`) query strings. It handles nested objects, arrays, encoding, and various formatting options, consistent with the `qs` library."
+        },
+        {
+          "name": "punycode",
+          "motivation": "The code includes an implementation (`Yo`) for Punycode (RFC 3492) encoding and decoding, used for internationalized domain names (IDNs), matching the `punycode` library."
+        },
+        {
+          "name": "events",
+          "motivation": "The code defines an `AsyncEventEmitter` class (`un.AsyncEventEmitter`) that extends `uf.EventEmitter` (likely Node.js EventEmitter or a compatible polyfill). It provides methods like `on`, `emit`, `once`, `removeListener`, mimicking the standard event emitter pattern."
+        }
+      ]
+    },
+    {
+      "file": "assets/priceLegacy-D9tD_8Or.js",
+      "occurences": [
+        {
+          "name": "1inch API Interaction Logic",
+          "motivation": "```markdown\nThe code explicitly defines a map `H` containing 1inch API base URLs (`https://api.1inch.io/v5.0/${chainId}`). It constructs request URLs using this base and specific paths like `/quote`. Functions like `J` (`Get price from 1inch`) and logging (`[pricesApi:1inch]`) further confirm direct interaction with the 1inch pricing API.\n```"
+        },
+        {
+          "name": "Axios Rate Limit (or similar)",
+          "motivation": "```markdown\nThe code imports `x` (as `g8`) and initializes `V` using `x({ rateLimit: { tokensPerInterval: 5, interval: \"second\" } })`. This pattern strongly suggests the use of a rate-limiting wrapper for HTTP requests, like `axios-rate-limit`, which applies rate limiting to underlying network calls (likely fetch or XMLHttpRequest via Axios).\n```"
+        },
+        {
+          "name": "Sentry",
+          "motivation": "```markdown\nThe code imports `v` (from `@sentry-B4eJ84ct.js`) and uses it to report errors: `v(i, { tags: { errorType: \"getBestPrice\" }, contexts: { params: e } })`. This is the standard pattern for capturing exceptions with context using the Sentry SDK.\n```"
+        },
+        {
+          "name": "Uniswap SDK (Core/Constants)",
+          "motivation": "```markdown\nThe code imports `A` (from `@uniswap-C8NJp6ZI.js`) and uses constants like `A.SupportedChainId.MAINNET` and `A.SupportedChainId.GNOSIS_CHAIN`. These constants are typical identifiers found in Uniswap SDK packages like `@uniswap/sdk-core`.\n```"
+        },
+        {
+          "name": "Safe Global / BigNumber",
+          "motivation": "```markdown\nThe code imports `j` (from `@safe-global-CRqML-Eq.js`) and uses it for arithmetic operations on potentially large numbers: `j.from(c).sub(d)`. This pattern is common when dealing with token amounts in web3 and suggests the use of a BigNumber library, possibly bundled within or used by `@safe-global` libraries.\n```"
+        }
+      ]
+    },
+    {
+      "file": "assets/vault-D1MBbYB3.js",
+      "occurences": [
+        {
+          "name": "ethers.js",
+          "motivation": "Code extensively uses patterns characteristic of ethers.js v5/v6: \n*   `new F(...)` matching `new Interface(...)`\n*   `new ye(...)` matching `new Contract(...)`\n*   `g.from(...)` matching `BigNumber.from(...)`\n*   `S.hash`, `S.resolveNames`, `S.getPayload` matching `TypedDataEncoder` methods.\n*   `B.encode`, `B.decode` matching `defaultAbiCoder` methods.\n*   Utility functions corresponding to `getAddress`, `arrayify`, `hexlify`, `concat`, `verifyMessage`, `verifyTypedData`.\n*   Signer interaction patterns like `provider.send(\"eth_signTypedData...\")` within custom signer wrapper classes (`Je`, `vn`).\n*   The imported module `fe` likely wraps `fetch` often provided by ethers."
+        },
+        {
+          "name": "CowSwap SDK / API Client",
+          "motivation": "Code includes specific logic for interacting with the CowSwap protocol API: \n*   A function `Pe` constructs CowSwap API base URLs (`https://api.cow.fi/{network}` or `https://barn.api.cow.fi/{network}`).\n*   Functions `Be`, `$e`, `Fe`, `te` wrap calls to specific CowSwap API v1 endpoints (`/orders`, `/quote`).\n*   A class `cn` acts as a client for the CowSwap API, taking network and environment/URL configuration.\n*   References to CowSwap/GPv2 concepts like order `kind`, `signingScheme`, `appData`, and contract names (`GPv2Settlement`)."
+        },
+        {
+          "name": "Safe{Core} SDK / Related Utilities",
+          "motivation": "The code is imported from a file named `./@safe-global-CRqML-Eq.js`. The `@safe-global` path segment strongly suggests this code originates from or is bundled with Safe{Core} SDK components or utilities used within the Safe ecosystem."
+        }
+      ]
+    },
+    {
+      "file": "assets/web3-BVRPY3DS.js",
+      "occurences": [
+        {
+          "name": "@ethereumjs/tx, @ethereumjs/util, @ethereumjs/common",
+          "motivation": "The code extensively uses classes and functions characteristic of the Ethereumjs ecosystem, including:\n*   `BaseTransaction`, `TransactionFactory`, specific transaction types like `FeeMarketEIP1559Transaction`, `AccessListEIP2930Transaction` (from `@ethereumjs/tx`).\n*   Utilities like `BN` (BigNumber), `Buffer`, `RLP` encoding/decoding, `keccak256`, `ecrecover`, `ecsign`, `publicToAddress`, `privateToAddress`, address handling (`Address`), constants (`MAX_INTEGER`, `KECCAK256_NULL`, etc.) (from `@ethereumjs/util`).\n*   Chain and hardfork management (`Chain`, `Hardfork`, `Common`) (from `@ethereumjs/common`).\n*   Event Emitter (`EventEmitter`)."
+        },
+        {
+          "name": "web3.js",
+          "motivation": "A comment `/*! For license information please see web3.min.js.LICENSE.txt */` is present at the beginning of the code, strongly indicating the inclusion or vendoring of the web3.js library or parts of it."
+        },
+        {
+          "name": "ethers.js (ABI Coder)",
+          "motivation": "The code includes a detailed ABI coder implementation (`AbiCoder`, `AddressCoder`, `ArrayCoder`, `BytesCoder`, `NumberCoder`, `StringCoder`, `TupleCoder`, `ParamType`, `Fragment`, `Interface`) which closely resembles the structure and functionality found in `ethers.js`'s ABI-related packages (`@ethersproject/abi`)."
+        },
+        {
+          "name": "elliptic / @noble/curves / secp256k1",
+          "motivation": "The code utilizes cryptographic functions like `ecsign`, `ecrecover`, `privateToPublic`, `publicToAddress`, mentions `secp256k1`, and includes constants like `N_DIV_2`. This points to the use of a library handling elliptic curve cryptography, likely `elliptic`, `@noble/curves`, or a similar library providing `secp256k1` operations."
+        },
+        {
+          "name": "js-sha3 / @noble/hashes",
+          "motivation": "The code includes SHA-3 and Keccak implementations (`keccak256`, `keccak_...`, `sha3_...`). Comments within the bundled code mention `JS_SHA3_NO_NODE_JS`, suggesting the `js-sha3` library or a similar hashing library like `@noble/hashes` is used or polyfilled."
+        },
+        {
+          "name": "multiformats (CID, multihash, multicodec, multibase)",
+          "motivation": "The code includes functionalities related to `CID` creation and validation, `multihash` decoding, `multicodec` handling (getting codec names/numbers), and `multibase` encoding/decoding. This strongly suggests the use of the `multiformats` suite of libraries or similar IPLD-related dependencies."
+        },
+        {
+          "name": "asn1.js / DER encoding",
+          "motivation": "The code contains logic for DER (Distinguished Encoding Rules) encoding/decoding, specifically for signature handling (`toDER`, `_importDER`). This indicates the use of a library like `asn1.js` or a similar ASN.1/DER handling utility, often used in conjunction with cryptographic libraries."
+        },
+        {
+          "name": "punycode",
+          "motivation": "The bundled code explicitly contains the `punycode` library for handling internationalized domain names (IDNs), particularly relevant for ENS normalization."
+        },
+        {
+          "name": "node-fetch / cross-fetch / XMLHttpRequest polyfill",
+          "motivation": "The code includes a wrapper around `XMLHttpRequest` and mentions `fetch`, suggesting either a direct use of `XMLHttpRequest`, a polyfill, or a library like `node-fetch` or `cross-fetch` to provide a consistent fetch API, especially given the surrounding Node.js-like module structures (Buffer, process checks)."
+        }
+      ]
+    },
+    {
+      "file": "service-worker.js",
+      "occurences": [
+        {
+          "name": "Workbox",
+          "motivation": "The code explicitly checks for `self[\"workbox:core:6.6.0\"]`, `self[\"workbox:precaching:6.6.0\"]`, `self[\"workbox:strategies:6.6.0\"]`, `self[\"workbox:routing:6.6.0\"]`, `self[\"workbox:expiration:6.6.0\"]`. It uses numerous Workbox classes and functions like `precache`, `registerRoute`, `CacheFirst` (implicitly via `p`), `NetworkFirst` (not used explicitly by name but pattern exists), `ExpirationPlugin` (via `Be`), `PrecacheController` (via `le`), `Router` (via `de`), `RegExpRoute` (via `ue`), `registerRoute` (`M`), `precacheAndRoute` (`be`), `clientsClaim` (`xe`), `skipWaiting` (`self.skipWaiting()`), and Workbox's cache naming utilities (`b.getPrecacheName`, `b.getRuntimeName`). The overall structure is typical of a Workbox service worker."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "assets/index-C2aZCUBl.js",
+      "occurences": [
+        {
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "assets/index-hcE3Ipwo.js",
+      "occurences": [
+        {
+          "count": 6
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

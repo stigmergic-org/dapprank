@@ -1,0 +1,22 @@
+{
+  "dappspec": "0.1.0",
+  "repository": "https://github.com/stigmergic-org/dapprank",
+  "preserveHistory": -1,
+  "chains": {
+    "1": {
+      "rpcs": [
+        "https://mainnet.gateway.tenderly.co/"
+      ],
+      "contracts": [
+        "0x64969fb44091A7E5fA1213D30D7A7e8488edf693"
+      ]
+    }
+  },
+  "fallbacks": {
+    "window": true,
+    "rpcs": true
+  },
+  "auxiliary": [
+    "https://delegated-ipfs.dev/routing/v1/providers/"
+  ]
+}
