@@ -6,6 +6,7 @@ import {
     renderNetworkingInfo, 
     renderWeb3Info 
 } from './components/report-details/details-v1';
+import { renderReportDetails as renderV2ReportDetails } from './components/report-details/details-v2';
 import { renderOutdatedWarning } from './components/report-details/details-outdated';
 
 // Helper function to get an appropriate icon based on MIME type
@@ -41,10 +42,25 @@ export function getMimeTypeIcon(mimeType: string | null | undefined): string {
     }
 }
 
+// Function to fetch dappspec.json from the archive car file
+async function fetchDappspecJson(fs: any, root: any, blockNumber: string | number): Promise<any | null> {
+    try {
+        const dappspec = await getJson(fs, root, `${blockNumber}/dappspec.json`);
+        console.log(`Found dappspec.json for block ${blockNumber}:`, dappspec);
+        return dappspec;
+    } catch (error) {
+        console.log(`No dappspec.json found for block ${blockNumber}`);
+        return null;
+    }
+}
+
 // Function to render detailed report information based on version
 export function renderReportDetails(report: any): string {
     // Use the appropriate renderer based on report version
-    // Currently we only have v1, but in the future we can add more versions
+    if (report.version === 2) {
+        return renderV2ReportDetails(report);
+    }
+    // Default to v1 renderer
     return renderV1ReportDetails(report);
 }
 
@@ -53,6 +69,7 @@ interface HistoricalReport {
     timestamp: number;
     blockNumber: number;
     report: any;
+    dappspec: any;
     isLatest: boolean;
 }
 
@@ -144,6 +161,8 @@ export async function loadHistoricalReports(ensName: string, currentBlockNumber?
         // Load the latest report data
         const latestReport = await getJson(fs, root, `${latestBlockNumber}/report.json`);
         
+        // Try to fetch dappspec.json if it exists
+        const dappspec = await fetchDappspecJson(fs, root, latestBlockNumber);
         // Load metadata from the archive directory which should have the definitive metadata
         let latestMetadata: DappMetadata = await getJson(fs, root, 'metadata.json');
         
@@ -174,11 +193,15 @@ export async function loadHistoricalReports(ensName: string, currentBlockNumber?
                 // Get the report.json for this block number
                 const reportData = await getJson(fs, root, `${blockNumber}/report.json`);
                 
+                // Try to fetch dappspec.json for this block if it exists
+                const blockDappspec = await fetchDappspecJson(fs, root, blockNumber);
+                
                 // Add to the list of reports
                 historicalReports.push({
                     timestamp: reportData.timestamp,
                     blockNumber: blockNumber,
                     report: reportData,
+                    dappspec: blockDappspec,
                     isLatest: blockNumber === currentBlockNumber
                 });
             } catch (error) {
@@ -416,7 +439,7 @@ function renderReportHistory(reports: HistoricalReport[], currentContentHash: st
                     <div class="report-toggle-icon">▼</div>
                 </div>
                 <div class="report-history-content" id="${reportId}" style="display: none;">
-                    ${renderReportDetails(report.report)}
+                    ${renderReportDetails({...report.report, dappspec: report.dappspec})}
                 </div>
             </div>
         `;

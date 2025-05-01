@@ -392,4 +392,791 @@
   .report-grid .report-value {
     flex: 1;
   }
+}
+
+/* V2 Report Styles */
+.report-success-message,
+.report-info-message {
+    padding: 15px;
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.report-success-message {
+    background-color: rgba(46, 125, 50, 0.12);
+    border: 1px solid rgba(46, 125, 50, 0.3);
+    color: #0a3d0a;
+}
+
+.report-success-message p {
+    color: #0a3d0a;
+    font-weight: 600;
+    margin: 0;
+}
+
+.report-info-message {
+    background-color: var(--info-background, rgba(25, 118, 210, 0.08));
+    border: 1px solid var(--info-border, rgba(33, 150, 243, 0.2));
+    color: var(--info-text, #1976d2);
+}
+
+.success-icon,
+.info-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+.report-success-message p,
+.report-info-message p {
+    margin: 0;
+    flex: 1;
+}
+
+/* Libraries Section */
+.libraries-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.library-item {
+    background-color: var(--card-background);
+    border-radius: 6px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.library-name {
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.library-file {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: var(--text-secondary);
+    font-family: var(--font-monospace);
+    background-color: var(--secondary-background);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: auto;
+}
+
+.library-motivation {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+/* Markdown styles for library motivation */
+.library-motivation p {
+    margin: 0.5em 0;
+}
+
+.library-motivation p:first-child {
+    margin-top: 0;
+}
+
+.library-motivation p:last-child {
+    margin-bottom: 0;
+}
+
+.library-motivation code {
+    font-family: var(--font-monospace);
+    background-color: var(--secondary-background);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--text-primary);
+}
+
+.library-motivation ul {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+.library-motivation li {
+    margin: 0.25em 0;
+}
+
+/* Dark mode support for markdown elements */
+@media (prefers-color-scheme: dark) {
+    .library-motivation code {
+        background-color: var(--secondary-background-dark, rgba(255, 255, 255, 0.05));
+    }
+}
+
+/* Dappspec Section */
+.dappspec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dappspec-item {
+    background-color: var(--card-background);
+    border-radius: 6px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dappspec-type {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.dappspec-type img,
+.dappspec-type .item-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dappspec-motivation {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+/* Networking Groups */
+.networking-group {
+    margin-bottom: 24px;
+}
+
+.networking-group:last-child {
+    margin-bottom: 0;
+}
+
+.networking-group h4 {
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.networking-motivation {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+    line-height: 1.5;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+}
+
+.networking-motivation p {
+    margin: 0.5em 0;
+}
+
+.networking-motivation p:first-child {
+    margin-top: 0;
+}
+
+.networking-motivation p:last-child {
+    margin-bottom: 0;
+}
+
+/* File Path Styling */
+.file-path {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    color: var(--text-primary);
+}
+
+/* Detail Type Styling */
+.detail-type {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Grouped Items */
+.grouped-items {
+    margin-bottom: 24px;
+}
+
+.grouped-items:last-child {
+    margin-bottom: 0;
+}
+
+.grouped-items h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .report-success-message {
+        background-color: rgba(46, 125, 50, 0.1);
+        border-color: rgba(76, 175, 80, 0.2);
+        color: #98cf9a;
+    }
+    
+    .report-success-message p {
+        color: #98cf9a;
+    }
+    
+    .report-info-message {
+        background-color: rgba(25, 118, 210, 0.1);
+        border-color: rgba(33, 150, 243, 0.2);
+        color: #90caf9;
+    }
+    
+    .library-item,
+    .dappspec-item {
+        background-color: var(--card-background-dark, rgba(255, 255, 255, 0.05));
+    }
+
+    .report-success-message p,
+    .report-info-message p {
+        color: inherit;
+    }
+}
+
+/* Detail Info Styling */
+.detail-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.detail-type,
+.detail-method,
+.detail-library {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: var(--secondary-background);
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+}
+
+.detail-type::before {
+    content: "🏷️";
+    font-size: 1.1em;
+}
+
+.detail-method::before {
+    content: "🔄";
+    font-size: 1.1em;
+}
+
+.detail-library::before {
+    content: "📚";
+    font-size: 1.1em;
+}
+
+.detail-url {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--secondary-background);
+}
+
+.url-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.url-value {
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    word-break: break-all;
+    flex: 1;
+}
+
+.detail-motivation {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--secondary-background);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Markdown styles for detail motivation */
+.detail-motivation p {
+    margin: 0.5em 0;
+}
+
+.detail-motivation p:first-child {
+    margin-top: 0;
+}
+
+.detail-motivation p:last-child {
+    margin-bottom: 0;
+}
+
+.detail-motivation code {
+    font-family: var(--font-monospace);
+    background-color: var(--secondary-background);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--text-primary);
+}
+
+.detail-motivation ul {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+.detail-motivation li {
+    margin: 0.25em 0;
+    border-bottom: none;
+    padding: 0;
+}
+
+/* Dark mode support for markdown elements */
+@media (prefers-color-scheme: dark) {
+    .detail-motivation code {
+        background-color: var(--secondary-background-dark, rgba(255, 255, 255, 0.05));
+    }
+}
+
+.fallback-params {
+    margin-top: 4px;
+    font-size: 0.85em;
+}
+
+.fallback-params code {
+    font-family: var(--font-monospace);
+    background-color: var(--secondary-background);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    word-break: break-all;
+}
+
+/* Dappspec Container */
+.dappspec-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.dappspec-subsection {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dappspec-subsection h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.dappspec-subsection h5 {
+    margin: 16px 0 8px 0;
+    color: var(--text-secondary);
+    font-size: 1em;
+    font-weight: 500;
+}
+
+/* Repository Link */
+.repository-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    padding: 8px 12px;
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.repository-link:hover {
+    background-color: var(--hover-background);
+    color: var(--highlight-color);
+}
+
+/* Contracts Section */
+.contracts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chain-contracts {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.chain-contracts:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.contract-item {
+    background-color: var(--secondary-background);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.contract-item:last-child {
+    margin-bottom: 0;
+}
+
+.contract-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.contract-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.contract-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.2s ease;
+}
+
+.contract-link:hover {
+    color: var(--highlight-color);
+}
+
+.contract-address {
+    margin-bottom: 8px;
+}
+
+.contract-address code {
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    background-color: var(--secondary-background);
+    padding: 4px 8px;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.contract-description {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Chain Services */
+.chain-services {
+    margin-bottom: 16px;
+}
+
+.chain-services:last-child {
+    margin-bottom: 0;
+}
+
+.service-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.service-item:last-child {
+    margin-bottom: 0;
+}
+
+.service-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.service-url {
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.service-detected,
+.service-not-detected,
+.fallback-detected,
+.fallback-not-detected {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.service-detected,
+.fallback-detected {
+    background-color: var(--success-background);
+    color: var(--success-color);
+}
+
+.service-not-detected,
+.fallback-not-detected {
+    background-color: var(--warning-background);
+    color: var(--warning-color);
+}
+
+/* Dservice Section */
+.dservice-self,
+.dservice-external {
+    margin-top: 16px;
+}
+
+.service-info {
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.service-description {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+/* Fallbacks Section */
+.fallbacks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fallback-item {
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.fallback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.fallback-type {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.fallback-description {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .dappspec-subsection {
+        background-color: var(--card-background-dark, rgba(255, 255, 255, 0.05));
+    }
+
+    .repository-link,
+    .contract-address code,
+    .service-item,
+    .service-info,
+    .fallback-item {
+        background-color: var(--secondary-background-dark, rgba(255, 255, 255, 0.05));
+    }
+
+    .service-detected,
+    .fallback-detected {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #98cf9a;
+    }
+
+    .service-not-detected,
+    .fallback-not-detected {
+        background-color: rgba(255, 152, 0, 0.2);
+        color: #ffb74d;
+    }
+}
+
+.sourcify-link {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    background-color: var(--secondary-background);
+    transition: all 0.2s ease;
+}
+
+.sourcify-link:hover {
+    background-color: var(--hover-background);
+    color: var(--highlight-color);
+}
+
+.sourcify-link .item-icon {
+    font-size: 0.9em;
+    margin: 0;
+}
+
+/* Detection Details */
+.detection-details {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+}
+
+.detection-details strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.detection-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px 0;
+}
+
+.detection-details ul:last-child {
+    margin-bottom: 0;
+}
+
+.detection-details li {
+    margin-bottom: 4px;
+    padding: 4px 8px;
+    background-color: var(--card-background);
+    border-radius: 3px;
+}
+
+.detection-details li:last-child {
+    margin-bottom: 0;
+}
+
+.fallback-implementation {
+    margin-top: 8px;
+    padding: 8px;
+    background-color: var(--card-background);
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.fallback-implementation p:first-child {
+    margin-top: 0;
+}
+
+.fallback-implementation p:last-child {
+    margin-bottom: 0;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .detection-details {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .detection-details li,
+    .fallback-implementation {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+}
+
+/* Networking Items */
+.networking-item {
+    background-color: var(--card-background);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.networking-item:last-child {
+    margin-bottom: 0;
+}
+
+.networking-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.networking-url {
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    background-color: var(--secondary-background);
+    padding: 4px 8px;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.networking-motivation {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+    line-height: 1.5;
+    margin-top: 8px;
+    padding: 8px;
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+}
+
+.networking-motivation p {
+    margin: 0.5em 0;
+}
+
+.networking-motivation p:first-child {
+    margin-top: 0;
+}
+
+.networking-motivation p:last-child {
+    margin-bottom: 0;
+}
+
+.networking-file {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-family: var(--font-monospace);
 } 

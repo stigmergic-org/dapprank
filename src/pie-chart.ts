@@ -204,11 +204,11 @@ export function createEnlargedPieChart(siteRoot: CID, colors: string[], reportCo
     pieContainer.appendChild(pieChart);
     
     // Add labels around the pieChart
-    const labels = ['NETWORKING', 'DISTRIBUTION', 'WEB3'];
+    const labels = ['NETWORKING', 'DISTRIBUTION', 'DAPPSPEC'];
     const labelPositions = [
         { top: '30%', left: '48%', transform: 'rotate(60deg)' }, // networking
         { top: '77%', left: '19%', transform: 'rotate(0deg)' }, // distribution
-        { top: '30%', left: '8%', transform: 'rotate(-60deg)' }, // web3
+        { top: '27%', left: '-1%', transform: 'rotate(-60deg)' }, // dappspec
     ];
 
     labels.forEach((text, index) => {
@@ -253,11 +253,11 @@ export function createThreePiecePieChart(siteRoot: CID, colors: string[], report
     popup.appendChild(reportContent);
 
     // Add labels around the popupPieChart
-    const popupLabels = ['NETWORKING', 'DISTRIBUTION', 'WEB3'];
+    const popupLabels = ['NETWORKING', 'DISTRIBUTION', 'DAPPSPEC'];
     const labelPositions = [
         { top: '30%', left: '48%', transform: 'rotate(60deg)' }, // networking
         { top: '77%', left: '19%', transform: 'rotate(0deg)' }, // distribution
-        { top: '30%', left: '8%', transform: 'rotate(-60deg)' }, // web3
+        { top: '27%', left: '-1%', transform: 'rotate(-60deg)' }, // dappspec
     ];
 
     popupLabels.forEach((text, index) => {
