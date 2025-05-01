@@ -35,11 +35,11 @@ interface Manifest {
   dappspec: string;
   repository: string;
   preserveHistory: number;
-  dservice: {
-    endpoints: string[];
-    serviceWorkerProxy: boolean;
+  dservices: {
+    self: string[];
+    serviceWorker: boolean;
+    external: string[];
   };
-  externalDservices: string[];
   chains: {
     [chainId: string]: {
       rpcs: string[];
@@ -61,10 +61,10 @@ The manifest fields are defined as follows:
 - `dappspec`: The version of the DappSpec specification being used.
 - `repository`: URL of the source code repository for the dapp, typically a git repository.
 - `preserveHistory`: Indicates how many historical versions pinning services should maintain. A value of -1 means all history should be preserved.
-- `dservice`: Information about the dapp's own decentralized backend service.
-  - `endpoints`: List of URLs for the backend service implemented by this dapp.
-  - `serviceWorkerProxy`: Indicates if the app can act as a proxy to the endpoints using a service worker.
-- `externalDservices`: List of ENS names for external decentralized services the dapp depends on.
+- `dservices`: Information about the dapp's own decentralized backend service.
+  - `self`: List of URLs for the backend service implemented by this dapp.
+  - `serviceWorker`: Indicates if the app can act as a proxy to the dservice endpoints using a service worker.
+  - `external`: List of ENS names for external decentralized services the dapp depends on.
 - `chains`: Blockchain configuration organized by chain ID.
   - `rpcs`: List of RPC URLs the dapp uses for each chain.
   - `bundlers`: List of EIP-4337 bundler URLs the dapp uses.
@@ -99,7 +99,7 @@ To build a compliant DService:
 
 #### Service Worker Proxy
 
-The `serviceWorkerProxy` field in the manifest indicates whether the dapp implements a service worker that can proxy requests to DService endpoints. When set to `true`, this feature provides several benefits:
+The `serviceWorker` field in the manifest indicates whether the dapp implements a service worker that can proxy requests to DService endpoints. When set to `true`, this feature provides several benefits:
 
 1. **Easily accessible**: Other dapps can simply send request directly to a .eth name (i.e. through a mirror), e.g. `mydapp.eth.link` or `mydapp.eth.sucks`
 
@@ -163,7 +163,7 @@ When `fallbacks.rpcs` or `fallbacks.dservice` are set to `true`, the dapp suppor
 - **RPC Overrides**: Using `?ds-rpc-<CHAIN_ID>=url` (e.g., `?ds-rpc-1=https%3A%2F%2Fmainnet.infura.io%2Fv3%2FYOUR-API-KEY`)
 - **Bundler Overrides**: Using `?ds-bundler-<CHAIN_ID>=url` (e.g., `?ds-bundler-1=https%3A%2F%2Fbundler.example.com`)
 - **DService Overrides**: 
-  - Main service: `?dservice=url` (URL-encoded value)
+  - Main service: `?ds-self=url` (URL-encoded value)
   - External services: `?ds-<ens-name>=url` (URL-encoded value)
 
 These parameters allow users to specify alternative endpoints when the default ones are inaccessible, enhancing censorship resistance. When a user provides any of these query parameters, the given value SHOULD be prioritized over the apps existing options.
