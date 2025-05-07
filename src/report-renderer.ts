@@ -428,6 +428,11 @@ function renderReportHistory(reports: HistoricalReport[], currentContentHash: st
         // Create a unique ID for each report section
         const reportId = `report-${report.blockNumber}`;
         
+        // Set first report to be expanded by default
+        const isFirstReport = index === 0;
+        const displayStyle = isFirstReport ? 'block' : 'none';
+        const toggleIcon = isFirstReport ? '▲' : '▼';
+        
         html += `
             <div class="report-history-item">
                 <div class="report-history-header" data-report-id="${reportId}">
@@ -436,9 +441,9 @@ function renderReportHistory(reports: HistoricalReport[], currentContentHash: st
                         <span class="report-block">Block #${report.blockNumber}</span>
                         ${isContentHashMatch ? '<span class="report-current-badge">Current ENS Record</span>' : ''}
                     </div>
-                    <div class="report-toggle-icon">▼</div>
+                    <div class="report-toggle-icon">${toggleIcon}</div>
                 </div>
-                <div class="report-history-content" id="${reportId}" style="display: none;">
+                <div class="report-history-content" id="${reportId}" style="display: ${displayStyle};">
                     ${renderReportDetails({...report.report, dappspec: report.dappspec})}
                 </div>
             </div>
