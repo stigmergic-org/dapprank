@@ -227,13 +227,7 @@ function renderNetworkingSection(report: any): string {
                     items,
                     type,
                     (item) => item.file || 'unknown',
-                    (item) => item.urls.map((url: string) => ({
-                        type,
-                        url,
-                        method: item.method,
-                        library: item.library,
-                        motivation: item.motivation
-                    }))
+                    (item) => [item] // Keep each occurrence as a single item
                 )}
             </div>
         `).join('');
@@ -573,8 +567,8 @@ function renderGroupedItems(items: any[], itemType: string, extractFile: (item: 
         if (!itemsByFile[file]) {
             itemsByFile[file] = [];
         }
-        const details = extractDetails(item);
-        itemsByFile[file].push(...details);
+        // Don't spread the details, keep each occurrence as a single item
+        itemsByFile[file].push(...extractDetails(item));
     });
     
     return `
@@ -591,7 +585,7 @@ function renderGroupedItems(items: any[], itemType: string, extractFile: (item: 
                             ${details.map(detail => {
                                 if (typeof detail === 'string') {
                                     return `<li>${detail}</li>`;
-                                } else if (detail.url) {
+                                } else {
                                     let detailHtml = `
                                         <li>
                                             <div class="detail-info">
@@ -600,8 +594,17 @@ function renderGroupedItems(items: any[], itemType: string, extractFile: (item: 
                                                 ${detail.library ? `<span class="detail-library">Library: ${detail.library}</span>` : ''}
                                             </div>
                                             <div class="detail-url">
-                                                <span class="url-label">URL:</span>
-                                                <span class="url-value">${detail.url}</span>
+                                                <span class="url-label">URL${detail.urls.length > 1 ? 's' : ''}:</span>
+                                                <span class="url-value">
+                                                    ${Array.isArray(detail.urls) ? (
+                                                        detail.urls.length === 0 ? '⚠️ Any url could be used' :
+                                                        `<ul class="url-list">
+                                                            ${detail.urls.map((url: string) => `<li><code>${url}</code></li>`).join('')}
+                                                        </ul>`
+                                                    ) : (
+                                                        detail.url ? detail.url : '<any>'
+                                                    )}
+                                                </span>
                                             </div>
                                             ${detail.motivation ? `
                                                 <div class="networking-motivation">
@@ -611,8 +614,6 @@ function renderGroupedItems(items: any[], itemType: string, extractFile: (item: 
                                     
                                     detailHtml += `</li>`;
                                     return detailHtml;
-                                } else {
-                                    return `<li>${JSON.stringify(detail)}</li>`;
                                 }
                             }).join('')}
                         </ul>
