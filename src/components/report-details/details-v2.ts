@@ -34,6 +34,16 @@ export function renderReportDetails(report: any): string {
     // Basic Info Section
     html += renderBasicInfoSection(report);
     
+    // Dappspec Section (if available)
+    if (report.dappspec) {
+        html += `
+            <h3>Dappspec Support</h3>
+            <div class="report-section">
+                ${renderDappspecSection(report)}
+            </div>
+        `;
+    }
+    
     // Distribution Section
     html += `
         <h3>Distribution</h3>
@@ -49,16 +59,6 @@ export function renderReportDetails(report: any): string {
             ${renderNetworkingSection(report)}
         </div>
     `;
-    
-    // Dappspec Section (if available)
-    if (report.dappspec) {
-        html += `
-            <h3>Dappspec Support</h3>
-            <div class="report-section">
-                ${renderDappspecSection(report)}
-            </div>
-        `;
-    }
     
     // Libraries Section
     html += `
