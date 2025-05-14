@@ -1,5 +1,8 @@
 import { formatFileSize } from '../../report-renderer';
+import { renderInfoCard } from '../ui/info-card';
+import { renderInfoItems } from '../ui/info-items';
 import './styles.css';
+import '../ui/info-items.css';
 
 // DappSpec interfaces
 interface ChainConfig {
@@ -28,21 +31,23 @@ interface DappSpec {
 export function renderReportDetails(report: any): string {
     let html = '';
     
-    // Content Hash Section
-    html += renderContentHashSection(report);
-    
-    // Basic Info Section
-    html += renderBasicInfoSection(report);
+    // Overview Section
+    html += `
+        <br>
+        <h3>Overview</h3>
+        <div class="report-section">
+            ${renderContentHashSection(report)}
+            ${renderBasicInfoSection(report)}
+        </div>
+    `;
     
     // Dappspec Section (if available)
-    if (report.dappspec) {
-        html += `
-            <h3>Dappspec Support</h3>
-            <div class="report-section">
-                ${renderDappspecSection(report)}
-            </div>
-        `;
-    }
+    html += `
+        <h3>Dappspec</h3>
+        <div class="report-section">
+            ${renderDappspecSection(report)}
+        </div>
+    `;
     
     // Distribution Section
     html += `
@@ -73,59 +78,71 @@ export function renderReportDetails(report: any): string {
 
 // Content Hash Section
 function renderContentHashSection(report: any): string {
-    return `
-        <div class="report-hash-comparison">
-            <div class="report-hash-item">
-                <strong>Content Hash:</strong>
-                <span class="report-hash-value">
-                    <span class="item-icon">🔐</span>${report.contentHash}
-                </span>
-                <div class="hash-button-container">
-                    <button class="hash-link" title="Inspect IPFS Content" onclick="window.open('https://webui.ipfs.io/#/ipfs/${report.contentHash}', '_blank')">
-                        <span class="hash-icon">🔍</span>Explore IPFS
-                    </button>
-                    <button class="copy-hash-btn" title="Copy to clipboard" onclick="navigator.clipboard.writeText('${report.contentHash}').then(() => { this.classList.add('copied'); setTimeout(() => this.classList.remove('copied'), 2000); })">
-                        <span class="hash-icon">📋</span>Copy Hash
-                    </button>
-                </div>
+    return renderInfoCard({
+        title: 'Content Hash',
+        content: `
+            <div class="report-hash-value">
+                <span class="item-icon">🔐</span>${report.contentHash}
             </div>
-        </div>
-    `;
+            <div class="hash-button-container">
+                <button class="hash-link" title="Inspect IPFS Content" onclick="window.open('https://webui.ipfs.io/#/ipfs/${report.contentHash}', '_blank')">
+                    <span class="hash-icon">🔍</span>Explore IPFS
+                </button>
+                <button class="copy-hash-btn" title="Copy to clipboard" onclick="navigator.clipboard.writeText('${report.contentHash}').then(() => { this.classList.add('copied'); setTimeout(() => this.classList.remove('copied'), 2000); })">
+                    <span class="hash-icon">📋</span>Copy Hash
+                </button>
+            </div>
+        `
+    });
 }
 
 // Basic Info Section
 function renderBasicInfoSection(report: any): string {
-    return `
-        <div class="report-info">
-            <div class="report-grid">
-                <div class="report-item">
-                    <span class="report-label">Total Size:</span>
-                    <span class="report-value">
-                        <span class="item-icon">💾</span> ${formatFileSize(report.totalSize)}
-                    </span>
-                </div>
-                <div class="report-item">
-                    <span class="report-label">Created at:</span>
-                    <span class="report-value">
-                        <span class="item-icon">📅</span> ${new Date(report.timestamp * 1000).toISOString().replace('T', ' ').split('.')[0]}
-                    </span>
-                </div>
-                <div class="report-item">
-                    <span class="report-label">Block number:</span>
-                    <span class="report-value">
-                        <span class="item-icon">⛓️</span> ${report.blockNumber}
-                    </span>
-                </div>
-                ${report.rootMimeType ? `
-                <div class="report-item">
-                    <span class="report-label">MIME Type:</span>
-                    <span class="report-value">
-                        <span class="item-icon">🗃️</span> ${report.rootMimeType}
-                    </span>
-                </div>
-                ` : ''}
+    const statsContent = `
+        <div class="report-grid">
+            <div class="report-item">
+                <span class="report-label">Total Size:</span>
+                <span class="report-value">
+                    <span class="item-icon">💾</span> ${formatFileSize(report.totalSize)}
+                </span>
+            </div>
+            ${report.rootMimeType ? `
+            <div class="report-item">
+                <span class="report-label">MIME Type:</span>
+                <span class="report-value">
+                    <span class="item-icon">🗃️</span> ${report.rootMimeType}
+                </span>
+            </div>
+            ` : ''}
+        </div>
+    `;
+
+    const createdContent = `
+        <div class="report-grid">
+            <div class="report-item">
+                <span class="report-label">Created at:</span>
+                <span class="report-value">
+                    <span class="item-icon">📅</span> ${new Date(report.timestamp * 1000).toISOString().replace('T', ' ').split('.')[0]}
+                </span>
+            </div>
+            <div class="report-item">
+                <span class="report-label">Block number:</span>
+                <span class="report-value">
+                    <span class="item-icon">⛓️</span> ${report.blockNumber}
+                </span>
             </div>
         </div>
+    `;
+
+    return `
+        ${renderInfoCard({
+            title: 'Dapp Stats',
+            content: statsContent
+        })}
+        ${renderInfoCard({
+            title: 'Report Metadata',
+            content: createdContent
+        })}
     `;
 }
 
@@ -299,257 +316,196 @@ function renderDappspecSection(report: any): string {
     const dappspec = report.dappspec as DappSpec | undefined;
     
     if (!dappspec) {
-        return `
-            <div class="report-info-message">
-                <span class="info-icon">ℹ️</span>
-                <p>No dappspec.json manifest found.</p>
-            </div>
-        `;
+        return renderInfoCard({
+            title: 'Dappspec',
+            content: 'No dappspec.json manifest found.'
+        });
     }
 
     let html = `<div class="dappspec-container">`;
 
     // Repository information
     if (dappspec.repository) {
-        html += `
-            <div class="dappspec-subsection">
-                <h4>Repository</h4>
+        html += renderInfoCard({
+            title: 'Repository',
+            content: `
                 <a href="${dappspec.repository}" target="_blank" class="repository-link">
                     <span class="item-icon">📦</span>
                     ${dappspec.repository}
                 </a>
-            </div>
-        `;
+            `
+        });
     }
 
     // Chains information
     if (dappspec.chains && Object.keys(dappspec.chains).length > 0) {
-        html += `
-            <div class="dappspec-subsection">
-                <h4>Chain Support</h4>
-        `;
-
-        for (const [chainId, chainData] of Object.entries(dappspec.chains)) {
-            html += `<h5>${getNetworkName(chainId)}</h5>`;
+        const chainItems = Object.entries(dappspec.chains).map(([chainId, chainData]) => {
+            const details = [];
             
             if (chainData.rpcs?.length > 0) {
-                html += `
-                    <div class="dappspec-item">
-                        <div class="dappspec-type">
-                            <span class="item-icon">🔌</span>
-                            RPC Endpoints (${chainData.rpcs.length})
-                        </div>
-                        <div class="dappspec-motivation">
-                            <ul>
-                                ${chainData.rpcs.map(rpc => `<li><code>${rpc}</code></li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
+                details.push({
+                    title: 'RPC Endpoints',
+                    content: `<ul>${chainData.rpcs.map(rpc => `<li><code>${rpc}</code></li>`).join('')}</ul>`
+                });
             }
 
             if (chainData.bundlers?.length > 0) {
-                html += `
-                    <div class="dappspec-item">
-                        <div class="dappspec-type">
-                            <span class="item-icon">📦</span>
-                            Bundlers (${chainData.bundlers.length})
-                        </div>
-                        <div class="dappspec-motivation">
-                            <ul>
-                                ${chainData.bundlers.map(bundler => `<li><code>${bundler}</code></li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
+                details.push({
+                    title: 'Bundlers',
+                    content: `<ul>${chainData.bundlers.map(bundler => `<li><code>${bundler}</code></li>`).join('')}</ul>`
+                });
             }
 
             if (chainData.contracts?.length > 0) {
-                html += `
-                    <div class="dappspec-item">
-                        <div class="dappspec-type">
-                            <span class="item-icon">📜</span>
-                            Contracts (${chainData.contracts.length})
-                        </div>
-                        <div class="dappspec-motivation">
-                            <ul>
-                                ${chainData.contracts.map(contract => `
-                                    <li>
-                                        <code>${contract}</code>
-                                        <a href="https://repo.sourcify.dev/contracts/full_match/${chainId}/${contract}" 
-                                           target="_blank" 
-                                           class="sourcify-link" 
-                                           title="View on Sourcify">
-                                            <span class="item-icon">🔍</span>
-                                        </a>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
+                details.push({
+                    title: 'Contracts',
+                    content: `<ul>${chainData.contracts.map(contract => `
+                        <li>
+                            <code>${contract}</code>
+                            <a href="https://repo.sourcify.dev/contracts/full_match/${chainId}/${contract}" 
+                               target="_blank" 
+                               class="sourcify-link" 
+                               title="View on Sourcify">
+                                <span class="item-icon">🔍</span>
+                            </a>
+                        </li>
+                    `).join('')}</ul>`
+                });
             }
-        }
 
-        html += `</div>`;
+            return {
+                icon: '⛓️',
+                title: getNetworkName(chainId),
+                details
+            };
+        });
+
+        html += renderInfoCard({
+            title: 'Chain Support',
+            content: renderInfoItems(chainItems)
+        });
     }
 
     // Fallbacks information
     if (dappspec.fallbacks) {
-        html += `
-            <div class="dappspec-subsection">
-                <h4>Fallback Support</h4>
-                <div class="dappspec-list">
-        `;
+        let fallbackItems = [];
 
         if (dappspec.fallbacks.window) {
             const { isSupported, files } = getWindowEthereumDetails(report);
-            html += `
-                <div class="dappspec-item">
-                    <div class="dappspec-type">
-                        <span class="item-icon">🔄</span>
-                        Window.ethereum Injection
-                        <span class="${isSupported ? 'fallback-detected' : 'fallback-not-detected'}">
-                            ${isSupported ? '✓ Detected' : '✗ Not Detected'}
-                        </span>
-                    </div>
-                    <div class="dappspec-motivation">
-                        <p>The dapp supports using injected Web3 providers from browser wallets.</p>
-                        ${isSupported ? `
-                            <div class="detection-details">
-                                <strong>Detected in:</strong>
-                                <ul>
-                                    ${files.map(file => `<li><code>${file}</code></li>`).join('')}
-                                </ul>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'Window.ethereum Injection',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'The dapp supports using injected Web3 providers from browser wallets.'
+                    },
+                    ...(isSupported ? [{
+                        title: 'Detected in:',
+                        content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                    }] : [])
+                ]
+            });
         }
 
         if (dappspec.fallbacks.rpcs) {
             const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'rpc');
-            html += `
-                <div class="dappspec-item">
-                    <div class="dappspec-type">
-                        <span class="item-icon">🔄</span>
-                        RPC Endpoint Override
-                        <span class="${isSupported ? 'fallback-detected' : 'fallback-not-detected'}">
-                            ${isSupported ? '✓ Detected' : '✗ Not Detected'}
-                        </span>
-                    </div>
-                    <div class="dappspec-motivation">
-                        <p>Custom RPC endpoints can be specified via <code>?ds-rpc-{chainId}=url</code> query parameters.</p>
-                        ${isSupported ? `
-                            <div class="detection-details">
-                                <strong>Detected in:</strong>
-                                <ul>
-                                    ${files.map(file => `<li><code>${file}</code></li>`).join('')}
-                                </ul>
-                                ${motivation ? `
-                                    <strong>Implementation:</strong>
-                                    <div class="fallback-implementation">
-                                        ${convertMarkdownToHtml(motivation)}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'RPC Endpoint Override',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'Custom RPC endpoints can be specified via <code>?ds-rpc-{chainId}=url</code> query parameters.'
+                    },
+                    ...(isSupported ? [
+                        {
+                            title: 'Detected in:',
+                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                        },
+                        ...(motivation ? [{
+                            title: 'Implementation:',
+                            content: convertMarkdownToHtml(motivation)
+                        }] : [])
+                    ] : [])
+                ]
+            });
         }
 
         if (dappspec.fallbacks.bundlers) {
             const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'bundler');
-            html += `
-                <div class="dappspec-item">
-                    <div class="dappspec-type">
-                        <span class="item-icon">🔄</span>
-                        Bundler Endpoint Override
-                        <span class="${isSupported ? 'fallback-detected' : 'fallback-not-detected'}">
-                            ${isSupported ? '✓ Detected' : '✗ Not Detected'}
-                        </span>
-                    </div>
-                    <div class="dappspec-motivation">
-                        <p>Custom bundler endpoints can be specified via <code>?ds-bundler-{chainId}=url</code> query parameters.</p>
-                        ${isSupported ? `
-                            <div class="detection-details">
-                                <strong>Detected in:</strong>
-                                <ul>
-                                    ${files.map(file => `<li><code>${file}</code></li>`).join('')}
-                                </ul>
-                                ${motivation ? `
-                                    <strong>Implementation:</strong>
-                                    <div class="fallback-implementation">
-                                        ${convertMarkdownToHtml(motivation)}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'Bundler Endpoint Override',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'Custom bundler endpoints can be specified via <code>?ds-bundler-{chainId}=url</code> query parameters.'
+                    },
+                    ...(isSupported ? [
+                        {
+                            title: 'Detected in:',
+                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                        },
+                        ...(motivation ? [{
+                            title: 'Implementation:',
+                            content: convertMarkdownToHtml(motivation)
+                        }] : [])
+                    ] : [])
+                ]
+            });
         }
 
         if (dappspec.fallbacks.dservice) {
             const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'dservice');
-            html += `
-                <div class="dappspec-item">
-                    <div class="dappspec-type">
-                        <span class="item-icon">🔄</span>
-                        DService Override
-                        <span class="${isSupported ? 'fallback-detected' : 'fallback-not-detected'}">
-                            ${isSupported ? '✓ Detected' : '✗ Not Detected'}
-                        </span>
-                    </div>
-                    <div class="dappspec-motivation">
-                        <p>Custom DService endpoints can be specified via <code>?ds-{ensName}=url</code> query parameters.</p>
-                        ${isSupported ? `
-                            <div class="detection-details">
-                                <strong>Detected in:</strong>
-                                <ul>
-                                    ${files.map(file => `<li><code>${file}</code></li>`).join('')}
-                                </ul>
-                                ${motivation ? `
-                                    <strong>Implementation:</strong>
-                                    <div class="fallback-implementation">
-                                        ${convertMarkdownToHtml(motivation)}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'DService Override',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'Custom DService endpoints can be specified via <code>?ds-{ensName}=url</code> query parameters.'
+                    },
+                    ...(isSupported ? [
+                        {
+                            title: 'Detected in:',
+                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                        },
+                        ...(motivation ? [{
+                            title: 'Implementation:',
+                            content: convertMarkdownToHtml(motivation)
+                        }] : [])
+                    ] : [])
+                ]
+            });
         }
 
-        html += `
-                </div>
-            </div>
-        `;
+        html += renderInfoCard({
+            title: 'Fallback Support',
+            content: renderInfoItems(fallbackItems)
+        });
     }
 
     // Auxiliary services
     if (dappspec.auxiliary?.length > 0) {
-        html += `
-            <div class="dappspec-subsection">
-                <h4>Auxiliary Services</h4>
-                <div class="dappspec-list">
-                    <div class="dappspec-item">
-                        <div class="dappspec-type">
-                            <span class="item-icon">🔗</span>
-                            External Services (${dappspec.auxiliary.length})
-                        </div>
-                        <div class="dappspec-motivation">
-                            <ul>
-                                ${dappspec.auxiliary.map(service => `<li><code>${service}</code></li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+        html += renderInfoCard({
+            title: 'Auxiliary Services',
+            content: renderInfoItems([{
+                icon: '🔗',
+                title: `External Services`,
+                details: [{
+                    title: '',
+                    content: 'The dapp uses external services to enhance its functionality. These services are not required for the dapp to operate but are used to provide additional features or services.'
+                }, {
+                    title: 'Specified service URLs:',
+                    content: `<ul>${dappspec.auxiliary.map(service => `<li><code>${service}</code></li>`).join('')}</ul>`
+                }]
+            }])
+        });
     }
 
     html += `</div>`;

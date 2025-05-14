@@ -1,0 +1,23 @@
+.info-card {
+    background: var(--card-background);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-card-header {
+    margin-bottom: 12px;
+}
+
+.info-card-header h4 {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.info-card-content {
+    color: var(--text-color);
+    line-height: 1.5;
+}
