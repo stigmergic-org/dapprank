@@ -42,6 +42,9 @@ export function renderReportDetails(report: any): string {
     html += `
         <br />
         <h3>Dappspec</h3>
+        <div class="report-section-info">
+            <p>The dappspec is a JSON file that describes the dapp. It is used to determine the dapp's dependencies and to document fallback mechanisms for the dapp to work in case of network failures. More infomation can be found in the <a href="/dappspec">dappspec specification</a>.</p>
+        </div>
         <div class="report-section">
             ${renderDappspecSection(report)}
         </div>
@@ -50,6 +53,9 @@ export function renderReportDetails(report: any): string {
     // Distribution Section
     html += `
         <h3>Distribution</h3>
+        <div class="report-section-info">
+            <p>Loading scripts or media from external sources is a common way to introduce security vulnerabilities. Scripts that are loaded from external sources could essentially change any aspect of the dapp and should be considered as a serious security vulnerability. Media loaded from external sources could be used to track users.</p>
+        </div>
         <div class="report-section">
             ${renderDistributionSection(report)}
         </div>
@@ -58,6 +64,15 @@ export function renderReportDetails(report: any): string {
     // Networking Section
     html += `
         <h3>Networking</h3>
+        <div class="report-section-info">
+            <p>Most modern applications require some form of networking functionality. However, we don't want dapps to just arbitrarily steal our data or track us. This section breaks down networking into a few main categories to help you understand how the dapp communicates with the outside world.</p>
+            <ul>
+                <li><strong>RPC:</strong> Requests made to an Ethereum RPC.</li>
+                <li><strong>Bundler:</strong> Requests made to an Ethereum 4337 Bundler.</li>
+                <li><strong>Self:</strong> Requests made to fetch resources from the same origin as the dapp (e.g. files listed within the dapp's own repository).</li>
+                <li><strong>Auxiliary:</strong> Requests made to non-essential external services. All escessive requests are listed here.</li>
+            </ul>
+        </div>
         <div class="report-section">
             ${renderNetworkingSection(report)}
         </div>
@@ -336,7 +351,7 @@ function renderDappspecSection(report: any): string {
 
         html += renderInfoCard({
             title: 'Auxiliary Services',
-            description: 'The dapp uses the following non-essential external services to enhance its functionality. These services are not required for core operations but provide additional features:',
+            description: 'The dapp uses the following non-essential external services to enhance its functionality. These services are not required for core operations but provide additional features.',
             content: renderInfoItems(auxiliaryItems)
         });
     }
@@ -459,32 +474,6 @@ function renderDistributionSection(report: any): string {
     }
 
     return html;
-}
-
-// Helper function to get fallback title and params
-function getFallbackInfo(type: string): { title: string, params: string } {
-    switch (type) {
-        case 'rpc':
-            return {
-                title: 'Ethereum RPC Fallback',
-                params: '?ds-rpc-[chain-id>=urlEncode(url)'
-            };
-        case 'bundler':
-            return {
-                title: 'Ethereum 4337 Bundler Fallback',
-                params: '?ds-bundler-<chain-id>=urlEncode(url)'
-            };
-        case 'dservice':
-            return {
-                title: 'Dservice Fallback',
-                params: '?ds-self=urlEncode(url), ?ds-<ens-name>=urlEncode(url)'
-            };
-        default:
-            return {
-                title: `${type.charAt(0).toUpperCase() + type.slice(1)} Fallback`,
-                params: ''
-            };
-    }
 }
 
 // Networking Section
