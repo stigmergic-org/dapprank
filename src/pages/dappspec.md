@@ -53,7 +53,10 @@ interface Manifest {
     bundlers: boolean; 
     dservice: boolean;
   };
-  auxiliary: string[];
+  auxiliary: {
+    url: string;
+    motivation: string;
+  }[];
 }
 ```
 
@@ -74,7 +77,9 @@ The manifest fields are defined as follows:
   - `rpcs`: Indicates if custom RPC endpoints are supported via query parameters.
   - `bundlers`: Indicates if custom bundler endpoints are supported via query parameters.
   - `dservice`: Indicates if custom dservice URLs are supported via query parameters.
-- `auxiliary`: List of URLs for non-critical services such as analytics.
+- `auxiliary`: List of non-critical services, each containing:
+  - `url`: The URL of the service
+  - `motivation`: A description of what this service is used for
 
 ### DServices
 

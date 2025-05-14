@@ -28,7 +28,10 @@ interface DappSpec {
     preserveHistory?: number;
     chains?: Record<string, ChainConfig>;
     fallbacks?: DappSpecFallbacks;
-    auxiliary?: string[];
+    auxiliary?: {
+        url: string;
+        motivation: string;
+    }[];
 }
 
 // Function to render detailed report information for v2
@@ -457,7 +460,8 @@ function renderDappspecSection(report: any): string {
         });
 
         html += renderInfoCard({
-            title: 'Chain Support',
+            title: 'Blockchain Support',
+            description: 'The dapp claims to interact only with the following blockchains. Using the RPC, Bundler, and smart contracts specified below.',
             content: renderInfoItems(chainItems)
         });
     }
@@ -568,19 +572,25 @@ function renderDappspecSection(report: any): string {
 
     // Auxiliary services
     if (dappspec.auxiliary?.length > 0) {
+        const auxiliaryItems = dappspec.auxiliary.map(service => ({
+            icon: '🔗',
+            title: new URL(service.url).hostname,
+            details: [
+                {
+                    title: 'URL:',
+                    content: `<ul><li><code>${service.url}</code></li></ul>`
+                },
+                {
+                    title: 'Purpose:',
+                    content: convertMarkdownToHtml(service.motivation)
+                }
+            ]
+        }));
+
         html += renderInfoCard({
             title: 'Auxiliary Services',
-            content: renderInfoItems([{
-                icon: '🔗',
-                title: `External Services`,
-                details: [{
-                    title: '',
-                    content: 'The dapp uses external services to enhance its functionality. These services are not required for the dapp to operate but are used to provide additional features or services.'
-                }, {
-                    title: 'Specified service URLs:',
-                    content: `<ul>${dappspec.auxiliary.map(service => `<li><code>${service}</code></li>`).join('')}</ul>`
-                }]
-            }])
+            description: 'The dapp uses the following non-essential external services to enhance its functionality. These services are not required for core operations but provide additional features:',
+            content: renderInfoItems(auxiliaryItems)
         });
     }
 

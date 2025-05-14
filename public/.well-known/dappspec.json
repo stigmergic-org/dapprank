@@ -14,7 +14,8 @@
     "window": true,
     "rpcs": true
   },
-  "auxiliary": [
-    "https://delegated-ipfs.dev/routing/v1/providers/"
-  ]
+  "auxiliary": [{
+    "url": "https://delegated-ipfs.dev/routing/v1/providers/",
+    "motivation": "Used to check the number of seeders for any given dapp."
+  }]
 }
