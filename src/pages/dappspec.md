@@ -213,6 +213,18 @@ IPNS is NOT RECOMMENDED because:
 - There is no persistent log of changes, unlike publishing CIDs directly on-chain
 - There is no simple way to create stronger governance mechanism around updating the CID
 
+#### Reduce dependencies
+
+External dependencies (e.g. npm libraries) increase the attack surface and points of failure in your dapp. Each external dependency:
+
+- Could contain malicious code that compromises user security
+- Could make external network request, and track users without their knowledge or consent
+- Increases load times and bandwidth usage
+- Makes auditing the full codebase more difficult
+
+For these reasons, you should carefully evaluate each dependency and only include those that are absolutely necessary for core functionality.
+
+
 #### Building and Deploying
 
 1. **Make a static build of your webapp.** A static web application can be delivered directly to the browser without server-side alterations.
