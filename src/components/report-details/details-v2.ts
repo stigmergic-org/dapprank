@@ -38,18 +38,9 @@ interface DappSpec {
 export function renderReportDetails(report: any): string {
     let html = '';
     
-    // Overview Section
-    html += `
-        <br>
-        <h3>Overview</h3>
-        <div class="report-section">
-            ${renderContentHashSection(report)}
-            ${renderBasicInfoSection(report)}
-        </div>
-    `;
-    
     // Dappspec Section (if available)
     html += `
+        <br />
         <h3>Dappspec</h3>
         <div class="report-section">
             ${renderDappspecSection(report)}
@@ -85,72 +76,273 @@ export function renderReportDetails(report: any): string {
 
 // Content Hash Section
 function renderContentHashSection(report: any): string {
-    return renderInfoCard({
-        title: 'Content Hash',
-        content: `
-            <div class="report-hash-value">
-                <span class="item-icon">🔐</span>${report.contentHash}
-            </div>
-            <div class="hash-button-container">
-                <button class="hash-link" title="Inspect IPFS Content" onclick="window.open('https://webui.ipfs.io/#/ipfs/${report.contentHash}', '_blank')">
-                    <span class="hash-icon">🔍</span>Explore IPFS
-                </button>
-                <button class="copy-hash-btn" title="Copy to clipboard" onclick="navigator.clipboard.writeText('${report.contentHash}').then(() => { this.classList.add('copied'); setTimeout(() => this.classList.remove('copied'), 2000); })">
-                    <span class="hash-icon">📋</span>Copy Hash
-                </button>
-            </div>
-        `
-    });
+    return `
+        <div class="report-hash-value">
+            ${report.contentHash}
+        </div>
+        <div class="hash-button-container">
+            <button class="hash-link" title="Inspect IPFS Content" onclick="window.open('https://webui.ipfs.io/#/ipfs/${report.contentHash}', '_blank')">
+                <span class="hash-icon">🔍</span>Explore IPFS
+            </button>
+            <button class="copy-hash-btn" title="Copy to clipboard" onclick="navigator.clipboard.writeText('${report.contentHash}').then(() => { this.classList.add('copied'); setTimeout(() => this.classList.remove('copied'), 2000); })">
+                <span class="hash-icon">📋</span>Copy Hash
+            </button>
+        </div>
+    `;
 }
 
-// Basic Info Section
-function renderBasicInfoSection(report: any): string {
-    const statsContent = `
-        <div class="report-grid">
-            <div class="report-item">
-                <span class="report-label">Total Size:</span>
-                <span class="report-value">
-                    <span class="item-icon">💾</span> ${formatFileSize(report.totalSize)}
-                </span>
-            </div>
-            ${report.rootMimeType ? `
-            <div class="report-item">
-                <span class="report-label">MIME Type:</span>
-                <span class="report-value">
-                    <span class="item-icon">🗃️</span> ${report.rootMimeType}
-                </span>
-            </div>
-            ` : ''}
-        </div>
-    `;
+// Dappspec Section
+function renderDappspecSection(report: any): string {
+    const dappspec = report.dappspec as DappSpec | undefined;
+    let html = `<div class="dappspec-container">`;
 
-    const createdContent = `
-        <div class="report-grid">
-            <div class="report-item">
-                <span class="report-label">Created at:</span>
-                <span class="report-value">
-                    <span class="item-icon">📅</span> ${new Date(report.timestamp * 1000).toISOString().replace('T', ' ').split('.')[0]}
-                </span>
-            </div>
-            <div class="report-item">
-                <span class="report-label">Block number:</span>
-                <span class="report-value">
-                    <span class="item-icon">⛓️</span> ${report.blockNumber}
-                </span>
-            </div>
-        </div>
-    `;
+    // Dapp Metadata Card - Always show this
+    const metadataItems = [
+        {
+            icon: '🔐',
+            title: 'Content Hash',
+            details: [{
+                title: '',
+                content: renderContentHashSection(report)
+            }]
+        }
+    ];
 
-    return `
-        ${renderInfoCard({
-            title: 'Dapp Stats',
-            content: statsContent
-        })}
-        ${renderInfoCard({
-            title: 'Report Metadata',
-            content: createdContent
-        })}
-    `;
+    // Add repository if available from dappspec
+    if (dappspec?.repository) {
+        metadataItems.push({
+            icon: '📦',
+            title: 'Repository',
+            details: [{
+                title: '',
+                content: `
+                    <a href="${dappspec.repository}" target="_blank" class="repository-link">
+                        ${dappspec.repository}
+                    </a>
+                `
+            }]
+        });
+    }
+
+    // Add size if available
+    if (report.totalSize) {
+        metadataItems.push({
+            icon: '💾',
+            title: 'Total Size',
+            details: [{
+                title: '',
+                content: `<ul><li><code>${formatFileSize(report.totalSize)}</code></li></ul>`
+            }]
+        });
+    }
+
+    // Add MIME type if available
+    if (report.rootMimeType) {
+        metadataItems.push({
+            icon: '🗃️',
+            title: 'MIME Type',
+            details: [{
+                title: '',
+                content: `<ul><li><code>${report.rootMimeType}</code></li></ul>`
+            }]
+        });
+    }
+
+    html += renderInfoCard({
+        title: 'Dapp Metadata',
+        content: renderInfoItems(metadataItems)
+    });
+
+    // If no dappspec found, show warning and return
+    if (!dappspec) {
+        html += renderNoticeCard({
+            type: 'warning',
+            message: 'No dappspec.json manifest found.'
+        });
+        html += `</div>`;
+        return html;
+    }
+
+    // Chains information
+    if (dappspec.chains && Object.keys(dappspec.chains).length > 0) {
+        const chainItems = Object.entries(dappspec.chains).map(([chainId, chainData]) => {
+            const details = [];
+            
+            if (chainData.rpcs?.length > 0) {
+                details.push({
+                    title: 'RPC Endpoints',
+                    content: `<ul>${chainData.rpcs.map(rpc => `<li><code>${rpc}</code></li>`).join('')}</ul>`
+                });
+            }
+
+            if (chainData.bundlers?.length > 0) {
+                details.push({
+                    title: 'Bundlers',
+                    content: `<ul>${chainData.bundlers.map(bundler => `<li><code>${bundler}</code></li>`).join('')}</ul>`
+                });
+            }
+
+            if (chainData.contracts?.length > 0) {
+                details.push({
+                    title: 'Contracts',
+                    content: `<ul>${chainData.contracts.map(contract => `
+                        <li>
+                            <code>${contract}</code>
+                            <a href="https://repo.sourcify.dev/contracts/full_match/${chainId}/${contract}" 
+                               target="_blank" 
+                               class="sourcify-link" 
+                               title="View on Sourcify">
+                                <span class="item-icon">🔍</span>
+                            </a>
+                        </li>
+                    `).join('')}</ul>`
+                });
+            }
+
+            return {
+                icon: '⛓️',
+                title: getNetworkName(chainId),
+                details
+            };
+        });
+
+        html += renderInfoCard({
+            title: 'Blockchain Support',
+            description: 'The dapp claims to interact only with the following blockchains. Using the RPC, Bundler, and smart contracts specified below.',
+            content: renderInfoItems(chainItems)
+        });
+    }
+
+    // Fallbacks information
+    if (dappspec.fallbacks) {
+        let fallbackItems = [];
+
+        if (dappspec.fallbacks.window) {
+            const { isSupported, files } = getWindowEthereumDetails(report);
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'Window.ethereum Injection',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'The dapp supports using injected Web3 providers from browser wallets.'
+                    },
+                    ...(isSupported ? [{
+                        title: 'Detected in:',
+                        content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                    }] : [])
+                ]
+            });
+        }
+
+        if (dappspec.fallbacks.rpcs) {
+            const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'rpc');
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'RPC Endpoint Override',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'Custom RPC endpoints can be specified via <code>?ds-rpc-{chainId}=url</code> query parameters.'
+                    },
+                    ...(isSupported ? [
+                        {
+                            title: 'Detected in:',
+                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                        },
+                        ...(motivation ? [{
+                            title: 'Implementation:',
+                            content: convertMarkdownToHtml(motivation)
+                        }] : [])
+                    ] : [])
+                ]
+            });
+        }
+
+        if (dappspec.fallbacks.bundlers) {
+            const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'bundler');
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'Bundler Endpoint Override',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'Custom bundler endpoints can be specified via <code>?ds-bundler-{chainId}=url</code> query parameters.'
+                    },
+                    ...(isSupported ? [
+                        {
+                            title: 'Detected in:',
+                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                        },
+                        ...(motivation ? [{
+                            title: 'Implementation:',
+                            content: convertMarkdownToHtml(motivation)
+                        }] : [])
+                    ] : [])
+                ]
+            });
+        }
+
+        if (dappspec.fallbacks.dservice) {
+            const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'dservice');
+            fallbackItems.push({
+                icon: '🔄',
+                title: 'DService Override',
+                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
+                details: [
+                    {
+                        title: '',
+                        content: 'Custom DService endpoints can be specified via <code>?ds-{ensName}=url</code> query parameters.'
+                    },
+                    ...(isSupported ? [
+                        {
+                            title: 'Detected in:',
+                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
+                        },
+                        ...(motivation ? [{
+                            title: 'Implementation:',
+                            content: convertMarkdownToHtml(motivation)
+                        }] : [])
+                    ] : [])
+                ]
+            });
+        }
+
+        html += renderInfoCard({
+            title: 'Fallback Support',
+            content: renderInfoItems(fallbackItems)
+        });
+    }
+
+    // Auxiliary services
+    if (dappspec.auxiliary?.length > 0) {
+        const auxiliaryItems = dappspec.auxiliary.map(service => ({
+            icon: '🔗',
+            title: new URL(service.url).hostname,
+            details: [
+                {
+                    title: 'URL:',
+                    content: `<ul><li><code>${service.url}</code></li></ul>`
+                },
+                {
+                    title: 'Purpose:',
+                    content: convertMarkdownToHtml(service.motivation)
+                }
+            ]
+        }));
+
+        html += renderInfoCard({
+            title: 'Auxiliary Services',
+            description: 'The dapp uses the following non-essential external services to enhance its functionality. These services are not required for core operations but provide additional features:',
+            content: renderInfoItems(auxiliaryItems)
+        });
+    }
+
+    html += `</div>`;
+    return html;
 }
 
 // Distribution Section
@@ -388,214 +580,6 @@ function renderLibrariesSection(report: any): string {
             ${libraryEntries.join('')}
         </div>
     `;
-}
-
-// Dappspec Section
-function renderDappspecSection(report: any): string {
-    const dappspec = report.dappspec as DappSpec | undefined;
-    
-    if (!dappspec) {
-        return renderNoticeCard({
-            type: 'warning',
-            message: 'No dappspec.json manifest found.'
-        });
-    }
-
-    let html = `<div class="dappspec-container">`;
-
-    // Repository information
-    if (dappspec.repository) {
-        html += renderInfoCard({
-            title: 'Repository',
-            content: `
-                <a href="${dappspec.repository}" target="_blank" class="repository-link">
-                    <span class="item-icon">📦</span>
-                    ${dappspec.repository}
-                </a>
-            `
-        });
-    }
-
-    // Chains information
-    if (dappspec.chains && Object.keys(dappspec.chains).length > 0) {
-        const chainItems = Object.entries(dappspec.chains).map(([chainId, chainData]) => {
-            const details = [];
-            
-            if (chainData.rpcs?.length > 0) {
-                details.push({
-                    title: 'RPC Endpoints',
-                    content: `<ul>${chainData.rpcs.map(rpc => `<li><code>${rpc}</code></li>`).join('')}</ul>`
-                });
-            }
-
-            if (chainData.bundlers?.length > 0) {
-                details.push({
-                    title: 'Bundlers',
-                    content: `<ul>${chainData.bundlers.map(bundler => `<li><code>${bundler}</code></li>`).join('')}</ul>`
-                });
-            }
-
-            if (chainData.contracts?.length > 0) {
-                details.push({
-                    title: 'Contracts',
-                    content: `<ul>${chainData.contracts.map(contract => `
-                        <li>
-                            <code>${contract}</code>
-                            <a href="https://repo.sourcify.dev/contracts/full_match/${chainId}/${contract}" 
-                               target="_blank" 
-                               class="sourcify-link" 
-                               title="View on Sourcify">
-                                <span class="item-icon">🔍</span>
-                            </a>
-                        </li>
-                    `).join('')}</ul>`
-                });
-            }
-
-            return {
-                icon: '⛓️',
-                title: getNetworkName(chainId),
-                details
-            };
-        });
-
-        html += renderInfoCard({
-            title: 'Blockchain Support',
-            description: 'The dapp claims to interact only with the following blockchains. Using the RPC, Bundler, and smart contracts specified below.',
-            content: renderInfoItems(chainItems)
-        });
-    }
-
-    // Fallbacks information
-    if (dappspec.fallbacks) {
-        let fallbackItems = [];
-
-        if (dappspec.fallbacks.window) {
-            const { isSupported, files } = getWindowEthereumDetails(report);
-            fallbackItems.push({
-                icon: '🔄',
-                title: 'Window.ethereum Injection',
-                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
-                details: [
-                    {
-                        title: '',
-                        content: 'The dapp supports using injected Web3 providers from browser wallets.'
-                    },
-                    ...(isSupported ? [{
-                        title: 'Detected in:',
-                        content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
-                    }] : [])
-                ]
-            });
-        }
-
-        if (dappspec.fallbacks.rpcs) {
-            const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'rpc');
-            fallbackItems.push({
-                icon: '🔄',
-                title: 'RPC Endpoint Override',
-                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
-                details: [
-                    {
-                        title: '',
-                        content: 'Custom RPC endpoints can be specified via <code>?ds-rpc-{chainId}=url</code> query parameters.'
-                    },
-                    ...(isSupported ? [
-                        {
-                            title: 'Detected in:',
-                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
-                        },
-                        ...(motivation ? [{
-                            title: 'Implementation:',
-                            content: convertMarkdownToHtml(motivation)
-                        }] : [])
-                    ] : [])
-                ]
-            });
-        }
-
-        if (dappspec.fallbacks.bundlers) {
-            const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'bundler');
-            fallbackItems.push({
-                icon: '🔄',
-                title: 'Bundler Endpoint Override',
-                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
-                details: [
-                    {
-                        title: '',
-                        content: 'Custom bundler endpoints can be specified via <code>?ds-bundler-{chainId}=url</code> query parameters.'
-                    },
-                    ...(isSupported ? [
-                        {
-                            title: 'Detected in:',
-                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
-                        },
-                        ...(motivation ? [{
-                            title: 'Implementation:',
-                            content: convertMarkdownToHtml(motivation)
-                        }] : [])
-                    ] : [])
-                ]
-            });
-        }
-
-        if (dappspec.fallbacks.dservice) {
-            const { isSupported, files, motivation } = getFallbackDetectionDetails(report, 'dservice');
-            fallbackItems.push({
-                icon: '🔄',
-                title: 'DService Override',
-                detected: isSupported ? '✓ Detected' : '✗ Not Detected',
-                details: [
-                    {
-                        title: '',
-                        content: 'Custom DService endpoints can be specified via <code>?ds-{ensName}=url</code> query parameters.'
-                    },
-                    ...(isSupported ? [
-                        {
-                            title: 'Detected in:',
-                            content: `<ul>${files.map(file => `<li><code>${file}</code></li>`).join('')}</ul>`
-                        },
-                        ...(motivation ? [{
-                            title: 'Implementation:',
-                            content: convertMarkdownToHtml(motivation)
-                        }] : [])
-                    ] : [])
-                ]
-            });
-        }
-
-        html += renderInfoCard({
-            title: 'Fallback Support',
-            content: renderInfoItems(fallbackItems)
-        });
-    }
-
-    // Auxiliary services
-    if (dappspec.auxiliary?.length > 0) {
-        const auxiliaryItems = dappspec.auxiliary.map(service => ({
-            icon: '🔗',
-            title: new URL(service.url).hostname,
-            details: [
-                {
-                    title: 'URL:',
-                    content: `<ul><li><code>${service.url}</code></li></ul>`
-                },
-                {
-                    title: 'Purpose:',
-                    content: convertMarkdownToHtml(service.motivation)
-                }
-            ]
-        }));
-
-        html += renderInfoCard({
-            title: 'Auxiliary Services',
-            description: 'The dapp uses the following non-essential external services to enhance its functionality. These services are not required for core operations but provide additional features:',
-            content: renderInfoItems(auxiliaryItems)
-        });
-    }
-
-    html += `</div>`;
-    return html;
 }
 
 // Helper function to render grouped items
