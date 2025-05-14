@@ -18,7 +18,7 @@ By following this specification, dapp developers create applications that are mo
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
 
 #### DappSpec Version
-`0.1.0`
+`0.2.0`
 
 #### Manifest Location
 

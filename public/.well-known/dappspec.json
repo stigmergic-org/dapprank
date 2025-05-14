@@ -1,5 +1,5 @@
 {
-  "dappspec": "0.1.0",
+  "dappspec": "0.2.0",
   "repository": "https://github.com/stigmergic-org/dapprank",
   "preserveHistory": -1,
   "chains": {
