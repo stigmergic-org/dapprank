@@ -1,8 +1,8 @@
 import { formatFileSize } from '../../report-renderer';
 import { renderInfoCard } from '../ui/info-card';
 import { renderInfoItems } from '../ui/info-items';
+import { renderNoticeCard } from '../ui/notice-card';
 import './styles.css';
-import '../ui/info-items.css';
 
 // DappSpec interfaces
 interface ChainConfig {
@@ -153,12 +153,10 @@ function renderDistributionSection(report: any): string {
     const externalMedia = distributionPurity.externalMedia || [];
     
     if (externalScripts.length === 0 && externalMedia.length === 0) {
-        return `
-            <div class="report-success-message">
-                <span class="success-icon">✅</span>
-                <p>No external dependencies detected. The dapp is fully distributed and self-contained.</p>
-            </div>
-        `;
+        return renderNoticeCard({
+            type: 'success',
+            message: 'No external dependencies detected. The dapp is fully distributed and self-contained.'
+        });
     }
     
     return `
@@ -208,15 +206,11 @@ function renderNetworkingSection(report: any): string {
     const networkingPurity = report.networkingPurity || [];
     
     if (networkingPurity.length === 0) {
-        return `
-            <div class="report-success-message">
-                <span class="success-icon">✅</span>
-                <p>No outbound network requests detected. The dapp operates without external service dependencies.</p>
-            </div>
-        `;
+        return renderNoticeCard({
+            type: 'info',
+            message: 'No outbound network requests detected. The dapp operates without external service dependencies.'
+        });
     }
-    
-    let html = '';
     
     // Group by type
     const networkingByType = networkingPurity.reduce((acc: any, item: any) => {
@@ -234,30 +228,105 @@ function renderNetworkingSection(report: any): string {
         });
         return acc;
     }, {});
-    
-    // Render networking endpoints
-    if (Object.keys(networkingByType).length > 0) {
-        html += Object.entries(networkingByType).map(([type, items]: [string, any]) => `
-            <div class="networking-group">
-                <h4>${type.charAt(0).toUpperCase() + type.slice(1)} Endpoints</h4>
-                ${renderGroupedItems(
-                    items,
-                    type,
-                    (item) => item.file || 'unknown',
-                    (item) => [item] // Keep each occurrence as a single item
-                )}
-            </div>
-        `).join('');
+
+    // Return early if no networking types found
+    if (Object.keys(networkingByType).length === 0) {
+        return renderNoticeCard({
+            type: 'info',
+            message: 'No networking endpoints were detected in the analysis.'
+        });
     }
-    
-    return html;
+
+    // Render each type as a separate info card
+    return Object.entries(networkingByType).map(([type, items]: [string, any]) => {
+        // Group items by file
+        const itemsByFile: Record<string, any[]> = {};
+        items.forEach((item: any) => {
+            if (!itemsByFile[item.file]) {
+                itemsByFile[item.file] = [];
+            }
+            itemsByFile[item.file].push(item);
+        });
+
+        // Create info items for each file
+        const fileItems = Object.entries(itemsByFile).map(([file, fileItems], index, array) => ({
+            icon: '📄',
+            title: file,
+            details: [
+                ...fileItems.map((item, itemIndex) => {
+                    const details = [];
+                    
+                    // Add API and Library info if present
+                    if (item.method || item.library) {
+                        details.push({
+                            title: 'Detected:',
+                            content: `
+                                ${item.method ? `<span class="detail-method">API: ${item.method}</span>` : ''}
+                                ${item.library ? `<span class="detail-library">Library: ${item.library}</span>` : ''}
+                            `
+                        });
+                    }
+
+                    // Add URLs
+                    details.push({
+                        title: `URL${item.urls.length > 1 ? 's' : ''}:`,
+                        content: item.urls.length === 0 ? 
+                            `<div class="warning-text">
+                                <span class="warning-icon">⚠️</span>
+                                <span>Warning: This code can make requests to any URL</span>
+                            </div>` :
+                            `<ul class="url-list">
+                                ${item.urls.map((url: string) => `<li><code>${escapeHtml(url)}</code></li>`).join('')}
+                            </ul>`
+                    });
+
+                    // Add motivation if present
+                    if (item.motivation) {
+                        details.push({
+                            title: 'Motivation:',
+                            content: convertMarkdownToHtml(item.motivation)
+                        });
+                    }
+
+                    // Only add breaks between items if there are multiple items
+                    if (fileItems.length > 1 && itemIndex < fileItems.length - 1) {
+                        details.push({
+                            title: '',
+                            content: '<div class="item-separator"></div>'
+                        });
+                    }
+
+                    return details;
+                }).flat(),
+            ]
+        }));
+
+        return renderInfoCard({
+            title: `${type.charAt(0).toUpperCase() + type.slice(1)} Endpoints`,
+            content: renderInfoItems(fileItems)
+        });
+    }).join('');
+}
+
+// Helper function to escape HTML tags
+function escapeHtml(text: string): string {
+    if (!text) return '';
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 // Helper function to convert simple markdown to HTML
 function convertMarkdownToHtml(markdown: string): string {
     if (!markdown) return '';
     
-    return markdown
+    // First escape any HTML tags in the markdown
+    const escaped = escapeHtml(markdown);
+    
+    return escaped
         // Convert code blocks with backticks
         .replace(/`([^`]+)`/g, '<code>$1</code>')
         // Convert line breaks
@@ -275,12 +344,10 @@ function renderLibrariesSection(report: any): string {
     const libraries = report.libraryUsage || [];
     
     if (!Array.isArray(libraries) || libraries.length === 0) {
-        return `
-            <div class="report-info-message">
-                <span class="info-icon">ℹ️</span>
-                <p>No JavaScript libraries were detected in the analysis.</p>
-            </div>
-        `;
+        return renderNoticeCard({
+            type: 'info',
+            message: 'No JavaScript libraries were detected in the analysis.'
+        });
     }
     
     return `
@@ -316,9 +383,9 @@ function renderDappspecSection(report: any): string {
     const dappspec = report.dappspec as DappSpec | undefined;
     
     if (!dappspec) {
-        return renderInfoCard({
-            title: 'Dappspec',
-            content: 'No dappspec.json manifest found.'
+        return renderNoticeCard({
+            type: 'warning',
+            message: 'No dappspec.json manifest found.'
         });
     }
 
@@ -555,7 +622,7 @@ function renderGroupedItems(items: any[], itemType: string, extractFile: (item: 
                                                     ${Array.isArray(detail.urls) ? (
                                                         detail.urls.length === 0 ? '⚠️ Any url could be used' :
                                                         `<ul class="url-list">
-                                                            ${detail.urls.map((url: string) => `<li><code>${url}</code></li>`).join('')}
+                                                            ${detail.urls.map((url: string) => `<li><code>${escapeHtml(url)}</code></li>`).join('')}
                                                         </ul>`
                                                     ) : (
                                                         detail.url ? detail.url : '<any>'

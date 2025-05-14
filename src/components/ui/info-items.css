@@ -93,6 +93,12 @@
     color: var(--text-color);
 }
 
+/* Item separator */
+.item-separator {
+    border-top: 1px solid var(--border-color);
+    margin: 1rem 0;
+}
+
 /* Dark mode specific adjustments */
 .dark-mode .info-item {
     background: var(--card-background);

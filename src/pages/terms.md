@@ -48,7 +48,7 @@ We reserve the right to modify these Terms of Use at any time without prior noti
 
 
 ### 9. Jurisdiction  
-These terms are governed by and construed in accordance with the laws of **Sweden**, without regard to conflict of law principles. By using this site, you agree to submit to the exclusive jurisdiction of the courts located in **Sweden**.
+These terms are governed by and construed in accordance with the laws of Swede*, without regard to conflict of law principles. By using this site, you agree to submit to the exclusive jurisdiction of the courts located in Sweden.
 
 ---
 

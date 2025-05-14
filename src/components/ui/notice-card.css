@@ -1,0 +1,78 @@
+.notice-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: var(--border-radius);
+    margin: 8px 0;
+    box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.notice-icon {
+    font-size: 1.2em;
+    margin-right: 12px;
+    line-height: 1.4;
+}
+
+.notice-message {
+    margin: 0;
+    line-height: 1.4;
+    flex: 1;
+    font-family: var(--font-primary);
+}
+
+/* Light mode styles */
+:root {
+    /* Warning theme */
+    --notice-warning-bg: var(--warning-background);
+    --notice-warning-border: var(--warning-color);
+    --notice-warning-text: var(--warning-text-color);
+
+    /* Info theme */
+    --notice-info-bg: rgba(67, 97, 238, 0.1);
+    --notice-info-border: var(--highlight-color);
+    --notice-info-text: var(--highlight-color);
+
+    /* Success theme */
+    --notice-success-bg: rgba(42, 157, 143, 0.1);
+    --notice-success-border: var(--success-color);
+    --notice-success-text: var(--success-color);
+}
+
+/* Dark mode styles */
+.dark-mode {
+    /* Warning theme */
+    --notice-warning-bg: var(--warning-background);
+    --notice-warning-border: var(--warning-color);
+    --notice-warning-text: var(--warning-text-color);
+
+    /* Info theme */
+    --notice-info-bg: rgba(72, 149, 239, 0.1);
+    --notice-info-border: var(--highlight-color);
+    --notice-info-text: var(--highlight-color);
+
+    /* Success theme */
+    --notice-success-bg: rgba(42, 157, 143, 0.1);
+    --notice-success-border: var(--success-color);
+    --notice-success-text: var(--success-color);
+}
+
+/* Warning style */
+.notice-card-warning {
+    background-color: var(--notice-warning-bg);
+    border: 1px solid var(--notice-warning-border);
+    color: var(--notice-warning-text);
+}
+
+/* Info style */
+.notice-card-info {
+    background-color: var(--notice-info-bg);
+    border: 1px solid var(--notice-info-border);
+    color: var(--notice-info-text);
+}
+
+/* Success style */
+.notice-card-success {
+    background-color: var(--notice-success-bg);
+    border: 1px solid var(--notice-success-border);
+    color: var(--notice-success-text);
+} 
