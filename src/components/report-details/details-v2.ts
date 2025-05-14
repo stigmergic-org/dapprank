@@ -357,21 +357,108 @@ function renderDistributionSection(report: any): string {
             message: 'No external dependencies detected. The dapp is fully distributed and self-contained.'
         });
     }
-    
-    return `
-        ${renderGroupedItems(
-            externalScripts,
-            'External Scripts',
-            (script) => script.file || 'index.html',
-            (script) => script.occurences || []
-        )}
-        ${renderGroupedItems(
-            externalMedia,
-            'External Media',
-            (media) => media.file || 'index.html',
-            (media) => media.occurences || []
-        )}
-    `;
+
+    let html = '';
+
+    // External Scripts Card
+    if (externalScripts.length > 0) {
+        const scriptItems = Object.entries(
+            externalScripts.reduce((acc: any, script: any) => {
+                const file = script.file || 'index.html';
+                if (!acc[file]) acc[file] = [];
+                acc[file].push(script);
+                return acc;
+            }, {})
+        ).map(([file, scripts]: [string, any[]]) => ({
+            icon: '📄',
+            title: file,
+            details: scripts.map((script) => {
+                const details = [];
+                
+                // Add URLs
+                details.push({
+                    title: `URL${script.occurences?.length > 1 ? 's' : ''}:`,
+                    content: !script.occurences || script.occurences.length === 0 ? 
+                        `<div class="warning-text">
+                            <span class="warning-icon">⚠️</span>
+                            <span>Warning: This code could load any external script</span>
+                        </div>` :
+                        `<ul class="url-list">
+                            ${script.occurences.map((occurrence: any) => {
+                                const url = typeof occurrence === 'string' ? occurrence : occurrence.url;
+                                const type = typeof occurrence === 'string' ? 'script' : occurrence.type || 'script';
+                                return url ? `
+                                    <li>
+                                        <div class="detail-info">
+                                            <span class="detail-type">Type: ${type}</span>
+                                        </div>
+                                        <code>${escapeHtml(url)}</code>
+                                    </li>` : '';
+                            }).filter(Boolean).join('') || ''}
+                        </ul>`
+                });
+
+                return details;
+            }).flat()
+        }));
+
+        html += renderInfoCard({
+            title: 'External Scripts',
+            description: 'The dapp loads JavaScript code from the following external sources:',
+            content: renderInfoItems(scriptItems)
+        });
+    }
+
+    // External Media Card
+    if (externalMedia.length > 0) {
+        const mediaItems = Object.entries(
+            externalMedia.reduce((acc: any, media: any) => {
+                const file = media.file || 'index.html';
+                if (!acc[file]) acc[file] = [];
+                acc[file].push(media);
+                return acc;
+            }, {})
+        ).map(([file, medias]: [string, any[]]) => ({
+            icon: '📄',
+            title: file,
+            details: medias.map((media) => {
+                const details = [];
+                
+                // Add URLs
+                details.push({
+                    title: `URL${media.occurences?.length > 1 ? 's' : ''}:`,
+                    content: !media.occurences || media.occurences.length === 0 ? 
+                        `<div class="warning-text">
+                            <span class="warning-icon">⚠️</span>
+                            <span>Warning: This code could load any external media</span>
+                        </div>` :
+                        `<ul class="url-list">
+                            ${media.occurences.map((occurrence: any) => {
+                                const url = typeof occurrence === 'string' ? occurrence : occurrence.url;
+                                const type = typeof occurrence === 'string' ? 'media' : occurrence.type || 'media';
+                                return url ? `
+                                    <li>
+                                        <div class="detail-info">
+                                            <span class="detail-type">Type: ${type}</span>
+                                        </div>
+                                        <code>${escapeHtml(url)}</code>
+                                    </li>` : '';
+                            }).filter(Boolean).join('') || ''}
+                        </ul>`
+                });
+
+                return details;
+            }).flat()
+        }));
+
+        html += renderInfoCard({
+            title: 'External Media',
+            description: 'The dapp loads media content from the following external sources:',
+            content: renderInfoItems(mediaItems)
+        });
+    }
+
+    return html;
 }
 
 // Helper function to get fallback title and params
@@ -620,17 +707,19 @@ function renderGroupedItems(items: any[], itemType: string, extractFile: (item: 
                                                 ${detail.library ? `<span class="detail-library">Library: ${detail.library}</span>` : ''}
                                             </div>
                                             <div class="detail-url">
-                                                <span class="url-label">URL${detail.urls.length > 1 ? 's' : ''}:</span>
-                                                <span class="url-value">
-                                                    ${Array.isArray(detail.urls) ? (
-                                                        detail.urls.length === 0 ? '⚠️ Any url could be used' :
-                                                        `<ul class="url-list">
-                                                            ${detail.urls.map((url: string) => `<li><code>${escapeHtml(url)}</code></li>`).join('')}
-                                                        </ul>`
-                                                    ) : (
-                                                        detail.url ? detail.url : '<any>'
-                                                    )}
-                                                </span>
+                                                ${detail.url || detail.urls ? `
+                                                    <span class="url-label">URL${detail.urls && detail.urls.length > 1 ? 's' : ''}:</span>
+                                                    <span class="url-value">
+                                                        ${detail.urls ? (
+                                                            detail.urls.length === 0 ? '⚠️ Any url could be used' :
+                                                            `<ul class="url-list">
+                                                                ${detail.urls.map((url: string) => `<li><code>${escapeHtml(url)}</code></li>`).join('')}
+                                                            </ul>`
+                                                        ) : (
+                                                            detail.url ? `<code>${escapeHtml(detail.url)}</code>` : '<any>'
+                                                        )}
+                                                    </span>
+                                                ` : ''}
                                             </div>
                                             ${detail.motivation ? `
                                                 <div class="networking-motivation">
