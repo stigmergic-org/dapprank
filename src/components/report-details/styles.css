@@ -4,6 +4,8 @@
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   background-color: var(--background-color);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Report Item */
@@ -137,6 +139,9 @@
   background-color: var(--background-color);
   border-top: 1px dashed var(--border-color);
   animation: fadeIn 0.3s ease-in-out;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* Badge Styles */
@@ -169,6 +174,9 @@
   background-color: var(--secondary-background);
   width: 100%;
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .report-label {
@@ -182,15 +190,17 @@
 }
 
 .report-value {
-  word-break: break-all;
+  word-break: normal;
+  overflow-wrap: break-word;
   font-family: var(--font-monospace, monospace);
   padding: 8px 12px;
   border-radius: 4px;
   background-color: var(--secondary-background);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   box-sizing: border-box;
+  white-space: pre-wrap;
 }
 
 .item-icon {
@@ -234,17 +244,20 @@
 .report-list {
   list-style: none;
   padding: 0;
-  margin: 10px 0;
+  margin: 0;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
 .report-list > li {
-  margin-bottom: 15px;
-  background-color: var(--card-background);
-  padding: 12px 15px;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: var(--secondary-background);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
   width: 100%;
   box-sizing: border-box;
 }
@@ -258,19 +271,19 @@
 .report-sublist {
   list-style: none;
   padding: 0;
-  margin: 0;
-  font-family: var(--font-monospace);
-  font-size: 0.9em;
+  margin: 8px 0 0 16px;
+  width: calc(100% - 16px);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .report-sublist li {
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--text-secondary);
-}
-
-.report-sublist li:last-child {
-  border-bottom: none;
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: var(--background-color);
+  border-radius: 4px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* Hash Related Styles */
@@ -356,14 +369,23 @@
 
 /* Responsive Adjustments */
 @media (max-width: 767px) {
-  .report-item {
-    padding: 10px 8px;
+  .report-item,
+  .report-list > li,
+  .report-sublist li,
+  .networking-motivation,
+  .detail-url {
+    padding: 8px;
   }
   
   .report-history-title {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
+  }
+  
+  .report-value,
+  .url-value {
+    font-size: 0.85em;
   }
 }
 
@@ -553,6 +575,10 @@
 /* Networking Groups */
 .networking-group {
     margin-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .networking-group:last-child {
@@ -566,25 +592,22 @@
 }
 
 .networking-motivation {
-    color: var(--text-secondary);
-    font-size: 0.95em;
-    line-height: 1.5;
     margin-top: 8px;
-    padding: 8px 12px;
-    background-color: var(--secondary-background);
+    padding: 8px;
+    background-color: var(--background-color);
     border-radius: 4px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .networking-motivation p {
-    margin: 0.5em 0;
-}
-
-.networking-motivation p:first-child {
-    margin-top: 0;
-}
-
-.networking-motivation p:last-child {
-    margin-bottom: 0;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 /* File Path Styling */
@@ -686,12 +709,16 @@
 
 .detail-url {
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 8px;
+    flex-direction: column;
+    gap: 4px;
     padding: 8px;
+    background-color: var(--background-color);
     border-radius: 4px;
-    background-color: var(--secondary-background);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .url-label {
@@ -702,10 +729,17 @@
 }
 
 .url-value {
-    font-family: var(--font-monospace);
+    font-family: var(--font-monospace, monospace);
     font-size: 0.9em;
-    word-break: break-all;
-    flex: 1;
+    padding: 4px 8px;
+    background-color: var(--secondary-background);
+    border-radius: 4px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .detail-motivation {
@@ -716,6 +750,11 @@
     font-size: 0.9em;
     color: var(--text-secondary);
     line-height: 1.5;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 /* Markdown styles for detail motivation */
@@ -1129,6 +1168,11 @@
     border-radius: 6px;
     padding: 12px;
     margin-bottom: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .networking-item:last-child {
@@ -1149,29 +1193,30 @@
     background-color: var(--secondary-background);
     padding: 4px 8px;
     border-radius: 4px;
-    word-break: break-all;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: block;
 }
 
 .networking-motivation {
-    color: var(--text-secondary);
-    font-size: 0.95em;
-    line-height: 1.5;
     margin-top: 8px;
     padding: 8px;
-    background-color: var(--secondary-background);
+    background-color: var(--background-color);
     border-radius: 4px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .networking-motivation p {
-    margin: 0.5em 0;
-}
-
-.networking-motivation p:first-child {
-    margin-top: 0;
-}
-
-.networking-motivation p:last-child {
-    margin-bottom: 0;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .networking-file {
@@ -1179,6 +1224,9 @@
     color: var(--text-secondary);
     margin-top: 4px;
     font-family: var(--font-monospace);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-width: 100%;
 }
 
 /* Markdown content styling */
@@ -1224,4 +1272,171 @@
     .markdown-content pre {
         background-color: var(--secondary-background);
     }
+}
+
+/* Mobile Responsiveness Improvements */
+@media (max-width: 767px) {
+  .report-history-content,
+  .report-list,
+  .report-list > li,
+  .report-sublist,
+  .networking-group,
+  .networking-item,
+  .networking-url,
+  .networking-motivation,
+  .detail-url,
+  .url-value,
+  .detail-motivation {
+    padding: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .report-history-content {
+    padding: 0 12px 12px;
+  }
+
+  .networking-url,
+  .url-value {
+    font-size: 0.85em;
+    padding: 4px 6px;
+  }
+}
+
+/* Ensure all text elements handle overflow properly */
+.report-value,
+.report-label,
+.networking-motivation p,
+.detail-motivation p,
+.library-motivation p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+/* Main container styles */
+.dapp-details {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+.dapp-details-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.dapp-details-section {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin-bottom: 24px;
+}
+
+/* Ensure parent containers handle overflow properly */
+#main-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+#content-wrapper {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Header section */
+.dapp-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.dapp-icon-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.dapp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .dapp-details {
+        padding: 12px;
+    }
+
+    .dapp-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dapp-icon-title {
+        width: 100%;
+    }
+
+    .dapp-header-right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* Ensure all direct children of dapp-details handle overflow properly */
+.dapp-details > * {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/* Update existing report container styles */
+.report-history-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.report-history-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding: 16px;
+}
+
+/* Ensure all text content wraps properly */
+.dapp-details h1,
+.dapp-details h2,
+.dapp-details h3,
+.dapp-details p,
+.dapp-details div {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
 } 
