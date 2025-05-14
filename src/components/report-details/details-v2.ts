@@ -2,7 +2,11 @@ import { formatFileSize } from '../../report-renderer';
 import { renderInfoCard } from '../ui/info-card';
 import { renderInfoItems } from '../ui/info-items';
 import { renderNoticeCard } from '../ui/notice-card';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkHtml from 'remark-html';
 import './styles.css';
+import '../ui/info-items.css';
 
 // DappSpec interfaces
 interface ChainConfig {
@@ -273,7 +277,7 @@ function renderNetworkingSection(report: any): string {
                         content: item.urls.length === 0 ? 
                             `<div class="warning-text">
                                 <span class="warning-icon">⚠️</span>
-                                <span>Warning: This code can make requests to any URL</span>
+                                <span>Warning: This code could make requests to any URL</span>
                             </div>` :
                             `<ul class="url-list">
                                 ${item.urls.map((url: string) => `<li><code>${escapeHtml(url)}</code></li>`).join('')}
@@ -308,6 +312,25 @@ function renderNetworkingSection(report: any): string {
     }).join('');
 }
 
+// Helper function to convert markdown to HTML
+function convertMarkdownToHtml(markdown: string): string {
+    if (!markdown) return '';
+    
+    try {
+        const file = unified()
+            .use(remarkParse)
+            .use(remarkHtml)
+            .processSync(markdown);
+            
+        // Add markdown-content class to wrap the content
+        let html = String(file);
+        return `<div class="markdown-content">${html}</div>`;
+    } catch (error) {
+        console.error('Error converting markdown to HTML:', error);
+        return escapeHtml(markdown);
+    }
+}
+
 // Helper function to escape HTML tags
 function escapeHtml(text: string): string {
     if (!text) return '';
@@ -317,26 +340,6 @@ function escapeHtml(text: string): string {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
-}
-
-// Helper function to convert simple markdown to HTML
-function convertMarkdownToHtml(markdown: string): string {
-    if (!markdown) return '';
-    
-    // First escape any HTML tags in the markdown
-    const escaped = escapeHtml(markdown);
-    
-    return escaped
-        // Convert code blocks with backticks
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        // Convert line breaks
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>')
-        // Convert lists
-        .replace(/^\s*-\s+(.+)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
-        // Wrap in paragraph if not already wrapped
-        .replace(/^(?!<[up]>)(.+)(?!<\/[up]>)$/gm, '<p>$1</p>');
 }
 
 // Libraries Section
@@ -350,30 +353,36 @@ function renderLibrariesSection(report: any): string {
         });
     }
     
+    const libraryEntries = libraries.map((fileEntry: any) => {
+        if (!fileEntry || !fileEntry.file || !Array.isArray(fileEntry.occurences)) return '';
+        
+        const entries = fileEntry.occurences.map((lib: any) => {
+            if (!lib || typeof lib !== 'object') return '';
+            const name = lib.name || 'Unknown Library';
+            const motivation = lib.motivation || 'No motivation provided';
+            
+            const htmlMotivation = convertMarkdownToHtml(motivation);
+            
+            return `
+                <div class="library-item">
+                    <div class="library-name">
+                        <span class="item-icon">📚</span>
+                        ${name}
+                        <span class="library-file">${fileEntry.file}</span>
+                    </div>
+                    <div class="library-motivation">
+                        ${htmlMotivation}
+                    </div>
+                </div>
+            `;
+        });
+        
+        return entries.join('');
+    });
+    
     return `
         <div class="libraries-list">
-            ${libraries.map((fileEntry: any) => {
-                if (!fileEntry || !fileEntry.file || !Array.isArray(fileEntry.occurences)) return '';
-                
-                return fileEntry.occurences.map((lib: any) => {
-                    if (!lib || typeof lib !== 'object') return '';
-                    const name = lib.name || 'Unknown Library';
-                    const motivation = lib.motivation || 'No motivation provided';
-                    
-                    return `
-                        <div class="library-item">
-                            <div class="library-name">
-                                <span class="item-icon">📚</span>
-                                ${name}
-                                <span class="library-file">${fileEntry.file}</span>
-                            </div>
-                            <div class="library-motivation">
-                                ${convertMarkdownToHtml(motivation)}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }).join('')}
+            ${libraryEntries.join('')}
         </div>
     `;
 }

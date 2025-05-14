@@ -1179,4 +1179,49 @@
     color: var(--text-secondary);
     margin-top: 4px;
     font-family: var(--font-monospace);
+}
+
+/* Markdown content styling */
+.markdown-content ul {
+    list-style-type: disc !important;
+    padding-left: 1.5em !important;
+    margin: 0.5em 0 !important;
+}
+
+.markdown-content ul li {
+    display: list-item !important;
+    margin: 0.25em 0 !important;
+}
+
+.markdown-content code {
+    background: var(--secondary-background);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-family: var(--font-monospace);
+}
+
+.markdown-content pre {
+    background: var(--secondary-background);
+    padding: 1em;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0.5em 0;
+}
+
+.markdown-content pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .markdown-content code {
+        background-color: var(--secondary-background);
+    }
+    
+    .markdown-content pre {
+        background-color: var(--secondary-background);
+    }
 } 
