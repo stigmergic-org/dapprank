@@ -4,7 +4,7 @@ import { renderDappDetailsPage } from './report-renderer'
 import { isContentHashOutdated } from './ens-resolver'
 import { fetchCar, getJson } from './ipfs-utils'
 import { getMimeTypeIcon } from './report-renderer'
-import { calculateCensorshipResistanceScore, DappData } from './reports'
+import { calculateCensorshipResistanceScore, DappData, DappspecManifest } from './reports'
 
 // @ts-ignore
 import about from './pages/about.md'
@@ -583,6 +583,13 @@ async function processDappData(root: CID, dappName: string, fs: any) {
         // Try to read report.json
         let report = await getJson(fs, root, `${dappName}/report.json`);
 
+        let dappspec: DappspecManifest | undefined;
+        try {
+            dappspec = await getJson(fs, root, `${dappName}/dappspec.json`);
+        } catch (error) {
+            console.error(`Error reading dappspec for ${dappName}:`, error)
+        }
+
         // Construct the favicon URL using archive directory with the block number
         let faviconUrl = '';
         if (report.favicon) {
@@ -596,6 +603,7 @@ async function processDappData(root: CID, dappName: string, fs: any) {
         const dappData: DappData = {
             metadata,
             report,
+            dappspec,
             favicon: faviconUrl
         }
         // Process the dapp data

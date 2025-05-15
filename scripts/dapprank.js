@@ -662,12 +662,14 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
     console.log(`Report saved to ${reportPath}`)
 
     // Check and save dappspec.json if it exists
+    let hasDappspec = false
     try {
         const dappspecFile = await getDappspecJson(kubo, report.contentHash)
         if (dappspecFile) {
             const dappspecPath = join(archiveDir, 'dappspec.json')
             await fs.writeFile(dappspecPath, JSON.stringify(dappspecFile, null, 2))
             console.log(`Dappspec saved to ${dappspecPath}`)
+            hasDappspec = true
         }
     } catch (error) {
         console.log(`No dappspec.json found: ${error.message}`)
@@ -712,6 +714,14 @@ async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
     const relativeReportPath = join('../../archive', ensName, blockNumber.toString(), 'report.json')
     await fs.symlink(relativeReportPath, symlinkPath)
     console.log(`Symlink created at ${symlinkPath}`)
+
+    // Create symlink to latest dappspec.json if it exists
+    if (hasDappspec) {
+        const dappspecSymlinkPath = join(indexDir, 'dappspec.json')
+        const relativeDappspecPath = join('../../archive', ensName, blockNumber.toString(), 'dappspec.json')
+        await fs.symlink(relativeDappspecPath, dappspecSymlinkPath)
+        console.log(`Dappspec symlink created at ${dappspecSymlinkPath}`)
+    }
 
     // Try to save favicon to archive directory only if favicon exists
     if (report.favicon && faviconInfo) {

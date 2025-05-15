@@ -280,7 +280,7 @@ function renderDappDetailsPageWithHistory(
                         <!-- Risk triangle will be inserted here by JS -->
                     </div>
                     <div class="risk-information-container" id="risk-information">
-                        <!-- Distribution, networking, and web3 info will be added here -->
+                        <!-- Distribution, networking, and dappspec info will be added here -->
                     </div>
                 </div>
                 
@@ -305,7 +305,7 @@ function renderDappDetailsPageWithHistory(
         });
     }
     
-    // Add the distribution, networking and web3 information
+    // Add the distribution, networking and dappspec information
     const riskInfoContainer = document.getElementById('risk-information');
     if (riskInfoContainer) {
         // Distribution info
@@ -324,18 +324,18 @@ function renderDappDetailsPageWithHistory(
             ${renderNetworkingInfo(dappData.report.networkingPurity)}
         `;
         
-        // Web3 info
-        const web3Info = document.createElement('div');
-        web3Info.className = 'web3-info';
-        web3Info.innerHTML = `
-            <h3>Web3</h3>
-            ${renderWeb3Info(dappData.report.web3)}
+        // Dappspec info
+        const dappspecInfo = document.createElement('div');
+        dappspecInfo.className = 'dappspec-info';
+        dappspecInfo.innerHTML = `
+            <h3>Dappspec</h3>
+            ${renderDappspecInfo(dappData.report.dappspec)}
         `;
         
         // Add all info sections
         riskInfoContainer.appendChild(distributionInfo);
         riskInfoContainer.appendChild(networkingInfo);
-        riskInfoContainer.appendChild(web3Info);
+        riskInfoContainer.appendChild(dappspecInfo);
     }
     
     console.log('beforecontethhash')
@@ -591,4 +591,26 @@ export function renderWeb3Interactions(web3: any[]): string {
             risk: offender.risk
         }))
     );
+}
+
+// Helper function to render dappspec information in a readable format
+function renderDappspecInfo(dappspec: any): string {
+    if (!dappspec) return '<p>No dappspec manifest found.</p>';
+    
+    let html = '';
+    
+    if (dappspec.dappspec) {
+        html += `<p>📋 Dappspec manifest version: ${dappspec.dappspec}</p>`;
+    }
+    
+    if (dappspec.chains) {
+        const chainCount = Object.keys(dappspec.chains).length;
+        html += `<p>⛓️ Supported blockchains: ${chainCount}</p>`;
+    }
+    
+    if (dappspec.fallbacks?.length > 0) {
+        html += `<p>🔄 Fallback mechanisms: ${dappspec.fallbacks.length}</p>`;
+    }
+    
+    return html || '<p>No dappspec information available.</p>';
 } 

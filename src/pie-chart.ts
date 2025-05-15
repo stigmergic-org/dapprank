@@ -3,7 +3,7 @@ import { generateSummarizedReport, SummarizedReport } from "./reports";
 import { CID } from 'multiformats/cid';
 
 export async function createRiskChart(dappData?: any, showEnlarged: boolean = false): Promise<HTMLDivElement> {
-    const report = dappData ? generateSummarizedReport(dappData.report) : null;
+    const report = dappData ? generateSummarizedReport(dappData) : null;
     const pieColors = getPieColors(report);
     const reportContent = renderReportText(report);
     
@@ -21,25 +21,27 @@ function renderReportText(report: SummarizedReport) {
         // Distribution section with only title and emoji subtexts
         const distributionContainer = createSectionContainer(container, 'Distribution', '');
         const distSubtextsContainer = createHorizontalContainer(distributionContainer);
-        addEmojiSubText(distSubtextsContainer, '🎬', 'media', report.distributionPurity.externalMedia);
-        addEmojiSubText(distSubtextsContainer, '📜', 'scripts', report.distributionPurity.externalScripts);
+        addEmojiSubText(distSubtextsContainer, '🎬', 'media', report.distribution.externalMedia);
+        addEmojiSubText(distSubtextsContainer, '📜', 'scripts', report.distribution.externalScripts);
 
         // Networking section with only title and emoji subtexts
         const networkingContainer = createSectionContainer(container, 'Networking', '');
         const netSubtextsContainer = createHorizontalContainer(networkingContainer);
-        addEmojiSubText(netSubtextsContainer, '🌐', 'http', report.networkingPurity.http);
-        addEmojiSubText(netSubtextsContainer, '🔌', 'websocket', report.networkingPurity.websocket);
-        addEmojiSubText(netSubtextsContainer, '📡', 'webrtc', report.networkingPurity.webrtc);
+        addEmojiSubText(netSubtextsContainer, '🌐', 'rpc', report.networking.rpc);
+        addEmojiSubText(netSubtextsContainer, '🔌', 'bundler', report.networking.bundler);
+        addEmojiSubText(netSubtextsContainer, '🔄', 'self', report.networking.self);
+        addEmojiSubText(netSubtextsContainer, '📡', 'auxiliary', report.networking.auxiliary);
 
-        // Web3 section with total number
-        const web3Container = createSectionContainer(container, 'Web3', '');
-        const web3SubtextsContainer = createHorizontalContainer(web3Container);
-        const web3Total = report.web3.high + report.web3.fair + report.web3.none;
-        addEmojiSubText(web3SubtextsContainer, '🧩', 'web3 functionality', web3Total);
+        // Dappspec section with total number
+        const dappspecContainer = createSectionContainer(container, 'Dappspec', '');
+        const dappspecSubtextsContainer = createHorizontalContainer(dappspecContainer);
+        addEmojiSubText(dappspecSubtextsContainer, '📋', 'manifest', report.dappspec.hasDappspec ? 1 : 0);
+        addEmojiSubText(dappspecSubtextsContainer, '🔄', 'fallbacks', report.dappspec.fallbacks);
+        addEmojiSubText(dappspecSubtextsContainer, '⛓️', 'blockchains', report.dappspec.blockchains);
     } else {
         createSectionContainer(container, 'Distribution', 'No report available');
         createSectionContainer(container, 'Networking', 'No report available');
-        createSectionContainer(container, 'Web3', 'No report available');
+        createSectionContainer(container, 'Dappspec', 'No report available');
     }
 
     return container;
@@ -111,27 +113,27 @@ function getPieColors(report: SummarizedReport): string[] {
     const colors = [];
 
     // Color for Networking Purity
-    if (report.networkingPurity.http + report.networkingPurity.websocket + report.networkingPurity.webrtc > 0) {
+    if (report.networking.rpc + report.networking.bundler + report.networking.self + report.networking.auxiliary > 0) {
         colors.push(COLORS.red);
     } else {
         colors.push(COLORS.green);
     }
 
-    // Color for web3
-    if (report.web3.high > 0) {
-        colors.push(COLORS.red);
-    } else if (report.web3.fair > 0) {
-        colors.push(COLORS.yellow);
-    } else if (report.web3.none > 0) {
-        colors.push(COLORS.green);
+    // Color for dappspec
+    if (report.dappspec.hasDappspec) {
+        if (report.dappspec.fallbacks > 0 || report.dappspec.blockchains > 0) {
+            colors.push(COLORS.green);
+        } else {
+            colors.push(COLORS.yellow);
+        }
     } else {
-        colors.push(COLORS.gray);
+        colors.push(COLORS.red);
     }
 
     // Color for Distribution Purity
-    if (report.distributionPurity.externalScripts > 0) {
+    if (report.distribution.externalScripts > 0) {
         colors.push(COLORS.red);
-    } else if (report.distributionPurity.externalMedia > 0) {
+    } else if (report.distribution.externalMedia > 0) {
         colors.push(COLORS.yellow);
     } else {
         colors.push(COLORS.green);
