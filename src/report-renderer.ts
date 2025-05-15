@@ -9,6 +9,7 @@ import {
 import { renderReportDetails as renderV2ReportDetails } from './components/report-details/details-v2';
 import { renderOutdatedWarning } from './components/report-details/details-outdated';
 import { DappData, DappMetadata, calculateCensorshipResistanceScore, getScoreCategory } from './reports';
+import { createRiskChart } from './pie-chart';
 
 // Helper function to get an appropriate icon based on MIME type
 export function getMimeTypeIcon(mimeType: string | null | undefined): string {
@@ -84,7 +85,6 @@ export interface ArchiveData {
 export function renderDappDetailsPage(
     ensName: string, 
     container: HTMLElement, 
-    createRiskChart: (dappData: any, showEnlarged?: boolean) => Promise<HTMLElement>,
     getCategoryColor: (category: string) => string
 ) {
     // Show loading state
@@ -98,7 +98,6 @@ export function renderDappDetailsPage(
             ensName,
             dappData,
             container,
-            createRiskChart,
             getCategoryColor,
             archiveData.historicalReports
         );
@@ -149,6 +148,7 @@ export async function loadHistoricalReports(ensName: string, currentBlockNumber?
         
         // Try to fetch dappspec.json if it exists
         const dappspec = await fetchDappspecJson(fs, root, latestBlockNumber);
+        
         // Load metadata from the archive directory which should have the definitive metadata
         let latestMetadata: DappMetadata = await getJson(fs, root, 'metadata.json');
         
@@ -165,7 +165,8 @@ export async function loadHistoricalReports(ensName: string, currentBlockNumber?
         const latestDappData = {
             metadata: latestMetadata,
             report: latestReport,
-            favicon: faviconUrl
+            favicon: faviconUrl,
+            dappspec: dappspec
         };
         
         // Log the category for debugging
@@ -211,7 +212,6 @@ function renderDappDetailsPageWithHistory(
     ensName: string, 
     dappData: any, 
     container: HTMLElement, 
-    createRiskChart: (dappData: any, showEnlarged?: boolean) => Promise<HTMLElement>,
     getCategoryColor: (category: string) => string,
     historicalReports: HistoricalReport[]
 ) {

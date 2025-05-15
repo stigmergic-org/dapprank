@@ -27,16 +27,16 @@ function renderReportText(report: SummarizedReport) {
         // Networking section with only title and emoji subtexts
         const networkingContainer = createSectionContainer(container, 'Networking', '');
         const netSubtextsContainer = createHorizontalContainer(networkingContainer);
-        addEmojiSubText(netSubtextsContainer, '🌐', 'rpc', report.networking.rpc);
-        addEmojiSubText(netSubtextsContainer, '🔌', 'bundler', report.networking.bundler);
-        addEmojiSubText(netSubtextsContainer, '🔄', 'self', report.networking.self);
+        addEmojiSubText(netSubtextsContainer, '⚡', 'rpc', report.networking.rpc);
+        addEmojiSubText(netSubtextsContainer, '📦', 'bundler', report.networking.bundler); 
+        addEmojiSubText(netSubtextsContainer, '🔒', 'self', report.networking.self);
         addEmojiSubText(netSubtextsContainer, '📡', 'auxiliary', report.networking.auxiliary);
 
         // Dappspec section with total number
         const dappspecContainer = createSectionContainer(container, 'Dappspec', '');
         const dappspecSubtextsContainer = createHorizontalContainer(dappspecContainer);
-        addEmojiSubText(dappspecSubtextsContainer, '📋', 'manifest', report.dappspec.hasDappspec ? 1 : 0);
-        addEmojiSubText(dappspecSubtextsContainer, '🔄', 'fallbacks', report.dappspec.fallbacks);
+        addEmojiSubText(dappspecSubtextsContainer, '📝', 'manifest', report.dappspec.hasDappspec ? 1 : 0);
+        addEmojiSubText(dappspecSubtextsContainer, '🔁', 'fallbacks', report.dappspec.fallbacks);
         addEmojiSubText(dappspecSubtextsContainer, '⛓️', 'blockchains', report.dappspec.blockchains);
     } else {
         createSectionContainer(container, 'Distribution', 'No report available');
@@ -113,19 +113,27 @@ function getPieColors(report: SummarizedReport): string[] {
     const colors = [];
 
     // Color for Networking Purity
-    if (report.networking.rpc + report.networking.bundler + report.networking.self + report.networking.auxiliary > 0) {
-        colors.push(COLORS.red);
+    const hasAux = report.networking.auxiliary > 0;
+    const hasOtherNetworking = report.networking.rpc > 0 || report.networking.bundler > 0 || report.networking.self > 0;
+    
+    if (!hasOtherNetworking && !hasAux) {
+        colors.push(COLORS.yellow); // No networking
+    } else if (hasAux) {
+        // If has auxiliary networking, check if it's listed in dappspec
+        if (report.dappspec.hasDappspec) {
+            colors.push(COLORS.yellow); // Auxiliary but listed in dappspec
+        } else {
+            colors.push(COLORS.red); // Auxiliary not in dappspec
+        }
     } else {
-        colors.push(COLORS.green);
+        colors.push(COLORS.green); // Only has self, rpc, and/or bundler
     }
 
     // Color for dappspec
     if (report.dappspec.hasDappspec) {
-        if (report.dappspec.fallbacks > 0 || report.dappspec.blockchains > 0) {
-            colors.push(COLORS.green);
-        } else {
-            colors.push(COLORS.yellow);
-        }
+        colors.push(COLORS.green); // Has dappspec
+    } else if (report.dappspec.fallbacks > 0) {
+        colors.push(COLORS.yellow); // Has only fallbacks
     } else {
         colors.push(COLORS.red);
     }

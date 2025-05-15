@@ -266,8 +266,7 @@ async function displayDappDetails(ensName: string) {
     // Use the enhanced renderDappDetailsPage that handles all data fetching internally
     renderDappDetailsPage(
         ensName, 
-        mainContent, 
-        createRiskChart,
+        mainContent,
         getCategoryColor
     );
 }
@@ -587,7 +586,6 @@ async function processDappData(root: CID, dappName: string, fs: any) {
         try {
             dappspec = await getJson(fs, root, `${dappName}/dappspec.json`);
         } catch (error) {
-            console.error(`Error reading dappspec for ${dappName}:`, error)
         }
 
         // Construct the favicon URL using archive directory with the block number
