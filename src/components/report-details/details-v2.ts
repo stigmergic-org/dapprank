@@ -54,7 +54,7 @@ export function renderReportDetails(report: any): string {
     html += `
         <h3>Distribution</h3>
         <div class="report-section-info">
-            <p>Loading scripts or media from external sources is a common way to introduce security vulnerabilities. Scripts that are loaded from external sources could essentially change any aspect of the dapp and should be considered as a serious security vulnerability. Media loaded from external sources could be used to track users.</p>
+            <p>Loading scripts or media from external sources is a common way to introduce security vulnerabilities. Scripts that are loaded from external sources could essentially change any aspect of the dapp and should be considered as serious security issues. Media loaded from external sources could be used to track users and should ideally be avoided completely.</p>
         </div>
         <div class="report-section">
             ${renderDistributionSection(report)}
@@ -81,6 +81,9 @@ export function renderReportDetails(report: any): string {
     // Libraries Section
     html += `
         <h3>Libraries</h3>
+        <div class="report-section-info">
+            <p>Libraries are third-party JavaScript code that are distributed with the dapp. The libraries listed below are detected by analyzing the dapp's source code.</p>
+        </div>
         <div class="report-section">
             ${renderLibrariesSection(report)}
         </div>
@@ -110,6 +113,14 @@ function renderContentHashSection(report: any): string {
 function renderDappspecSection(report: any): string {
     const dappspec = report.dappspec as DappSpec | undefined;
     let html = `<div class="dappspec-container">`;
+
+    // Show warning first if no dappspec found
+    if (!dappspec) {
+        html += renderNoticeCard({
+            type: 'warning',
+            message: 'No dappspec.json manifest found.'
+        });
+    }
 
     // Dapp Metadata Card - Always show this
     const metadataItems = [
@@ -168,12 +179,8 @@ function renderDappspecSection(report: any): string {
         content: renderInfoItems(metadataItems)
     });
 
-    // If no dappspec found, show warning and return
+    // Return early if no dappspec
     if (!dappspec) {
-        html += renderNoticeCard({
-            type: 'warning',
-            message: 'No dappspec.json manifest found.'
-        });
         html += `</div>`;
         return html;
     }

@@ -4,6 +4,7 @@ import { renderDappDetailsPage } from './report-renderer'
 import { isContentHashOutdated } from './ens-resolver'
 import { fetchCar, getJson } from './ipfs-utils'
 import { getMimeTypeIcon } from './report-renderer'
+import { calculateCensorshipResistanceScore, DappData } from './reports'
 
 // @ts-ignore
 import about from './pages/about.md'
@@ -266,9 +267,7 @@ async function displayDappDetails(ensName: string) {
     renderDappDetailsPage(
         ensName, 
         mainContent, 
-        createRiskChart, 
-        calculateCensorshipResistanceScore, 
-        getScoreCategory, 
+        createRiskChart,
         getCategoryColor
     );
 }
@@ -309,52 +308,6 @@ async function handleInput() {
     } else {
         displayToast(`Invalid ENS name: ${ensName}`, 6000);
     }
-}
-
-interface DappData {
-    metadata: {
-        description: string;
-        category?: string;
-    };
-    report: {
-        title: string;
-        contentHash: string;
-        timestamp: number;
-        blockNumber: number;
-        totalSize: number;
-        hasFavicon: boolean;
-        rootMimeType?: string;
-        distributionPurity: {
-            externalScripts: any[];
-            externalMedia: {
-                file: string;
-                offenders: {
-                    type: string;
-                    url: string;
-                }[];
-            }[];
-        };
-        networkingPurity: {
-            http: {
-                file: string;
-                offenders: string[];
-            }[];
-            websocket: {
-                file: string;
-                offenders: string[];
-            }[];
-            webrtc: any[];
-        };
-        web3: {
-            file: string;
-            offenders: {
-                service: string;
-                url: string;
-                risk: string;
-            }[];
-        }[];
-    };
-    favicon?: string;
 }
 
 // Function to set up table sorting
@@ -587,72 +540,6 @@ function addCrownToElement(element: HTMLElement) {
     element.appendChild(crown);
 }
 
-// Update the censorship resistance score calculation function
-function calculateCensorshipResistanceScore(dappData: DappData): number {
-  let score = 70; // Start with a baseline score of 70
-  
-  // Check for distribution purity issues
-  const hasDistributionIssues = dappData.report.distributionPurity && 
-    ((dappData.report.distributionPurity.externalScripts?.length || 0) > 0 || 
-     (dappData.report.distributionPurity.externalMedia?.length || 0) > 0);
-  
-  // Check for networking purity issues
-  const hasNetworkingIssues = dappData.report.networkingPurity && 
-    ((dappData.report.networkingPurity.http?.length || 0) > 0 || 
-     (dappData.report.networkingPurity.websocket?.length || 0) > 0 || 
-     (dappData.report.networkingPurity.webrtc?.length || 0) > 0);
-  
-  // Add points for web3 interactions (positive factor) ONLY if there are no distribution or networking issues
-  if (!hasDistributionIssues && !hasNetworkingIssues && dappData.report.web3 && dappData.report.web3.length > 0) {
-    // Count the total number of web3 interactions
-    const web3Count = dappData.report.web3.reduce((total, item) => {
-      return total + (item.offenders ? item.offenders.length : 0);
-    }, 0);
-    console.log(`Web3 count: ${web3Count}`);
-    // Add points based on the number of web3 interactions
-    score += Math.min(web3Count * 5, 30); // Cap at 30 points
-  }
-  
-  // Subtract points for distribution purity issues (negative factor)
-  if (hasDistributionIssues) {
-    // Count external scripts
-    const externalScriptsCount = dappData.report.distributionPurity.externalScripts?.length || 0;
-    
-    // Count external media
-    const externalMediaCount = dappData.report.distributionPurity.externalMedia?.length || 0;
-    
-    // Calculate penalties with caps per category
-    const scriptsPenalty = Math.min(externalScriptsCount * 5, 25);
-    const mediaPenalty = Math.min(externalMediaCount * 1, 5);
-    
-    // Apply total distribution penalty with overall cap
-    score -= Math.min(scriptsPenalty + mediaPenalty, 30);
-  }
-  
-  // Subtract points for networking purity issues (negative factor)
-  if (hasNetworkingIssues) {
-    // Count HTTP requests
-    const httpCount = dappData.report.networkingPurity.http?.length || 0;
-    
-    // Count WebSocket connections
-    const websocketCount = dappData.report.networkingPurity.websocket?.length || 0;
-    
-    // Count WebRTC connections
-    const webrtcCount = dappData.report.networkingPurity.webrtc?.length || 0;
-    
-    // Calculate penalties with caps per category
-    const httpPenalty = Math.min(httpCount * 3, 20);
-    const websocketPenalty = Math.min(websocketCount * 2, 15);
-    const webrtcPenalty = Math.min(webrtcCount * 1, 5);
-    
-    // Apply total networking penalty with overall cap
-    score -= Math.min(httpPenalty + websocketPenalty + webrtcPenalty, 40);
-  }
-  
-  // Ensure score stays within 0-100 range
-  return Math.max(0, Math.min(100, score));
-}
-
 // Function to get score category (high, medium, low)
 function getScoreCategory(score: number): string {
   if (score >= 70) return 'high';
@@ -755,7 +642,7 @@ function addDappRow(cells: HTMLElement[]): void {
 
 // Map to store category colors
 const categoryColorMap = new Map<string, string>();
-const defaultCategories = ['defi', 'social', 'nft', 'wallet interface', 'personal website', 'knowledge base', 'filesharing', 'data', 'infofi', 'other'];
+const defaultCategories = ['defi', 'social', 'nft', 'wallet', 'personal', 'organization', 'knowledge base', 'filesharing', 'data', 'infofi', 'dev tool', 'other'];
 
 // Function to get or generate a color for a category
 function getCategoryColor(category: string): string {

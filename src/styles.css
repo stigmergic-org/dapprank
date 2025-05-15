@@ -710,12 +710,16 @@ code {
     background-color: #fa5252; /* Updated red */
 }
 
-.category-wallet-interface {
+.category-wallet {
     background-color: #ff922b; /* Updated light orange */
 }
 
-.category-personal-website {
+.category-personal {
     background-color: #40c057; /* Updated green */
+}
+
+.category-organization {
+    background-color: #0ca678; /* Distinct darker green */
 }
 
 .category-knowledge-base {
@@ -732,6 +736,10 @@ code {
 
 .category-infofi {
     background-color: #12b886; /* Updated teal/green */
+}
+
+.category-dev-tool {
+    background-color: #15aabf; /* Distinct cyan/blue */
 }
 
 .category-other {

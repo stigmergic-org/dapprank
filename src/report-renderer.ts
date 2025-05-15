@@ -8,6 +8,7 @@ import {
 } from './components/report-details/details-v1';
 import { renderReportDetails as renderV2ReportDetails } from './components/report-details/details-v2';
 import { renderOutdatedWarning } from './components/report-details/details-outdated';
+import { DappData, DappMetadata, calculateCensorshipResistanceScore, getScoreCategory } from './reports';
 
 // Helper function to get an appropriate icon based on MIME type
 export function getMimeTypeIcon(mimeType: string | null | undefined): string {
@@ -73,20 +74,9 @@ interface HistoricalReport {
     isLatest: boolean;
 }
 
-// Interface for metadata
-interface DappMetadata {
-    description?: string;
-    category?: string;
-    [key: string]: any; // Allow other properties
-}
-
-// Interface for dapp data with reports
+// Interface for archive data
 export interface ArchiveData {
-    latestDappData: {
-        metadata: DappMetadata;
-        report: any;
-        favicon: string;
-    };
+    latestDappData: DappData;
     historicalReports: HistoricalReport[];
 }
 
@@ -95,8 +85,6 @@ export function renderDappDetailsPage(
     ensName: string, 
     container: HTMLElement, 
     createRiskChart: (dappData: any, showEnlarged?: boolean) => Promise<HTMLElement>,
-    calculateCensorshipResistanceScore: (dappData: any) => number,
-    getScoreCategory: (score: number) => string,
     getCategoryColor: (category: string) => string
 ) {
     // Show loading state
@@ -111,8 +99,6 @@ export function renderDappDetailsPage(
             dappData,
             container,
             createRiskChart,
-            calculateCensorshipResistanceScore,
-            getScoreCategory,
             getCategoryColor,
             archiveData.historicalReports
         );
@@ -226,8 +212,6 @@ function renderDappDetailsPageWithHistory(
     dappData: any, 
     container: HTMLElement, 
     createRiskChart: (dappData: any, showEnlarged?: boolean) => Promise<HTMLElement>,
-    calculateCensorshipResistanceScore: (dappData: any) => number,
-    getScoreCategory: (score: number) => string,
     getCategoryColor: (category: string) => string,
     historicalReports: HistoricalReport[]
 ) {
