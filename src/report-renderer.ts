@@ -1,15 +1,12 @@
 import { isContentHashOutdated, getCurrentContentHash } from './ens-resolver';
 import { fetchCar, getJson } from './ipfs-utils';
-import { 
-    renderReportDetails as renderV1ReportDetails,
-    renderDistributionInfo,
-    renderNetworkingInfo, 
-    renderWeb3Info 
-} from './components/report-details/details-v1';
+import { renderReportDetails as renderV1ReportDetails } from './components/report-details/details-v1';
 import { renderReportDetails as renderV2ReportDetails } from './components/report-details/details-v2';
 import { renderOutdatedWarning } from './components/report-details/details-outdated';
-import { DappData, DappMetadata, calculateCensorshipResistanceScore, getScoreCategory } from './reports';
+import { DappData, DappMetadata, calculateCensorshipResistanceScore, getScoreCategory, generateSummarizedReport } from './reports';
 import { createRiskChart } from './pie-chart';
+import { renderInfoCard } from './components/ui/info-card';
+import { renderInfoItems } from './components/ui/info-items';
 
 // Helper function to get an appropriate icon based on MIME type
 export function getMimeTypeIcon(mimeType: string | null | undefined): string {
@@ -210,7 +207,7 @@ export async function loadHistoricalReports(ensName: string, currentBlockNumber?
 // Function to render the dapp details page with historical reports
 function renderDappDetailsPageWithHistory(
     ensName: string, 
-    dappData: any, 
+    dappData: DappData, 
     container: HTMLElement, 
     getCategoryColor: (category: string) => string,
     historicalReports: HistoricalReport[]
@@ -280,7 +277,7 @@ function renderDappDetailsPageWithHistory(
                         <!-- Risk triangle will be inserted here by JS -->
                     </div>
                     <div class="risk-information-container" id="risk-information">
-                        <!-- Distribution, networking, and dappspec info will be added here -->
+                        <!-- Distribution, networking, and dappspec information will be inserted here -->
                     </div>
                 </div>
                 
@@ -308,37 +305,31 @@ function renderDappDetailsPageWithHistory(
     // Add the distribution, networking and dappspec information
     const riskInfoContainer = document.getElementById('risk-information');
     if (riskInfoContainer) {
-        // Distribution info
-        const distributionInfo = document.createElement('div');
-        distributionInfo.className = 'distribution-info';
-        distributionInfo.innerHTML = `
-            <h3>Distribution</h3>
-            ${renderDistributionInfo(dappData.report.distributionPurity)}
-        `;
+        // Clear previous content
+        riskInfoContainer.innerHTML = '';
         
-        // Networking info
-        const networkingInfo = document.createElement('div');
-        networkingInfo.className = 'networking-info';
-        networkingInfo.innerHTML = `
-            <h3>Networking</h3>
-            ${renderNetworkingInfo(dappData.report.networkingPurity)}
-        `;
+        // Create and add each info card
+        const cards = [
+            {
+                title: 'Dappspec',
+                content: renderDappspecInfo(dappData)
+            },
+            {
+                title: 'Distribution',
+                content: renderDistributionInfo(dappData)
+            },
+            {
+                title: 'Networking',
+                content: renderNetworkingInfo(dappData)
+            }
+        ];
         
-        // Dappspec info
-        const dappspecInfo = document.createElement('div');
-        dappspecInfo.className = 'dappspec-info';
-        dappspecInfo.innerHTML = `
-            <h3>Dappspec</h3>
-            ${renderDappspecInfo(dappData.report.dappspec)}
-        `;
-        
-        // Add all info sections
-        riskInfoContainer.appendChild(distributionInfo);
-        riskInfoContainer.appendChild(networkingInfo);
-        riskInfoContainer.appendChild(dappspecInfo);
+        cards.forEach(card => {
+            const cardHtml = renderInfoCard(card);
+            riskInfoContainer.innerHTML += cardHtml;
+        });
     }
     
-    console.log('beforecontethhash')
 
     const reportHistoryContainer = document.getElementById('dapp-report-history');
     if (reportHistoryContainer) {
@@ -594,23 +585,120 @@ export function renderWeb3Interactions(web3: any[]): string {
 }
 
 // Helper function to render dappspec information in a readable format
-function renderDappspecInfo(dappspec: any): string {
-    if (!dappspec) return '<p>No dappspec manifest found.</p>';
+function renderDappspecInfo(dappData: DappData): string {
+    const report = generateSummarizedReport(dappData);
+    if (!report) return '<p>No dappspec information available.</p>';
     
-    let html = '';
+    const items = [
+        {
+            icon: '📝',
+            title: 'Manifest',
+            details: [{
+                title: '',
+                content: report.dappspec.hasDappspec ? 'A Dappspec manifest was detected' : 'No Dappspec manifest detected'
+            }]
+        },
+        {
+            icon: '🔁',
+            title: 'Fallbacks',
+            details: [{
+                title: '',
+                content: report.dappspec.fallbacks > 0 
+                    ? `Alternative endpoints and gateways: ${report.dappspec.fallbacks}`
+                    : 'No fallback endpoints detected'
+            }]
+        },
+        {
+            icon: '⛓️',
+            title: 'Blockchains',
+            details: [{
+                title: '',
+                content: report.dappspec.blockchains > 0 
+                    ? `Supported blockchain networks: ${report.dappspec.blockchains}`
+                    : 'No blockchain networks declared'
+            }]
+        }
+    ];
     
-    if (dappspec.dappspec) {
-        html += `<p>📋 Dappspec manifest version: ${dappspec.dappspec}</p>`;
-    }
+    return renderInfoItems(items);
+}
+
+function renderDistributionInfo(dappData: DappData): string {
+    const report = generateSummarizedReport(dappData);
+    if (!report) return '<p>No distribution information available.</p>';
     
-    if (dappspec.chains) {
-        const chainCount = Object.keys(dappspec.chains).length;
-        html += `<p>⛓️ Supported blockchains: ${chainCount}</p>`;
-    }
+    const items = [
+        {
+            icon: '🎬',
+            title: 'External Media',
+            details: [{
+                title: '',
+                content: report.distribution.externalMedia > 0 
+                    ? `External media resources loaded from outside the dapp's content: ${report.distribution.externalMedia}`
+                    : 'No external media detected'
+            }]
+        },
+        {
+            icon: '📜',
+            title: 'External Scripts',
+            details: [{
+                title: '',
+                content: report.distribution.externalScripts > 0 
+                    ? `JavaScript code loaded from external sources: ${report.distribution.externalScripts}`
+                    : 'No external scripts detected'
+            }]
+        }
+    ];
     
-    if (dappspec.fallbacks?.length > 0) {
-        html += `<p>🔄 Fallback mechanisms: ${dappspec.fallbacks.length}</p>`;
-    }
+    return renderInfoItems(items);
+}
+
+function renderNetworkingInfo(dappData: DappData): string {
+    const report = generateSummarizedReport(dappData);
+    if (!report) return '<p>No networking information available.</p>';
     
-    return html || '<p>No dappspec information available.</p>';
+    const items = [
+        {
+            icon: '⚡',
+            title: 'RPC',
+            details: [{
+                title: '',
+                content: report.networking.rpc > 0 
+                    ? `Ethereum RPC endpoint connections: ${report.networking.rpc}`
+                    : 'No RPC connections detected'
+            }]
+        },
+        {
+            icon: '📦',
+            title: 'Bundler',
+            details: [{
+                title: '',
+                content: report.networking.bundler > 0 
+                    ? `Account abstraction bundler connections: ${report.networking.bundler}`
+                    : 'No bundler connections detected'
+            }]
+        },
+        {
+            icon: '🔒',
+            title: 'Self',
+            details: [{
+                title: '',
+                content: report.networking.self > 0 
+                    ? `Self-hosted backend services: ${report.networking.self}`
+                    : 'No self-hosted services detected'
+            }]
+        },
+        {
+            icon: '📡',
+            title: 'Auxiliary',
+            details: [{
+                title: '',
+                content: report.networking.auxiliary > 0 
+                    ? `Additional third-party service connections: ${report.networking.auxiliary}`
+                    : 'No auxiliary services detected'
+            }]
+        }
+    ];
+    
+    return renderInfoItems(items);
 } 

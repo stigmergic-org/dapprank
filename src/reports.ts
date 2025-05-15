@@ -216,7 +216,6 @@ export function calculateCensorshipResistanceScore(dappData: DappData): number {
             Array.from(networkingAuxUrls).some(url => url.includes(aux.url))
         ).length;
         score += matchingAux * 4;
-            console.log(`Matching auxiliary: ${matchingAux}`);
 
         // Fallbacks bonus - count number of enabled fallbacks
         const fallbackCount = dappspec.fallbacks ? 

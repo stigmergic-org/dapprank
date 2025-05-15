@@ -12,24 +12,24 @@ The censorship resistance score evaluates how resistant a web application is to 
 
 ## Scoring Factors
 
-### Web3 Interactions (Positive Factor)
-Web3 interactions with decentralized services improve the score, but ONLY if the application has no external dependencies:
-- Each web3 interaction adds 5 points
-- Maximum bonus from web3 interactions: +30 points
-- This bonus is only applied if there are NO distribution or networking issues
-
 ### Distribution Purity Issues (Negative Factor)
 External resources that could be censored reduce the score:
 - Each external script: -5 points (max -25)
-- Each external media resource: -1 points (max -5)
+- Each external media resource: -1 point (max -5)
 - Maximum penalty from distribution issues: -30 points
 
-### Networking Purity Issues (Negative Factor)
-External network connections that could be blocked reduce the score:
-- Each HTTP request: -3 points (max -20)
-- Each WebSocket connection: -2 points (max -15)
-- Each WebRTC connection: -1 point (max -5)
-- Maximum penalty from networking issues: -40 points
+### Networking and Web3 Factors
+Network connections and web3 integrations affect the score:
+- Each auxiliary network connection: -5 points (max -25)
+- Having RPC connections: +3 points
+- Having bundler connections: +3 points
+- Having Ethereum interactions: +5 points
+
+### DappSpec Bonuses
+Applications with a DappSpec manifest can earn additional points:
+- Each unique RPC or bundler URL: +3 points
+- Each matching auxiliary endpoint with documentation: +4 points
+- Each enabled fallback mechanism: +7 points
 
 ## Score Categories
 - High (70-100): Excellent censorship resistance
@@ -37,26 +37,37 @@ External network connections that could be blocked reduce the score:
 - Low (0-39): Poor censorship resistance
 
 ## Implementation Details
-1. The algorithm first checks if the application has any distribution or networking issues
-2. If there are NO issues, it adds points for web3 interactions (up to +30)
-3. It then subtracts points for any distribution issues (up to -40)
-4. It also subtracts points for any networking issues (up to -30)
-5. The final score is capped between 0 and 100
+1. The algorithm starts with a baseline score of 70
+2. It applies distribution purity penalties for external scripts and media
+3. It evaluates networking patterns, penalizing auxiliary connections while rewarding RPC and bundler usage
+4. It adds bonuses for Ethereum integration
+5. If a DappSpec manifest is present, it adds bonuses for:
+   - Documented RPC and bundler endpoints
+   - Well-documented auxiliary connections
+   - Implemented fallback mechanisms
+6. The final score is capped between 0 and 100
 
 ## Example Calculation
 For an application with:
-- 8 web3 interactions
-- 3 external scripts
-- 2 external media resources
-- 4 HTTP requests
-- 1 WebSocket connection
+- 2 external scripts
+- 1 external media resource
+- 1 auxiliary network connection
+- RPC and bundler connections
+- Ethereum integration
+- DappSpec with 2 fallbacks
 
 The calculation would be:
 - Start with baseline: 70 points
-- Has distribution and networking issues, so NO bonus for web3 interactions
-- Distribution penalty: (3 × -3) + (2 × -2) = -13 points
-- Networking penalty: (4 × -3) + (1 × -2) = -14 points
-- Final score: 70 - 13 - 14 = 43 points (Medium category)
+- Distribution penalty: (2 × -5) + (1 × -1) = -11 points
+- Auxiliary penalty: (1 × -5) = -5 points
+- RPC and bundler bonus: +6 points
+- Ethereum bonus: +5 points
+- Fallback bonus: (2 × 7) = +14 points
+- Final score: 70 - 11 - 5 + 6 + 5 + 14 = 79 points (High category)
 
 ## Rationale
-This scoring system rewards applications that are fully self-contained and use decentralized technologies, while penalizing those that depend on centralized services that could be points of censorship. A truly censorship-resistant application should have no external dependencies that could be blocked or manipulated. 
+This scoring system rewards applications that minimize centralized dependencies while implementing robust decentralized features and fallback mechanisms. The scoring particularly favors applications that:
+1. Minimize external resource dependencies
+2. Implement proper blockchain integrations
+3. Provide comprehensive documentation via DappSpec
+4. Include fallback mechanisms for resilience 
