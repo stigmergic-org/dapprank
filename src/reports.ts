@@ -155,59 +155,73 @@ export function calculateCensorshipResistanceScore(dappData: DappData): number {
         ((report.distributionPurity.externalScripts?.length || 0) > 0 || 
          (report.distributionPurity.externalMedia?.length || 0) > 0);
     
-    // Check for networking purity issues
-    const hasNetworkingIssues = report.networkingPurity && report.networkingPurity.length > 0;
-    
-    // Add points for ethereum interactions (positive factor) ONLY if there are no distribution or networking issues
-    if (!hasDistributionIssues && !hasNetworkingIssues && report.ethereum && report.ethereum.length > 0) {
-        // Count the total number of ethereum interactions
-        const ethereumCount = report.ethereum.reduce((total, item) => {
-            return total + (item.occurences ? item.occurences.reduce((sum, occ) => sum + (occ.count || 0), 0) : 0);
-        }, 0);
-        console.log(`Ethereum count: ${ethereumCount}`);
-        // Add points based on the number of ethereum interactions
-        score += Math.min(ethereumCount * 5, 30); // Cap at 30 points
-    }
-    
-    // Subtract points for distribution purity issues (negative factor)
+    // Distribution penalty (keeping as is)
     if (hasDistributionIssues) {
-        // Count external scripts
         const externalScriptsCount = report.distributionPurity.externalScripts?.length || 0;
-        
-        // Count external media
         const externalMediaCount = report.distributionPurity.externalMedia?.length || 0;
         
-        // Calculate penalties with caps per category
         const scriptsPenalty = Math.min(externalScriptsCount * 5, 25);
         const mediaPenalty = Math.min(externalMediaCount * 1, 5);
         
-        // Apply total distribution penalty with overall cap
         score -= Math.min(scriptsPenalty + mediaPenalty, 30);
     }
-    
-    // Subtract points for networking purity issues (negative factor)
-    if (hasNetworkingIssues) {
-        // Count different types of networking issues
-        const networkingIssues = report.networkingPurity.reduce((acc, item) => {
+
+    // Networking scoring
+    if (report.networkingPurity) {
+        // Count occurrences by type
+        const networkingTypes = report.networkingPurity.reduce((acc, item) => {
             item.occurences.forEach(occ => {
-                if (occ.method.toLowerCase().includes('http') || occ.method.toLowerCase().includes('xmlhttprequest')) {
-                    acc.http++;
-                } else if (occ.method.toLowerCase().includes('websocket')) {
-                    acc.websocket++;
-                } else if (occ.method.toLowerCase().includes('webrtc')) {
-                    acc.webrtc++;
-                }
+                acc[occ.type] = (acc[occ.type] || 0) + 1;
             });
             return acc;
-        }, { http: 0, websocket: 0, webrtc: 0 });
+        }, { rpc: 0, bundler: 0, auxiliary: 0, self: 0 } as Record<string, number>);
+
+        // Auxiliary penalty (-5 per aux, max -25)
+        const auxPenalty = Math.min(networkingTypes.auxiliary * 5, 25);
+        score -= auxPenalty;
+
+        // RPC and bundler bonuses (+3 each if present)
+        if (networkingTypes.rpc > 0) score += 3;
+        if (networkingTypes.bundler > 0) score += 3;
+    }
+
+    // Ethereum presence bonus (+5 if any ethereum interactions)
+    if (report.ethereum && report.ethereum.length > 1) {
+        score += 5;
+    }
+
+    // Dappspec bonuses
+    if (dappData.dappspec) {
+        const dappspec = dappData.dappspec;
         
-        // Calculate penalties with caps per category
-        const httpPenalty = Math.min(networkingIssues.http * 3, 20);
-        const websocketPenalty = Math.min(networkingIssues.websocket * 2, 15);
-        const webrtcPenalty = Math.min(networkingIssues.webrtc * 1, 5);
-        
-        // Apply total networking penalty with overall cap
-        score -= Math.min(httpPenalty + websocketPenalty + webrtcPenalty, 40);
+        // Count unique RPCs and bundlers from chains
+        const uniqueUrls = new Set<string>();
+        if (dappspec.chains) {
+            Object.values(dappspec.chains).forEach(chain => {
+                chain.rpcs?.forEach(rpc => uniqueUrls.add(rpc));
+                chain.bundlers?.forEach(bundler => uniqueUrls.add(bundler));
+            });
+        }
+        score += uniqueUrls.size * 3;
+
+        // Auxiliary matches
+        const networkingAuxUrls = new Set(
+            report.networkingPurity
+                ?.flatMap(item => item.occurences)
+                .filter(occ => occ.type === 'auxiliary')
+                .flatMap(occ => occ.urls) || []
+        );
+
+        const matchingAux = (dappspec.auxiliary || []).filter(aux => 
+            Array.from(networkingAuxUrls).some(url => url.includes(aux.url))
+        ).length;
+        score += matchingAux * 4;
+            console.log(`Matching auxiliary: ${matchingAux}`);
+
+        // Fallbacks bonus - count number of enabled fallbacks
+        const fallbackCount = dappspec.fallbacks ? 
+            Object.values(dappspec.fallbacks).filter(Boolean).length : 0;
+        score += fallbackCount * 7;
     }
     
     // Ensure score stays within 0-100 range
