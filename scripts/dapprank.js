@@ -949,8 +949,9 @@ async function analyzeHTML(kubo, cid, filePath) {
         
         // Skip non-JS scripts (like application/json, text/template, etc.)
         if (scriptType && 
-            !['text/javascript', 'application/javascript', ''].includes(scriptType) && 
+            !['text/javascript', 'application/javascript', 'module', ''].includes(scriptType) && 
             !scriptType.includes('javascript')) {
+            console.log(`Skipping non-JS script: ${scriptType}`)
             return;
         }
         
@@ -997,6 +998,14 @@ async function geminiAnalysisWithChunking(scriptText, filePath) {
     try {
         return await geminiAnalysis(scriptText, filePath);
     } catch (error) {
+        // Handle rate limit error (429)
+        if (error.message && error.message.includes('status: 429')) {
+            console.log('Rate limit exceeded, waiting for 1 minute before retrying...');
+            await new Promise(resolve => setTimeout(resolve, 60000)); // Wait for 1 minute
+            return await geminiAnalysisWithChunking(scriptText, filePath); // Retry recursively
+        }
+        
+        // Handle token count exceeded error
         if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
             console.log('Token limit exceeded, attempting to chunk the code...');
             const chunks = await splitScriptIntoChunks(scriptText);
@@ -1004,8 +1013,6 @@ async function geminiAnalysisWithChunking(scriptText, filePath) {
 
             const results = [];
             for (const chunk of chunks) {
-                // Wait 1 minute between chunk analysis to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 60000));
                 const result = await geminiAnalysisWithChunking(chunk, filePath);
                 results.push(result);
             }
@@ -1142,43 +1149,79 @@ async function geminiAnalysis(scriptText, filePath) {
             }
         };
 
-        // Query the Gemini model with structured output
-        const response = await ai.models.generateContent({
-            // model: "gemini-2.5-pro-exp-03-25", // free model
-            model: "gemini-2.5-pro-preview-03-25",
-            contents: [
-                {
-                    role: "user",
-                    parts: [
-                        { text: systemPrompt },
-                        { text: `File: ${filePath}\n\nCode:\n\`\`\`javascript\n${scriptText}\n\`\`\`` }
-                    ]
+        let retries = 3;
+        let lastError = null;
+
+        while (retries > 0) {
+            try {
+                // Query the Gemini model with structured output
+                const response = await ai.models.generateContent({
+                    // model: "gemini-2.5-pro-exp-03-25", // free model
+                    model: "gemini-2.5-pro-preview-03-25",
+                    contents: [
+                        {
+                            role: "user",
+                            parts: [
+                                { text: systemPrompt },
+                                { text: `File: ${filePath}\n\nCode:\n\`\`\`javascript\n${scriptText}\n\`\`\`` }
+                            ]
+                        }
+                    ],
+                    generationConfig: {
+                        temperature: 0.1,
+                        maxOutputTokens: 8192,
+                    },
+                    response_mime_type: "application/json",
+                    response_schema: responseSchema
+                });
+                
+                console.log(`Received response from Gemini for ${filePath}`);
+
+                if (response.candidates[0].content.parts.length > 1) {
+                    console.log('Multiple response parts found:', response.candidates[0].content.parts);
+                    throw new Error('Multiple parts found in response, not sure how to proceed');
                 }
-            ],
-            generationConfig: {
-                temperature: 0.1,
-                maxOutputTokens: 8192,
-            },
-            response_mime_type: "application/json",
-            response_schema: responseSchema
-        });
-        
-        console.log(`Received response from Gemini for ${filePath}`);
 
-        if (response.candidates[0].content.parts.length > 1) throw new Error('Multiple parts found in response, not sure how to proceed');
+                const textContent = response.candidates[0].content.parts[0].text;
 
-        // console.log('response content', response.candidates[0].content);
-        const textContent = response.candidates[0].content.parts[0].text;
-        // console.log('textContent', textContent);
+                try {
+                    // First try to parse as direct JSON
+                    const analysis = JSON.parse(textContent);
+                    return {
+                        libraries: analysis.libraries,
+                        networking: analysis.networking,
+                        fallbacks: analysis.fallbacks
+                    };
+                } catch (jsonError) {
+                    // If direct JSON parse fails, try markdown extraction
+                    const markdownMatch = textContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
+                    if (!markdownMatch) {
+                        throw new Error('Could not find JSON in markdown response');
+                    }
+                    
+                    const analysis = JSON.parse(markdownMatch[1]);
+                    return {
+                        libraries: analysis.libraries,
+                        networking: analysis.networking,
+                        fallbacks: analysis.fallbacks
+                    };
+                }
+            } catch (error) {
+                lastError = error;
+                retries--;
+                
+                if (retries > 0) {
+                    console.log(`Error parsing Gemini response for ${filePath}, retrying... (${retries} attempts left)`);
+                    // Add a small delay between retries
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    continue;
+                }
+                
+                throw lastError;
+            }
+        }
 
-        const markdownMatch = textContent.match(/```json\s*(\{[\s\S]*?\})\s*```/);
-        const analysis = JSON.parse(markdownMatch[1]);
-
-        return {
-            libraries: analysis.libraries,
-            networking: analysis.networking,
-            fallbacks: analysis.fallbacks
-        };
+        throw lastError;
 }
 
 /**

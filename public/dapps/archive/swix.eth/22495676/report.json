@@ -1,0 +1,127 @@
+{
+  "version": 2,
+  "contentHash": "bafybeichc3vzcxihgj5jt3qy3cdq4ccoahkzifr7oibc6fsyikcrzywqhy",
+  "timestamp": 1747399007,
+  "blockNumber": 22495676,
+  "rootMimeType": "text/html",
+  "totalSize": 770306,
+  "favicon": "",
+  "title": "Swix",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "URL from <link rel='modulepreload'> href attribute"
+          ],
+          "library": "self",
+          "type": "auxiliary",
+          "motivation": "The script contains a mechanism to preload modules using `fetch(b.href, w)`, where `b` is a `<link rel=\"modulepreload\">` DOM element. The `b.href` attribute provides the URL. This is a browser-native fetch call for loading code dependencies."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://gw.elib.top/transfer"
+          ],
+          "library": "self",
+          "type": "auxiliary",
+          "motivation": "A `fetch` call is made to the URL `\"https://gw.elib.top/transfer\"` (constructed from obfuscated parts `Hl(298)` + `Hl(348)` + `\"transfer\"`). The call uses the \"POST\" method and sends JSON data. This appears to be a custom API endpoint, likely for submitting some form of data or proof."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://eth.drpc.org"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The code initializes an ethers.js `JsonRpcProvider` (aliased as `F2`) with the URL `\"https://eth.drpc.org\"`. This URL is constructed from obfuscated parts (`X(697)` which is `\"https://et\"` and `X(573)` which is `\"h.drpc.org\"`) when the network `\"eth\"` (obfuscated as `X(595)`) is selected in the `IO` function. Ethers.js uses `fetch` internally for RPC communication."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://bsc.drpc.org"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The code initializes an ethers.js `JsonRpcProvider` (aliased as `F2`) with the URL `\"https://bsc.drpc.org\"`. This URL is constructed from obfuscated parts (`X(523)` which is `\"https://bs\"` and `X(502)` which is `\"c.drpc.org\"`) when the network `\"bsc\"` (obfuscated as `X(612)`) is selected in the `IO` function. Ethers.js uses `fetch` internally for RPC communication."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://tron.drpc.org"
+          ],
+          "library": "ethers.js",
+          "type": "rpc",
+          "motivation": "The code initializes an ethers.js `JsonRpcProvider` (aliased as `F2`) with the URL `\"https://tron.drpc.org\"`. This URL is constructed from obfuscated parts (`\"https://tr\"` + `X(678)` which is `\"on.drpc.or\"` + `\"g\"`) when the network `\"tron\"` (obfuscated as `X(660)`) is selected in the `IO` function. Ethers.js uses `fetch` internally for RPC communication."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://gasstation.polygon.technology/v2"
+          ],
+          "library": "ethers.js",
+          "type": "auxiliary",
+          "motivation": "When the network is 'matic', an ethers.js plugin (`FetchUrlFeeDataPlugin`, aliased as `tO`) is configured with this URL to fetch fee data. Ethers.js uses `fetch` for this."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://gasstation-testnet.polygon.technology/v2"
+          ],
+          "library": "ethers.js",
+          "type": "auxiliary",
+          "motivation": "When the network is 'matic-mumbai', an ethers.js plugin (`FetchUrlFeeDataPlugin`, aliased as `tO`) is configured with this URL to fetch fee data. Ethers.js uses `fetch` for this."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://gateway.ipfs.io/ipfs/"
+          ],
+          "library": "self",
+          "type": "auxiliary",
+          "motivation": "The `H1(e)` function constructs URLs like `https://gateway.ipfs.io/ipfs/${e}`. This function is used within `_getAvatar` (part of ENS resolution logic in an ethers.js related class `V0` aliasing `EnsResolver`), which then uses a `FetchRequest` (internally using `fetch`) to retrieve data from IPFS via this public gateway."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code extensively uses `Symbol.for` with React-specific keys like `\"react.element\"`, `\"react.fragment\"`, `\"react.context\"`, `\"react.forward_ref\"`, etc. It also uses JSX-like function calls such as `M.jsx(...)` and `M.jsxs(...)` which are typical outputs of a JSX transform (e.g., Babel with React preset)."
+        },
+        {
+          "name": "ReactDOM",
+          "motivation": "The code initializes the React application using `nw.createRoot(Rm).render(...)` where `nw` is an alias for `ReactDOM` (specifically `react-dom/client`) and `Rm` is `document.getElementById(\"root\")`. This pattern is standard for mounting React applications."
+        },
+        {
+          "name": "ethers.js",
+          "motivation": "Multiple class aliases and functionalities strongly indicate the use of ethers.js. Examples include: `Bl` aliasing a class with methods like `computePublicKey`, `sign` (Wallet); `jn` aliasing a class for `Signature`; `bu` for `Transaction`; `R3` for `Interface`; `kl` for `AbiCoder`; `o6` for `Network`; `yu` for `EnsResolver`; `pu` for `TypedDataEncoder`; `F2` (extending `CO`) for `JsonRpcProvider`; `P1` (extending `mO`) for `JsonRpcSigner`; `D3` for `Contract`. The version string `K_=\"6.13.5\"` is also present within the ethers.js related code sections."
+        },
+        {
+          "name": "tailwind-merge",
+          "motivation": "The code contains `ft=Aw(Zw)`. `Zw` is a function that returns a configuration object with properties like `theme`, `classGroups`, `conflictingClassGroups`, and `cacheSize`. `Aw` is an alias for `createTwc` which is the main factory function from `tailwind-merge` that takes this configuration. This pattern is characteristic of `tailwind-merge`'s setup."
+        },
+        {
+          "name": "Tippy.js",
+          "motivation": "The code includes `h6 = tippy` (aliased) and uses a structure like `In = defaultProps` and `Ep` function for processing props with plugins, which is consistent with Tippy.js's API and extensibility for tooltips."
+        },
+        {
+          "name": "Emittery",
+          "motivation": "A class aliased as `Hi` is defined with methods like `on`, `off`, `once`, `emit`, `emitSerial`, `listenerCount`, `onAny`, `offAny`, `clearListeners`. The presence of `Hi.mixin(...)` and meta events like `listenerAdded` and `listenerRemoved` (referenced by symbols `wu` and `Au`) are characteristic of the Emittery event emitter library."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

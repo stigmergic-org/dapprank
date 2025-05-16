@@ -1,0 +1,466 @@
+{
+  "version": 2,
+  "contentHash": "bafybeibmlgr3ycqkdmie772w6sk4dyp6kxq5ksazavmtlrd33ta6efidnm",
+  "timestamp": 1747385638,
+  "blockNumber": 22494464,
+  "rootMimeType": "inode/directory",
+  "totalSize": 10046634,
+  "favicon": "favicon.ico",
+  "title": "seedit",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/ccip-e1xWd4dv.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "{gateway_url_from_input_array}"
+          ],
+          "library": "self",
+          "type": "auxiliary",
+          "motivation": "The `ccipRequest` function (`C`) iterates through an array of URL strings (`a`). For each URL string `t` in this array:\n- It replaces `'{sender}'` with the sender's address (lowercase) and `'{data}'` with the call data, if these placeholders are present in `t`.\n- It determines the HTTP method: if `t` (after potential replacements, though the check `t.includes(\"{data}\")` is on the original `t`) includes `\"{data}\"`, the method is GET; otherwise, it's POST.\n- For POST requests, the body is `JSON.stringify({data: c, sender: r})` and headers include `{\"Content-Type\":\"application/json\"}`.\n- The native `fetch` API is then called with the constructed URL, method, headers, and body.\nThis mechanism is used to query CCIP (EIP-3668) off-chain data gateways. The URL `{gateway_url_from_input_array}` represents one such dynamically constructed URL from the input list."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<configured_ethereum_rpc_url>"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "The function `E` (believed to be a `viem` client method like `call` or `readContract`) is used to interact with an Ethereum smart contract: `await E(c,{blockNumber, blockTag, data, to})`. This typically involves sending a JSON-RPC request (e.g., `eth_call`) to an Ethereum RPC endpoint.\n- The `viem` library handles the actual network communication, usually via its configured `transport` which commonly uses `fetch` internally.\n- The specific RPC URL (`<configured_ethereum_rpc_url>`) is not explicitly present in this snippet but is a necessary part of the configuration of the client instance `c` that `E` operates on. This URL is where the `eth_call` payload (derived from `data` and `to`) is sent."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-BTdNe8yF.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "<URLs from modulepreload links>"
+          ],
+          "library": "Vite (bundler feature)",
+          "type": "self",
+          "motivation": "The code iterates over `link[rel=\"modulepreload\"]` elements found in the document and fetches their `href` attributes using `fetch(Y.href, Q)`. This is a mechanism used by bundlers like Vite for preloading JavaScript modules and other assets relative to the current domain."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<passed as M.url parameter>"
+          ],
+          "library": "Capacitor",
+          "type": "auxiliary",
+          "motivation": "The `CapacitorHttpPluginWeb.request` method uses `fetch(Y, K)`, where `Y` is constructed from the `M.url` parameter passed to the request method. This allows the application to make arbitrary HTTP requests using Capacitor's HTTP plugin for native bridge functionality."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "<passed as Y.url parameter>"
+          ],
+          "library": "Fetch Polyfill",
+          "type": "auxiliary",
+          "motivation": "The Fetch API polyfill (`fetch$2`) uses `XMLHttpRequest` (e.g., `Q.open(Y.method, X(Y.url), !0)` and `Q.send(...)`) to make network requests. The `Y.url` is the URL originally passed to the polyfilled `fetch` function. This serves as a fallback for browsers lacking native Fetch."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.etherscan.io/api",
+            "https://api-ropsten.etherscan.io/api",
+            "https://api-rinkeby.etherscan.io/api",
+            "https://api-kovan.etherscan.io/api",
+            "https://api-goerli.etherscan.io/api",
+            "https://api-optimistic.etherscan.io/api"
+          ],
+          "library": "Ethers.js (EtherscanProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `EtherscanProvider` constructs these URLs dynamically based on the network. The `fetch` method in `EtherscanProvider` calls `fetchJson` (an Ethers utility wrapping `fetch`) with these URLs. Base URLs are determined by `getBaseUrl`, and `/api` with query parameters (module, action, apikey) is appended."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cloudflare-eth.com/"
+          ],
+          "library": "Ethers.js (CloudflareProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `CloudflareProvider`'s `getUrl` method defines `https://cloudflare-eth.com/` for the homestead network. It extends `UrlJsonRpcProvider`, which uses `fetchJson`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://mainnet.infura.io/v3/",
+            "https://ropsten.infura.io/v3/",
+            "https://rinkeby.infura.io/v3/",
+            "https://kovan.infura.io/v3/",
+            "https://goerli.infura.io/v3/",
+            "https://polygon-mainnet.infura.io/v3/",
+            "https://polygon-mumbai.infura.io/v3/",
+            "https://optimism-mainnet.infura.io/v3/",
+            "https://optimism-kovan.infura.io/v3/",
+            "https://arbitrum-mainnet.infura.io/v3/",
+            "https://arbitrum-rinkeby.infura.io/v3/"
+          ],
+          "library": "Ethers.js (InfuraProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `InfuraProvider.getUrl` method constructs these URLs by combining a base hostname (e.g., `mainnet.infura.io`) with `/v3/` and a project ID (project ID excluded from the reported URL). It extends `UrlJsonRpcProvider`."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://mainnet.infura.io/ws/v3/",
+            "wss://ropsten.infura.io/ws/v3/",
+            "wss://rinkeby.infura.io/ws/v3/",
+            "wss://kovan.infura.io/ws/v3/",
+            "wss://goerli.infura.io/ws/v3/",
+            "wss://polygon-mainnet.infura.io/ws/v3/",
+            "wss://polygon-mumbai.infura.io/ws/v3/",
+            "wss://optimism-mainnet.infura.io/ws/v3/",
+            "wss://optimism-kovan.infura.io/ws/v3/",
+            "wss://arbitrum-mainnet.infura.io/ws/v3/",
+            "wss://arbitrum-rinkeby.infura.io/ws/v3/"
+          ],
+          "library": "Ethers.js (InfuraWebSocketProvider via WebSocketProvider)",
+          "type": "rpc",
+          "motivation": "The `InfuraWebSocketProvider` constructor transforms the HTTP URLs from `InfuraProvider` into WebSocket URLs (replacing `http` with `ws` and `/v3/` with `/ws/v3/`). It then calls `super(Q,M)` which initializes `WebSocketProvider`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://eth-mainnet.alchemyapi.io/v2/",
+            "https://eth-ropsten.alchemyapi.io/v2/",
+            "https://eth-rinkeby.alchemyapi.io/v2/",
+            "https://eth-goerli.alchemyapi.io/v2/",
+            "https://eth-kovan.alchemyapi.io/v2/",
+            "https://polygon-mainnet.g.alchemy.com/v2/",
+            "https://polygon-mumbai.g.alchemy.com/v2/",
+            "https://opt-mainnet.g.alchemy.com/v2/",
+            "https://opt-kovan.g.alchemy.com/v2/",
+            "https://arb-mainnet.g.alchemy.com/v2/",
+            "https://arb-rinkeby.g.alchemy.com/v2/"
+          ],
+          "library": "Ethers.js (AlchemyProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `AlchemyProvider.getUrl` method, in conjunction with its `getHost` method, constructs these URLs by combining a network-specific hostname (e.g., `eth-mainnet.alchemyapi.io`) with `/v2/` and an API key (API key excluded). It extends `UrlJsonRpcProvider`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.ankr.com/eth",
+            "https://rpc.ankr.com/eth_ropsten",
+            "https://rpc.ankr.com/eth_rinkeby",
+            "https://rpc.ankr.com/eth_goerli",
+            "https://rpc.ankr.com/eth_kovan",
+            "https://rpc.ankr.com/polygon",
+            "https://rpc.ankr.com/polygon_mumbai",
+            "https://rpc.ankr.com/arbitrum",
+            "https://rpc.ankr.com/optimism",
+            "https://rpc.ankr.com/bsc",
+            "https://rpc.ankr.com/avalanche",
+            "https://rpc.ankr.com/fantom"
+          ],
+          "library": "Ethers.js (AnkrProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `AnkrProvider.getUrl` method uses `getHost` (which resolves to `xxx.ankr.com` or specific paths like `rpc.ankr.com/eth`) and an API key (excluded) to form the final URL, prefixed with `https://`. It extends `UrlJsonRpcProvider`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://ethereum.api.nodesmith.io/v1/mainnet/jsonrpc",
+            "https://ethereum.api.nodesmith.io/v1/ropsten/jsonrpc",
+            "https://ethereum.api.nodesmith.io/v1/rinkeby/jsonrpc",
+            "https://ethereum.api.nodesmith.io/v1/goerli/jsonrpc",
+            "https://ethereum.api.nodesmith.io/v1/kovan/jsonrpc"
+          ],
+          "library": "Ethers.js (NodesmithProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `NodesmithProvider.getUrl` method explicitly defines these URLs and appends `?apiKey=...`. It extends `UrlJsonRpcProvider`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://eth-mainnet.gateway.pokt.network/v1/lb/",
+            "https://eth-mainnet.gateway.pokt.network/v1/",
+            "https://eth-ropsten.gateway.pokt.network/v1/lb/",
+            "https://eth-ropsten.gateway.pokt.network/v1/",
+            "https://eth-rinkeby.gateway.pokt.network/v1/lb/",
+            "https://eth-rinkeby.gateway.pokt.network/v1/",
+            "https://eth-goerli.gateway.pokt.network/v1/lb/",
+            "https://eth-goerli.gateway.pokt.network/v1/"
+          ],
+          "library": "Ethers.js (PocketProvider via fetchJson)",
+          "type": "rpc",
+          "motivation": "The `PocketProvider.getUrl` method constructs these URLs based on the network and whether `loadBalancer` is true, appending the `applicationId` (excluded from the reported URL). It extends `UrlJsonRpcProvider`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "PATTERN:https://<ipfsGatewayUrl>/ipfs/<CID>",
+            "PATTERN:https://<ipfsGatewayUrl>/ipns/<CID>",
+            "PATTERN:http(s)://<metadata_server_url>/<path_to_metadata>"
+          ],
+          "library": "Ethers.js (via getNftImageUrlNoCache / getNftMetadataUrlNoCache using fetch$1)",
+          "type": "auxiliary",
+          "motivation": "The functions `getNftImageUrlNoCache` and `getNftMetadataUrlNoCache` use `fetch$1` (a minified `fetch`). The URLs are either direct HTTP(S) URLs for metadata or constructed using a provided `ipfsGatewayUrl` and an IPFS path (`ipfs://<hash>` converted to `<gateway>/ipfs/<hash>`). The `ipfsGatewayUrl` is configurable."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "PATTERN:https://<ipfsGatewayUrl>/ipfs/<CID>"
+          ],
+          "library": "Plebbit.js / Plebbit React Hooks",
+          "type": "auxiliary",
+          "motivation": "The `useSubplebbitStats` hook calls `account.plebbit.fetchCid(J)`. This method within Plebbit.js likely fetches data from IPFS using a configured gateway. The exact URL depends on the Plebbit.js implementation and its IPFS gateway configuration."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "./translations/{{lng}}/{{ns}}.json"
+          ],
+          "library": "i18next-http-backend",
+          "type": "self",
+          "motivation": "The i18next instance is configured with `Backend` and a `loadPath: \"./translations/{{lng}}/{{ns}}.json\"`. This backend uses HTTP requests (likely `fetch` or `XMLHttpRequest`) to load translation files from this relative path."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://raw.githubusercontent.com/plebbit/temporary-default-subplebbits/master/multisub.json"
+          ],
+          "library": "Otherwise (direct fetch call)",
+          "type": "auxiliary",
+          "motivation": "An explicit `fetch` call is made to this URL in the `useDefaultSubplebbits` hook to retrieve a list of default subplebbits."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://raw.githubusercontent.com/plebbit/seedit/master/package.json",
+            "https://api.github.com/repos/plebbit/seedit/commits?per_page=1&sha=development"
+          ],
+          "library": "Otherwise (direct fetch call)",
+          "type": "auxiliary",
+          "motivation": "Explicit `fetch` calls are made in the `CheckForUpdates` component to check for application updates."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "./sw.js"
+          ],
+          "library": "Workbox (via service worker registration)",
+          "type": "self",
+          "motivation": "The Workbox library is initialized with `new ne(\"./sw.js\", ...)`, which registers a service worker. The browser will fetch this script."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "PATTERN:http(s)://<external_webpage_url>"
+          ],
+          "library": "Capacitor (CapacitorHttp)",
+          "type": "auxiliary",
+          "motivation": "The `fetchWebpageThumbnail` function uses `CapacitorHttp.get({url:G, ...})` where `G` is a URL of an external webpage to fetch its content for thumbnail extraction. This is dynamic based on the link being processed."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "assets/ccip-e1xWd4dv.js",
+      "occurences": [
+        {
+          "name": "viem",
+          "motivation": "The code utilizes several functions and patterns characteristic of the `viem` library:\n- Error classes `S`, `$`, `q` extend a base class `p`, similar to `viem`'s `BaseError`.\n- The function `k` is used for decoding ABI-encoded error data (`k({data:n,abi:[T]})`), analogous to `viem`'s `decodeErrorResult`.\n- The function `E` is invoked in a way that resembles `viem`'s `client.call` for making Ethereum RPC calls (`E(c,{blockNumber, blockTag, data, to})`).\n- Utility functions like `x` (for `concatHex`), `R` (for `encodeAbiParameters`), `b` (for `isAddressEqual`), and `M` (for `isHex`) correspond to common `viem` utilities.\n- An error class `m` is instantiated like `viem`'s `HttpRequestError`.\n- The overall structure for `offchainLookup`, including handling EIP-3668 `OffchainLookup` revert data, making HTTP requests to gateway URLs, and then making a callback to the contract, is a common pattern supported by `viem`.\n- The minified import names (`p`, `y`, `w`, `k`, `b`, `L`, `O`, `E`, `x`, `R`, `m`, `M`) from `./index-BTdNe8yF.js` suggest these are likely re-exported functionalities from a comprehensive Ethereum library such as `viem`."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-BTdNe8yF.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code imports `requireReact` from `./vendor-BVZ8Lot9.js`, contains `reactJsxRuntime_production`, uses `reactExports.useState`, and implies JSX syntax through its runtime. `React` is also explicitly imported as `React` and `React$1` from `./vendor-BVZ8Lot9.js`."
+        },
+        {
+          "name": "React DOM",
+          "motivation": "The code imports `requireReactDom` from `./vendor-BVZ8Lot9.js` and includes `reactDomClient_production` which is used for rendering React components in the DOM. The `ReactDOM$1` constant is derived from these imports."
+        },
+        {
+          "name": "React Router",
+          "motivation": "Imports `NavLink`, `Link`, `Route`, `Routes`, `HashRouter`, `useLocation`, `useNavigate`, `useParams`, `useSearchParams`, `Outlet` from `./vendor-BVZ8Lot9.js`. These are core components and hooks of the React Router library for handling navigation in React applications."
+        },
+        {
+          "name": "Capacitor",
+          "motivation": "The code includes functions like `createCapacitorPlatforms`, `initPlatforms`, `CapacitorPlatforms`, `CapacitorException`, `createCapacitor`, `initCapacitorGlobal`, and `registerPlugin`. It also defines Capacitor-specific web plugins like `CapacitorCookiesPluginWeb` and `CapacitorHttpPluginWeb`, indicating the use of the Capacitor framework for building cross-platform applications."
+        },
+        {
+          "name": "Zustand",
+          "motivation": "The code uses functions like `createStoreImpl$1`, `useSyncExternalStoreWithSelector$1`, `useStore$1`, and `create$d` (e.g., in `useThemeStore = create$d(...)`). These are characteristic of Zustand, a state-management solution."
+        },
+        {
+          "name": "react-i18next",
+          "motivation": "The presence of `initReactI18next`, the `<Trans>` component (implemented as `Trans$1` and `Trans` functions), and the `useTranslation` hook are strong indicators of `react-i18next` for internationalization in React. It also uses i18next core functionalities like `loadNamespaces` and `loadLanguages`."
+        },
+        {
+          "name": "js-sha256",
+          "motivation": "The code contains a bundled version of a SHA256 implementation, referenced via `sha256$e.exports` which in turn calls `requireSha256$1`. This is indicative of the `js-sha256` library or a similar SHA256 implementation."
+        },
+        {
+          "name": "js-sha512",
+          "motivation": "The code includes a bundled version of a SHA512 implementation, referenced via `sha512$9.exports` which in turn calls `requireSha512$2`. This points to the use of `js-sha512` or an equivalent SHA512 library."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code contains `requireElliptic()` and references its submodules like `ec` and `eddsa`. Elliptic is a widely used JavaScript library for elliptic curve cryptography (ECC)."
+        },
+        {
+          "name": "asn1.js",
+          "motivation": "The code includes `requireAsn1$2()` and uses functions like `G.define` for ASN.1 schema definitions (e.g., for `X509Certificate`, `RSAPrivateKey`). This library is typically used for encoding/decoding ASN.1 data structures, often in conjunction with cryptographic libraries."
+        },
+        {
+          "name": "Buffer (Polyfill/Shim)",
+          "motivation": "The code explicitly polyfills `window.Buffer = Buffer$1` and includes a substantial implementation of the Node.js `Buffer` API (e.g., `re.alloc`, `re.from`, `re.prototype.write`, `re.prototype.slice`) for browser compatibility."
+        },
+        {
+          "name": "Fetch API (Polyfill)",
+          "motivation": "The code checks for the native `fetch` API (`g$7.fetch`) and, if not available, assigns a polyfill (`g$7.fetch = fetch$2`). This polyfill (`fetch$2`) is implemented using `XMLHttpRequest` and provides `Headers`, `Request`, and `Response` constructors, mimicking the standard Fetch API."
+        },
+        {
+          "name": "Ethers.js",
+          "motivation": "The code extensively uses Ethers.js classes and concepts like `UrlJsonRpcProvider`, `BaseProvider`, `FallbackProvider`, `InfuraProvider`, `AlchemyProvider`, `EtherscanProvider`, `CloudflareProvider`, `NodesmithProvider`, `PocketProvider`, `JsonRpcProvider`, `WebSocketProvider`, `Web3Provider`, `Contract`, `BigNumber`, `utils.hexlify`, `utils.hexValue`, `Logger`, `defineReadOnly`, and various network-specific provider logic. These are all core components of the Ethers.js library for interacting with Ethereum."
+        },
+        {
+          "name": "React",
+          "motivation": "The code uses `reactExports.useEffect`, `reactExports.useState`, `reactExports.useMemo`, `reactExports.useRef`, `reactExports.useCallback`, `React.forwardRef`, `React.Fragment`, `React.createElement`, `React.memo`, `React.useContext`, `React.useId`, `PropTypes`, `ReactDOM.createRoot`, and JSX syntax (though not directly visible in this minified form, the usage patterns of hooks and components imply it), which are characteristic of React."
+        },
+        {
+          "name": "React Router DOM",
+          "motivation": "Usage of hooks like `useLocation`, `useNavigate`, `useParams`, and components like `Link`, `Outlet`, `Routes`, `Route`, and `HashRouter` indicates the use of React Router for client-side routing."
+        },
+        {
+          "name": "Zustand",
+          "motivation": "The code uses a minified `create$1$1` function (likely `create` from Zustand) to define stores with a functional syntax for state updates, e.g., `G=>({subplebbitsStats:Object.assign(Object.assign({},W.subplebbitsStats),{[M]:K})}))`. This pattern is typical of Zustand for state management in React applications."
+        },
+        {
+          "name": "i18next / react-i18next",
+          "motivation": "The code includes classes like `Logger` (specific to i18next), `EventEmitter`, `ResourceStore`, `Translator`, `LanguageUtil`, `PluralResolver`, `Interpolator`, `Formatter`, `Connector`, and `I18n`. It also uses `instance.t` for translations and the `useTranslation` hook, which are part of i18next and its React integration `react-i18next`."
+        },
+        {
+          "name": "Floating UI (or similar like Popper.js/Tippy.js)",
+          "motivation": "The presence of hooks like `useFloating`, `useHover`, `useFocus`, `useDismiss`, `useRole`, `useInteractions` and components/concepts like `FloatingPortal`, `FloatingFocusManager`, and functions `computePosition`, `offset`, `shift`, `flip`, `autoUpdate` strongly suggests a library for managing floating UI elements like tooltips, popovers, and dropdowns."
+        },
+        {
+          "name": "Lodash",
+          "motivation": "A significant portion of the minified code defines Lodash functions. The pattern `lodashExports=requireLodash();const _=getDefaultExportFromCjs$1(lodashExports)` is a clear indicator of its inclusion, and `_.debounce` is used."
+        },
+        {
+          "name": "Plebbit.js / Plebbit React Hooks",
+          "motivation": "The code contains direct calls to `PlebbitJs.Plebbit.getShortAddress` and `PlebbitJs.Plebbit.createComment`. Custom hooks like `useSubplebbit`, `useAccount` interact with `account.plebbit` or `Y.plebbit` and logger names like `\"plebbit-react-hooks:subplebbits:hooks\"` confirm the usage of a Plebbit client library and its associated React hooks."
+        },
+        {
+          "name": "LocalForage-LRU (or similar based on LocalForage)",
+          "motivation": "The code uses `localForageLru.createInstance({name:\"repliesPages\",size:500})` and `localForageLru.createInstance({name:\"comments\",size:5e3})`, indicating the use of an LRU cache wrapper around LocalForage for persistent client-side storage."
+        },
+        {
+          "name": "QuickLRU",
+          "motivation": "The code explicitly uses `new QuickLRU({maxSize:1e4})` for in-memory caching."
+        },
+        {
+          "name": "Memoizee",
+          "motivation": "The code includes `memoizeeExports=requireMemoizee();const memoize=getDefaultExportFromCjs$1(memoizeeExports);` and then uses `memoize(...)` for function memoization."
+        },
+        {
+          "name": "Capacitor",
+          "motivation": "The code uses `Capacitor.getPlatform()`, `Capacitor.isNativePlatform()`, `CapacitorHttp.get(...)`, and `registerPlugin(\"App\")`, `registerPlugin(\"FileUploader\")`. This indicates Capacitor is used for building cross-platform (web, iOS, Android) applications."
+        },
+        {
+          "name": "React-Dropzone",
+          "motivation": "The presence of the `useDropzone` hook and its associated props/logic like `getRootProps`, `getInputProps`, `isDragActive`, `onDrop`, and `accept` prop handling for file types points to the use of `react-dropzone`."
+        },
+        {
+          "name": "Workbox",
+          "motivation": "The code snippet `const{Workbox:ne}=await import(\"./workbox-window.prod.es5-B9K5rw8f.js\");return{Workbox:ne}},[],import.meta.url).then(({Workbox:ne})=>new ne(\"./sw.js\",...))` clearly shows Workbox being used for service worker management."
+        },
+        {
+          "name": "Unified (Remark/Rehype Ecosystem)",
+          "motivation": "The code uses `unified().use(remarkParse).use(G.remarkPlugins||[]).use(remarkRehype, ...).use(G.rehypePlugins||[]).use(rehypeFilter,G)`. This indicates the use of the Unified processing engine with Remark (markdown parser) and Rehype (HTML processor) plugins."
+        },
+        {
+          "name": "Remark-Parse",
+          "motivation": "Used with `unified()` as `remarkParse` to parse markdown content."
+        },
+        {
+          "name": "Remark-Rehype",
+          "motivation": "Used with `unified()` as `remarkRehype` to convert markdown (mdast) to HTML (hast)."
+        },
+        {
+          "name": "Rehype-Raw",
+          "motivation": "The usage pattern suggests `rehype-raw` or similar functionality for handling raw HTML within the Rehype pipeline, especially given the presence of `fromParse5` and `toParse5` logic often associated with it."
+        },
+        {
+          "name": "Rehype-Sanitize",
+          "motivation": "Used with `unified()` as `rehypeSanitize` for sanitizing HTML content, often configured with a schema like `defaultSchema`."
+        },
+        {
+          "name": "Remark-GFM",
+          "motivation": "Used with `unified()` as `remarkGfm` to support GitHub Flavored Markdown features."
+        },
+        {
+          "name": "Remark-Supersub",
+          "motivation": "The function `supersub()` is a remark plugin for handling superscript and subscript syntax. It's used as `use(supersub)`."
+        },
+        {
+          "name": "Parse5 / Hastings-Util-From-Parse5 / Hastings-Util-To-Parse5",
+          "motivation": "The code includes functions `fromParse5` and `toParse5`, which are utilities for converting between Parse5 ASTs (used for HTML parsing) and HAST (HTML Abstract Syntax Tree), often used by Rehype plugins like `rehype-raw`."
+        },
+        {
+          "name": "Mdast-util-to-hast",
+          "motivation": "The function `toHast(G,M)` is used to convert an mdast (Markdown AST) to a hast (HTML AST)."
+        },
+        {
+          "name": "Hastscript",
+          "motivation": "The functions `h()` and `s()` (minified versions of `hastscript` and `hastscript/svg` respectively) are used for programmatically creating HAST nodes."
+        },
+        {
+          "name": "VFile",
+          "motivation": "The class `VFile$1` (likely minified `VFile`) is used, which is standard in the Unified ecosystem for representing virtual files with metadata and messages."
+        },
+        {
+          "name": "Micromark (and extensions)",
+          "motivation": "The low-level parsing logic involving `createTokenizer`, various tokenizer functions (e.g., `tokenizeTable`, `tokenizeAutolink`), and state machines are characteristic of Micromark, which is the underlying markdown parser for Remark."
+        },
+        {
+          "name": "unist-util-visit / unist-util-visit-parents",
+          "motivation": "Functions like `visit$1` and `visitParents$1` (likely minified versions) are used for traversing unist (Universal Syntax Tree) compliant ASTs, which mdast and hast are."
+        },
+        {
+          "name": "property-information",
+          "motivation": "The schemas `html$4`, `svg$4` and the `find$3` function for looking up HTML/SVG attribute and property information are characteristic of this library."
+        },
+        {
+          "name": "ES-Struzzo (or similar structuredClone ponyfill)",
+          "motivation": "The detailed `serialize` and `deserialize` functions handling various JavaScript types (PRIMITIVE, ARRAY, OBJECT, DATE, REGEXP, MAP, SET, BIGINT, ArrayBuffer, DataView) and the final export `structuredClone$1` point to a structured clone ponyfill like es-struzzo."
+        }
+      ]
+    },
+    {
+      "file": "assets/vendor-BVZ8Lot9.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code includes multiple references to React's internal symbols like `Symbol.for(\"react.fragment\")`, `Symbol.for(\"react.component\")`, etc. It defines components using patterns like `y.prototype.isReactComponent={}`. It extensively uses functions aliased to `d` which correspond to React APIs like `d.createElement`, `d.createContext`, `d.useRef`, `d.useState`, `d.useCallback`, `d.useContext`, `d.useMemo`, `d.useEffect`, `d.useLayoutEffect`. The version `19.1.0` is explicitly mentioned (`g.version=\"19.1.0\"`). The `ct()` function clearly sets up the React library environment. The `__REACT_DEVTOOLS_GLOBAL_HOOK__` is referenced."
+        },
+        {
+          "name": "React DOM",
+          "motivation": "The code initializes ReactDOM in the `ht()` function, which depends on the React library (`e=De()`). It defines ReactDOM-specific APIs under the alias `U`, such as `U.createPortal`, `U.flushSync`, `U.preconnect`, `U.prefetchDNS`, `U.preinit`. It references `__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE`. The version `19.1.0` is explicitly mentioned (`U.version=\"19.1.0\"`)."
+        },
+        {
+          "name": "Remix Router / React Router",
+          "motivation": "The code contains copyright notices for `@remix-run/router v1.9.0` and `React Router v6.16.0`. It defines and uses routing concepts like `history` actions (`k.Pop`, `k.Push`, `k.Replace`), `popstate` event listeners, path matching (`gt`, `xt`, `Ot`), route configuration (`me`), and navigation functions (`l.pushState`, `l.replaceState`, `Ke`). It defines React components and hooks specific to React Router, such as `rr` (Router), `gr` (Routes), `tr` (Route), `fr` (Link), `Er` (NavLink), `Ke` (useNavigate hook), `G` (useLocation hook), `mr` (useParams hook), `Wt` (Outlet component), and context providers (`z.Provider`, `oe.Provider`, `B.Provider`)."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}

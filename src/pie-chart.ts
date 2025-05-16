@@ -116,9 +116,7 @@ function getPieColors(report: SummarizedReport): string[] {
     const hasAux = report.networking.auxiliary > 0;
     const hasOtherNetworking = report.networking.rpc > 0 || report.networking.bundler > 0 || report.networking.self > 0;
     
-    if (!hasOtherNetworking && !hasAux) {
-        colors.push(COLORS.yellow); // No networking
-    } else if (hasAux) {
+    if (hasAux) {
         // If has auxiliary networking, check if it's listed in dappspec
         if (report.dappspec.hasDappspec) {
             colors.push(COLORS.yellow); // Auxiliary but listed in dappspec

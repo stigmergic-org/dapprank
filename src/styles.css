@@ -742,6 +742,10 @@ code {
     background-color: #15aabf; /* Distinct cyan/blue */
 }
 
+.category-privacy {
+    background-color: #4c6ef5; /* Deep indigo */
+}
+
 .category-other {
     background-color: #6c757d; /* Updated gray */
 }
