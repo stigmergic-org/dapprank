@@ -1458,8 +1458,8 @@ function getFaviconPath(htmlContent, files) {
     const $ = cheerio.load(htmlContent);
     const favicons = [];
     
-    // Look for favicon link tags
-    $('link[rel="icon"], link[rel="shortcut icon"]').each((i, elem) => {
+    // Look for favicon link tags - handle space-separated rel values
+    $('link[rel*="icon"], link[rel*="shortcut"]').each((i, elem) => {
         const href = $(elem).attr('href');
         if (!href) return;
         
@@ -1472,35 +1472,62 @@ function getFaviconPath(htmlContent, files) {
                 const encoding = dataUrlMatch[2];
                 
                 // Determine file extension from mime type
-                const ext = mimeType.split('/')[1] || 'ico';
+                let ext = mimeType.split('/')[1] || 'ico';
+                // Handle special case for SVG
+                if (ext === 'svg+xml') {
+                    ext = 'svg';
+                }
                 const fileName = `favicon.${ext}`;
                 
-                return {
+                favicons.push({
                     path: fileName,
                     dataUrl: href,
                     priority: getFaviconPriority(ext),
                     isDataUrl: true
-                };
+                });
             }
-            return;
-        }
-        
-        // Normalize path to match files array (remove leading ./)
-        const normalizedPath = href.replace(/^\.?\//, '');
-        const faviconFile = files.find(file => file.path === normalizedPath);
-        
-        if (faviconFile) {
-            // Get file extension
-            const ext = normalizedPath.split('.').pop().toLowerCase();
-            // Only use filename without path
-            const fileName = normalizedPath.split('/').pop();
+        } else {
+            // Normalize path to match files array (remove leading ./)
+            const normalizedPath = href.replace(/^\.?\//, '');
+            const faviconFile = files.find(file => file.path === normalizedPath);
             
-            favicons.push({
-                path: fileName,
-                cid: faviconFile.cid,
-                priority: getFaviconPriority(ext),
-                isDataUrl: false
-            });
+            if (faviconFile) {
+                // Check type attribute first, then fallback to file extension
+                const typeAttr = $(elem).attr('type');
+                let ext;
+                
+                if (typeAttr) {
+                    // Extract extension from MIME type
+                    const mimeExt = typeAttr.split('/')[1];
+                    if (mimeExt === 'svg+xml') {
+                        ext = 'svg';
+                    } else {
+                        ext = mimeExt;
+                    }
+                    
+                    // Use the MIME type extension for the filename
+                    const fileName = `favicon.${ext}`;
+                    
+                    favicons.push({
+                        path: fileName,
+                        cid: faviconFile.cid,
+                        priority: getFaviconPriority(ext),
+                        isDataUrl: false
+                    });
+                } else {
+                    // Fallback to file extension
+                    ext = normalizedPath.split('.').pop().toLowerCase();
+                    // Only use filename without path
+                    const fileName = normalizedPath.split('/').pop();
+                    
+                    favicons.push({
+                        path: fileName,
+                        cid: faviconFile.cid,
+                        priority: getFaviconPriority(ext),
+                        isDataUrl: false
+                    });
+                }
+            }
         }
     });
     

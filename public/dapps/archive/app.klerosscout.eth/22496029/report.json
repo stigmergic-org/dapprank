@@ -1,11 +1,11 @@
 {
   "version": 2,
   "contentHash": "bafybeigf3twudb5id6ungfpbrtrf6c3acqkidrcqzftwh7cjesuwxpx4pu",
-  "timestamp": 1747345175,
-  "blockNumber": 22491241,
+  "timestamp": 1747403272,
+  "blockNumber": 22496029,
   "rootMimeType": "inode/directory",
   "totalSize": 20845849,
-  "favicon": "",
+  "favicon": "favicon.svg",
   "title": "Kleros Scout",
   "distributionPurity": {
     "externalScripts": [

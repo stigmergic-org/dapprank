@@ -1,11 +1,11 @@
 {
   "version": 2,
   "contentHash": "bafybeichc3vzcxihgj5jt3qy3cdq4ccoahkzifr7oibc6fsyikcrzywqhy",
-  "timestamp": 1747399007,
-  "blockNumber": 22495676,
+  "timestamp": 1747399386,
+  "blockNumber": 22495708,
   "rootMimeType": "text/html",
   "totalSize": 770306,
-  "favicon": "",
+  "favicon": "favicon.svg",
   "title": "Swix",
   "distributionPurity": {
     "externalScripts": [],
