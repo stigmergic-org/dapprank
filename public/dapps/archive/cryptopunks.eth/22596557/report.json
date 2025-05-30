@@ -1,0 +1,799 @@
+{
+  "version": 2,
+  "contentHash": "bafybeidwuggfyjxhnppvcpmvvn5gmtdnadsjxsuz2bdn6aqe3qynxktvxu",
+  "timestamp": 1748620867,
+  "blockNumber": 22596557,
+  "rootMimeType": "inode/directory",
+  "totalSize": 5064870,
+  "favicon": "icon.png",
+  "title": "CryptoPunks.eth.limo - The NFT marketplace to buy and sell CryptoPunks on Ethereum",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "script",
+            "url": "https://plausible.io/js/script.js"
+          },
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "223.d16e997fada6cedd.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://explorer-api.walletconnect.com/v3/wallets",
+            "https://explorer-api.walletconnect.com/v3/wallets/images",
+            "https://explorer-api.walletconnect.com/v3/featured",
+            "https://explorer-api.walletconnect.com/v3/wallets/{id}/logo/lg"
+          ],
+          "library": "@web3modal/core",
+          "type": "auxiliary",
+          "motivation": "The code contains functions like `ExplorerCtrl.getWallets`, `ExplorerApiCtrl.fetchWalletListings`, `fetchWalletImages`, `fetchFeaturedWallets`, and `getWalletImageUrl`. These construct URLs using `ExplorerApiCtrl.explorerApiUrl` (which defaults to `https://explorer-api.walletconnect.com`) and specific API paths (`/v3/wallets`, `/v3/wallets/images`, `/v3/featured`, `/v3/wallets/{id}/logo/lg`) along with a `projectId` query parameter to fetch wallet metadata and images from the WalletConnect Explorer API via `fetch`."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "@web3modal/ethereum-provider",
+          "type": "auxiliary",
+          "motivation": "The code includes a call to `ClientCtrl.ethereum().getEnsAvatar(t)`. This function likely uses the underlying Ethereum provider's `getAvatar` method. ENS avatar resolution often involves fetching data based on the resolver's configuration, which can result in `fetch` calls to external HTTP or IPFS gateways specified in ENS records. The exact URL cannot be determined from the static code as it depends on the specific ENS name being resolved at runtime."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://relay.walletconnect.com"
+          ],
+          "library": "@walletconnect/sign-client",
+          "type": "auxiliary",
+          "motivation": "The code references WalletConnect connection logic, such as `ClientCtrl.ethereum().connectWalletConnect(...)`. The WalletConnect v2 protocol, used by Web3Modal v2, establishes a session by opening a WebSocket connection to a WalletConnect relay server. The default URL for this relay is `wss://relay.walletconnect.com`, though this can be configured via `ConfigCtrl`."
+        }
+      ]
+    },
+    {
+      "file": "413.3ce364813d44d5b6.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://explorer-api.walletconnect.com/w3m/v1/getDesktopListings",
+            "https://explorer-api.walletconnect.com/w3m/v1/getMobileListings",
+            "https://explorer-api.walletconnect.com/w3m/v1/getAllListings"
+          ],
+          "library": "WalletConnect Web3Modal",
+          "type": "auxiliary",
+          "motivation": "The code defines a base URL `O = \"https://explorer-api.walletconnect.com\"` and uses it within the `E` function to construct URLs for API calls using `fetch`. Specific functions (`h_getDesktopListings`, `h_getMobileListings`, `h_getAllListings`) call `E` with paths like `/w3m/v1/getDesktopListings`, `/w3m/v1/getMobileListings`, and `/w3m/v1/getAllListings`. Query parameters like `projectId`, `sdkType`, `sdkVersion`, `page`, `entries`, `chains`, `excludedIds`, `recommendedIds` are appended dynamically based on configuration and context. These calls fetch wallet metadata for the modal."
+        }
+      ]
+    },
+    {
+      "file": "568.2243308e45f7d2ae.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3Svc (application-specific service)",
+          "type": "rpc",
+          "motivation": "The call `this.web3Svc.getEnsFromAddress(...)` in `Un` class (eth-address component) initiates an Ethereum RPC request to resolve an ENS name. This is assumed to use `fetch` as an underlying mechanism if a direct RPC provider is configured by `web3Svc`. The specific RPC endpoint URL is determined by `web3Svc`'s external configuration (not present in this snippet) or via a wallet provider like `window.ethereum` (in which case the URL 'window.ethereum' is excluded as per instructions, leading to an empty `urls` array)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3Svc (application-specific service)",
+          "type": "rpc",
+          "motivation": "The call `this.web3Svc.checkNetwork()` in `le` class (app-bid component) likely performs an RPC call such as `eth_chainId` to verify the connected network. This is assumed to use `fetch` as an underlying mechanism if a direct RPC provider is configured. The specific RPC endpoint URL is determined by `web3Svc`'s external configuration or a wallet provider, and is not present in this snippet or is `window.ethereum` (excluded URL)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3Svc (application-specific service)",
+          "type": "rpc",
+          "motivation": "Calls like `this.web3Svc.getBid(...)`, `this.web3Svc.getPunkAttributes(...)`, and `this.web3Svc.getPunkImage(...)` in various components (`le`, `we`, `la`) perform Ethereum RPC `eth_call` requests to read data from smart contracts. These are assumed to use `fetch` as an underlying mechanism if a direct RPC provider is configured. Specific RPC endpoint URLs are externally configured or come from a wallet provider (`window.ethereum` URLs are excluded)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3Svc (application-specific service)",
+          "type": "rpc",
+          "motivation": "The call `this.web3Svc.enterBidForPunk(...)` in `le` class (app-bid component) initiates an `eth_sendTransaction` RPC call to submit a bid. If `web3Svc` uses a direct RPC node that relays transactions or a wallet provider that uses `fetch` for this, `fetch` would be the underlying method. Specific RPC endpoint URLs are externally configured or come from a wallet provider (`window.ethereum` URLs are excluded)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3Svc (application-specific service)",
+          "type": "rpc",
+          "motivation": "The call `this.web3Svc.waitForTransaction(...)` in `le` class (app-bid component) likely polls for a transaction receipt using RPC calls like `eth_getTransactionReceipt`. This polling is assumed to use `fetch` as an underlying mechanism if a direct RPC provider is configured. Specific RPC endpoint URLs are externally configured or come from a wallet provider (`window.ethereum` URLs are excluded)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "viem/wagmi (inferred)",
+          "type": "rpc",
+          "motivation": "The `da` function in `va` class (AuctionComponent) sets up a `watchBlockNumber` process with `poll:!0`. This pattern, using `t.getClient` (where `t` is `this.web3Svc.config`) and `(0,pa.T)(l,ha.q,\"watchBlockNumber\")`, strongly suggests usage of `wagmi` and `viem` for polling `eth_blockNumber`. This polling would use `fetch` (or a similar HTTP request mechanism) if the `viem` client is configured with an HTTP RPC transport. The RPC URL is determined by the client's configuration, not present in this snippet, or could be `window.ethereum` (excluded URL)."
+        }
+      ]
+    },
+    {
+      "file": "60.5989e3d06bd10ebe.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/assets/logo.svg"
+          ],
+          "library": "Angular HttpClient",
+          "type": "self",
+          "motivation": "A call `l.http.get(\"/assets/logo.svg\", {responseType:\"text\"})` is made using Angular's HttpClient (`l.http` instance of `sn.Qq`). This fetches a local asset from the same domain."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIG.staticDownloadUrl]/[TOKEN_ID].svg"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "A call `t.http.get(e, {responseType:\"text\"})` is made, where `e` is constructed as `F.c.staticDownloadUrl + [TOKEN_ID] + \".svg\"`. `F.c.staticDownloadUrl` is a configuration value (likely from an environment file) pointing to a base URL for token images. This is assumed to be an external or CDN URL for assets."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/assets/cryptophunks-dark.svg"
+          ],
+          "library": "Angular HttpClient",
+          "type": "self",
+          "motivation": "A call `a.http.get(H, {responseType:\"text\"})` is made where `H` can be `\"/assets/cryptophunks-dark.svg\"`. This fetches a local asset if the collection is 'cryptophunks'."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIG.dataSvcStaticUrl]/icons/logo.svg"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "A call `a.http.get(H, {responseType:\"text\"})` is made where `H` can be `a.dataSvc.staticUrl+\"/icons/logo.svg\"`. `a.dataSvc.staticUrl` is a configuration value from the DataService. This is assumed to be an external or CDN URL for assets."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "[CONFIG.dataSvcStaticUrl]/[CONFIG.dataSvcTokenImagePath]/[TOKEN_ID].svg"
+          ],
+          "library": "Angular (LazyLoad Directive)",
+          "type": "auxiliary",
+          "motivation": "An image is loaded using Angular's `lazyLoad` directive: `n.Y8G(\"lazyLoad\",t.dataSvc.staticUrl+t.dataSvc.tokenImagePath+n.bMT(22,19,t.data.id)+\".svg\")`. This directive will trigger an HTTP GET request for the image URL. The URL components `dataSvc.staticUrl` and `dataSvc.tokenImagePath` are configurations. Assumed to be an external/CDN URL."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "Configured GraphQL Endpoint"
+          ],
+          "library": "Apollo Client",
+          "type": "auxiliary",
+          "motivation": "Calls to `this.apollo.query({query:_t,...})` execute GraphQL queries. Apollo Client uses `fetch` (or `XMLHttpRequest`) internally to send these queries to a configured GraphQL server endpoint. The specific URL is part of Apollo Client's setup and not directly in this call, but it's an external data source."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "MEV Blocker Builder Endpoint"
+          ],
+          "library": "Ethereum Interaction Library (e.g., Ethers.js/Web3.js)",
+          "type": "rpc",
+          "motivation": "The `acceptBidForPunk` flow explicitly mentions sending transactions to the \"MEV Blocker builder\" and includes UI/logic for adding the MEV Blocker RPC. This strongly suggests that `web3Svc.acceptBidForPunk` might use a specific MEV Blocker builder submission endpoint (e.g., `https://builder.mevblocker.io` or similar) via an underlying `fetch` call made by the Ethereum interaction library (like Ethers.js) for specialized transaction handling."
+        }
+      ]
+    },
+    {
+      "file": "698.d6bd2b89a9b1d409.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "{url}"
+          ],
+          "library": "otherwise",
+          "type": "auxiliary",
+          "motivation": "The code defines a function `x` (aliased as `h`) which iterates through a list of URLs (`r`). Inside the loop, it calls `fetch(i.replace(\"{sender}\",e).replace(\"{data}\",a), {...})`. The variable `i` holds the current URL from the `r` array. The URL string contains placeholders `{sender}` and `{data}` which are replaced dynamically. The exact URL depends on the `urls` argument passed to the `ccipRequest` function (aliased as `x` or `h`). Since the URL structure is dynamic and meant for off-chain data retrieval based on contract calls (CCIP-Read/EIP-3668), it's classified as auxiliary. The method is determined by checking if the URL includes `{data}`: 'GET' if it does, 'POST' otherwise. Data is passed either in the URL ('GET') or as JSON in the request body ('POST')."
+        }
+      ]
+    },
+    {
+      "file": "862.47356340150f888a.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://verify.walletconnect.com/attestation/",
+            "https://verify.walletconnect.org/attestation/"
+          ],
+          "library": "@walletconnect/core",
+          "type": "auxiliary",
+          "motivation": "The code makes a call `fetch(`${f}/attestation/${c}`, ...)` inside the `fetchAttestation` function within the `X3` class (Verify API client). The base URL `f` is dynamically determined but defaults to `https://verify.walletconnect.com` or the failover `https://verify.walletconnect.org`. This call retrieves attestation data for domain verification."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.walletconnect.com/v1/"
+          ],
+          "library": "@walletconnect/universal-provider",
+          "type": "rpc",
+          "motivation": "The code utilizes a generic HTTP RPC provider (`kd`/`Li`) instantiated within chain-specific providers (e.g., `NE` for eip155). The URL is constructed using the `mi` function, which defaults to `https://rpc.walletconnect.com/v1/?chainId=...&projectId=...` if no specific RPC URL is provided in the configuration (`rpcMap`). This is used to send standard JSON-RPC requests to Ethereum (and potentially other) chains."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://echo.walletconnect.com/"
+          ],
+          "library": "@walletconnect/core",
+          "type": "auxiliary",
+          "motivation": "The code makes a POST request in the `registerDeviceToken` function within the `Z3` class (Echo client). The URL is constructed as `https://echo.walletconnect.com/${o.projectId}/clients`. This is used to register a device token for push notifications via the WalletConnect Echo service."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://relay.walletconnect.com",
+            "wss://relay.walletconnect.org"
+          ],
+          "library": "@walletconnect/core",
+          "type": "auxiliary",
+          "motivation": "The code establishes a WebSocket connection (`new A1(e, [], c)`) inside the `S1` class. The URL `e` is constructed dynamically by the Relayer (`q3`) using the `Oy` function. This function takes the `relayUrl` (defaulting to `wss://relay.walletconnect.com` with a failover of `wss://relay.walletconnect.org`) and appends query parameters including authentication (`auth`) and the project ID. This connection is essential for the WalletConnect relay protocol."
+        }
+      ]
+    },
+    {
+      "file": "866.ed9c107a30a38538.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "web3Svc (custom service)",
+          "type": "rpc",
+          "motivation": "The component calls `this.web3Svc.getENSMetadata(this.address)`. This method is designed to retrieve Ethereum Name Service (ENS) data, which necessitates communication with an Ethereum RPC endpoint. `fetch` (or `XMLHttpRequest`) is the standard underlying mechanism for such HTTP-based RPC calls. No specific URL is present in this code snippet; it would be configured within the `web3Svc`."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "dataSvc (custom service)",
+          "type": "auxiliary",
+          "motivation": "The component calls `this.dataSvc.getEthFollowStatsFor(this.address)` to obtain 'Ethereum Follow Protocol' statistics. This indicates a network request to a custom backend API, typically made using `fetch` (or `XMLHttpRequest`, possibly via Angular's `HttpClient`). The specific API URL is not discernible from this snippet and would be part of the `dataSvc` configuration."
+        }
+      ]
+    },
+    {
+      "file": "main.769805678cbfb63b.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cloudflare-eth.com"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "Default RPC URL for Ethereum mainnet (chain ID 1) configured in the `Ne` constant, used by `viem`'s HTTP transport."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.walletconnect.com/v1/",
+            "https://rpc.walletconnect.org/v1/"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "Base URLs used by `LC` function (called by `JsonRpcProvider`) for constructing RPC endpoints for WalletConnect chains. The full URL includes chainId and projectId."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://eth-mainnet.g.alchemy.com/v2/"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "RPC URL (`E.c.rpcHttpProvider`) used by the `Bp` JsonRpcProvider instance for Ethereum mainnet interactions. API key is part of the path but excluded."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://punkcdn.com/data/_attributes.json"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching punk attributes data from a static JSON file on punkcdn.com. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.reservoir.tools/users/{address}/tokens/v7"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching user's tokens from the Reservoir API, path includes a dynamic address. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.reservoir.tools/orders/asks/v5"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching ask orders from the Reservoir API. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.reservoir.tools/orders/bids/v5"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching bid orders from the Reservoir API. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.ethfollow.xyz/api/v1/users/{address}/stats"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching user statistics from the EthFollow API, path includes a dynamic address. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.reservoir.tools/tokens/v6"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching specific token data from the Reservoir API. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://api.geckoterminal.com/api/v2/networks/eth/tokens/0xcb56b52316041a62b6b5d0583dce4a8ae7a3c629"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching CIG token price data from GeckoTerminal API. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://punkcdn.com/data/coin-price"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching cryptocurrency price data (specifically Ethereum) from punkcdn.com. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://pro-api.coingecko.com/api/v3/simple/price"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching token prices (e.g., for NFTX vault tokens) from CoinGecko Pro API. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://punks.limo/"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching punk card or user card data from punks.limo. The specific path is dynamic (e.g., `/${kt}?=${st}`). Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://punks.limo/floorpunks"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching floor punks card data from punks.limo. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "https://punkcdn.com/data/_states.json"
+          ],
+          "library": "Angular HttpClient",
+          "type": "auxiliary",
+          "motivation": "Fetching state data for the 'cryptopunks' collection from punkcdn.com. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/assets/_punksv1_states.json"
+          ],
+          "library": "Angular HttpClient",
+          "type": "self",
+          "motivation": "Fetching state data for the 'cryptopunks-v1' collection from a local asset path. Called via `this.http.get`."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "/assets/_phunks_states.json"
+          ],
+          "library": "Angular HttpClient",
+          "type": "self",
+          "motivation": "Fetching state data for other collections (e.g., 'phunks') from a local asset path. Called via `this.http.get`."
+        },
+        {
+          "method": "POST",
+          "urls": [
+            "https://gateway.thegraph.com/api/697844908bda79b5c5c11bdfde65ef5e/subgraphs/id/CWCx5K9VPUCgvUCNnY2jX73VTuKy47kRdZ3VVbPKdSvj"
+          ],
+          "library": "Apollo Client",
+          "type": "auxiliary",
+          "motivation": "Default GraphQL endpoint for fetching CryptoPunks data from The Graph. Used by various Apollo queries."
+        },
+        {
+          "method": "POST",
+          "urls": [
+            "https://gateway-arbitrum.network.thegraph.com/api/697844908bda79b5c5c11bdfde65ef5e/subgraphs/id/Epp6gJotEJKAsJYdk7bDEURtGWWeZVXwZds2Pgw8eG51"
+          ],
+          "library": "Apollo Client",
+          "type": "auxiliary",
+          "motivation": "GraphQL endpoint for fetching NFTX data from The Graph, used by the 'nftx' named Apollo client."
+        },
+        {
+          "method": "POST",
+          "urls": [
+            "https://gateway-arbitrum.network.thegraph.com/api/697844908bda79b5c5c11bdfde65ef5e/subgraphs/id/FQJe5L2quB6CGaGv3yyTGUV5ATnEgHcau3Q2nFm7UWAe"
+          ],
+          "library": "Apollo Client",
+          "type": "auxiliary",
+          "motivation": "GraphQL endpoint for fetching CIG (CryptoPunks Improvement Grant) token data from The Graph, used by the 'cig' named Apollo client."
+        },
+        {
+          "method": "POST",
+          "urls": [
+            "https://gondiproxy.chickenkiller.com/lending/graphql"
+          ],
+          "library": "Apollo Client",
+          "type": "auxiliary",
+          "motivation": "GraphQL endpoint for fetching Gondi lending data, used by the 'gondi' named Apollo client."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "native fetch",
+          "type": "auxiliary",
+          "motivation": "The `br()` function uses `fetch(s, {method:\"HEAD\"})` with a dynamic URL `s` to check if an ENS avatar image exists. The URL is derived from ENS records and can point to various domains (HTTP, IPFS gateways like ipfs.io, arweave.net)."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "native fetch",
+          "type": "auxiliary",
+          "motivation": "The `Xr()` function uses `fetch(e).then(c=>c.json())` with a dynamic URL `e` to fetch ENS avatar metadata (often a JSON file). The URL is derived from ENS records and can point to various domains."
+        }
+      ]
+    },
+    {
+      "file": "polyfills.aa0d9bd37968f15b.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [],
+          "library": "Zone.js",
+          "type": "auxiliary",
+          "motivation": "The code patches `XMLHttpRequest.prototype.open` and `XMLHttpRequest.prototype.send` using `Zone.js`'s `ue` utility function. The `open` patch captures the URL (`x[1]`) and stores it. The `send` patch uses `Zone.current.scheduleMacroTask` (`Xe`) to wrap the XHR lifecycle. No specific URLs are hardcoded in this polyfill; they are passed dynamically by the application code when it calls `open`."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "Zone.js",
+          "type": "auxiliary",
+          "motivation": "The code contains `ue(e,\"fetch\",d=>function ee(d){...})`, which patches the global `fetch` function using Zone.js utilities to likely wrap the Promise returned by `fetch` in a ZoneAwarePromise. No specific URLs are hardcoded in this polyfill; they are passed dynamically by the application code when it calls `fetch`."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "115.0e9d14ef203371b7.js",
+      "occurences": [
+        {
+          "name": "@web3modal/core",
+          "motivation": "Presence of multiple controllers like `AccountController`, `NetworkController`, `ConnectionController`, `OptionsController`, `SIWEController`, `RouterController`, `SnackController`, `En` (event controller), and state management utilities (`(0,S.BX)`, `(0,S.B1)`) suggests the use of Web3Modal's core logic library."
+        },
+        {
+          "name": "lit",
+          "motivation": "The code defines custom elements (`(0,p.customElement)('w3m-connecting-siwe')`), uses base classes (`extends h.WF`), template literals (`h.qy`), tagged template literals for styles (`h.AH`), and decorators (`(0,W.wk)()`), all characteristic features of the Lit library for building web components."
+        },
+        {
+          "name": "@web3modal/common or @walletconnect/utils",
+          "motivation": "The use of `E.LX.caipNetworkIdToNumber` indicates a utility function for handling CAIP (Chain Agnostic Improvement Proposals) standards, likely originating from a common utility package within the Web3Modal or WalletConnect ecosystem."
+        }
+      ]
+    },
+    {
+      "file": "223.d16e997fada6cedd.js",
+      "occurences": [
+        {
+          "name": "Lit",
+          "motivation": "`LitElement` and `lit-html` are used extensively. Evidence includes:\n* Class definitions extending `LitElement` (e.g., `class K extends b{`, where `b` is identified as `LitElement`'s base class `ce`).\n* Usage of `html` (aliased as `p`) and `css` (aliased as `E`) tagged template literals.\n* Use of Lit directives like `classMap` (imported as `z`).\n* Decorator patterns used for property definitions (e.g., `ge([w({type:Boolean})],K.prototype,\"disabled\",2)` where `w` is a property decorator factory).\n* Standard Lit lifecycle methods like `render()`, `firstUpdated()`, `connectedCallback()`, `disconnectedCallback()`.\n* Explicit tracking of Lit versions (`litElementVersions`, `litHtmlVersions`)."
+        },
+        {
+          "name": "Motion One",
+          "motivation": "The code utilizes animation functionalities characteristic of Motion One:\n* Imports and usage of animation functions like `animate` (e.g., `ie(this.routerEl,{opacity:[1,0]...`) which corresponds to the imported `ie` function wrapping `Zo` and `zo`, ultimately using `Cr` (a custom animation class similar to Motion One's internal implementation) or potentially the native `animate`.\n* Presence of easing functions (`Ie`, `Ar`) and timing constants (`U={duration:.3...}`).\n* Checks for Web Animations API (WAAPI) support (`ue.waapi`, `Pr.waapi`).\n* Handling of CSS variables for transforms (`wt=i=>`--motion-${i}`, `Ve_set`, `Ve_get`)."
+        },
+        {
+          "name": "@web3modal/* (Core, UI, Utils, etc.)",
+          "motivation": "The code implements a Web3 connection modal, heavily utilizing components and logic likely from the Web3Modal v2 library suite (@web3modal/core, @web3modal/ui, @web3modal/common, potentially including parts previously in @walletconnect/modal-*):\n* Extensive use of custom elements prefixed with `wcm-` (e.g., `<wcm-modal>`, `<wcm-qrcode>`, `<wcm-connect-wallet-view>`, `<wcm-wallet-button>`).\n* References to controllers like `ThemeCtrl` (d.lH), `ModalCtrl` (d.D8), `RouterCtrl` (d.jL), `ExplorerCtrl` (d.pV), `ClientCtrl` (d.IN), `ConfigCtrl` (d.mb), `ToastCtrl` (d.dC), `OptionsCtrl` (d.vZ), `CoreHelperUtil` (d.Ao). These controllers manage state and logic for the modal.\n* Logic for fetching wallet data from the WalletConnect Explorer API (`ExplorerCtrl.getWallets`, `ExplorerApiCtrl.fetchWalletListings`, `ExplorerApiCtrl.getWalletImageUrl`).\n* Handling of WalletConnect URIs (`walletConnectUri`).\n* Specific UI components for different connection flows and states (e.g., `wcm-desktop-connecting-view`, `wcm-qrcode-view`, `wcm-wallet-explorer-view`).\n* Usage of WalletConnect-specific icons and branding (`O.WALLET_CONNECT_LOGO`, etc.).\n* References to `explorer.walletconnect.com` for fetching wallet data."
+        }
+      ]
+    },
+    {
+      "file": "323.8ed513cecc55d395.js",
+      "occurences": [
+        {
+          "name": "tinycolor",
+          "motivation": "The code implements a color parsing and manipulation library. Function names like `toHsv`, `toHsl`, `toHex`, `toRgb`, `lighten`, `darken`, `desaturate`, `saturate`, `spin`, `mix`, `readability`, `mostReadable`, and the structure involving `s.prototype` and methods like `_applyModification` closely resemble the API and internal structure of the `tinycolor2` library (or a derivative/fork). The presence of specific strings like `progid:DXImageTransform.Microsoft.gradient` and the extensive color name map (`s.names`) further support this identification."
+        }
+      ]
+    },
+    {
+      "file": "413.3ce364813d44d5b6.js",
+      "occurences": [
+        {
+          "name": "WalletConnect Web3Modal",
+          "motivation": "The code explicitly uses constants like `WALLETCONNECT_DEEPLINK_CHOICE`, `WCM_VERSION`, mentions `WalletConnectModal`, interacts with URLs under `https://explorer-api.walletconnect.com`, and dynamically loads a web component named `wcm-modal`. Functions like `setWalletConnectDeepLink`, `setWalletConnectAndroidDeepLink`, `removeWalletConnectDeepLink`, and state management related to wallet connection (`ConnectWallet` view, `walletConnectUri`) are characteristic of Web3Modal v2."
+        },
+        {
+          "name": "Proxy State Management Library (Likely Valtio/similar)",
+          "motivation": "The code uses patterns like `(0,o.BX)({...})` to create reactive state objects (e.g., `i`, `a`, `m`, `L`, `g`, `I`, `y`, `b`) and `(0,o.B1)(...)` to subscribe to changes. This pattern is common with proxy-based state management libraries like Valtio, which Web3Modal is known to use internally."
+        }
+      ]
+    },
+    {
+      "file": "568.2243308e45f7d2ae.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code extensively uses Angular's distinctive features: component lifecycle hooks (`ngOnInit`, `ngOnDestroy`, `ngOnChanges`), decorators (`@Component` implied by `ɵcmp`, `@Directive` implied by `ɵdir`), dependency injection patterns (e.g., `o.rXU(xt.b)`), and compiled template artifacts/functions (e.g., `o.VBU`, `o.FsC`, `o.EFF`, `o.Y8G`, `o.DNE`, `o.bMT`, `o.nI1`). The use of `selectors`, `inputs`, `standalone:!0`, `features:[o.aNF]` are all specific to Angular's component and directive definitions."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code uses `this.store.select(...)`, which in NgRx (a common Angular state management library) returns an RxJS `Observable`. The `async` pipe (`o.nI1(1,\"async\")` in compiled templates) is used to subscribe to Observables in templates. Variables like `activeAuction$` (ending with `$`) are a common convention for Observables."
+        },
+        {
+          "name": "NgRx Store",
+          "motivation": "The code shows injection and usage of a `store` service (`this.store=e` where `e` is `o.rXU(z0.il)`). Methods like `this.store.select(S0.yk)` (selecting state) and `this.store.dispatch((0,fa.Td)({currentBlock:Number(s)}))` (dispatching actions) are characteristic of NgRx Store, an Angular state management library inspired by Redux."
+        },
+        {
+          "name": "Tippy.js",
+          "motivation": "The code contains a directive `re` with `selectors:[[\"\",\"tippy\",\"\"]]`. Inside its `ngOnInit`, it calls `(0,ee.Ay)(e,{content:e.dataset.tippyContent,...})` which is the initialization function for Tippy.js (likely `tippy()` itself, minified as `ee.Ay`). It also references `_tippy` property on elements and uses `data-tippy-content` attributes."
+        },
+        {
+          "name": "D3.js",
+          "motivation": "The `la` class (directive `punk-image`) uses D3.js for rendering an SVG chart. It calls D3 methods like `Mt.select(...).append('svg')` (minified as `function ea...append(\"svg\")` where `Q` is `Selection`), `r0()` (likely `d3.scaleBand()`), `Rt()` (likely D3 axis functions like `d3.axisBottom()` or `d3.axisLeft()`). The code structure for building axes (`e.svg.append(\"g\").call(...)`), creating scales (`e.xScale=r0().range([0,e.punkWidth]).domain(i).padding(0)`), and data joining/transitions (`e.svg.selectAll(\"rect\").data(r.dataArr).join(\"rect\").transition().style(...)`) are all idiomatic D3.js. Many internal D3 function names and structures are visible in the minified code block related to selections, scales, axes, colors, transitions, and timers."
+        }
+      ]
+    },
+    {
+      "file": "60.5989e3d06bd10ebe.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code exhibits numerous characteristics of an Angular application, including the use of decorators (implicitly, via minified code like `n.VBU` for Component, `n.KVO` for Inject), dependency injection (`n.rXU`), component lifecycle hooks, template syntax (e.g., `*ngIf`, `*ngFor`, `[propertyBinding]`, `(eventBinding)` represented by minified calls), pipes (`async`, `tokenIdParse`, `date`), services, and RxJS integration. Standalone components (`standalone:!0`) are also indicated. Specific Angular modules like `HttpClient` (injected as `sn.Qq`) and Forms (`C.MJ` for `FormControl`) are evident."
+        },
+        {
+          "name": "Apollo Client",
+          "motivation": "The code contains calls to `this.apollo.query({...})` (where `this.apollo` is an instance of `Pn.Ic`), which is the standard way to execute GraphQL queries using Apollo Client. A GraphQL query string (`_t`) is defined and used in these calls, indicating interaction with a GraphQL server."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "Reactive Extensions for JavaScript (RxJS) is extensively used throughout the codebase. This is evident from the frequent use of the `.pipe()` method on observables, various RxJS operators (minified, e.g., `(0,W.M)` for `tap`, `(0,nn.T)` for `map`, `(0,q.n)` for `switchMap`, `(0,on.Q)` for `takeUntil`), and `Subject`/`BehaviorSubject` instances (`dn.B`, `rn.t`) for managing asynchronous data streams and state."
+        },
+        {
+          "name": "Ethereum Interaction Library (e.g., Ethers.js/Web3.js)",
+          "motivation": "The `Web3Service` (injected as `at.b`) encapsulates Ethereum blockchain interactions. Methods like `ethToWei`, `verifyAddressOrEns`, `waitForTransaction`, and specific contract call wrappers (e.g., `offerPunkForSale`, `buyPunk`, `acceptBidForPunk`) are characteristic of libraries like Ethers.js or Web3.js. These libraries typically use `fetch` or `XMLHttpRequest` for RPC communication."
+        }
+      ]
+    },
+    {
+      "file": "862.47356340150f888a.js",
+      "occurences": [
+        {
+          "name": "Webpack",
+          "motivation": "The code begins with `(self.webpackChunkcryptopunks_eth=self.webpackChunkcryptopunks_eth||[]).push(...)`, which is the standard boilerplate for code bundled by Webpack."
+        },
+        {
+          "name": "@walletconnect/universal-provider",
+          "motivation": "The main export `EthereumProvider` (`r2`) and its initialization pattern (`xa.init(...)`) are characteristic of `@walletconnect/universal-provider`. It orchestrates various WalletConnect components."
+        },
+        {
+          "name": "@walletconnect/sign-client",
+          "motivation": "The code includes classes like `SignClient` (`Vc`) and `Engine` (`pE`), responsible for handling WalletConnect v2 session logic (proposals, settlements, requests, events, etc.), which are core components of `@walletconnect/sign-client`."
+        },
+        {
+          "name": "@walletconnect/core",
+          "motivation": "Core functionalities like `Core` (`Bc`), `Relayer` (`q3`), `Crypto` (`T3`), `Expirer` (`Q3`), `History` (`Y3`), `KeyChain` (`P3`), `Verify` (`X3`), and `Echo` (`Z3`) are present, indicating the use of `@walletconnect/core`."
+        },
+        {
+          "name": "@walletconnect/utils",
+          "motivation": "Utility functions for environment detection (`ns`, `ts`, `rs`), JSON-RPC payload checking (`Tc`, `ga`), constants, and error handling (`Me`, `Jt`) are used, aligning with the utilities provided by `@walletconnect/utils`."
+        },
+        {
+          "name": "@walletconnect/time",
+          "motivation": "Time constants like `FIVE_MINUTES`, `THIRTY_SECONDS`, `ONE_DAY`, `SEVEN_DAYS` (`Xe`) are used throughout the code, matching those exported by `@walletconnect/time`."
+        },
+        {
+          "name": "@walletconnect/environment",
+          "motivation": "The code imports and uses environment detection functions (`ns`, `ts`, `rs` imported from `P(23601)`) to determine if the runtime is Node.js, Browser, or React Native, which is the purpose of `@walletconnect/environment`."
+        },
+        {
+          "name": "@walletconnect/modal",
+          "motivation": "The code conditionally imports and instantiates `WalletConnectModal` (`P.e(413).then(P.bind(P, 52413))`) based on the `showQrModal` option, indicating optional use of the `@walletconnect/modal` package."
+        },
+        {
+          "name": "Noble Crypto Libraries (or similar)",
+          "motivation": "The code includes implementations or imports (`P(...)`) for various cryptographic primitives like `Ed25519` (`uh`, `P(40597)`), `X25519` (`Ze`, `P(96863)`), `SHA256` (`je`, `P(21001)`), `SHA512` (`be`, `P(88411)`), `ChaCha20Poly1305` (`te`, `P(25945)`), `HMAC` (`P(48921)`), `HKDF` (`g`, `P(80877)`), `Poly1305` (`P(95905)`). These are often provided by libraries like `@noble/curves`, `@noble/hashes`, `@noble/ciphers`, or similar high-quality crypto libraries."
+        },
+        {
+          "name": "Multiformats",
+          "motivation": "The code contains extensive sections (`P(62862)`) dedicated to multibase encoding/decoding (e.g., `base16`, `base58btc`, `base64url`), multihash implementations (`sha256`, `sha512`), and CID concepts, suggesting the use of the `multiformats` library or its constituent parts (`multibase`, `multihash`, `cids`)."
+        },
+        {
+          "name": "Lodash",
+          "motivation": "The code includes a bundled version of Lodash (`P(35667)`), indicated by the presence of its internal functions and structures (`__lodash_hash_undefined__`, `xs`, `vn`, `St`, etc.) and the export pattern `Pr._ = bs`."
+        },
+        {
+          "name": "query-string",
+          "motivation": "The code imports (`P(98570)`) and uses functions like `parse` (`Ie`) and `stringify` (`m.stringify`) for handling URL query parameters, which is characteristic of the `query-string` library."
+        },
+        {
+          "name": "pino",
+          "motivation": "The code imports (`P(91105)`) and uses a logger setup consistent with `pino`, specifically its browser version (`pino/browser`). The setup involves configuration for serialization and transmission in a browser context."
+        },
+        {
+          "name": "idb-keyval",
+          "motivation": "The code defines a storage class (`av`) that wraps an IndexedDB implementation (`iv`) using patterns (`dbName`, `storeName`, `keyval-store`) typical of the `idb-keyval` library for simple key-value storage in IndexedDB."
+        },
+        {
+          "name": "whatwg-fetch (or ponyfill)",
+          "motivation": "The code explicitly includes a fetch ponyfill (`P(27886)`) and checks for native fetch support (`P(48901)`), ensuring fetch functionality is available, a common pattern when using `whatwg-fetch` or similar ponyfills."
+        }
+      ]
+    },
+    {
+      "file": "866.ed9c107a30a38538.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code utilizes Angular's core features and syntax. This includes the component structure (indicated by `\\u0275cmp` for component definition and `\\u0275fac` for factory), lifecycle hooks such as `ngOnInit` and `ngOnChanges`, dependency injection (e.g., `t.rXU`), and Angular's template syntax with directives like `*ngIf`, `*ngFor`, event binding `(click)`, and property binding. Minified imports like `s.MD` (likely representing `@angular/common` functionalities) further support this."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code extensively employs RxJS for asynchronous programming. This is evident from the use of `new h.B` (likely `Subject` or `BehaviorSubject` from RxJS, where `h` is `o(21413)`), methods like `.asObservable()`, the `.pipe()` operator for composing asynchronous operations, and minified calls corresponding to RxJS operators: `(0,C.n)` (e.g., `switchMap`, `tap` - where `C` is `o(25558)`), `(0,M.p)` (e.g., `forkJoin`, `combineLatest` - where `M` is `o(27468)`), `(0,u.w)` (likely `timeout` - where `u` is `o(62087)`), `(0,E.W)` (likely `catchError` - where `E` is `o(99437)`), and `(0,c.of)` (likely `of` - where `c` is `o(7673)`)."
+        },
+        {
+          "name": "Apollo Client",
+          "motivation": "An `apollo` service is injected into the component's constructor (`this.apollo=e`, where `e` is resolved via `t.rXU(T.Ic)` and `T.Ic` (`o(73512)`) likely refers to the Apollo Client instance). Apollo Client is a common library for managing GraphQL data in JavaScript applications, including those built with Angular."
+        },
+        {
+          "name": "Tippy.js",
+          "motivation": "The component's template uses a `tippy` directive (`<... tippy ...>`). Additionally, options are configured for this directive (`[options]=\"t.eq3(2,L,e.description)\"`), where the `L` function defines properties like `interactive`, `content`, and `placement`, which are characteristic of Tippy.js, a tooltip/popover library. The dependency `g.iI` (from `o(41059)`) in the component's dependencies array likely corresponds to this directive."
+        }
+      ]
+    },
+    {
+      "file": "common.9d65e9897e881c0f.js",
+      "occurences": [
+        {
+          "name": "events (Node.js polyfill/implementation)",
+          "motivation": "The code explicitly defines and exports an `EventEmitter` class (`o.EventEmitter=o`, `p.exports=o`) with methods like `on`, `emit`, `once`, `removeListener`, `setMaxListeners`, etc. This API mirrors the Node.js `events` module, suggesting it's either a direct port, a polyfill, or a compatible implementation for a browser environment, potentially bundled by Webpack (`self.webpackChunkcryptopunks_eth`)."
+        }
+      ]
+    },
+    {
+      "file": "main.769805678cbfb63b.js",
+      "occurences": [
+        {
+          "name": "Angular",
+          "motivation": "The code extensively uses Angular's component structure (`@Component`, `ngOnInit`, `ngOnChanges`, `ngOnDestroy`), template syntax (`r.j41`, `r.EFF`, `r.DNE`), dependency injection (`r.KVO`, `r.rXU`), pipes (`r.EJ8`), and services. The variable `r` is frequently assigned from `y(54438)`, which appears to be the Angular core module."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code heavily utilizes RxJS patterns and operators. Examples include `new p.t([])` (likely `BehaviorSubject` or `Subject`), `.asObservable()`, `.pipe()`, and numerous operators like `map` (e.g., `(0,ge.T)`), `switchMap` (e.g., `(0,ie.n)`), `filter` (e.g., `(0,at.p)`), `tap` (e.g., `(0,oe.M)`), `catchError` (e.g., `(0,xe.W)`), `of` (e.g., `(0,E.of)`), `startWith` (e.g., `(0,Y.Z)(null)`), `withLatestFrom` (e.g., `(0,We.E)`), `take` (e.g., `(0,De.s)(1)`), and `timeout` (e.g., `(0,et.w)(1e3)`)."
+        },
+        {
+          "name": "Apollo Client",
+          "motivation": "The code makes GraphQL queries using `this.apollo.query({...})`, `this.apollo.watchQuery({...})`, and `this.apollo.use('clientName')`. It also uses a tagged template literal (e.g., `ht.J1`, `r.J1`) for defining GraphQL queries, which is characteristic of Apollo Client (often used with `graphql-tag`)."
+        },
+        {
+          "name": "Tippy.js",
+          "motivation": "The code includes a directive (`28916`) that explicitly calls `(0,r.Ay)(T, {...})` which is identified as `tippy()` based on the context of creating tooltips and referencing `this.el.nativeElement._tippy`."
+        },
+        {
+          "name": "viem / ethers.js (or similar Ethereum interaction library, identified as viem)",
+          "motivation": "A large portion of the code (module `9969`) handles Ethereum interactions like ABI encoding/decoding, transaction preparation, signing, ENS resolution (`getEnsFromAddress`, `getEnsAddress`), and RPC calls. Constants like `Ne` (representing Ethereum mainnet chain), ABI definitions (e.g., `at`, `De`, `et`, `ht`, `ot`), and Ethereum-specific utility functions (e.g., `ethToWei`, `weiToEth`, namehashing `Mo()`) are present. The code contains the string `@wagmi/core@2.6.16` and `viem`, and includes error types and structures consistent with `viem` or a library built upon it. `JsonRpcProvider` and `FetchRequest` classes within this module handle RPC communication."
+        },
+        {
+          "name": "Wagmi",
+          "motivation": "The codebase includes `@wagmi/core@${St}` string literals and error classes like `WagmiCoreError`, `ChainNotConfiguredError`, `ConnectorAlreadyConnectedError`, `ConnectorNotConnectedError`, `ProviderNotFoundError`, `SwitchChainNotSupportedError`. It uses Wagmi's `createConfig` structure (`function Ry(s){...}` which creates `config`) and interacts with connectors and state management patterns typical of Wagmi."
+        },
+        {
+          "name": "WalletConnect SDK (@walletconnect/ethereum-provider, Web3Modal)",
+          "motivation": "The code uses `EthereumProvider.init` (from `@walletconnect/ethereum-provider`) within the `Wd` function for the WalletConnect connector. Class `Pm` in module `9969` initializes an iframe pointing to `https://secure.walletconnect.com/sdk`, which is part of WalletConnect's Web3Modal / Email Wallets SDK. Event keys like `APP_CONNECT_EMAIL`, `FRAME_CONNECT_EMAIL_SUCCESS` are used for communication with this iframe."
+        },
+        {
+          "name": "Day.js / Moment.js (likely Day.js)",
+          "motivation": "Multiple modules (e.g., `67374`, `52155`) define locales using `r.defineLocale(...)` with date/time formatting strings (`LT`, `LTS`, `LL`, `relativeTime`, etc.), which is characteristic of date manipulation libraries like Day.js or Moment.js. Given the modular locale definitions, Day.js is more probable."
+        },
+        {
+          "name": "Zod",
+          "motivation": "Module `9969` includes classes and type definitions clearly from Zod, such as `ZodError`, `ZodType`, `ZodString`, `ZodNumber`, `ZodObject`, `ZodIssueCode`, and the `on` variable which is assigned `zod`. It's used for schema definition and validation."
+        },
+        {
+          "name": "LitElement (or similar for WUI components)",
+          "motivation": "The code defines custom elements like `w3m-account-button`, `wui-connect-button`, `wui-flex`, etc., which extend a base class `Bt.WF`. `Bt.qy` is used for templating, and decorators like `@customElement` and `@property` (aliased as `er.MZ`, `er.wk`) are used. This pattern is common with LitElement for creating web components. These components seem to be part of a UI library, possibly WalletConnect's Web UI Kit (WUI)."
+        },
+        {
+          "name": "LocalForage (or a similar storage wrapper)",
+          "motivation": "The code includes `_localforage_support_test` string and implements storage abstractions in module `9969` (e.g., class `ob` and function `Py`) that resemble LocalForage's API or a wrapper around browser storage mechanisms like localStorage/IndexedDB."
+        },
+        {
+          "name": "Zustand (or similar state management)",
+          "motivation": "Module `9969` contains code for state management (`b0`, `HC`, `nb` functions) that closely resembles Zustand's API, including patterns for creating stores, subscribing to state changes, and middleware like persist (evidenced by `console.warn(\"[zustand persist middleware] ...\")`)."
+        },
+        {
+          "name": "Moment.js",
+          "motivation": "The code includes a large, minified section characteristic of Moment.js. It references `_isAMomentObject`, `moment.utc`, `moment.fn.add`, `moment.fn.subtract`, `moment.fn.format`, and contains extensive date/time parsing, manipulation logic, and locale handling features (e.g., `defineLocale`, `localeData`, `preparse`, `postformat`). The specific structure and function names like `et(k,Q)`, `ht(k)`, `ot(k)` within the minified date/time library code strongly align with Moment.js's internal workings. The call `y(35358)(\"./\"+k)` is part of Moment.js's dynamic locale loading mechanism."
+        },
+        {
+          "name": "qrcode",
+          "motivation": "The code contains functions like `ne.create=p.create`, `ne.toCanvas=w.bind(null,E.render)`, `ne.toDataURL=w.bind(null,E.renderToDataURL)`, and `ne.toString=w.bind(null,function(A,T,O){return C.render(A,O)})` which are typical exports of a QR code generation library. Internal logic related to QR code structure such as `getSymbolSize`, `getRowColCoords`, `getPositions`, error correction levels (`ErrorCorrectionLevel.L`, `M`, `Q`, `H`), modes (`Mode.NUMERIC`, `ALPHANUMERIC`, `BYTE`, `KANJI`), and bit manipulation for encoding data into QR format are present. The module `68314` which exports these functions seems to be the `qrcode` library (or a similar one)."
+        },
+        {
+          "name": "Tippy.js",
+          "motivation": "The code includes references to `tippy` (as `Di` in `const Di=Ys`), and constants like `le=\"tippy-content\"`, `Ke=\"tippy-backdrop\"`, `Qe=\"tippy-arrow\"`, `Ut=\"tippy-svg-arrow\"`. It defines functions for creating Tippy instances (`wa(Pe,Je)` which is the core tippy instantiation logic), handling props, and lifecycle events like `onShow`, `onHide`, `onMount`, `onDestroy`. DOM manipulation for creating `tippy-box`, `tippy-content` elements is also evident. The code also includes a minified version of Popper.js (`_t=Qt({defaultModifiers:[...]})`), which Tippy.js uses for positioning."
+        }
+      ]
+    },
+    {
+      "file": "polyfills.aa0d9bd37968f15b.js",
+      "occurences": [
+        {
+          "name": "Zone.js",
+          "motivation": "The code explicitly uses `Zone`, `ZoneAwarePromise`, `Zone.__symbol__`, patches browser APIs (`setTimeout`, `Promise`, `XMLHttpRequest`, `fetch`, event listeners) using Zone.js patterns (`scheduleMacroTask`, `scheduleMicroTask`, `runTask`), and includes checks like `e.Zone`. The purpose of the file seems to be polyfilling/patching APIs for change detection, which is the core function of Zone.js, often used with Angular."
+        },
+        {
+          "name": "Webpack",
+          "motivation": "The code starts with the characteristic Webpack chunk loading wrapper `(self.webpackChunkcryptopunks_eth=self.webpackChunkcryptopunks_eth||[]).push([[461],{...}])`, indicating it's part of a Webpack build process."
+        },
+        {
+          "name": "Angular Localize",
+          "motivation": "The code defines and uses a `Fe` function assigned to `globalThis.$localize` and uses a specific syntax with colons (`:`) within template literals (`Pe` function), which matches the behavior and setup of `@angular/localize` for internationalization."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "726.1f838bd3690e05c9.js",
+      "occurences": [
+        {
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "main.769805678cbfb63b.js",
+      "occurences": [
+        {
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

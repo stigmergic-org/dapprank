@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "contentHash": "bafybeienqtrc2mu5tz62saqobumqwh53f5vfnqdvhyrpn5tfxwupy4ds5e",
+  "timestamp": 1748623016,
+  "blockNumber": 22596557,
+  "rootMimeType": "application/json",
+  "totalSize": 845186,
+  "favicon": "",
+  "title": "",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [],
+  "libraryUsage": [],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}
