@@ -5,6 +5,14 @@ import { isContentHashOutdated } from './ens-resolver'
 import { fetchCar, getJson } from './ipfs-utils'
 import { getMimeTypeIcon } from './report-renderer'
 import { calculateCensorshipResistanceScore, DappData, DappspecManifest } from './reports'
+import Plausible from 'plausible-tracker'
+
+// Initialize Plausible analytics
+const { enableAutoPageviews } = Plausible({
+  domain: 'dapprank.eth.link',
+  trackLocalhost: true,
+})
+enableAutoPageviews()
 
 // @ts-ignore
 import about from './pages/about.md'

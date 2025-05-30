@@ -17,5 +17,8 @@
   "auxiliary": [{
     "url": "https://delegated-ipfs.dev/routing/v1/providers/",
     "motivation": "Used to check the number of seeders for any given dapp."
+  }, {
+    "url": "https://plausible.io/api/event",
+    "motivation": "Used for gathering privacy-preserving usage analytics."
   }]
 }
