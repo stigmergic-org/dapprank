@@ -27,11 +27,6 @@ class IPFSPlugin {
   apply(compiler) {
     compiler.hooks.afterEmit.tapAsync('IPFSPlugin', async (compilation, callback) => {
       try {
-        console.log('\nPreparing Git repository...');
-        await this.execPromise('git update-server-info');
-        await this.execPromise('mkdir -p dist/.well-known');
-        await this.execPromise('cp -r .git dist/.well-known/source.git');
-        
         console.log('\nAdding build to IPFS...');
         const { stdout, stderr } = await this.execPromise('ipfs add --hidden --cid-version=1 -r dist');
         
