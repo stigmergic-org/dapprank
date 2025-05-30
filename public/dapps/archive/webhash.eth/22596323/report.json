@@ -1,0 +1,74 @@
+{
+  "version": 2,
+  "contentHash": "bafybeig45aqpm4lzjmxkafiujwma6kpniiseuzec65em7hvbumsnsuc2eu",
+  "timestamp": 1748617465,
+  "blockNumber": 22596323,
+  "rootMimeType": "inode/directory",
+  "totalSize": 11009104,
+  "favicon": "favicon.x-icon",
+  "title": "WebHash.com | Build a Decentralized linktree and Website with WebHash.com - The Revolutionary Web3 Builder",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew&family=Outfit:wght@400;600;700;800&display=swap"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [],
+  "libraryUsage": [
+    {
+      "file": "assets/js/bootstrap.min.js",
+      "occurences": [
+        {
+          "name": "Bootstrap",
+          "motivation": "The file header explicitly states `/*! * Bootstrap v5.0.1 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors... */`. The code structure and component names (e.g., `Modal`, `Tooltip`, `Carousel`) are characteristic of Bootstrap."
+        },
+        {
+          "name": "Popper.js",
+          "motivation": "The code includes `module.exports=e(require(\"@popperjs/core\"))` and later `(t=\"undefined\"!=typeof globalThis?globalThis:t||self).bootstrap=e(t.Popper)`. This indicates that Popper.js is a dependency used by Bootstrap for positioning elements like tooltips and popovers."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "CodePen Execution Environment Utilities",
+          "motivation": "The code contains calls to `window.CP.shouldStopExecution(0)` and `window.CP.exitedLoop(0)`. These are helper functions injected by the CodePen.io online development environment to manage script execution, specifically to prevent infinite loops and indicate loop completion within its sandboxed environment. The comment `//# sourceURL=pen.js` further suggests execution within CodePen."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-3",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$` symbol extensively, for example, `$(document).ready(...)` and `$(\".owl-one\")`. This is the standard way to use the jQuery library for DOM manipulation and event handling."
+        },
+        {
+          "name": "Owl Carousel",
+          "motivation": "The code explicitly calls `$(\".owl-one\").owlCarousel({...})`. `owlCarousel` is a method provided by the Owl Carousel jQuery plugin, used for creating responsive carousels."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-4",
+      "occurences": [
+        {
+          "name": "jQuery",
+          "motivation": "The code uses the `$` function, which is the primary identifier for jQuery. It also employs common jQuery patterns such as `$(function() { ... })` for the document ready handler, `$(\".navbar-toggler\")` for selecting DOM elements by class, and jQuery methods like `.click()` for event handling and `.toggleClass()` for DOM manipulation."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}
