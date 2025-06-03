@@ -1,0 +1,277 @@
+{
+  "version": 2,
+  "contentHash": "bafybeideqyrn7l2h75afsddfbgwoxwffiakjiuwfpgcjhgf7ppgpb77bp4",
+  "timestamp": 1748856542,
+  "blockNumber": 22616107,
+  "rootMimeType": "text/html",
+  "totalSize": 2430785,
+  "favicon": "",
+  "title": "send slow ᯓ➤",
+  "distributionPurity": {
+    "externalScripts": [
+      {
+        "file": "index.html",
+        "occurences": [
+          {
+            "type": "link",
+            "url": "https://content.wrappr.wtf/ipfs/bafkreiclx7chymashumtojpccabwucwyuoa25nyjfjmxjyhavtwhb2avou"
+          }
+        ]
+      }
+    ],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "/path/to/module.js"
+          ],
+          "library": "Browser Native",
+          "type": "self",
+          "motivation": "This `fetch` call is part of an IIFE that preloads JavaScript modules. `i.href` is obtained from `<link rel=\"modulepreload\">` tags in the HTML, pointing to resources on the same domain. The URL is dynamic based on the link tags."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://example.com/image.png",
+            "https://ipfs.io/ipfs/QmHash/image.png",
+            "https://arweave.net/transactionId/image.png"
+          ],
+          "library": "Viem or Custom",
+          "type": "auxiliary",
+          "motivation": "The `ore` function uses `fetch(e, {method: \"HEAD\"})` to validate image URIs (`e`) by checking their `content-type`. This is often part of ENS avatar resolution logic, potentially handled by Viem or custom code. The URLs are placeholders for various image sources."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://example.com/metadata.json",
+            "https://ipfs.io/ipfs/QmHash/metadata.json",
+            "https://arweave.net/transactionId"
+          ],
+          "library": "Viem or Custom",
+          "type": "auxiliary",
+          "motivation": "The `bZ` function uses `fetch(t).then(i => i.json())` to retrieve JSON metadata from a URI (`t`). This is common for NFT metadata or ENS avatar details, potentially handled by Viem or custom code. URLs are placeholders for metadata sources."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://some-ccip-gateway.xyz/{sender}/{data}"
+          ],
+          "library": "Viem",
+          "type": "auxiliary",
+          "motivation": "The `Tm` (aliased as `EL`) function, part of Viem's CCIP-Read (EIP-3668) implementation, uses `fetch` to make GET or POST requests to gateway URLs. The URL `o` is constructed dynamically using `o.replace(\"{sender}\",t).replace(\"{data}\",e)`, where `o` comes from the `urls` array in the error data from a contract."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://mainnet.base.org",
+            "https://cloudflare-eth.com",
+            "https://rpc.flashbots.net",
+            "https://rpc.ankr.com/eth_goerli",
+            "https://rpc.merlinchain.io",
+            "https://rpc.mainnet.oasys.games",
+            "https://rpc.scroll.io",
+            "https://rpc.testnet.rss3.io",
+            "https://sepolia.base.org"
+          ],
+          "library": "Viem",
+          "type": "rpc",
+          "motivation": "Viem's HTTP transport (`Xte` function creating `Yte`) makes `fetch` calls to Ethereum JSON-RPC endpoints. The URL (`b`) is derived from `e || (l==null?void 0:l.rpcUrls.default.http[0])`, where `l` is a chain configuration object. Examples like `Dl` (Base mainnet) and `IY` (Ethereum mainnet) are defined and used."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://slow-production-3176.up.railway.app/transfers/{address}?type={type}&status={status}"
+          ],
+          "library": "Custom Application Code",
+          "type": "auxiliary",
+          "motivation": "The `BC` function constructs a URL using the base `uue` (https://slow-production-3176.up.railway.app) and dynamic parameters to fetch transfer data from a custom backend API."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://mainnet.base.org/ws",
+            "wss://rpc.linea.build"
+          ],
+          "library": "Viem / @web3-onboard/core",
+          "type": "rpc",
+          "motivation": "The code checks for `e.transport.type === \"webSocket\"` or `e.transport.transports[0].config.type === \"webSocket\"`, indicating that Viem/Web3-Onboard can use WebSocket transports for RPC communication. URLs would come from `chain.rpcUrls.default.webSocket` if available."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://relay.walletconnect.com"
+          ],
+          "library": "@web3-onboard/walletconnect",
+          "type": "auxiliary",
+          "motivation": "The `@web3-onboard/walletconnect` module uses `@walletconnect/ethereum-provider` (dynamically imported as `SOe`), which internally establishes WebSocket connections to WalletConnect relay servers (e.g., `wss://relay.walletconnect.com`) for communication."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://verify.walletconnect.org/v3/public-key"
+          ],
+          "library": "Web3-Onboard",
+          "type": "auxiliary",
+          "motivation": "The code constructs this URL using `this.verifyUrlV3` which is built from `_h=\"https://verify.walletconnect.org\"` and `yEe=\"\".concat(_h,\"/v3\")`. It fetches a public key for WalletConnect's verification service. This is likely part of WalletConnect v2 integration within Web3-Onboard."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://verify.walletconnect.org/attestation/{attestationId}?v2Supported=true"
+          ],
+          "library": "Web3-Onboard",
+          "type": "auxiliary",
+          "motivation": "The URL is constructed with a base `s` (defaulting to `https://verify.walletconnect.org` or a custom `verifyUrl`) and a dynamic `attestationId` (`i`). It's used to fetch attestation data from WalletConnect's verify service. This functionality is related to transaction verification, often handled by libraries like Web3-Onboard."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://echo.walletconnect.com/{projectId}/clients"
+          ],
+          "library": "Web3-Onboard",
+          "type": "auxiliary",
+          "motivation": "The URL is formed using `xEe=\"https://echo.walletconnect.com\"` and `this.projectId`. This call registers a device token with WalletConnect's echo service, a common step in setting up push notifications or real-time communication managed by Web3-Onboard for WalletConnect."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://pulse.walletconnect.org/batch?projectId={projectId}&st=events_sdk&sv=js-{sdk_version}"
+          ],
+          "library": "Web3-Onboard",
+          "type": "auxiliary",
+          "motivation": "The URL uses `AEe=\"https://pulse.walletconnect.org/batch\"` and includes `projectId` and SDK version (`m8`). This is for sending telemetry or batch event data to WalletConnect's pulse service, a feature often integrated into SDKs like Web3-Onboard for usage analytics."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.walletconnect.org/v1/?chainId={chainId}&projectId={projectId}"
+          ],
+          "library": "Web3-Onboard",
+          "type": "rpc",
+          "motivation": "This URL is used for making an `eth_call`. The base URL `s` can default to `Fve=\"https://rpc.walletconnect.org/v1\"` or be a custom RPC URL. Query parameters include `chainId` (CAIP-2 format) and `projectId`. This is a standard RPC call, likely for EIP-1271 signature verification or other on-chain data retrieval, managed through Web3-Onboard's RPC handling."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.walletconnect.org/v1/?chainId={chainId}&projectId={projectId}"
+          ],
+          "library": "Web3-Onboard",
+          "type": "rpc",
+          "motivation": "This URL is constructed by the internal JsonRpcProvider (`Lo` class) for generic JSON-RPC requests. `this.url` is initialized using `xs(...)` which can default to WalletConnect's RPC (`yz=\"https://rpc.walletconnect.org/v1/\"`) or a custom URL from configuration. It includes `chainId` and `projectId` as query parameters, typical for services like WalletConnect's RPC infrastructure used by Web3-Onboard."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://relay.walletconnect.org"
+          ],
+          "library": "Web3-Onboard",
+          "type": "auxiliary",
+          "motivation": "The WebSocket URL is constructed by the `lve` function. The base `relayUrl` defaults to `tz=\"wss://relay.walletconnect.org\"`. The `ove` function appends various query parameters including `projectId`, `ua` (user agent), and a sensitive signed `auth` JWT token for authentication to the WalletConnect relay server. This is a core part of WalletConnect v2 communication, managed by Web3-Onboard."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.walletconnect.org/v1/bundler?projectId={projectId}&chainId={chainId}&bundler={bundler_name}"
+          ],
+          "library": "Web3-Onboard",
+          "type": "bundler",
+          "motivation": "The URL is constructed by `getBundlerUrl` using `RAe=\"\".concat(yz,\"bundler\")` where `yz=\"https://rpc.walletconnect.org/v1/\"`. It's used to call `eth_getUserOperationReceipt`. This indicates interaction with an EIP-4337 bundler endpoint, a functionality that can be integrated with Web3-Onboard for account abstraction features."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "name": "Svelte",
+          "motivation": "The code structure uses Svelte component initialization patterns like `tr(this,t,ioe,noe,Jt,{agreed:0},Jse)`, a base class `rr` for components, and CSS scoping with `svelte-xxxxxx` classes. Functions like `er(e, \"svelte-...\")` for style injection are also present."
+        },
+        {
+          "name": "Viem",
+          "motivation": "The code includes the string `Version: viem@${FB}` (FB is \"2.23.9\"). Numerous Viem-specific error classes (e.g., `TransactionExecutionError`, `CallExecutionError`, `RpcRequestError`) and utility functions for ABI encoding/decoding, blockchain interaction (`eth_blockNumber`, `eth_sendRawTransaction`), and address formatting are used throughout the script."
+        },
+        {
+          "name": "Web3-Onboard",
+          "motivation": "The script initializes and uses Web3-Onboard (`Td = q4` where `q4` is initialized by `pce`). It includes modules for various wallets (MetaMask, Coinbase, WalletConnect via `Ece`, `Sce`, `Zle` etc.), manages wallet connections, displays account centers (`Pae`), and handles notifications. The overall application flow for wallet management is characteristic of Web3-Onboard."
+        },
+        {
+          "name": "RxJS",
+          "motivation": "The code defines and uses reactive programming primitives like `Ea` (Subject), `xi` (Observable), and operators such as `pipe`, `map`, `filter`, `takeUntil`, `debounceTime`, `distinctUntilChanged`. These are core concepts of RxJS."
+        },
+        {
+          "name": "Bowser",
+          "motivation": "The script contains classes `Hx` and `EX` with methods like `getParser` and `getResult`. It also defines constants like `bX` (browser map), `Si` (OS map), `Hc` (engine map), which are characteristic of the Bowser user-agent parsing library."
+        },
+        {
+          "name": "Buffer Polyfill",
+          "motivation": "The code explicitly assigns a Buffer implementation to `window.Buffer`. The implementation is described as \"The buffer module from node.js, for the browser.\", indicating a polyfill."
+        },
+        {
+          "name": "Process Polyfill",
+          "motivation": "A process object implementation is assigned to `window.process`. It includes stubs for Node.js process functionality like `process.cwd = function(){return\"/\"}` and error messages like \"process.binding is not supported\", characteristic of a browser polyfill."
+        },
+        {
+          "name": "Noble Cryptography Libraries (hashes, curves)",
+          "motivation": "The code includes copyright banners \"noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com)\" and \"noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com)\". It implements Keccak (SHA3) hashing (`zee=Fee(1,136,256/8)`) and secp256k1 elliptic curve operations (`new Yv.Signature`), which are provided by these libraries."
+        },
+        {
+          "name": "Intl MessageFormat (likely via svelte-i18n)",
+          "motivation": "The script defines a class `VD` which acts as an `IntlMessageFormat` constructor and uses `Intl.NumberFormat`, `Intl.DateTimeFormat`, `Intl.PluralRules` for formatting. The error parsing logic for ICU messages (e.g., `qt.EXPECT_ARGUMENT_CLOSING_BRACE`) is also present. This functionality is often provided by libraries like `intl-messageformat`, which is a dependency of `svelte-i18n` (also detected)."
+        },
+        {
+          "name": "abitype",
+          "motivation": "The code includes the string `Version: abitype@${Eq}` and uses error classes like `AbiTypeError` and `InvalidAbiItemError`. Functions like `G9` (likely `parseAbiItem`) and `sm` (likely `formatAbiItem`) are also present, indicating usage of the `abitype` library for ABI handling, which is a dependency of Viem but its artifacts are directly visible."
+        },
+        {
+          "name": "svelte-i18n",
+          "motivation": "The code contains logging like `[svelte-i18n] The message ... was not found`, and uses a store-like pattern for locale management (`yl`, `pm` stores for locale) and translation functions (`eee` for formatting messages, which uses `VD` - the IntlMessageFormat constructor). The `F2` function (likely `addMessages`) and `bl()` (likely `locale.get()`) further confirm its use."
+        },
+        {
+          "name": "Svelte",
+          "motivation": "The code contains numerous CSS class names prefixed with `svelte-` (e.g., `svelte-hb2n95`, `svelte-1ubxcdp`) and utilizes Svelte's component structure, lifecycle methods (e.g., `rr`, `tr`, `Jt` which are minified Svelte runtime functions), and reactivity patterns (e.g., `$$set`, `$$props`, internal Svelte functions like `Ve`, `qe`, `ce`). This indicates Svelte is used as the primary UI framework."
+        },
+        {
+          "name": "Web3-Onboard",
+          "motivation": "The code references structures and patterns indicative of Web3-Onboard, such as `Qe.get().accountCenter`, `Qe.select(\"appMetadata\")`, `Qe.get().notify.replacement`. The variable `Qe` likely represents the Web3-Onboard state store. Additionally, CSS variables like `--onboard-font-family-normal` and functionalities related to wallet connection, account management (`accountCenter`), application metadata (`appMetadata`), and notifications (`notify`) are core features of Web3-Onboard."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Vite",
+          "motivation": "The code sets the global variable `window.__vite_is_modern_browser` to `true` if the current page is not loaded via the `file:` protocol. This specific global variable is a known convention used by the Vite build tool and its client-side scripts. Vite uses this flag to determine if the browser supports modern JavaScript features, which can influence aspects like module loading, Hot Module Replacement (HMR) behavior, or differential serving of assets."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-5",
+      "occurences": [
+        {
+          "name": "SystemJS",
+          "motivation": "The code uses `System.import()`, which is the primary API for the SystemJS module loader. This function is specifically used for dynamically loading JavaScript modules, indicating the presence and active use of the SystemJS library in this context."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "index.html#inline-script-1",
+      "occurences": [
+        {
+          "count": 30
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}

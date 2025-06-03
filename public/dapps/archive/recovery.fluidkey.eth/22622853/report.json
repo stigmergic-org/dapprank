@@ -1,0 +1,483 @@
+{
+  "version": 2,
+  "contentHash": "bafybeidtgpazf7nc4zi7cbhddsonw4flcgxlxqhzxes2eoingo54jffmni",
+  "timestamp": 1748938262,
+  "blockNumber": 22622853,
+  "rootMimeType": "inode/directory",
+  "totalSize": 4646350,
+  "favicon": "favicon.svg",
+  "title": "SARA",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/index-Dyo3_Kjc.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "/assets/index-CV2nsG3h.js"
+          ],
+          "library": "Vite (build tool)",
+          "type": "self",
+          "motivation": "This `fetch` call is part of Vite's module preloading mechanism. The `d.href` in `fetch(d.href,b)` would resolve to relative paths for JavaScript modules bundled by Vite. The specific URL `/assets/index-CV2nsG3h.js` appears in `__vitePreload(()=>import(\"./ccip-CV2nsG3h.js\"),__vite__mapDeps([]))` which is an internal mechanism for Vite."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "viem / @wagmi/core",
+          "type": "rpc",
+          "motivation": "The `fetch` call within `getHttpRpcClient$1` is the primary mechanism for making JSON-RPC requests. The URL is dynamically determined by `const ot=a||($==null?void 0:$.rpcUrls.default.http[0])`, where `a` is a direct URL or `$` is a chain object from `viem` or `@wagmi/core` configuration. The code defines several chains with default RPC URLs, e.g., `mainnet$1` with `https://cloudflare-eth.com`, `base$5` with `https://mainnet.base.org`, `optimism$1` with `https://mainnet.optimism.io`, `arbitrum$1` with `https://arb1.arbitrum.io/rpc`. These URLs are passed to `http$3` which uses `getHttpRpcClient$1`."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "viem (internals for ENS avatar)",
+          "type": "auxiliary",
+          "motivation": "Within `isImageUri$1`, a `fetch(a, {method:\"HEAD\"})` call is made to check if a URI points to an image by inspecting its headers. The URL `a` is dynamic, typically an ENS avatar URI. This is auxiliary to core dapp functionality."
+        },
+        {
+          "method": "fetch",
+          "urls": [],
+          "library": "viem (internals for ENS avatar)",
+          "type": "auxiliary",
+          "motivation": "Within `getMetadataAvatarUri$1`, a `fetch(i).then(d=>d.json())` call is made to retrieve JSON metadata for an ENS avatar. The URL `i` is dynamic, pointing to a metadata resource. This is auxiliary."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "./index.es-C_NkiEZU.js",
+            "./arbitrum-LYDBJZP3-BqjyWlr0.js",
+            "./avalanche-TFPKP544-D_4HPsrK.js",
+            "./base-3MIUIYGA-CzL856e2.js",
+            "./bsc-S2GSW6VX-CTFL85G7.js",
+            "./cronos-DQKKIEX7-BC8OGSkQ.js",
+            "./ethereum-4FY57XJF-BhI8i5E7.js",
+            "./hardhat-ARRFHFKB-DXjWs0mo.js",
+            "./optimism-UUP5Y7TB-CkwAWENU.js",
+            "./polygon-Z4QITDL7-BdYUrcfE.js",
+            "./xdc-5UHQ25DW-DEC0KCO4.js",
+            "./zkSync-XRUC4ZHO-BbodPLR7.js",
+            "./zora-KVO7WIOK-D5bRxKPW.js",
+            "./ronin-3JLI3AUN-Dcv143QE.js",
+            "./ar_AR-2FHIOEAO-Cou27X_p.js",
+            "./es_419-JU5M7ADI-Dz_VPdQz.js",
+            "./fr_FR-6UHJQO35-DuV6FTOB.js",
+            "./hi_IN-QYRORIUD-C0HfmOt3.js",
+            "./id_ID-TUMMBG4U-Bvpv9dZD.js",
+            "./ja_JP-ZUYW24MT-Crr9iftH.js",
+            "./ko_KR-6CVQ44HH-kgyTxYXW.js",
+            "./pt_BR-RZPKMOY4-Bxnur191.js",
+            "./ru_RU-6H6D24G6-3STYGbpq.js",
+            "./th_TH-V7MI6RLE-DQi5G0ZM.js",
+            "./tr_TR-5VDGWEXM-C3qeykM7.js",
+            "./uk_UA-LQISH4SK-DBmMlMPH.js",
+            "./zh_CN-EHEYLG7G-L948upmD.js",
+            "./assets-26YY4GVD-unq2KRLS.js",
+            "./login-ZSMM5UYL-Dwac7LJ-.js",
+            "./sign-FZVB2CS6-CGsRnPrd.js",
+            "./connect-XNDTNVUH-BrWe_DLP.js",
+            "./create-PAJXJDV3-aLc4x62m.js",
+            "./refresh-5KGGHTJP-C8QGCTrU.js",
+            "./scan-HZBLXLM4-DsV3US5d.js",
+            "./Arc-QDJFTGH2-CMIt7t_M.js",
+            "./Brave-YATE5BIM-BT0QgSna.js",
+            "./Chrome-LGF33C3S-BAtiMVmP.js",
+            "./Edge-K2JEGI5S-CaW1Fen3.js",
+            "./Firefox-NP5SYEK5-BKk6Wa02.js",
+            "./Opera-KV54PXPA-BCqqyEOJ.js",
+            "./Safari-2QIYKJ4P-CgF0kJQK.js",
+            "./Browser-HN7O5MN7-BIvPkI4Y.js",
+            "./Windows-R3CKAIUV-DfNT6Oej.js",
+            "./Macos-2KTZ2XLP-bkMn-PIg.js",
+            "./Linux-NS2LQPT4-9fsHcAq6.js"
+          ],
+          "library": "Vite Internal",
+          "type": "self",
+          "motivation": "The application uses Vite's `__vitePreload` mechanism for dynamic imports. These calls fetch JavaScript chunks and assets (like SVGs for chain/wallet icons, translation files) from the same origin as the application. Example path: `./index.es-C_NkiEZU.js`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://cloudflare-eth.com",
+            "https://polygon-rpc.com",
+            "https://mainnet.optimism.io",
+            "https://arb1.arbitrum.io/rpc",
+            "https://mainnet.base.org",
+            "https://rpc.gnosischain.com",
+            "https://rpc.sepolia.org"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "The `getDefaultConfig` function, used by RainbowKit, configures `viem`'s HTTP transport (`http$3`) with RPC URLs for the specified chains. These URLs are used for various JSON-RPC requests (e.g., `eth_call`, `eth_estimateGas`, `eth_getBlockNumber`). The URLs are sourced from `chain.rpcUrls.default.http[0]` for each configured chain (`mainnet$1`, `polygon$1`, etc.)."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://mainnet.era.zksync.io/ws",
+            "wss://rpc.linea.build",
+            "wss://mainnet.base.org/ws",
+            "wss://rpc.gnosischain.com/wss",
+            "wss://rpc.sepolia.org/ws"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "`viem`'s `watchBlockNumber` and `watchPendingTransactions` actions can use WebSocket transport for real-time updates if the transport is configured accordingly (e.g., not polling). The URLs are derived from `chain.rpcUrls.default.webSocket` for the respective chains if provided and WebSocket transport is active. Example for zkSync in the code: `wss://mainnet.era.zksync.io/ws`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "Dynamic CCIP gateway URLs"
+          ],
+          "library": "viem",
+          "type": "auxiliary",
+          "motivation": "The `ccipFetch` function, part of `viem`'s CCIP-Read (Cross-Chain Interoperability Protocol Read) support, makes `fetch` requests. The URLs are dynamically constructed (e.g., `dt.replace(\"{sender}\",it).replace(\"{data}\",nt)`) based on data returned from smart contracts or ENS, pointing to off-chain gateways to resolve data. These URLs are not hardcoded but follow a pattern for CCIP-Read lookups."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "Generic image or metadata URLs (e.g., IPFS gateways, direct HTTP)"
+          ],
+          "library": "@rainbow-me/rainbowkit",
+          "type": "auxiliary",
+          "motivation": "Components like `AsyncImage` and associated hooks (`useAsyncImage`, `isImageUri`, `getMetadataAvatarUri`) are used to load avatar images and metadata. These can make `fetch` requests to URLs provided as `src` props or resolved dynamically, which might include IPFS gateway links (e.g., `https://ipfs.io/ipfs/...`) or direct HTTP URLs for image assets."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://relay.walletconnect.com"
+          ],
+          "library": "@walletconnect/ethereum-provider",
+          "type": "auxiliary",
+          "motivation": "WalletConnect v2's `EthereumProvider.init()` and subsequent `connect()` calls establish a WebSocket connection to a relay server. The code passes a `projectId`, implying usage of WalletConnect's default cloud relay infrastructure (e.g., `wss://relay.walletconnect.com`) for signaling and message relaying between the dApp and the wallet."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.mainnet.oasys.games"
+          ],
+          "library": "@walletconnect/ethereum-provider",
+          "type": "rpc",
+          "motivation": "During WalletConnect's `EthereumProvider.init()`, an `rpcMap` is constructed using `b.chains.map(tt=>[tt.id,tt.rpcUrls.default.http[0]])`. This map provides RPC URLs for each configured chain, which the provider uses for `fetch`-based JSON-RPC requests. Example URL from `oasys` chain definition."
+        }
+      ]
+    },
+    {
+      "file": "assets/index.es-C_NkiEZU.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "https://verify.walletconnect.com/attestation/",
+            "https://verify.walletconnect.org/attestation/"
+          ],
+          "library": "WalletConnect SDK (internal verify client)",
+          "type": "auxiliary",
+          "motivation": "The `W2` class (Verify client) constructs URLs for fetching attestations. It uses `this.verifyUrl` which defaults to `qn` ('https://verify.walletconnect.com') or can be `Du` ('https://verify.walletconnect.org'). The path `/attestation/${s}` (where `s` is an attestationId) is appended. The call is made via `fetch` (aliased as `E6`)."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://echo.walletconnect.com/"
+          ],
+          "library": "WalletConnect SDK (internal echo client)",
+          "type": "auxiliary",
+          "motivation": "The `G2` class (Echo client) makes a POST request to register device tokens. The base URL is `S2` ('https://echo.walletconnect.com'), and the path `/${this.projectId}/clients` is appended. The call is made via `E6` (an alias for `fetch`)."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://rpc.walletconnect.com/v1/"
+          ],
+          "library": "WalletConnect SDK (UniversalProvider's chain-specific HTTP providers)",
+          "type": "rpc",
+          "motivation": "The `zi` function is used by chain-specific providers (e.g., `TI` for EIP-155) to determine the RPC URL. If an `rpcMap` entry for the specific chain is not found, it defaults to `_I` ('https://rpc.walletconnect.com/v1/'). Query parameters like `chainId` and `projectId` are then appended to this base URL. The actual `fetch` call is made by the `Hi` class (HTTPConnection) using `Dd` (an alias for a fetch implementation)."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://relay.walletconnect.com",
+            "wss://relay.walletconnect.org"
+          ],
+          "library": "WalletConnect SDK (Relayer)",
+          "type": "auxiliary",
+          "motivation": "The `F2` class (Relayer) establishes a WebSocket connection. The `relayUrl` defaults to `Hp` ('wss://relay.walletconnect.com') and can failover to `ud` ('wss://relay.walletconnect.org'). The `zE` function constructs the full WebSocket URL, appending query parameters like `auth`, `ua`, and `projectId`. The connection is made using the `y6` class (WebSocketConnection), which internally uses `g6` (an alias for the `WebSocket` constructor)."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "assets/index-Dyo3_Kjc.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code extensively uses React's core concepts and APIs, such as `React.createElement`, `React.Component`, `useState`, `useEffect`, `jsx`, `jsxs`, and references `react.production.min.js`."
+        },
+        {
+          "name": "React DOM",
+          "motivation": "The code includes references to `react-dom.production.min.js`, `ReactDOM.createRoot`, and `ReactDOM.hydrateRoot`, which are used for rendering React components in the browser."
+        },
+        {
+          "name": "scheduler",
+          "motivation": "The code contains `scheduler.production.min.js`. This is an internal library used by React for cooperative scheduling."
+        },
+        {
+          "name": "@floating-ui/react",
+          "motivation": "The code uses `useFloating`, `computePosition`, `offset`, `shift`, `flip`, `arrow`, and components like `FloatingArrow`, `TooltipFloating`. These are indicative of Floating UI, a library for positioning floating elements like tooltips and popovers."
+        },
+        {
+          "name": "@mantine/core",
+          "motivation": "The code imports and uses numerous components prefixed with `Mantine` (e.g., `MantineProvider`, `MantineCssVariables`, `MantineThemeProvider`) and UI components like `Box`, `Button`, `ActionIcon`, `Modal`, `Paper`, `TextInput`, `PinInput`, `ScrollArea`, `Loader`, `Group`, `CloseButton`, `Overlay`, `Progress`, `Notification`, `Container`, `Code`, `UnstyledButton`, `VisuallyHidden`, `Collapse`, `Portal`. It also features Mantine-specific styling patterns, CSS variables (e.g., `--mantine-color-primary`, `--mantine-spacing-md`), and class name resolution (e.g., `useStyles`, `resolveClassNames`)."
+        },
+        {
+          "name": "clsx",
+          "motivation": "The `clsx` function is defined and used for conditionally joining class names, a common utility in JavaScript UI development."
+        },
+        {
+          "name": "Zustand",
+          "motivation": "The code includes `createStoreImpl` (similar to Zustand's `create`) and `subscribeWithSelectorImpl` (Zustand's `subscribeWithSelector`). The persistence middleware pattern (`persistImpl`, `createJSONStorage`) is also characteristic of Zustand."
+        },
+        {
+          "name": "@tanstack/query",
+          "motivation": "The presence of `QueryClient`, `QueryCache`, `MutationCache`, `QueryObserver`, `MutationObserver`, `useQuery`, and `useMutation` indicates the use of TanStack Query (formerly React Query) for data fetching and caching."
+        },
+        {
+          "name": "viem",
+          "motivation": "The code utilizes various functions like `getAddress$2`, `parseAccount$2`, `encodeFunctionData$2`, `decodeFunctionResult$2`, `hashMessage$2`, `verifyMessage$3`, `hashTypedData$1`, `serializeTransaction$2`, `defineChain$2` with chain definitions (e.g., `mainnet$1`, `optimism$1`), and viem-specific error types (e.g., `RpcRequestError$1`, `ContractFunctionExecutionError$1`). These are core to `viem`."
+        },
+        {
+          "name": "@wagmi/core",
+          "motivation": "Functions like `createConfig`, `connect`, `disconnect`, `getAccount`, `getBalance$2`, `watchAccount`, `reconnect`, `switchChain$2`, and hooks like `useConfig`, `useAccount`, `useConnect`, `useDisconnect`, `useSwitchChain`, along with `WagmiProvider` and `Hydrate` components, are indicative of `@wagmi/core`."
+        },
+        {
+          "name": "abitype",
+          "motivation": "The code includes functions like `parseAbi`, `formatAbiItem$1` and error types such as `InvalidAbiItemError`, which are from the `abitype` library for ABI type safety and parsing."
+        },
+        {
+          "name": "@noble/hashes",
+          "motivation": "Functions like `sha256$6` (from `sha.js` which is often a part of Noble) and `hmac$2` for cryptographic hashing are present. The structure of hashing functions (`Hash$9`, `SHA2$2`) points to a library like `@noble/hashes`."
+        },
+        {
+          "name": "@noble/curves",
+          "motivation": "The code includes `secp256k1$1` and related elliptic curve operations, suggesting the use of `@noble/curves` for cryptographic curve operations."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The `BN$9` constructor and its methods (e.g., `.add`, `.sub`, `.mul`, `.div`, `.mod`, `.invm`, `.pow`, `.isZero`, `.cmp`, `.toRed`, `.fromRed`) are extensively used throughout the cryptographic sections, indicating the `bn.js` library for big number arithmetic."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code includes an `EC` class (`requireEc()`) and mentions `KeyPair$2`, `Signature$3`, which are parts of the `elliptic` library for Elliptic Curve Cryptography, often used in conjunction with `bn.js`."
+        },
+        {
+          "name": "eventemitter3",
+          "motivation": "The `EventEmitter$1` class is defined and used, which is the hallmark of the `eventemitter3` library."
+        },
+        {
+          "name": "buffer",
+          "motivation": "The `Buffer$C` (aliased from `dist$1.Buffer`) class and its methods like `.from`, `.alloc`, `.isBuffer`, `.concat` are used, indicating the `buffer` library, which provides Node.js Buffer API in browsers."
+        },
+        {
+          "name": "ua-parser-js",
+          "motivation": "The code contains a minified version of the `ua-parser-js` library, identifiable by the `Ar` class and methods like `getBrowser`, `getOS`, `getDevice` used for parsing User-Agent strings."
+        },
+        {
+          "name": "qrcode",
+          "motivation": "The code includes `QRCode$1.create`, `CanvasRenderer.renderToDataURL`, and `SvgRenderer.render`, which are characteristic of a QR code generation library, most likely `qrcode`."
+        },
+        {
+          "name": "react-remove-scroll",
+          "motivation": "The code defines and uses components `RemoveScroll$1` and `RemoveScrollSideCar`. It also references class names like `right-scroll-bar-position`, `fullWidthClassName`, `noScrollbarsClassName` which are associated with this library for scroll locking."
+        },
+        {
+          "name": "React",
+          "motivation": "The code extensively uses `reactExports.createElement`, `reactExports.useContext`, `reactExports.useState`, `reactExports.useEffect`, `reactExports.useReducer`, `reactExports.useMemo`, `reactExports.useCallback`, `reactExports.forwardRef`, indicating the use of the React library."
+        },
+        {
+          "name": "ReactDOM",
+          "motivation": "The code uses `reactDomExports.createPortal`, which is part of ReactDOM for rendering components outside the main DOM hierarchy."
+        },
+        {
+          "name": "viem",
+          "motivation": "The code uses numerous functions and hooks characteristic of `viem`, such as `getAddress$2` (likely `getAddress`), `numberToHex`, `normalizeChainId`, `usePublicClient`, `useBalance`, `http$3` (http transport), `encodeFunctionData`, `decodeFunctionResult`, `keccak256`, `toHex`, `fromHex`, `getContractAddress`, `encodeAbiParameters`, `decodeAbiParameters`, `call`, `estimateGas`, `getBlock`, `getTransactionCount`, `sendTransaction`, `readContract`, `simulateContract`, and chain definitions from `viem/chains` (e.g., `mainnet$1`)."
+        },
+        {
+          "name": "wagmi",
+          "motivation": "The code utilizes React hooks like `useAccount`, `useConnect`, `useDisconnect`, `useSwitchChain`, `useSignMessage`, `useBalance`, `useEnsAvatar`, `useEnsName`, `useConfig`, and the `WagmiProvider` component, which are core to the `wagmi` library."
+        },
+        {
+          "name": "@rainbow-me/rainbowkit",
+          "motivation": "The presence of `RainbowKitProvider`, `ConnectButton`, `getDefaultConfig` (a RainbowKit utility for wagmi config), `lightTheme`, and various UI components and hooks like `useModalState`, `useAccountModal` strongly indicates the use of RainbowKit."
+        },
+        {
+          "name": "@walletconnect/ethereum-provider",
+          "motivation": "The code includes a `walletConnect` connector setup function that dynamically imports and initializes `EthereumProvider` (likely from `@walletconnect/ethereum-provider/dist/index.js.es.js` or similar based on the import path `./index.es-C_NkiEZU.js`). It uses methods like `init`, `connect`, `disconnect`, `enable`, and event listeners like `on('connect')`, `on('display_uri')`, `on('session_delete')`, `on('accountsChanged')`, `on('chainChanged')` specific to WalletConnect v2 Ethereum provider."
+        },
+        {
+          "name": "asn1.js / parse-asn1",
+          "motivation": "The code contains numerous ASN.1 related definitions and functions like `asn.define`, `RSAPrivateKey`, `X509Certificate`, `AlgorithmIdentifier`, and `parseKeys$2` (which uses `parseAsn1`). This suggests an ASN.1 parsing library, likely bundled, such as `asn1.js` or `parse-asn1`."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code references `requireElliptic().ec` and uses its methods for elliptic curve cryptography, such as key generation (`genKeyPair`) and signing (`keyFromPrivate().sign()`)."
+        },
+        {
+          "name": "bn.js (BigNumber)",
+          "motivation": "A significant portion of the code implements a big number library with functions like `iushln`, `isub`, `umod`, `redAdd`, `redMul`, `toRed`, `mont`, consistent with `bn.js`."
+        },
+        {
+          "name": "safe-buffer / buffer",
+          "motivation": "The code uses `safeBufferExports$1.Buffer` and `Buffer$X.from`, `Buffer$X.isBuffer`, `Buffer$X.concat`, indicating the use of a Buffer implementation, likely `safe-buffer` or a polyfill for Node.js's `buffer` module in the browser."
+        },
+        {
+          "name": "crypto-browserify",
+          "motivation": "The code calls `requireCryptoBrowserify()` and uses its exports like `cryptoBrowserify.createHash`, `cryptoBrowserify.pbkdf2`, `cryptoBrowserify.createCipheriv`, `cryptoBrowserify.publicEncrypt`. This is a polyfill for Node.js's `crypto` module for browsers."
+        },
+        {
+          "name": "browserify-rsa",
+          "motivation": "The code explicitly uses `browserifyRsa` for RSA operations, likely part of the crypto-browserify suite."
+        },
+        {
+          "name": "evp_bytestokey",
+          "motivation": "The code assigns `evp = evp_bytestokey`, a function for deriving keys and IVs from passwords, often used with OpenSSL-compatible encryption."
+        },
+        {
+          "name": "@vanilla-extract/sprinkles",
+          "motivation": "The use of `createSprinkles`, `createMapValueFn`, `createNormalizeValueFn`, and the generation of atomic CSS classes (e.g., `ju367v9i`) are characteristic of Vanilla Extract's sprinkles API for type-safe styling."
+        },
+        {
+          "name": "clsx",
+          "motivation": "The code uses the `clsx()` function, which is a utility for conditionally constructing `className` strings."
+        },
+        {
+          "name": "@tanstack/query-core",
+          "motivation": "The presence of `QueryClient` and `QueryClientProvider` indicates the use of TanStack Query (formerly React Query) for data fetching and caching."
+        },
+        {
+          "name": "@mantine/core",
+          "motivation": "The code uses various UI components like `Modal`, `PinInput`, `Button`, `Table`, `Textarea`, `Progress`, `Tooltip`, `ActionIcon`, `NumberInput`, `Switch`, `TextInput`, `Grid`, `Collapse`, `Box`, `Container`, `Stepper` and the `rem` utility, which are part of the Mantine component library."
+        },
+        {
+          "name": "remove-scroll",
+          "motivation": "The code includes `React.createElement(RemoveScroll,...)`, a utility likely used for managing scroll behavior when modals are open."
+        },
+        {
+          "name": "ua-parser-js",
+          "motivation": "The code calls `uaParserExports.UAParser()`, indicating the use of `ua-parser-js` for parsing user agent strings to identify browser, OS, etc."
+        },
+        {
+          "name": "semver",
+          "motivation": "The code imports and uses a function `satisfies_1` (likely `semver.satisfies`) within `utils$1.findDeployment` for version comparisons, characteristic of the `semver` library."
+        },
+        {
+          "name": "lodash",
+          "motivation": "A large, minified block of code characteristic of Lodash is present, and `lodashExports.merge` is used directly."
+        },
+        {
+          "name": "bip39 (micro-bip39 or similar)",
+          "motivation": "The code contains functions like `generateMnemonic$1`, `mnemonicToEntropy`, `mnemonicToSeedSync`, `validateMnemonic`, and uses wordlists (e.g., `english`, `japanese`). This functionality is core to BIP39 mnemonic generation and handling."
+        },
+        {
+          "name": "bip32 (@scure/bip32 or similar)",
+          "motivation": "The code uses `HDKey.fromMasterSeed` and `HDKey.derive` for hierarchical deterministic key generation, which is characteristic of BIP32."
+        },
+        {
+          "name": "@noble/secp256k1",
+          "motivation": "The code explicitly uses `secp256k1.Signature.fromCompact`, `secp256k1.getPublicKey`, `secp256k1.sign`, and refers to `CURVE.n`, indicating the use of `@noble/secp256k1` for elliptic curve cryptography over the secp256k1 curve."
+        },
+        {
+          "name": "@safe-global/safe-deployments",
+          "motivation": "The code imports and uses deployments for Gnosis Safe contracts (e.g., `GnosisSafeL2`, `SafeProxyFactory`) via `safe_deployments_1=dist`. Specifically, `getSafeSingletonDeployment` and `getProxyFactoryDeployment` are used. The variable name `safe_deployments_1` along with the functions `getSafeSingletonDeployment` and `getProxyFactoryDeployment` point to this library."
+        },
+        {
+          "name": "bottleneck",
+          "motivation": "The code includes a large, minified section that matches the structure and exported API of the `bottleneck` library (e.g., `Bottleneck`, `Group`, `RedisConnection`, `Job`, `Queues`), used for rate limiting and task scheduling."
+        }
+      ]
+    },
+    {
+      "file": "assets/index.es-C_NkiEZU.js",
+      "occurences": [
+        {
+          "name": "Pino",
+          "motivation": "The code uses `Je.pino` and `Je.generateChildLogger` for logging, which are characteristic of the Pino logging library. Specific constants like `PINO_LOGGER_DEFAULTS` are also defined."
+        },
+        {
+          "name": "EventEmitter3 (or compatible)",
+          "motivation": "`zr.EventEmitter` is instantiated and used extensively (`on`, `once`, `off`, `emit`) for event handling throughout the codebase, typical of EventEmitter libraries."
+        },
+        {
+          "name": "WalletConnect SignClient",
+          "motivation": "The presence of classes like `dI` (likely `SignClient`), `uI` (Engine), `X2` (Core), and methods related to session proposal (`wc_sessionPropose`), settlement, requests, and pairing indicates the use of WalletConnect SignClient or its core components. Constants like `WALLETCONNECT_CLIENT_ID` further support this."
+        },
+        {
+          "name": "WalletConnect UniversalProvider",
+          "motivation": "The code defines class `HI` (likely `UniversalProvider`) and includes logic for managing different chain-specific providers (e.g., `TI` for EIP-155, `AI` for Polkadot). It handles request dispatching and session management, which are core functionalities of the UniversalProvider."
+        },
+        {
+          "name": "query-string",
+          "motivation": "The `Is` object contains `parse`, `stringify`, `extract`, and `parseUrl` functions, which are direct parallels to the API of the `query-string` library for URL query string manipulation."
+        },
+        {
+          "name": "Noble Hashes (or similar SHA implementations)",
+          "motivation": "The code includes classes `oa.SHA256` (class `s` within module `oa`) and `wp.SHA512` (class `s` within module `wp`) for cryptographic hashing, suggesting the use of a library like Noble Hashes or a similar direct implementation."
+        },
+        {
+          "name": "TweetNaCl.js (or similar X25519/Ed25519 library)",
+          "motivation": "Module `Uu` provides X25519 operations (e.g., `scalarMult`, `sharedKey`), and module `Ku` provides Ed25519 operations (e.g., `sign`, `verify`, `generateKeyPairFromSeed`). These are indicative of a library like TweetNaCl.js or a similar cryptographic primitives library."
+        },
+        {
+          "name": "ChaCha20-Poly1305 implementation",
+          "motivation": "The `Ru.ChaCha20Poly1305` class is used for symmetric encryption, indicating a direct implementation or inclusion of a ChaCha20-Poly1305 crypto library."
+        },
+        {
+          "name": "Multiformats (bases)",
+          "motivation": "A comprehensive implementation for encoding and decoding various multibase formats (e.g., base58btc, base64url) is present, with classes like `R6`, `Cs`, `Qt` and constants like `Z1` (base58btc). This points to the `multiformats/bases` library or a compatible implementation."
+        },
+        {
+          "name": "Unstorage",
+          "motivation": "The `QD` function sets up a storage system with features like `mounts`, `getItem`, `setItem`, `getKeys`, and `clear`, which closely resembles the API and functionality of the `unstorage` library."
+        },
+        {
+          "name": "idb-keyval (or similar IndexedDB wrapper)",
+          "motivation": "The `o3` function configures an IndexedDB-backed key-value store. Functions like `Lf` (aliased getItem) and `XD` (aliased setItem) are used, which is characteristic of `idb-keyval` or a similar lightweight IndexedDB wrapper."
+        },
+        {
+          "name": "cross-fetch (or Fetch polyfill)",
+          "motivation": "The variable `b6` is assigned to `self.fetch` or a polyfill (`td.default`). The polyfill (`w6` function) uses `XMLHttpRequest` if `fetch` is not available. This suggests the use of a library like `cross-fetch` or an embedded polyfill to ensure Fetch API availability."
+        },
+        {
+          "name": "ws (WebSocket client polyfill/universal client)",
+          "motivation": "The `d6()` function attempts to resolve `WebSocket` from global contexts (browser, react-native, self) or falls back to `require('ws')`. The `y6` class (WebSocketConnection) then uses this resolved `WebSocket` constructor. This indicates a flexible WebSocket client setup, potentially using `ws` in Node.js environments."
+        },
+        {
+          "name": "Lodash",
+          "motivation": "The `Iu.exports` (aliased as `m6`) object is a large collection of utility functions matching Lodash's API, and it's used for various data manipulation tasks (e.g., `m6(f[y],d[y])` which is `_.isEqual`)."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [
+    {
+      "file": "assets/index-CGkgmvjE.js",
+      "occurences": [
+        {
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Dyo3_Kjc.js",
+      "occurences": [
+        {
+          "count": 8
+        }
+      ]
+    }
+  ],
+  "fallbacks": []
+}
