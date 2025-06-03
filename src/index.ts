@@ -642,13 +642,46 @@ function addDappRow(cells: HTMLElement[]): void {
     
     // Create a table row
     const row = document.createElement('tr');
+    row.style.position = 'relative'; // Add position relative to the row
+    
+    // Get the ENS name from the domain cell (last cell)
+    const domainCell = cells[cells.length - 1];
+    const domainLink = domainCell.querySelector('a');
+    const ensName = domainLink?.textContent || '';
+    
+    // Create a wrapper link for the entire row
+    const rowLink = document.createElement('a');
+    rowLink.href = `/${convertEnsNameToPath(ensName)}`;
+    rowLink.setAttribute('data-nav', 'true');
+    rowLink.style.position = 'absolute';
+    rowLink.style.top = '0';
+    rowLink.style.left = '0';
+    rowLink.style.width = '100%';
+    rowLink.style.height = '100%';
+    rowLink.style.zIndex = '1';
+    rowLink.style.cursor = 'pointer';
+    
+    // Add click event listener to handle navigation
+    rowLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = rowLink.getAttribute('href');
+        if (href) {
+            history.pushState({}, '', href);
+            handleRouteChange();
+        }
+    });
     
     // Add each cell to the row
     cells.forEach(cell => {
         const td = document.createElement('td');
+        td.style.position = 'relative'; // For proper z-index stacking
         td.appendChild(cell);
         row.appendChild(td);
     });
+    
+    // Add the row link as the first child of the row
+    row.appendChild(rowLink);
     
     // Add the row to the tbody
     tbody.appendChild(row);

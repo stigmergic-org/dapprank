@@ -2700,3 +2700,49 @@ html {
   50% { opacity: 1; }
   100% { opacity: 0.5; }
 }
+
+#dapps tr {
+    position: relative;
+    cursor: pointer;
+}
+
+#dapps tr td {
+    position: relative;
+}
+
+/* Ensure interactive elements stay above the row link */
+#dapps tr td a:not([data-nav="true"]),
+#dapps tr td .pie-container,
+#dapps tr td .category-label,
+#dapps tr td .score-badge {
+    position: relative;
+    z-index: 2;
+}
+
+/* Style for the row link */
+#dapps tr td a[data-nav="true"] {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Ensure the row link doesn't interfere with text selection */
+#dapps tr td a[data-nav="true"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+/* Preserve hover effect for the row */
+#dapps tr:hover td {
+    background-color: var(--hover-background);
+}
+
+/* Ensure the row link doesn't interfere with other clickable elements */
+#dapps tr td a:not([data-nav="true"]):hover,
+#dapps tr td .pie-container:hover {
+    z-index: 3;
+}

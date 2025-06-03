@@ -1211,6 +1211,9 @@ async function geminiAnalysis(scriptText, filePath) {
                 retries--;
                 
                 if (retries > 0) {
+                    if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
+                        break;
+                    }
                     console.log(`Error parsing Gemini response for ${filePath}, retrying... (${retries} attempts left)`);
                     // Add a small delay between retries
                     await new Promise(resolve => setTimeout(resolve, 1000));
