@@ -1,0 +1,516 @@
+{
+  "version": 2,
+  "contentHash": "bafybeifyvgqs5quvg26vsxrmmvi5ukfyfvx5e7j3gcxzd6asnbidxbhxom",
+  "timestamp": 1749465586,
+  "blockNumber": 22666479,
+  "rootMimeType": "inode/directory",
+  "totalSize": 19027157,
+  "favicon": "favicon.ico",
+  "title": "Walletbeat",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "_astro/ClientRouter.astro_astro_type_script_index_0_lang.rasoniT7.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "[DYNAMIC_SAME_ORIGIN_NAVIGATION_URL]"
+          ],
+          "library": "Astro",
+          "type": "self",
+          "motivation": "This `fetch` call is used for client-side navigation to retrieve the HTML content of the destination page. Key aspects:\n- It's invoked within the `ge` function, which is part of the navigation handling logic (function `j` calls `me`, whose callback `l` calls `ge`).\n- The URL (`e` in `ge`) is dynamically determined from the `href` attribute of an `<a>` tag or the `action` attribute of a `<form>` element that triggered the navigation. This URL (represented by `i.to.href` in the `l` function) is resolved relative to the current page's location (e.g., `/new-page`, `product/1`).\n- The request can be a GET or POST. For POST requests (typically form submissions), the `fetch` options (`t` in `ge`, which is `h` in `l`) include `method: \"POST\"` and a `body` payload (either `URLSearchParams` or `FormData` from the form data).\n- The system ensures that these navigations are same-origin. If a navigation target or a redirect from the fetched URL is cross-origin (checked via `location.origin !== n.origin` or `g.origin !== i.to.origin`), a full browser navigation occurs instead.\n- This mechanism allows Astro to update the page content without a full reload, which is a core feature of its client-side router."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "[DYNAMIC_SAME_ORIGIN_PREFETCH_URL]"
+          ],
+          "library": "Astro",
+          "type": "self",
+          "motivation": "This `fetch` call is used for prefetching resources to improve perceived navigation performance. Key aspects:\n- It's invoked within the `S` function, which is dedicated to prefetching linked resources.\n- The URL (`e` in `S`) is derived from the `href` attribute of `<a>` tags found on the page. Any `#hash` fragment is removed from the URL before it's prefetched (`e.replace(/#.*/,\"\")`).\n- Prefetching can be triggered based on various strategies such as `tap`, `hover`, `viewport` intersection, or on page `load`, often configured using `data-astro-prefetch` attributes on the anchor elements.\n- The `fetch` request is made with `{priority: \"low\"}` to minimize impact on current page interactivity.\n- The `ke` function explicitly checks that prefetched URLs are same-origin (`location.origin === new URL(e, location.href).origin`) before initiating the prefetch.\n- This is a client-side performance enhancement feature provided by Astro to potentially speed up subsequent navigations."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "404.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "_astro/AnchorHeader.GWgz1GOm.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code imports `useState` (as `a.useState` from `./index.CZMpeKRu.js`) which is a core React Hook. It also imports and uses `jsx` and `jsxs` functions (as `e.jsx` and `e.jsxs` from `./ExternalLink.ByQTHiFw.js`), which are part of React's JSX runtime for rendering components."
+        },
+        {
+          "name": "Material-UI",
+          "motivation": "Several patterns indicate the use of Material-UI (or a compatible library like MUI Core):\n1.  An icon component `h` is created using `i(e.jsx(\"path\",{d:\"...\"}),\"Link\")`. This pattern is characteristic of Material-UI's `createSvgIcon` utility, where `i` would be `createSvgIcon` (imported from `@mui/material/utils` or a similar path) and `e.jsx` is React's JSX factory.\n2.  The `sx` prop is used for styling (e.g., `sx:{opacity:.75}`). The `sx` prop is a prominent feature of Material-UI for applying theme-aware custom styles directly to components.\n3.  A component `t` (imported from `./ExternalLink.ByQTHiFw.js`) is used with props like `href`, `underline: \"none\"`, and `color: \"inherit\"`. These props and their values are commonly found on Material-UI's `Link` component.\n4.  A component `c` (imported from `./ExternalLink.ByQTHiFw.js`) is used as a wrapper, which could be a generic Material-UI layout component such as `Box` or `Typography`."
+        }
+      ]
+    },
+    {
+      "file": "_astro/ClientRouter.astro_astro_type_script_index_0_lang.rasoniT7.js",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code is part of the Astro framework's client-side router and view transition system. This is evidenced by:\n- Usage of specific data attributes like `data-astro-transition-persist`, `data-astro-rerun`, `data-astro-transition`, and `data-astro-prefetch`.\n- Dispatching and listening for custom Astro-specific events such as `astro:before-preparation`, `astro:after-preparation`, `astro:before-swap`, `astro:after-swap`, and `astro:page-load`.\n- Functions and variables related to Astro's view transitions (e.g., `document.startViewTransition`, checks for `[name=\"astro-view-transitions-enabled\"]`, `[name=\"astro-view-transitions-fallback\"]`).\n- Logging with an `[astro]` prefix: `console.log(\"[astro]\", ...)`.\n- The overall architecture for handling client-side navigation, prefetching, and DOM updates for single-page application-like behavior is characteristic of Astro's client-side router features."
+        }
+      ]
+    },
+    {
+      "file": "_astro/ExternalLink.ByQTHiFw.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code includes React's license comment (`/** * @license React ... */`). It extensively uses React's core APIs such as `React.createElement` (minified as `pe.createElement`), `React.Fragment` (minified as `v.Fragment`), and various hooks like `C.useState`, `C.useEffect`, `C.useContext`, `C.useMemo`, `C.useCallback`, `C.useRef`, `C.forwardRef`, `C.memo`. Symbols like `Symbol.for(\"react.element\")` and `Symbol.for(\"react.fragment\")` are defined. JSX helper functions (`jsx`, `jsxs`) are also present (minified as `v.jsx`, `v.jsxs`)."
+        },
+        {
+          "name": "Emotion",
+          "motivation": "The code utilizes functions characteristic of Emotion, such as `createCache` (minified as `ga`, e.g., `ga({key:\"css\"})`) for managing styles and `StyleSheet` management (e.g., class `Hi` representing `emotion-sheet`). `data-emotion` attributes are referenced in style tag creation logic (`t.setAttribute(\"data-emotion\",e.key)`). CSS-in-JS processing is evident through functions like `serializeStyles` (minified as `et`) and styled component patterns (`Oa` and `Xt` which is `styled`). Emotion's `CacheProvider` and `ThemeContext` are also used (minified, e.g., `Yn` for context and `Yn.Provider`)."
+        },
+        {
+          "name": "Material-UI (MUI)",
+          "motivation": "MUI's presence is indicated by theme creation utilities like `createTheme` (minified as `fr`, `Jt`, `_e`) and the use of `ThemeProvider` (minified as `oo`, `Tl`). MUI-specific components are defined and used, such as `SvgIcon` (`Zt`), `Typography` (`Ml`), `Link` (`Vl`), and `Divider` (`kn`). The `Mui` prefix is used in generated class names (e.g., `Ye(\"MuiSvgIcon\",e)`). The `sx` prop and its associated processing logic (`xe`, `Di`) are characteristic features of MUI. An MUI-specific error reporting URL (`https://mui.com/production-error/`) is constructed in the `ve` function. The theme structure (palette, typography, spacing, components, shape) aligns with MUI's theme specification."
+        },
+        {
+          "name": "classnames",
+          "motivation": "The codebase includes a bundled version of the `classnames` library (identified by the `Ul` function). This library is then used (via the minified variable `Pe`) for conditionally concatenating CSS class strings, for instance, `Pe(\"whitespace-nowrap flex flex-row items-center ...\")`."
+        },
+        {
+          "name": "Embedded SVG Icons (Feather/Lucide-like)",
+          "motivation": "A custom SVG icon generation system is implemented, primarily through the `q(e)` factory function and the `Mo(e)` rendering component. This system is used to define numerous SVG icon components (e.g., `Lo`, `Io` for ExternalLink, `Bo` for Github, `Fo` for X, `No` for Moon, `Wo` for Sun) by specifying their `viewBox` attributes and `path` data. The style and naming of these icons are similar to popular icon sets like Feather Icons or Lucide."
+        }
+      ]
+    },
+    {
+      "file": "_astro/GitHub.v5QBH6aR.js",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The file path `_astro/GitHub.v5QBH6aR.js` strongly suggests that this code is a bundled asset from a project built using the Astro framework. Astro is known for its component-based architecture and optimized build outputs, and this file naming and path convention is characteristic of its generated client-side JavaScript."
+        },
+        {
+          "name": "React or Preact (or similar JSX-supporting library)",
+          "motivation": "The code utilizes a `jsx` function (imported as `j.jsx` from `./ExternalLink.ByQTHiFw.js`, aliased to `t`, and then used as `t.jsx`) for creating an SVG `<path>` element. This `jsx` function is characteristic of the modern JSX transform used by libraries like React (via `react/jsx-runtime`) and Preact (via `preact/jsx-runtime`), indicating that one of these, or a library with a similar mechanism, is employed for UI rendering."
+        }
+      ]
+    },
+    {
+      "file": "_astro/RenderTypographicContent.BVJqSN03.js",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The JavaScript file path `_astro/RenderTypographicContent.BVJqSN03.js` indicates it's a file generated by the Astro build system. The code also utilizes a JSX-like factory function pattern (e.g., `Jt.jsx(...)` where `Jt` is imported from an internal module `./ExternalLink.ByQTHiFw.js`), which is common in Astro components for rendering content. This suggests the code operates within the Astro framework and leverages its rendering capabilities."
+        }
+      ]
+    },
+    {
+      "file": "_astro/_FrequentlyAskedQuestionsPage.WZbChuMG.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code uses `e.jsx`, `e.jsxs`, and `e.Fragment` (where `e` is imported as `j` from an internal module `./ExternalLink.ByQTHiFw.js`). These are characteristic APIs of React for creating and rendering JSX elements and fragments."
+        },
+        {
+          "name": "Material-UI",
+          "motivation": "The code imports and uses components with APIs and naming conventions typical of Material-UI:\n- A component `y` (imported as `D` from `./ExternalLink.ByQTHiFw.js`) is used as `<y orientation=\"horizontal\" variant=\"middle\" flexItem sx={{...}} />`. This strongly resembles the Material-UI `Divider` component.\n- An icon creation pattern `o(e.jsx(\"path\",{...}))` (where `o` is imported as `c` from `./ExternalLink.ByQTHiFw.js`) is used to define icons named `QuestionMark` and `HelpOutline`. This is similar to Material-UI's `createSvgIcon` utility and standard Material-UI icon names.\n- A component `w` (imported as `T` from `./ExternalLink.ByQTHiFw.js`) is used as `<w id=\"faqHeader\" variant=\"h1\" ... />`. This matches the API of Material-UI's `Typography` component (e.g., `<Typography variant=\"h1\">`)."
+        }
+      ]
+    },
+    {
+      "file": "_astro/client.C1xSCIWg.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code includes numerous references to React, such as:\n- Copyright notices like `/** @license React ... */`.\n- Usage of React-specific `Symbol` objects (e.g., `Symbol.for(\"react.element\")`, `Symbol.for(\"react.portal\")`).\n- Mentions of \"Minified React error\" and construction of error URLs pointing to `react.dev/errors`.\n- Presence of core React concepts and internal structures like Fiber, component lifecycle hooks, and state management logic."
+        },
+        {
+          "name": "React Scheduler",
+          "motivation": "The code contains a section explicitly licensed as `/** @license React * scheduler.production.js ... */`.\n- It implements scheduling logic using `MessageChannel`, `setTimeout`, and various priority levels (e.g., `unstable_ImmediatePriority`, `unstable_NormalPriority`), which are characteristic of React's internal scheduler used for managing updates and rendering tasks."
+        },
+        {
+          "name": "React DOM (client)",
+          "motivation": "The code includes a section explicitly licensed as `/** @license React * react-dom-client.production.js ... */`.\n- It contains functions central to React's browser rendering, such as `createRoot` and `hydrateRoot` (exposed via `be.createRoot` and `be.hydrateRoot`).\n- It handles DOM manipulation, event handling, and component mounting/unmounting in the browser environment."
+        },
+        {
+          "name": "Astro (client-side integration)",
+          "motivation": "The filename `_astro/client.C1xSCIWg.js` is a strong indicator of an Astro build artifact.\nThe code contains specific logic for integrating React components within an Astro project:\n- A component `wc` is defined, which renders `<astro-slot>` or `<astro-static-slot>` elements, a pattern used by Astro for passing server-rendered content into client-side components.\n- A function `by` (likely the default export) orchestrates the client-side hydration/rendering of React components managed by Astro. It checks for `E.hasAttribute(\"ssr\")`, reads attributes like `data-action-key`, `data-action-name`, `data-action-result`, and `prefix`, and attaches an event listener `E.addEventListener(\"astro:unmount\", ...)`. \n- It uses React's `createRoot` or `hydrateRoot` based on a `client` prop passed in the component's options, which aligns with Astro's island architecture and hydration strategies.\n- The `vy` function processes HTML strings (likely from Astro server-rendered slots) into React elements using `document.createElement('template')` and `S.innerHTML`."
+        }
+      ]
+    },
+    {
+      "file": "_astro/index.CZMpeKRu.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code contains numerous hallmark features and identifiers of the React library. These include:\n- A license comment `/**\n * @license React\n * react.production.js\n *\n * Copyright (c) Meta Platforms, Inc. and affiliates.\n */`.\n- Usage of React-specific Symbols like `Symbol.for(\"react.transitional.element\")`, `Symbol.for(\"react.portal\")`, `Symbol.for(\"react.fragment\")`.\n- Definitions of React component base classes and prototypes: `y.prototype.isReactComponent={}`, `C.isPureReactComponent=!0`.\n- Export and definition of core React API methods such as `createElement`, `useState`, `useEffect`, `useContext`, `Component`, `PureComponent`, `Fragment`, `Suspense`.\n- The presence of `u.version=\"19.0.0\"` explicitly stating the React version."
+        }
+      ]
+    },
+    {
+      "file": "about/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "ambire/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "coinbase/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "daimo/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "elytro/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "embedded/ecosystem/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "embedded/privacy/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "embedded/security/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "embedded/selfSovereignty/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "embedded/summary/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "embedded/transparency/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "family/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "faq/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "firefly/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "frame/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "gridplus/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/ecosystem/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/maintenance/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/privacy/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/security/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/selfSovereignty/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/summary/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "hww/transparency/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "index.html#inline-script-3",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "keystone/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "ledger/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "metamask/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "phantom/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "rabby/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "rainbow/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "safe/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "trezor/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "wallet/ecosystem/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "wallet/privacy/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "wallet/security/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "wallet/selfSovereignty/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "wallet/summary/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "wallet/transparency/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    },
+    {
+      "file": "zerion/index.html#inline-script-2",
+      "occurences": [
+        {
+          "name": "Astro",
+          "motivation": "The code explicitly initializes `self.Astro = {}` if it does not already exist (`self.Astro||(self.Astro={})`). It defines a custom HTML element named `astro-island` (`customElements.define(\"astro-island\",y)`), which is a core feature of the Astro framework used for client-side partial hydration of components. The script also makes extensive use of Astro-specific event names such as `astro:load`, `astro:hydrate`, and `astro:after-swap` (e.g., `e.addEventListener(\"astro:hydrate\",this.hydrate,{once:!0})`, `this.dispatchEvent(new CustomEvent(\"astro:hydrate\"))`). Furthermore, it dynamically calls a method on an `Astro` object based on a client attribute (`Astro[c](async()=>{...})` where `c` is `this.getAttribute(\"client\")`), which is characteristic of Astro's client-side runtime."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}
