@@ -1,0 +1,655 @@
+{
+  "version": 2,
+  "contentHash": "bafybeidj4a3ln63giplnkbbczm57s2mxvltkalfi4ya54kri7f4otkpor4",
+  "timestamp": 1749476312,
+  "blockNumber": 22667272,
+  "rootMimeType": "inode/directory",
+  "totalSize": 15566220,
+  "favicon": "favicon.ico",
+  "title": "seedit",
+  "distributionPurity": {
+    "externalScripts": [],
+    "externalMedia": []
+  },
+  "networkingPurity": [
+    {
+      "file": "assets/ccip-DOoL9ouH.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "<resolved_url_from_contract-provided_template_list_with_{sender}_and_{data}_placeholders_filled>"
+          ],
+          "library": "otherwise",
+          "type": "auxiliary",
+          "motivation": "A direct `fetch` call is made within the `C` function (exported as `ccipRequest`). This function is designed to handle CCIP-Read (EIP-3668) requests, typically serving as a fallback or primary implementation for fetching off-chain data.\n\nThe `C` function iterates through an array of URL templates (passed as the `urls` argument, denoted as `a` in the function). These URL templates originate from data provided by a smart contract when it reverts with an `OffchainLookup` error (as per EIP-3668).\n\nFor each URL template `t` in this array:\n- Placeholders within the template `t` are dynamically replaced: `{sender}` is replaced with the sender's address (`r.toLowerCase()`) and `{data}` is replaced with the call data (`c`).\n- The HTTP method for the `fetch` call is determined based on the content of the URL template `t`:\n  - If `t` *includes* the string `\"{data}\"`, the method is 'GET'. The placeholders `{sender}` and `{data}` are expected to be part of the URL path or query parameters within the template `t`.\n  - If `t` does *not* include `\"{data}\"`, the method is 'POST'.\n- For 'POST' requests, a JSON body `{data: c, sender: r}` is constructed and sent, with the 'Content-Type' header set to 'application/json'.\n\nThe `fetch` call is then made with the fully resolved URL and the determined HTTP method, headers, and body (if applicable). This entire mechanism is a client-side implementation for querying off-chain gateways specified by smart contracts."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-B2BFGC-S.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "http://localhost:5001/api/v0/add",
+            "http://localhost:5001/api/v0/bitswap/stat",
+            "http://localhost:5001/api/v0/block/get",
+            "http://localhost:5001/api/v0/dag/put",
+            "http://localhost:5001/api/v0/id",
+            "http://localhost:5001/api/v0/version",
+            "http://localhost:5001/api/v0/cat"
+          ],
+          "library": "kubo-rpc-client",
+          "type": "rpc",
+          "motivation": "The `kubo-rpc-client` makes `POST` requests to various IPFS RPC API endpoints. The URL is constructed as `normalizedOptions.url + '/' + resourcePath`. `normalizedOptions.url` defaults to `http://localhost:5001/api/v0` (protocol, host, port can be configured). The listed URLs are examples based on common IPFS commands found in the client's methods like `add`, `id`, `dag.put`, etc."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<modulepreload_href>"
+          ],
+          "library": "Module Preload Polyfill",
+          "type": "self",
+          "motivation": "A polyfill for `<link rel=\"modulepreload\">` fetches the `href` attribute of such links. The URL is dynamic based on the HTML content."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "<CapacitorHttp_config_url>"
+          ],
+          "library": "@capacitor/http",
+          "type": "auxiliary",
+          "motivation": "The `CapacitorHttpPluginWeb` wraps the native `fetch`. The URL (`ee.url`) is provided dynamically by the caller to `CapacitorHttp.request()` or its helper methods (get, post, etc.)."
+        },
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "<FetchPolyfill_input_url>"
+          ],
+          "library": "Fetch Polyfill",
+          "type": "auxiliary",
+          "motivation": "The fetch polyfill uses `XMLHttpRequest` to make requests. The URL (`ie.url`) is derived from the arguments passed to the polyfilled `fetch` function and is dynamic."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://eth.merkle.io",
+            "https://rpc.linea.build",
+            "https://mainnet.base.org",
+            "https://rpc.ankr.com/eth"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "Viem's HTTP transport uses `fetch` (via `createGetUrl` which wraps `fetch`) to send JSON-RPC requests. The URLs are dynamically selected from its extensive chain configurations (e.g., `mainnet` uses `https://eth.merkle.io`, `linea` uses `https://rpc.linea.build`) or from specialized provider configurations like `AnkrProvider` (e.g., `https://rpc.ankr.com/eth`). These calls are for standard Ethereum RPC methods."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://api.etherscan.io",
+            "https://api-goerli.etherscan.io",
+            "https://api.arbiscan.io"
+          ],
+          "library": "ethers.js v5 utilities",
+          "type": "auxiliary",
+          "motivation": "The `EtherscanProvider$1` (an ethers.js-style utility) makes `fetch` calls to Etherscan API endpoints (e.g., `https://api.etherscan.io` for mainnet, `https://api.arbiscan.io` for Arbitrum). These are used to retrieve blockchain data such as transaction history or contract ABIs, rather than for direct JSON-RPC interactions like `eth_call`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://gateway.ipfs.io/ipfs/"
+          ],
+          "library": "viem",
+          "type": "auxiliary",
+          "motivation": "The code includes an IPFS gateway helper (`getIpfsGatewayFunc` within `Gateways`) that defaults to `https://gateway.ipfs.io/ipfs/`. This is likely used by `viem` or its utilities for fetching IPFS content (e.g., for ENS avatars, metadata), where a Content Identifier (CID) is appended to this base URL."
+        },
+        {
+          "method": "WebSocket",
+          "urls": [
+            "wss://rpc.linea.build",
+            "wss://api.mainnet.abs.xyz/ws",
+            "wss://mainnet.infura.io/ws/v3/"
+          ],
+          "library": "viem",
+          "type": "rpc",
+          "motivation": "Viem's WebSocket transport (using `getWebSocketRpcClient` or `WebSocketProvider$1`) establishes connections to WebSocket RPC endpoints. These URLs are derived from chain configurations (e.g., `linea`'s `wss://rpc.linea.build`, `abstract`'s `wss://api.mainnet.abs.xyz/ws`) or specialized providers like `InfuraWebSocketProvider` (e.g., `wss://mainnet.infura.io/ws/v3/`). This is used for real-time communication, subscriptions to events like `newHeads` or `logs`."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://raw.githubusercontent.com/plebbit/temporary-default-subplebbits/master/multisub.json"
+          ],
+          "library": "@plebbit/plebbit-react-hooks (internal)",
+          "type": "auxiliary",
+          "motivation": "The code directly fetches a JSON file from GitHub. This URL is hardcoded in the `fetchMultisubData` function."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "CHAIN_PROVIDER_URL"
+          ],
+          "library": "ethers",
+          "type": "rpc",
+          "motivation": "The `JsonRpcProvider({url:ee},re)` call in `getChainProviderNoCache` uses the `ee` parameter as the URL. This function is memoized and used to get chain providers. Hardcoded examples in `chainProviders` object include `https://ethrpc.xyz`, `https://api.avax.network/ext/bc/C/rpc`, `https://polygon-rpc.com`, `https://solrpc.xyz`. These are Ethereum RPC endpoints."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "NFT_METADATA_URL_OR_IPFS_GATEWAY_URL"
+          ],
+          "library": "@plebbit/plebbit-react-hooks (internal)",
+          "type": "auxiliary",
+          "motivation": "In `getNftImageUrlNoCache`, `fetch$1(te)` is called where `te` is `nftMetadataUrl`. This URL can be an IPFS gateway URL (e.g., `https://<ipfsGatewayUrl>/ipfs/<cid>`) constructed by `getNftMetadataUrlNoCache` if the `tokenURI` starts with `ipfs://`, or it can be any other HTTP URL returned by an NFT's `tokenURI` method. The IPFS gateway URLs are configurable (e.g., `https://ipfs.io`, `https://ipfsgateway.xyz`)."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "WEBPAGE_URL_FOR_THUMBNAIL"
+          ],
+          "library": "@plebbit/plebbit-react-hooks (internal)",
+          "type": "auxiliary",
+          "motivation": "The `fetchWebpageThumbnail` function calls `fetch(te, {signal: ue.signal, headers: {Accept: \"text/html\"}})` where `te` is a dynamic URL passed to the function. This is used to fetch HTML content of a webpage to extract a thumbnail image."
+        },
+        {
+          "method": "CapacitorHttp.get",
+          "urls": [
+            "WEBPAGE_URL_FOR_THUMBNAIL"
+          ],
+          "library": "@capacitor/http",
+          "type": "auxiliary",
+          "motivation": "The `fetchWebpageThumbnail` function, when on a native platform, calls `CapacitorHttp.get({url:te,...})` where `te` is a dynamic URL. This is used for fetching HTML content to extract a thumbnail."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://ipfsgateway.xyz/ipfs/CID",
+            "https://gateway.plebpubsub.xyz/ipfs/CID",
+            "https://gateway.forumindex.com/ipfs/CID",
+            "https://ipfs.io/ipfs/CID"
+          ],
+          "library": "plebbit-js",
+          "type": "auxiliary",
+          "motivation": "The `PlebbitJs.Plebbit` instance is configured with `ipfsGatewayUrls` (from `getDefaultPlebbitOptions`) and `defaultMediaIpfsGatewayUrl`. These base URLs are used by PlebbitJs internally to construct full URLs for fetching IPFS content (e.g., `https://<gateway>/ipfs/<CID>`). These calls are made by `plebbit-js` when resolving CIDs."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://pubsubprovider.xyz/api/v0",
+            "https://plebpubsub.xyz/api/v0",
+            "https://rannithepleb.com/api/v0"
+          ],
+          "library": "plebbit-js",
+          "type": "auxiliary",
+          "motivation": "The `PlebbitJs.Plebbit` instance is configured with `pubsubKuboRpcClientsOptions` (from `getDefaultPlebbitOptions`). These URLs are used by PlebbitJs internally to interact with Kubo RPC APIs for PubSub functionality."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "https://routing.lol",
+            "https://peers.pleb.bot",
+            "https://peers.plebpubsub.xyz",
+            "https://peers.forumindex.com"
+          ],
+          "library": "plebbit-js",
+          "type": "auxiliary",
+          "motivation": "The `PlebbitJs.Plebbit` instance is configured with `httpRoutersOptions` (from `getDefaultPlebbitOptions`). These URLs are used by PlebbitJs internally for its routing mechanisms."
+        },
+        {
+          "method": "fetch",
+          "urls": [
+            "./translations/{{lng}}/{{ns}}.json"
+          ],
+          "library": "i18next-http-backend",
+          "type": "self",
+          "motivation": "The `i18next` instance is configured with `Backend` and a `loadPath` of `./translations/{{lng}}/{{ns}}.json`. The `i18next-http-backend` uses `fetch` to load these translation files relative to the current domain."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Cx21V9Dp.js",
+      "occurences": [
+        {
+          "method": "XMLHttpRequest",
+          "urls": [
+            "<urlFromParameter>"
+          ],
+          "library": "Ace Editor",
+          "type": "self",
+          "motivation": "The `XMLHttpRequest` is used within the `L.get = function(d, p)` method defined in the `ace/lib/net` module of the Ace Editor. The `d` parameter represents the URL, which is dynamically determined at runtime. This function is likely used by Ace or its extensions to fetch resources such as snippets or configurations, typically relative to the application's domain or a configured base path."
+        }
+      ]
+    },
+    {
+      "file": "assets/native-B8WyFf_Z.js",
+      "occurences": [
+        {
+          "method": "WebSocket",
+          "urls": [],
+          "library": "native",
+          "type": "auxiliary",
+          "motivation": "The code defines a utility function `e` that searches for and returns the `WebSocket` constructor from standard JavaScript environments (`WebSocket`, `globalThis.WebSocket`, `window.WebSocket`, `self.WebSocket`). The result of this function call is stored in `t` and then exported as `WebSocket`. This action makes the `WebSocket` API available for use by other parts of the application. No WebSocket connection is initiated (and thus no specific URL is used) within this particular code snippet, hence the `urls` array is empty."
+        }
+      ]
+    },
+    {
+      "file": "sw.js",
+      "occurences": [
+        {
+          "method": "fetch",
+          "urls": [
+            "assets/ccip-DOoL9ouH.js",
+            "assets/index-B2BFGC-S.js",
+            "assets/index-Cx21V9Dp.js",
+            "assets/index-yE6dQYlW.css",
+            "assets/mode-json-IUr3cO2b.js",
+            "assets/native-B8WyFf_Z.js",
+            "assets/theme-github-C4W7_neC.js",
+            "assets/theme-tomorrow_night-CsNRYznr.js",
+            "assets/vendor-CxCkkgh_.js",
+            "assets/web-BRnEgkqQ.js",
+            "assets/web-MbGml33P.js",
+            "assets/workbox-window.prod.es5-B9K5rw8f.js",
+            "index.html",
+            "redirect.html",
+            "apple-touch-icon.png",
+            "favicon.ico",
+            "robots.txt",
+            "manifest.webmanifest"
+          ],
+          "library": "Workbox",
+          "type": "self",
+          "motivation": "The `fetch` operations are primarily initiated by Workbox's `PrecacheController` (class `V`) during the service worker's `install` phase. \nThe URLs listed are explicitly defined in the precache manifest, which is an array of objects passed to the `ce()` function (e.g., `{\"revision\":null,\"url\":\"assets/ccip-DOoL9ouH.js\"}`). This function calls `K().precache(a)`, where `a` is the manifest. \nWorkbox's `PrecacheController` then iterates through these manifest entries. For each entry, its `install` method uses the configured caching strategy (an instance of class `d`, which is `CacheOnly` customized for precaching) to fetch and cache the resource. Specifically, the `_handleInstall` method within the strategy calls `handler.fetch(request)`, where `request` is a `Request` object constructed using the URL from the manifest. \nThese URLs are all relative paths (e.g., `assets/ccip-DOoL9ouH.js`, `index.html`) and are therefore resolved against the service worker's origin, classifying them as type `self`."
+        }
+      ]
+    }
+  ],
+  "libraryUsage": [
+    {
+      "file": "assets/ccip-DOoL9ouH.js",
+      "occurences": [
+        {
+          "name": "Viem",
+          "motivation": "The code utilizes several utility functions, error classes, and patterns highly characteristic of the Viem library for Ethereum interactions. These include:\n\n- Custom error classes (`S` as `OffchainLookupError`, `$` as `OffchainLookupResponseMalformedError`, `q` as `OffchainLookupSenderMismatchError`) extending a base class `p` (imported as `B`), which mimics Viem's `BaseError` structure.\n- ABI data decoding using function `k` (imported as `d`) with an ABI item `T` (defined as `offchainLookupAbiItem`), as in `k({data:n,abi:[T]})`. This is similar to Viem's `decodeErrorResult` or `decodeFunctionData`.\n- Address comparison using function `b` (imported as `i`), as in `if(!b(i,t))`, which is akin to Viem's `isAddressEqual(address, address)`.\n- Usage of a function `O` (imported as `b` from the source module and aliased to `O` in the code: `import {b as O}`), in `await O({data:d,ccipRequest:h})`. This pattern, including its arguments, matches Viem's `prepareFetchRequest` utility function used in CCIP-Read contexts.\n- A contract interaction pattern via function `E` (imported as `c`), used like `await E(c,{blockNumber, blockTag, data, to})`, resembling Viem's `call` or `readContract` client actions.\n- ABI encoding and parsing with functions `x` (imported as `e`) and `R` (imported as `f`), specifically in the expression `x([l,R([{type:\"bytes\"},{type:\"bytes\"}],[u,s])])`. This is similar to Viem's `encodeAbiParameters` and `parseAbiParameters`.\n- An HTTP request error class `m` (imported as `H`), instantiated as `new m({body, details, headers, status, url})`, which is like Viem's `HttpRequestError`.\n- Hex string validation using function `M` (imported as `h`) in the condition `!M(e)`, similar to Viem's `isHex` utility.\n- The overall logic robustly implements EIP-3668 (OffchainLookup / CCIP-Read), evidenced by `offchainLookupAbiItem` (`T`), `offchainLookupSignature` (`D`), and the `offchainLookup` and `ccipRequest` functions. Viem provides comprehensive support for CCIP-Read."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-B2BFGC-S.js",
+      "occurences": [
+        {
+          "name": "React",
+          "motivation": "The code imports `React`, `requireReact`, `reactExports` and uses JSX syntax (evidenced by `jsxRuntime` and `jsxs` from `react-jsx-runtime.production.js`). It also imports and uses React components like `NavLink`, `Link`, `Outlet`, `Route`, `Routes` from `./vendor-CxCkkgh_.js`."
+        },
+        {
+          "name": "ReactDOM",
+          "motivation": "The code imports `requireReactDom` from `./vendor-CxCkkgh_.js`. The `client.exports=requireReactDomClient_production()` and subsequent usage like `ReactDOM$1.createRoot` (though `ReactDOM$1` is assigned `clientExports`) indicates usage of ReactDOM for rendering."
+        },
+        {
+          "name": "i18next",
+          "motivation": "The code imports `useTranslation`, `initReactI18next`, and `Backend` (likely `i18next-http-backend` or similar) from `./vendor-CxCkkgh_.js`, which are core parts of the i18next internationalization framework and its React integration."
+        },
+        {
+          "name": "react-i18next",
+          "motivation": "Imports `useTranslation` and `initReactI18next` from `./vendor-CxCkkgh_.js` strongly indicate the use of `react-i18next` for integrating i18next with React."
+        },
+        {
+          "name": "Buffer Polyfill",
+          "motivation": "The code includes a full implementation of the Node.js `Buffer` API and assigns it to `window.Buffer = Buffer$1;`. This is a common polyfill for browser environments."
+        },
+        {
+          "name": "Process Polyfill",
+          "motivation": "The code includes a polyfill for the Node.js `process` object and assigns it to `window.process = process;`. The `browserExports$2` from `requireBrowser$e()` is used for this."
+        },
+        {
+          "name": "Fetch Polyfill",
+          "motivation": "The code defines `fetch$2` which uses `XMLHttpRequest` to mimic the Fetch API and includes logic like `fetch$2.polyfill = !0;` and `g$5.fetch||(g$5.fetch=fetch$2, ...)`. This polyfills `fetch` if not natively available."
+        },
+        {
+          "name": "Zustand",
+          "motivation": "The presence of functions like `createStoreImpl$1`, `createStore$1`, `useStore$1`, `createImpl$1`, and `create$d` (e.g., `useThemeStore = create$d(...)`) are characteristic of the Zustand state management library. The import of `useSyncExternalStoreWithSelector$1` also supports this, as Zustand uses it."
+        },
+        {
+          "name": "Capacitor",
+          "motivation": "The code defines `CapacitorException`, `createCapacitor`, `initCapacitorGlobal`, and `registerPlugin`. It then registers specific plugins like `CapacitorCookies`, `CapacitorHttp`, and `LocalNotifications`, indicating usage of the Capacitor framework for building cross-platform applications."
+        },
+        {
+          "name": "@capacitor/core",
+          "motivation": "The core Capacitor functionalities like `registerPlugin`, `Capacitor.isNativePlatform`, etc., are defined and used, suggesting the presence of `@capacitor/core`."
+        },
+        {
+          "name": "@capacitor/cookies",
+          "motivation": "`registerPlugin(\"CapacitorCookies\",{web:()=>new CapacitorCookiesPluginWeb})` indicates the use of the Capacitor Cookies plugin."
+        },
+        {
+          "name": "@capacitor/http",
+          "motivation": "`const CapacitorHttp=registerPlugin(\"CapacitorHttp\",{web:()=>new CapacitorHttpPluginWeb});` indicates the use of the Capacitor HTTP plugin."
+        },
+        {
+          "name": "@capacitor/local-notifications",
+          "motivation": "`const LocalNotifications=registerPlugin(\"LocalNotifications\",{web:()=>__vitePreload(...).then(te=>new te.LocalNotificationsWeb)});` indicates the use of the Capacitor Local Notifications plugin."
+        },
+        {
+          "name": "React Router",
+          "motivation": "The import of `HashRouter` from `./vendor-CxCkkgh_.js` indicates the use of React Router for client-side routing, specifically using the hash-based routing strategy."
+        },
+        {
+          "name": "debug",
+          "motivation": "The code defines `Debug` based on `browserExports$1` (from `requireBrowser$d()`) and uses it in a `Logger$4` utility (e.g., `Logger$4.enable=te=>{Debug.enable(te)};`). This pattern is common for the `debug` library."
+        },
+        {
+          "name": "lodash.isequal",
+          "motivation": "The code explicitly requires and wraps `lodash_isequal` (e.g., `var lodash_isequalExports=requireLodash_isequal(); const isEqual=getDefaultExportFromCjs$1(lodash_isequalExports);`)."
+        },
+        {
+          "name": "assert",
+          "motivation": "The code explicitly requires and wraps an `assert` module (e.g., `var assertExports$1=requireAssert$1(); const assert$f=getDefaultExportFromCjs$1(assertExports$1);`)."
+        },
+        {
+          "name": "multiformats",
+          "motivation": "The codebase includes extensive code related to CID creation/parsing (`CID$4`, `CID$3`), various base encodings (base58btc, base32, base64url, etc. from `bases$8` and `bases$9`), multihash concepts (digests within CIDs), multicodecs (dag-pb, dag-cbor, dag-json, dag-jose), and varint encoding/decoding. These are all core components of the `multiformats` ecosystem."
+        },
+        {
+          "name": "kubo-rpc-client",
+          "motivation": "The code defines `KuboRPCClient` and associated helper functions like `createKuboRPCClient`. This client makes HTTP POST requests to various Kubo (IPFS) RPC API endpoints (e.g., `/add`, `/id`, `/dag/put`)."
+        },
+        {
+          "name": "uint8arraylist",
+          "motivation": "The code defines a `Uint8ArrayList` class and uses a specific symbol `Symbol.for(\"@achingbrain/uint8arraylist\")`, indicating the use of this library for efficient Uint8Array manipulation."
+        },
+        {
+          "name": "iso-url",
+          "motivation": "The code effectively re-exports URL utilities from `requireUrlBrowser()` under the `isoUrl` namespace, providing URL parsing and formatting capabilities, likely for isomorphic environments."
+        },
+        {
+          "name": "js-sha256",
+          "motivation": "The code contains a bundled version of a SHA256 implementation, identifiable by patterns like `ne.JS_SHA256_NO_WINDOW` and the specific SHA256 algorithm constants and functions."
+        },
+        {
+          "name": "js-sha512",
+          "motivation": "The code contains a bundled version of a SHA512 implementation, identifiable by patterns like `ne.JS_SHA512_NO_NODE_JS` and the specific SHA512 algorithm constants and functions."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code explicitly bundles the `elliptic` library, indicated by `var elliptic={};` and `requireElliptic()` which sets up its components like `ee.ec=requireEc()` and `ee.eddsa=requireEddsa()`."
+        },
+        {
+          "name": "asn1.js",
+          "motivation": "The code bundles an ASN.1 parser/encoder, visible through `var asn1$2={},asn1$1={}` and `requireAsn1$2()`, used for DER encoding/decoding of structures like X.509 certificates and RSA keys."
+        },
+        {
+          "name": "crypto-browserify",
+          "motivation": "The code includes various shims and modules typically part of `crypto-browserify` for providing Node.js crypto-like functionality in the browser. This includes components for ciphers (`browserify-cipher`, `browserify-des`, `browserify-aes`), hashing (`hash.js`), public/private key operations (`public-encrypt`, `browserify-rsa`, `browserify-sign`), key derivation (`pbkdf2`), and random byte generation (`randombytes`). Specific requires like `requireBrowser$7()` (for `browserify-aes`) and `requireBrowser$4()` (for `browserify-sign`) confirm this."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The code includes multiple bundled instances of `BN.js` (e.g., `var bn$d={exports:{}},bn$c=bn$d.exports;`), a library for arbitrary-precision integers, heavily used in cryptographic operations."
+        },
+        {
+          "name": "viem",
+          "motivation": "The code includes extensive chain definitions using `defineChain`, client creation patterns like `createPublicClient`, `publicActions`, and various Ethereum interaction functions (e.g., `getBlockNumber`, `sendRawTransaction`, `simulateBlocks`, `waitForTransactionReceipt`, `watchBlockNumber`). It also handles HTTP and WebSocket transports for RPC communication, which are characteristic of `viem`."
+        },
+        {
+          "name": "ethers.js v5 utilities",
+          "motivation": "The presence of classes and functions like `AbiCoder$1`, `Interface$1`, `HDNode`, `SigningKey$2`, `TypedDataEncoder$1`, `Transaction$1` (for legacy/EIP-1559 style transactions), `computeAddress$1`, `recoverAddress$1`, `keccak256$1`, `sha256$1`, `pbkdf2$1`, `randomBytes`, and provider patterns such as `EtherscanProvider$1`, along with the specific `Logger$3` and `defineReadOnly$2` patterns, strongly indicates the inclusion or inspiration from ethers.js v5 utility packages. Version strings like `bytes/5.8.0` are also typical of ethers.js v5 sub-modules."
+        },
+        {
+          "name": "@noble/curves & @noble/hashes",
+          "motivation": "The code contains comments explicitly mentioning 'noble-curves - MIT License' and 'noble-hashes - MIT License'. Furthermore, it includes implementations and usage of cryptographic primitives like `secp256k1` (e.g., `secp256k1$1`), `sha256` (e.g., `sha256$4`), `keccak256` (e.g., `keccak_256$1`), and `hmac`, which are core functionalities provided by these libraries."
+        },
+        {
+          "name": "uuid",
+          "motivation": "The code includes a function `uuidV4` derived from an import of `uuid`'s `v4` functionality. This is used, for example, in the `encrypt` function for generating a UUID, likely for keystore files."
+        },
+        {
+          "name": "bn.js",
+          "motivation": "The code explicitly imports and uses `bn.js` for big number arithmetic, as seen with `const _BN=getDefaultExportFromCjs$1(bnExports);` and its subsequent usage."
+        },
+        {
+          "name": "aes-js",
+          "motivation": "The code imports `aes-js` via `const aes=getDefaultExportFromCjs$1(aesJsExports);` and uses it for AES encryption/decryption, notably in keystore-related functions like `_decrypt`."
+        },
+        {
+          "name": "scrypt-js",
+          "motivation": "The code imports `scrypt-js` through `const scrypt=getDefaultExportFromCjs$1(scryptExports);` and uses it for Scrypt key derivation, particularly in the context of decrypting keystore files (`_computeKdfKey` and `encrypt` functions)."
+        },
+        {
+          "name": "bs58",
+          "motivation": "The code imports `bs58` via `const bs58=getDefaultExportFromCjs$1(bs58Exports);`. This is used for Base58 encoding/decoding, which is common in various blockchain ecosystems, including Solana-related parts that appear later in the file."
+        },
+        {
+          "name": "@plebbit/plebbit-react-hooks",
+          "motivation": "The code contains numerous log messages prefixed with `plebbit-react-hooks:` (e.g., `Logger$4(\"plebbit-react-hooks:utils\")`) and uses custom hooks and store patterns typical of this library (e.g., `useAccount`, `useSubplebbit`, `accountsStore`, `subplebbitsStore`)."
+        },
+        {
+          "name": "plebbit-js",
+          "motivation": "The code explicitly instantiates Plebbit using `PlebbitJs.Plebbit(te)` and calls methods like `createSigner`, `getSubplebbit`, `createComment`, etc."
+        },
+        {
+          "name": "localforage",
+          "motivation": "The library is used directly with calls like `localForage.createInstance({name:\"accounts\"})` and `localForageLru.createInstance`."
+        },
+        {
+          "name": "ethers",
+          "motivation": "Usage of `JsonRpcProvider`, `Wallet`, `Contract`, `getDefaultProvider`, `verifyMessage`, `computeAddress`, `hexlify`, `arrayify`, `hexZeroPad`, `hexDataSlice`, `keccak256` are strong indicators of ethers.js."
+        },
+        {
+          "name": "elliptic",
+          "motivation": "The code includes `elliptic_1.ec` and `new EC$1(\"secp256k1\")` for cryptographic operations, specifically related to EC (Elliptic Curve) cryptography."
+        },
+        {
+          "name": "hmac-drbg",
+          "motivation": "The code instantiates `new hmacDrbg(...)` for deterministic random bit generation using HMAC."
+        },
+        {
+          "name": "quick-lru",
+          "motivation": "The code uses `new QuickLRU(...)` for an in-memory LRU cache."
+        },
+        {
+          "name": "zustand",
+          "motivation": "The pattern `create$1$1((te,ee)=>({...` and `useStore` (which internally uses `useSyncExternalStoreWithSelector`) are characteristic of Zustand state management."
+        },
+        {
+          "name": "react",
+          "motivation": "Presence of `reactExports.useState`, `reactExports.useEffect`, `reactExports.useRef`, `reactExports.useMemo`, `reactExports.useCallback`, `React.Fragment`, `React.createElement`."
+        },
+        {
+          "name": "react-dom",
+          "motivation": "Usage of `reactDomExports.createRoot` and `reactDomExports.flushSync`."
+        },
+        {
+          "name": "react-router-dom",
+          "motivation": "Usage of `<Link to=...>`, `useLocation`, `useNavigate`, `useParams` components and hooks."
+        },
+        {
+          "name": "i18next",
+          "motivation": "The code uses `useTranslation()` hook and `instance$1.t` for internationalization, common in i18next."
+        },
+        {
+          "name": "i18next-http-backend",
+          "motivation": "The code defines `loadPath: \"./translations/{{lng}}/{{ns}}.json\"` and uses `instance$1.use(Backend)`, which is typical for this i18next plugin to load translations over HTTP."
+        },
+        {
+          "name": "prop-types",
+          "motivation": "The code imports and uses `PropTypes` (e.g., `PropTypes.string`)."
+        },
+        {
+          "name": "@floating-ui/react",
+          "motivation": "The code uses hooks like `useFloating`, `useClick`, `useDismiss`, `useRole`, `useInteractions` and components like `FloatingPortal`, `FloatingFocusManager`."
+        },
+        {
+          "name": "tabbable",
+          "motivation": "The code uses the `tabbable(te, getTabbableOptions())` function to find tabbable elements."
+        },
+        {
+          "name": "uuid",
+          "motivation": "The `v4()` function is called, which is a common way to generate UUIDs, typically provided by the `uuid` library."
+        },
+        {
+          "name": "memoizee",
+          "motivation": "The code uses `memoize(...)` which is the export from `memoizeeExports`."
+        },
+        {
+          "name": "remark-parse",
+          "motivation": "The `remarkParse` object is used within the `unified` processor setup."
+        },
+        {
+          "name": "remark-gfm",
+          "motivation": "The `remarkGfm` plugin is used with the `unified` processor."
+        },
+        {
+          "name": "remark-rehype",
+          "motivation": "The `remarkRehype` plugin is used to transform markdown to HTML AST."
+        },
+        {
+          "name": "rehype-raw",
+          "motivation": "The `rehypeRaw` plugin is used, likely for handling raw HTML in markdown."
+        },
+        {
+          "name": "rehype-sanitize",
+          "motivation": "The `rehypeSanitize` plugin is used with a schema, indicating HTML sanitization."
+        },
+        {
+          "name": "mdast-util-to-string",
+          "motivation": "The `toString$1` function is used for converting MDAST nodes to a string, characteristic of this utility."
+        },
+        {
+          "name": "unist-util-visit-parents",
+          "motivation": "The code uses `visitParents$1`, which is the `visitParents` function from this utility."
+        },
+        {
+          "name": "hast-util-from-parse5",
+          "motivation": "The `fromParse5` function is used, indicating conversion from Parse5 AST to HAST."
+        },
+        {
+          "name": "hast-util-to-parse5",
+          "motivation": "The `toParse5` function is used, indicating conversion from HAST to Parse5 AST."
+        },
+        {
+          "name": "hastscript",
+          "motivation": "The `h()` and `s()` functions are used, which are common exports from `hastscript` for creating HAST nodes."
+        },
+        {
+          "name": "property-information",
+          "motivation": "The usage of `find$3(ne.schema,ee)` and schema definitions like `html$4` and `svg$4` for HTML/SVG attribute and property information points to this library or a similar one like `space-separated-tokens`, `comma-separated-tokens` that are often bundled with it."
+        },
+        {
+          "name": "react-markdown",
+          "motivation": "The `ReactMarkdown` component is explicitly used."
+        },
+        {
+          "name": "vfile",
+          "motivation": "The code instantiates `new VFile$1(...)`."
+        },
+        {
+          "name": "unified",
+          "motivation": "The `unified()` processor is used extensively for markdown and HTML processing."
+        },
+        {
+          "name": "is-buffer",
+          "motivation": "The `isBuffer` function is imported and used via `buffer$1(ee)` or `isBuffer(te)`."
+        },
+        {
+          "name": "gifuct-js",
+          "motivation": "The code uses `libExports.parseGIF` and `libExports.decompressFrames` which are part of `gifuct-js` for handling GIF images, aliased as `libExports`."
+        },
+        {
+          "name": "@capacitor/core",
+          "motivation": "Usage of `Capacitor.getPlatform()` and `Capacitor.isNativePlatform()`."
+        },
+        {
+          "name": "@capacitor/http",
+          "motivation": "The code uses `CapacitorHttp.get()` for making HTTP requests on native platforms."
+        },
+        {
+          "name": "@capacitor/local-notifications",
+          "motivation": "The code imports `showLocalNotification` from a module that seems to wrap Capacitor's local notifications functionality (`registerPlugin(\"LocalNotifications\")` is typical)."
+        },
+        {
+          "name": "bs58",
+          "motivation": "Functions like `toString$p(..., \"base58btc\")` and `fromString$p(..., \"base58btc\")` suggest the use of a base58 encoding/decoding library."
+        },
+        {
+          "name": "Solana Web3-like Library",
+          "motivation": "The presence of functions like `getPublicKey(re)` (for Ed25519 keys), `sign$2(ae,re)`, and `verify$1(ie,se,ae)` specifically for Solana (`getSolWalletFromPlebbitPrivateKey`, `validateSolWallet`) indicates a Solana-focused cryptographic or SDK library."
+        }
+      ]
+    },
+    {
+      "file": "assets/index-Cx21V9Dp.js",
+      "occurences": [
+        {
+          "name": "Ace Editor",
+          "motivation": "The code extensively uses `ace.define` to structure modules, with names like `ace/editor`, `ace/mode/text`, `ace/theme/textmate`, `ace/lib/net`, and `ace/config`. This is the standard way Ace editor's source code is organized."
+        },
+        {
+          "name": "React",
+          "motivation": "The code imports `De` from `./vendor-CxCkkgh_.js` (presumably React) and uses `W.Component` (where `W` refers to `De`) and `Ge.createElement` within the `Je()` function, which defines a React component structure. Specific React lifecycle methods like `componentDidMount` and `componentDidUpdate` are also present."
+        },
+        {
+          "name": "Lodash (or similar utility library)",
+          "motivation": "The `et()` function defines utility functions like `debounce` and `ie` (a deep property accessor similar to `lodash.get`). The code also contains the string `__lodash_hash_undefined__`, which is an internal constant used by Lodash."
+        },
+        {
+          "name": "diff-match-patch",
+          "motivation": "The `tt()` function, whose exports are assigned to `Ie.exports`, implements the diff-match-patch algorithm. This is evident from the presence of characteristic function names such as `diff_main`, `diff_linesToChars_`, `diff_cleanupSemantic`, and `patch_make`."
+        },
+        {
+          "name": "prop-types",
+          "motivation": "Within the React component defined in the `Je()` function, prop type validation is performed using `L.oneOfType`, `L.string`, `L.bool`, `L.array`, `L.object`, `L.number`, and `L.func`. Here, `L` is an import (`Oe` from `./index-B2BFGC-S.js`), and this pattern is characteristic of the `prop-types` library used with React."
+        }
+      ]
+    },
+    {
+      "file": "assets/theme-github-C4W7_neC.js",
+      "occurences": [
+        {
+          "name": "ACE Editor",
+          "motivation": "The code uses `ace.define` and `ace.require` calls, which are standard methods for defining modules and themes within the ACE (Ajax.org Cloud9 Editor) library. Specifically, it defines a theme named \"github\" (`ace.define(\"ace/theme/github-css\", ...)` and `ace.define(\"ace/theme/github\", ...)`)."
+        }
+      ]
+    },
+    {
+      "file": "assets/web-BRnEgkqQ.js",
+      "occurences": [
+        {
+          "name": "@capacitor/core",
+          "motivation": "The code imports `W as s` from `./index-B2BFGC-S.js`. The class `d` (exported as `LocalNotificationsWeb`) extends `s`. This `s` (or `W`) is inferred to be the `WebPlugin` base class from `@capacitor/core` because the `LocalNotificationsWeb` class uses methods characteristic of Capacitor plugins, such as `this.unimplemented(...)`, `this.unavailable(...)`, and `this.notifyListeners(...)`. The overall structure, where a web-specific plugin class extends a base class from a core module, is typical of Capacitor architecture."
+        },
+        {
+          "name": "@capacitor/local-notifications (Web Implementation)",
+          "motivation": "The class is named `LocalNotificationsWeb` and is exported as such. It implements a comprehensive API for managing local notifications, including methods like `schedule`, `getDeliveredNotifications`, `removeDeliveredNotifications`, `requestPermissions`, `checkPermissions`, and `cancel`. This functionality and naming convention directly align with the web platform implementation of the `@capacitor/local-notifications` plugin. The `Web` suffix in the class name is a standard Capacitor convention for web-based plugin implementations."
+        }
+      ]
+    },
+    {
+      "file": "assets/web-MbGml33P.js",
+      "occurences": [
+        {
+          "name": "Capacitor",
+          "motivation": "The provided JavaScript code defines a class `AppWeb` which extends an imported base class `t` (imported as `W` from `./index-B2BFGC-S.js`). This `AppWeb` class implements several methods characteristic of a mobile application lifecycle and information interface, such as `exitApp()`, `getInfo()`, `getLaunchUrl()`, `getState()`, and `minimizeApp()`. Furthermore, it utilizes a `this.notifyListeners()` method to emit events like `appStateChange`, `pause`, and `resume`, which are triggered by changes in document visibility (`document.addEventListener(\"visibilitychange\", ...)`). It also references a `this.unimplemented()` method. This specific collection of functionalities, the class structure (extending a base plugin class), method names, and the event notification mechanism (`notifyListeners`) strongly aligns with the patterns used for creating web-platform implementations of plugins within the Capacitor framework. The imported base class `t` is therefore inferred to be `WebPlugin` or a similar foundational class from `@capacitor/core` or a compatible plugin system."
+        }
+      ]
+    },
+    {
+      "file": "electron/preload.cjs",
+      "occurences": [
+        {
+          "name": "electron",
+          "motivation": "The code uses `require(\"electron\")` to import core Electron modules. Specifically, it utilizes `electron.contextBridge` to expose APIs and data to the renderer process in a secure way (e.g., `isElectron`, `defaultPlebbitOptions`, `electronApi`) and `electron.ipcRenderer` for asynchronous and synchronous inter-process communication between the renderer process and the main process (e.g., `ipcRenderer.on`, `ipcRenderer.send`, `ipcRenderer.invoke`)."
+        }
+      ]
+    },
+    {
+      "file": "sw.js",
+      "occurences": [
+        {
+          "name": "Workbox",
+          "motivation": "The code explicitly references Workbox modules by checking properties on `self` like `self[\"workbox:core:7.2.0\"]`, `self[\"workbox:precaching:7.2.0\"]`, `self[\"workbox:strategies:7.2.0\"]`, and `self[\"workbox:routing:7.2.0\"]`. It extensively uses Workbox APIs and concepts, including `PrecacheController` (represented by class `V`), various caching strategies like `CacheOnly` (represented by class `d`), routing functionalities (managed by class `z`, often accessed via `J()`), route registration (`X()`), and the processing of a precache manifest via the `ce()` function which calls `K().precache()` (where `K()` returns a `PrecacheController` instance)."
+        }
+      ]
+    }
+  ],
+  "urls": [],
+  "ethereum": [],
+  "fallbacks": []
+}
