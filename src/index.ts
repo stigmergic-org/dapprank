@@ -689,7 +689,7 @@ function addDappRow(cells: HTMLElement[]): void {
 
 // Map to store category colors
 const categoryColorMap = new Map<string, string>();
-const defaultCategories = ['defi', 'social', 'nft', 'wallet', 'personal', 'organization', 'knowledge base', 'filesharing', 'data', 'infofi', 'dev tool', 'privacy', 'other'];
+const defaultCategories = ['defi', 'social', 'nft', 'wallet', 'personal', 'organization', 'knowledge base', 'filesharing', 'data', 'infofi', 'dev tool', 'privacy', 'gaming', 'other'];
 
 // Function to get or generate a color for a category
 function getCategoryColor(category: string): string {

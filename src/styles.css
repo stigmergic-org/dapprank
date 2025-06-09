@@ -699,55 +699,59 @@ code {
 
 /* Category colors with more modern palette */
 .category-defi {
-    background-color: #7950f2; /* Updated purple */
+    background-color: #2196F3; /* Blue */
 }
 
 .category-social {
-    background-color: #fd7e14; /* Updated orange */
+    background-color: #E91E63; /* Pink */
 }
 
 .category-nft {
-    background-color: #fa5252; /* Updated red */
+    background-color: #FF9800; /* Orange */
 }
 
 .category-wallet {
-    background-color: #ff922b; /* Updated light orange */
+    background-color: #4CAF50; /* Green */
 }
 
 .category-personal {
-    background-color: #40c057; /* Updated green */
+    background-color: #9C27B0; /* Purple */
 }
 
 .category-organization {
-    background-color: #0ca678; /* Distinct darker green */
+    background-color: #795548; /* Brown */
 }
 
 .category-knowledge-base {
-    background-color: #339af0; /* Updated blue */
+    background-color: #607D8B; /* Blue Grey */
 }
 
 .category-filesharing {
-    background-color: #20c997; /* Updated teal */
+    background-color: #00BCD4; /* Cyan */
 }
 
 .category-data {
-    background-color: #9775fa; /* Updated violet */
+    background-color: #FF5722; /* Deep Orange */
 }
 
 .category-infofi {
-    background-color: #12b886; /* Updated teal/green */
+    background-color: #3F51B5; /* Indigo */
 }
 
 .category-dev-tool {
-    background-color: #15aabf; /* Distinct cyan/blue */
+    background-color: #009688; /* Teal */
 }
 
 .category-privacy {
-    background-color: #4c6ef5; /* Deep indigo */
+    background-color: #673AB7; /* Deep Purple */
+}
+
+.category-gaming {
+    background-color: #8BC34A; /* Light Green */
 }
 
 .category-other {
-    background-color: #6c757d; /* Updated gray */
+    background-color: #9E9E9E; /* Grey */
 }
 
 /* Dapp Details Page Styles */

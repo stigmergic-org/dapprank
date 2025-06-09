@@ -1376,6 +1376,7 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
             if (file.path === '.well-known/dappspec.json') continue
             
             const fileMimeType = await detectMimeType(kubo, file.cid);
+            console.log(`File: ${file.path}, Detected MIME type: ${fileMimeType}`);
             
             if (fileMimeType.includes('html')) {
                 const { metadata, distributionPurity, scriptContents } = await analyzeHTML(kubo, file.cid, file.path);
@@ -1424,7 +1425,7 @@ async function generateReport(kubo, rootCID, blockNumber = null) {
                 addToReportIfNotEmpty(report.distributionPurity.externalScripts, distributionPurity?.externalScripts, file.path);
                 addToReportIfNotEmpty(report.distributionPurity.externalMedia, distributionPurity?.externalMedia, file.path);
             } 
-            else if (fileMimeType.includes('javascript')) {
+            else if (fileMimeType.includes('javascript') || file.path.endsWith('.js')) {
                 // Load and analyze JavaScript file
                 const content = await loadJavaScriptFile(kubo, file.cid, file.path);
                 if (content && content.trim().length >= 20) {
