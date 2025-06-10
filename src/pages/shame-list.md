@@ -24,6 +24,5 @@ The following projects have .eth on their Twitter account, but don't have any we
 
  - [ens.eth](https://x.com/ensdomains) - *Uses IPNS*
  - [snapshot.eth](https://x.com/SnapshotLabs) - *Uses IPNS*
- - [beta.walletbeat.eth](https://warpcast.com/~/channel/walletbeat) - *Uses IPNS*
  - [efp.eth](https://x.com/efp) - *Misconfigured build output*
  - [libp2p.eth](https://x.com/libp2p) - *Redirects to https website*

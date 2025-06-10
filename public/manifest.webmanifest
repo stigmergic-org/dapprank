@@ -1,0 +1,32 @@
+{
+  "name": "DappRank",
+  "short_name": "DappRank",
+  "description": "Dapp Rank benchmarks decentralized applications based on censorship resistance and security metrics.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "dapp_repository": "https://github.com/stigmergic-org/dapprank",
+  "dapp_preserve_history": -1,
+  "dapp_auxiliary_services": [
+    {
+      "motivation": "Used to check the number of seeders for any given dapp.",
+      "domains": [
+        "delegated-ipfs.dev"
+      ]
+    },
+    {
+      "motivation": "Used for gathering privacy-preserving usage analytics.",
+      "domains": [
+        "plausible.io"
+      ]
+    }
+  ],
+  "dapp_contracts": [{
+    "chain_id": 1,
+    "address": "0x64969fb44091A7E5fA1213D30D7A7e8488edf693"
+  }]
+}
