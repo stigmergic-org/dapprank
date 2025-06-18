@@ -14,15 +14,19 @@ We need to do better! We need to celebrate builders that go through the effort o
 
 ### How is the risk of a dapp assessed?
 
-The risk of a dapp is assessed based on the three main criteria: distribution purity, networking purity, and web3 api usage.
+The methodology of how dapps are being evaluated is currently under development. The main discussion is taking place in the [Best Practices for Dapps (dappspec) thread @ Ethereum Magicians](https://ethereum-magicians.org/t/new-erc-best-practices-for-dapps-dappspec/24407).
 
-- **Distribution purity** is assessed based on how much of the dapp is distributed over IPFS. If media or scripts are loaded from external sources during page load this is considered as a violation.
-- **Networking purity** is assessed based on how the dapp interacts with external APIs. If any external api appears in any of the dapps scripts this is considered as a violation.
-- **Web3 api usage** is currently assessed based on if the dapp uses the *window.ethereum* or a local rpc endpoint.
+The goal is to eventually evaluate dapps based on three main criterias: *control*, *integrity*, and *networking*. Also worth noting is that DappRank primarily considers the frontend code of the application. Smart contract logic is considered out of scope.
+
+
+- **Integirty** is primarily assessed based on how much of the dapp is distributed over IPFS, but also other integirty checks. If media or scripts are loaded from external sources during page load this is considered as a violation.
+- **Networking** is assessed based on how the dapp interacts with external APIs. If any external api appears in any of the dapps scripts this is considered as a violation if it doesn't talk to an Ethereum RPC, 4337 Bundler, or DService.
+- **Control** is currently not implemented, but going to assess the resiliency of the process of updating the ENS contenthash, i.e. publishing a new version of the dapp.
 
 
 ### How can I help?
 
 Build a dapp that is useful to others!
+
 
 You can also help us improve by sharing your ideas or adding improvements. Feel free to open an issue or submitting a pull request to the [GitHub repository](https://github.com/stigmergic-org/dapprank).

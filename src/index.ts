@@ -17,8 +17,6 @@ enableAutoPageviews()
 // @ts-ignore
 import about from './pages/about.md'
 // @ts-ignore
-import dappspec from './pages/dappspec.md'
-// @ts-ignore
 import shameList from './pages/shame-list.md'
 // @ts-ignore
 import terms from './pages/terms.md'
@@ -173,6 +171,19 @@ const sortableColumns: SortableColumn[] = [
   }
 ];
 
+function displayContent(content: string) {
+    const dappsTable = document.getElementById('dapps') as HTMLElement;
+    const mainContent = document.getElementById('main-content') as HTMLElement;
+    dappsTable.style.display = 'none';
+    mainContent.style.display = 'block';
+    mainContent.innerHTML = content;
+    // Ensure all links open in a new tab
+    mainContent.querySelectorAll('a').forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+    });
+}
+
 function handleRouteChange() {
     const path = window.location.pathname;
     const dappsTable = document.getElementById('dapps') as HTMLElement;
@@ -183,12 +194,6 @@ function handleRouteChange() {
         window.__activePopup.style.opacity = '0';
         window.__activePopup.style.display = 'none';
         window.__activePopup = undefined;
-    }
-
-    function displayContent(content: string) {
-        dappsTable.style.display = 'none';
-        mainContent.style.display = 'block';
-        mainContent.innerHTML = content;
     }
 
     // Update active navigation tabs
@@ -222,8 +227,8 @@ function handleRouteChange() {
         mainContent.style.display = 'none';
     } else if (path === '/about') {
         displayContent(about);
-    } else if (path === '/dappspec') {
-        displayContent(dappspec);
+    // } else if (path === '/dappspec') {
+    //     displayContent(dappspec);
     } else if (path === '/shame-list') {
         displayContent(shameList);
     } else if (path === '/terms') {
