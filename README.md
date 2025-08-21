@@ -1,21 +1,52 @@
-# 👑 Dapp Rank
+# DappRank
 
-A small application that ranks dapps based on their censorship resistance.
+ENS site analysis and ranking tool with a web frontend and CLI backend.
 
-Available at [dapprank.eth](https://dapprank.eth.link/).
+## Project Structure
 
-## How to use
+This is a pnpm workspace with two packages:
 
-```shell
-# Install all dependencies
-npm install
+- **`frontend/`** - Web application built with webpack and TypeScript
+- **`dapprank/`** - CLI tool for analyzing ENS sites
 
-# Run in development env
-npm run start
+## Development
 
-# Build a production package
-npm run build
+### Prerequisites
 
-# Deploy the web app to IPFS
-npm run deploy
+- Node.js 18+
+- pnpm 8+
+
+### Setup
+
+```bash
+# Install dependencies for all packages
+pnpm install
+
+# Start the frontend development server
+pnpm dev
+
+# Build the frontend
+pnpm build
+
+# Run CLI commands
+pnpm analyze
+pnpm add
+pnpm update
 ```
+
+### Package-specific commands
+
+```bash
+# Frontend
+pnpm --filter frontend run start
+pnpm --filter frontend run build
+
+# CLI
+pnpm --filter dapprank run analyze
+pnpm --filter dapprank run add
+pnpm --filter dapprank run update
+```
+
+## License
+
+GPL-3.0-only

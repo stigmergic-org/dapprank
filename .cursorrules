@@ -1,0 +1,5 @@
+# Use pnpm for package management
+- Use pnpm instead of npm or yarn
+- Run pnpm install to install dependencies
+- Use pnpm add/remove for adding/removing packages
+- Use pnpm run for running scripts
