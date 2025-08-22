@@ -5,24 +5,27 @@
   "license": "GPL-3.0-only",
   "private": true,
   "type": "module",
-  "main": "dapprank.js",
+  "main": "src/index.js",
   "bin": {
-    "dapprank": "dapprank.js"
+    "dapprank": "bin/dapprank.js"
   },
   "scripts": {
-    "start": "node dapprank.js",
-    "add": "node dapprank.js add",
-    "update": "node dapprank.js update",
-    "test": "node dapprank.js test",
-    "analyze": "node dapprank.js analyze"
+    "start": "node bin/dapprank.js",
+    "add": "node bin/dapprank.js add",
+    "update": "node bin/dapprank.js update",
+    "test": "node bin/dapprank.js test",
+    "analyze": "node bin/dapprank.js analyze",
+    "scan": "node bin/dapprank.js scan"
   },
   "dependencies": {
     "@babel/parser": "^7.27.0",
     "@babel/traverse": "^7.27.0",
     "@google/genai": "^0.8.0",
+    "@simplepg/common": "^0.1.0",
     "cheerio": "^1.0.0",
     "commander": "^13.1.0",
     "dotenv": "^16.5.0",
+    "graphql-request": "^7.2.0",
     "kubo-rpc-client": "^5.1.0",
     "multiformats": "^13.3.2",
     "node-fetch": "^3.3.2",
