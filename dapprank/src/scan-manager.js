@@ -51,8 +51,10 @@ export class ScanManager {
   async getLastScanHeight() {
     try {
       const data = await fs.readFile(this.statePath, 'utf8')
-      const { blockNumber } = JSON.parse(data)
-      return blockNumber
+      const state = JSON.parse(data)
+      // Handle legacy format with blockNumber
+      const scannedUntil = state.scannedUntil || 0
+      return scannedUntil
     } catch (error) {
       console.warn('Could not read scan height, starting from 0:', error.message)
       return 0
@@ -60,8 +62,23 @@ export class ScanManager {
   }
 
   async saveScanHeight(blockNumber) {
-    const data = { blockNumber }
-    await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+    try {
+      // Read existing state to preserve other fields
+      const existingData = await fs.readFile(this.statePath, 'utf8')
+      const existingState = JSON.parse(existingData)
+      
+      // Merge with existing state, updating scannedUntil
+      const data = { 
+        ...existingState,
+        scannedUntil: blockNumber
+      }
+      
+      await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+    } catch (error) {
+      // If we can't read existing state, just save the new state
+      const data = { scannedUntil: blockNumber }
+      await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+    }
   }
 
   async scanContenthashChanges(fromBlock = 0) {

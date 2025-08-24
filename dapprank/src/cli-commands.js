@@ -7,6 +7,7 @@ import { resolveENSName } from './ens-resolver.js'
 import { generateReport, saveReport, reportExistsForCID } from './report-generator.js'
 import { loadScriptAnalysisCache, saveScriptAnalysisCache } from './cache-manager.js'
 import { ScanManager } from './scan-manager.js'
+import { AnalyzeManager } from './analyze-manager.js'
 
 // Add command
 export async function addCommand(ensName, options, parentOptions) {
@@ -218,6 +219,39 @@ export async function scanCommand(options, parentOptions) {
         
     } catch (error) {
         console.error('Fatal error during scan:', error);
+        process.exit(1);
+    }
+}
+
+// Analyze command
+export async function analyzeCommand(ensName, options, parentOptions) {
+    try {
+        if (!options.folder) {
+            console.error('Error: --folder (-f) option is required');
+            process.exit(1);
+        }
+
+        console.log(`Starting analysis of scanned results in folder: ${options.folder}`);
+        
+        const kubo = createKubo({ url: parentOptions.ipfs });
+        const analyzeManager = new AnalyzeManager(options.folder, kubo);
+        await analyzeManager.initialize();
+        
+        if (ensName) {
+            console.log(`Analyzing only ENS name: ${ensName}`);
+            await analyzeManager.analyzeSpecificName(ensName);
+        } else if (options.backwards) {
+            console.log('Analyzing backwards from oldest block number...');
+            await analyzeManager.analyzeBackwards();
+        } else {
+            console.log('Analyzing forwards from latest block number...');
+            await analyzeManager.analyzeForwards();
+        }
+        
+        console.log('\nAnalysis completed successfully!');
+        
+    } catch (error) {
+        console.error('Fatal error during analysis:', error);
         process.exit(1);
     }
 }

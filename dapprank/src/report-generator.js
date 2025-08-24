@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
 import { getFilesFromCID, detectMimeType, getDappspecJson } from './ipfs-utils.js'
-import { analyzeHTML, getFaviconPath } from './html-analyzer.js'
+import { analyzeHTML, getFavicon } from './html-analyzer.js'
 import { analyzeIndividualScript } from './script-analyzer.js'
 import { ANALYSIS_VERSION } from './constants.js'
 
@@ -89,7 +89,7 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
 
                     // Extract favicon if we have index.html content
                     if (indexHtmlContent) {
-                        faviconInfo = getFaviconPath(indexHtmlContent, files);
+                        faviconInfo = await getFavicon(kubo, files);
                         report.favicon = faviconInfo.path;
                     }
                 }
@@ -236,32 +236,13 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
     }
 
     // Try to save favicon to archive directory only if favicon exists
-    if (report.favicon && faviconInfo) {
+    if (report.favicon && faviconInfo && faviconInfo.data) {
         try {
             // Save favicon to archive directory
             const archiveFaviconPath = join(archiveDir, report.favicon)
 
-            if (faviconInfo.isDataUrl) {
-                // Handle data URL favicon
-                console.log('Saving data URL favicon to', archiveFaviconPath)
-                
-                // Extract the base64 data
-                const dataUrlMatch = /data:([^;]+);([^,]+),(.+)/.exec(faviconInfo.dataUrl)
-                if (dataUrlMatch && dataUrlMatch[2] === 'base64') {
-                    const base64Data = dataUrlMatch[3]
-                    const binaryData = Buffer.from(base64Data, 'base64')
-                    await fs.writeFile(archiveFaviconPath, binaryData)
-                }
-            } else {
-                // Handle regular favicon file from IPFS
-                const faviconData = []
-                for await (const chunk of kubo.cat(faviconInfo.cid)) {
-                    faviconData.push(chunk)
-                }
-
-                console.log('Saving favicon to', archiveFaviconPath)
-                await fs.writeFile(archiveFaviconPath, Buffer.concat(faviconData))
-            }
+            console.log('Saving favicon to', archiveFaviconPath)
+            await fs.writeFile(archiveFaviconPath, faviconInfo.data)
             
             // No longer creating favicon symlink in index directory
             console.log('Favicon saved successfully to archive directory')

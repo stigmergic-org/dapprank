@@ -1,10 +1,11 @@
 import * as cheerio from 'cheerio'
-import { getFileContent } from './ipfs-utils.js'
+import { getFileContent, getFileBinary } from './ipfs-utils.js'
+import { toString } from 'uint8arrays'
 import { LINK_NON_FETCHING_REL_VALUES } from './constants.js'
 
 // Analyze HTML content with Cheerio
 export async function analyzeHTML(kubo, cid, filePath) {
-    console.log(`Analyzing HTML file: ${filePath}`);
+    // console.log(`Analyzing HTML file: ${filePath}`);
     const fileContent = await getFileContent(kubo, cid);
     if (!fileContent) return {};
     
@@ -52,7 +53,7 @@ export async function analyzeHTML(kubo, cid, filePath) {
     });
     
     // Extract JavaScript from script tags for AST analysis
-    const scriptContents = [];
+    const inlineScripts = [];
     $('script').each((i, elem) => {
         console.log(`Loading inline script ${i}`)
         const $elem = $(elem);
@@ -68,7 +69,7 @@ export async function analyzeHTML(kubo, cid, filePath) {
         
         const content = $elem.html();
         if (content && content.trim()) {
-            scriptContents.push(content);
+            inlineScripts.push(content);
         }
     });
     
@@ -78,105 +79,163 @@ export async function analyzeHTML(kubo, cid, filePath) {
             externalMedia,
             externalScripts
         },
-        scriptContents
+        inlineScripts
     };
 }
 
-// Extract favicon information from HTML
-export function getFaviconPath(htmlContent, files) {
-    const $ = cheerio.load(htmlContent);
+async function getHtmlDOM(kubo, files) {
+    const indexHtml = files.find(file => file.path === 'index.html');
+    if (!indexHtml) return { path: '', data: null }
+    
+    const htmlContent = await getFileContent(kubo, indexHtml.cid);
+    if (!htmlContent) return { path: '', data: null }
+
+    return cheerio.load(htmlContent)
+}
+
+export async function getWebmanifest(kubo, files) {
+    const defaultResult = { data: null, icons: [], screenshots: [] }
+    const $ = await getHtmlDOM(kubo, files);
+    
+    // Extract metadata
+    let manifestPath = $('link[rel="manifest"]').attr('href');
+    if (!manifestPath) return defaultResult
+    // remove leading / or ./
+    manifestPath = manifestPath.replace(/^\.?\//, '');
+    const manifestFile = files.find(file => file.path === manifestPath);
+    if (!manifestFile) return defaultResult
+    const data = await getFileBinary(kubo, manifestFile.cid)
+    const manifest = JSON.parse(await getFileContent(kubo, manifestFile.cid))
+
+    // get icons and screenshots from manifest, load them from ipfs
+    const processAssets = async (assets = []) => {
+        const results = []
+        for (const asset of assets) {
+            const assetFile = files.find(file => file.path === asset.src)
+            if (!assetFile) continue
+            results.push({
+                path: asset.src,
+                data: await getFileBinary(kubo, assetFile.cid)
+            })
+        }
+        return results
+    }
+
+    const icons = await processAssets(manifest.icons)
+    const screenshots = await processAssets(manifest.screenshots)
+    return {
+        data: data,
+        icons,
+        screenshots
+    }
+}
+
+
+/**
+ * Extract the favicon from the index.html content
+ * @param {string} kubo - The Kubo instance
+ * @param {Object[]} files - The files in the index.html file
+ * @returns { path: string, data: Uint8Array } - The favicon object
+ */
+export async function getFavicon(kubo, files) {
+    const $ = await getHtmlDOM(kubo, files);
     const favicons = [];
     
-    // Look for favicon link tags - handle space-separated rel values
+    // Find all favicon link tags
     $('link[rel*="icon"], link[rel*="shortcut"]').each((i, elem) => {
         const href = $(elem).attr('href');
         if (!href) return;
         
-        // Check if this is a data URL
         if (href.startsWith('data:')) {
-            // Extract mime type and data
+            // Handle data URI
             const dataUrlMatch = /data:([^;]+);([^,]+),(.+)/.exec(href);
             if (dataUrlMatch) {
                 const mimeType = dataUrlMatch[1];
                 const encoding = dataUrlMatch[2];
+                const base64Data = dataUrlMatch[3];
                 
-                // Determine file extension from mime type
                 let ext = mimeType.split('/')[1] || 'ico';
-                // Handle special case for SVG
-                if (ext === 'svg+xml') {
-                    ext = 'svg';
-                }
-                const fileName = `favicon.${ext}`;
+                if (ext === 'svg+xml') ext = 'svg';
                 
-                favicons.push({
-                    path: fileName,
-                    dataUrl: href,
-                    priority: getFaviconPriority(ext),
-                    isDataUrl: true
-                });
+                let data;
+                try {
+                    if (encoding === 'base64') {
+                        data = new Uint8Array(Buffer.from(base64Data, 'base64'));
+                    } else {
+                        data = new Uint8Array(Buffer.from(decodeURIComponent(base64Data)));
+                    }
+                    
+                    // Ensure SVG files have XML declaration
+                    if (ext === 'svg') {
+                        const svgString = toString(data);
+                        if (!svgString.includes('<?xml')) {
+                            const xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
+                            data = new Uint8Array(Buffer.from(xmlDeclaration + svgString));
+                        }
+                    }
+                    
+                    favicons.push({
+                        path: `favicon.${ext}`,
+                        data: data,
+                        priority: getFaviconPriority(ext),
+                        isDataUrl: true
+                    });
+                } catch (error) {
+                    console.warn('Failed to decode data URL:', error);
+                }
             }
         } else {
-            // Normalize path to match files array (remove leading ./)
+            // Handle file path
             const normalizedPath = href.replace(/^\.?\//, '');
             const faviconFile = files.find(file => file.path === normalizedPath);
             
             if (faviconFile) {
-                // Check type attribute first, then fallback to file extension
                 const typeAttr = $(elem).attr('type');
                 let ext;
                 
                 if (typeAttr) {
-                    // Extract extension from MIME type
                     const mimeExt = typeAttr.split('/')[1];
-                    if (mimeExt === 'svg+xml') {
-                        ext = 'svg';
-                    } else {
-                        ext = mimeExt;
-                    }
-                    
-                    // Use the MIME type extension for the filename
-                    const fileName = `favicon.${ext}`;
-                    
-                    favicons.push({
-                        path: fileName,
-                        cid: faviconFile.cid,
-                        priority: getFaviconPriority(ext),
-                        isDataUrl: false
-                    });
+                    ext = mimeExt === 'svg+xml' ? 'svg' : mimeExt;
                 } else {
-                    // Fallback to file extension
                     ext = normalizedPath.split('.').pop().toLowerCase();
-                    // Only use filename without path
-                    const fileName = normalizedPath.split('/').pop();
-                    
-                    favicons.push({
-                        path: fileName,
-                        cid: faviconFile.cid,
-                        priority: getFaviconPriority(ext),
-                        isDataUrl: false
-                    });
                 }
+                
+                favicons.push({
+                    path: normalizedPath,
+                    cid: faviconFile.cid,
+                    priority: getFaviconPriority(ext),
+                    isDataUrl: false
+                });
             }
         }
     });
-    
-    // Sort favicons by priority and return the highest priority one
-    if (favicons.length > 0) {
-        favicons.sort((a, b) => b.priority - a.priority);
-        return favicons[0];
+
+    for (const favicon of favicons) {
+        if (!favicon.data) {
+            favicon.data = await getFileBinary(kubo, favicon.cid);
+        }
     }
     
-    // Fallback to looking for favicon.ico file directly
+    // Return best favicon if found
+    if (favicons.length > 0) {
+        favicons.sort((a, b) => b.priority - a.priority);
+        const bestFavicon = favicons[0];
+        return {
+            path: bestFavicon.path,
+            data: bestFavicon.data
+        }
+    }
+    
+    // Fallback to favicon.ico if no link tags found
     const faviconFile = files.find(file => file.path === 'favicon.ico');
-    return faviconFile ? {
-        path: 'favicon.ico',
-        cid: faviconFile.cid,
-        isDataUrl: false
-    } : {
-        path: '',
-        cid: null,
-        isDataUrl: false
-    };
+    if (faviconFile) {
+        return {
+            path: 'favicon.ico',
+            data: await getFileBinary(kubo, faviconFile.cid)
+        }
+    }
+    
+    return { path: '', data: null };
 }
 
 function getFaviconPriority(ext) {

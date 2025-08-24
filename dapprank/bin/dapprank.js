@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { program } from 'commander'
-import { addCommand, updateCommand, testCommand, scanCommand, initializeCache } from '../src/cli-commands.js'
+import { addCommand, updateCommand, testCommand, scanCommand, analyzeCommand, initializeCache } from '../src/cli-commands.js'
 
 program
     .name('dapprank')
@@ -52,6 +52,18 @@ program
     .action(async (options) => {
         const parentOptions = program.optsWithGlobals();
         await scanCommand(options, parentOptions);
+    });
+
+// Analyze command
+program
+    .command('analyze')
+    .description('Analyze scanned results from dapprank scan in archive folder')
+    .requiredOption('-f, --folder <path>', 'Folder containing scan results')
+    .option('-b, --backwards', 'Analyze backwards from oldest block number', false)
+    .argument('[ens-name]', 'Optional: Only analyze a specific ENS name')
+    .action(async (ensName, options) => {
+        const parentOptions = program.optsWithGlobals();
+        await analyzeCommand(ensName, options, parentOptions);
     });
 
 // Load the cache before parsing commands

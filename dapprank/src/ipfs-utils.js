@@ -1,5 +1,7 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
+import all from 'it-all'
+import { concat, toString } from 'uint8arrays'
 import { WASMagic } from "wasmagic"
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
@@ -44,28 +46,34 @@ export async function getFilesFromCID(kubo, cid, result = [], pathCarry = '') {
     return result
 }
 
+export async function ensContenthashToCID(kubo, decodedContenthash) {
+    const { codec, value } = decodedContenthash
+    if (codec === 'ipns-ns') {
+        const cid = (await all(await kubo.name.resolve(value)))?.[0]
+        if (cid?.startsWith('/ipfs/')) {
+            return cid.split('/ipfs/')[1]
+        }
+    } else if (codec === 'ipfs-ns') {
+        return CID.parse(value).toV1().toString()
+    }
+    return ''
+}
+
+// Function to extract the content of a file as raw binary data
+export async function getFileBinary(kubo, cid) {
+    return concat(await all(kubo.cat(cid)))
+}
+
 // Function to extract the content of a file as a string
 export async function getFileContent(kubo, cid) {
-    try {
-        const chunks = [];
-        for await (const chunk of kubo.cat(cid)) {
-            chunks.push(chunk);
-        }
-        return Buffer.concat(chunks).toString('utf-8');
-    } catch (error) {
-        console.error(`Error getting file content: ${error.message}`);
-        return null;
-    }
+    return toString(await getFileBinary(kubo, cid))
 }
 
 // Function to detect MIME type
 export async function detectMimeType(kubo, cid) {
+    console.log('detectMimeType', cid)
     try {
-        const chunks = [];
-        for await (const chunk of kubo.cat(cid)) {
-            chunks.push(chunk);
-        }
-        const buffer = Buffer.concat(chunks);
+        const buffer = await getFileBinary(kubo, cid);
         const magic = await WASMagic.create();
         return magic.detect(buffer)
     } catch (error) {

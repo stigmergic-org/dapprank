@@ -1,8 +1,8 @@
 // Main module exports
 export { loadScriptAnalysisCache, saveScriptAnalysisCache, getCacheEntry, setCacheEntry, createPromptHash, createCombinedHash } from './cache-manager.js'
 export { UNIVERSAL_RESOLVER_ADDRESS, WEB3_APIs, LINK_NON_FETCHING_REL_VALUES, ANALYSIS_VERSION, SYSTEM_PROMPT_TEMPLATE } from './constants.js'
-export { getFilesFromCID, getFileContent, detectMimeType, processContentHash, getDappspecJson } from './ipfs-utils.js'
-export { analyzeHTML, getFaviconPath } from './html-analyzer.js'
+export { getFilesFromCID, getFileContent, getFileBinary, detectMimeType, processContentHash, getDappspecJson } from './ipfs-utils.js'
+export { analyzeHTML, getFavicon } from './html-analyzer.js'
 export { detectWindowEthereum, splitScriptIntoChunks, analyzeIndividualScript } from './script-analyzer.js'
 export { generateReport, saveReport, reportExistsForCID } from './report-generator.js'
 export { addCommand, updateCommand, testCommand, initializeCache } from './cli-commands.js'
