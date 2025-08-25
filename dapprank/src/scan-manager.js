@@ -19,6 +19,8 @@ const CONTENTHASH_QUERY = `
       resolver {
         domain {
           name
+          ownerId
+          wrappedOwnerId
         }
       }
       transactionID
@@ -154,6 +156,7 @@ export class ScanManager {
     const blockNumber = change.blockNumber
     const contenthash = change.hash
     const txHash = change.transactionID
+    const ownerAddress = change.resolver.domain.wrappedOwnerId || change.resolver.domain.ownerId
     
     // Handle extremely long ENS names that would cause filesystem path issues
     let safeEnsName = ensName
@@ -163,7 +166,7 @@ export class ScanManager {
       // Create a hash-based name for extremely long ENS names
       const crypto = await import('crypto')
       const hash = crypto.createHash('sha256').update(ensName).digest('hex').substring(0, 16)
-      safeEnsName = `[${hash}].long-name.eth`
+      safeEnsName = `[${hash}].long-name`
       console.log(`Truncated extremely long ENS name "${ensName.substring(0, 50)}..." to "${safeEnsName}"`)
     }
     
@@ -181,6 +184,7 @@ export class ScanManager {
       const metadata = {
         contenthash,
         tx: txHash,
+        ownerAddress,
         originalName: ensName !== safeEnsName ? ensName : undefined // Store original name if truncated
       }
       

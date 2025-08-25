@@ -8,9 +8,7 @@
     "dev": "pnpm --filter frontend run start",
     "build": "pnpm --filter frontend run build",
     "analyze": "pnpm --filter dapprank run analyze",
-    "add": "pnpm --filter dapprank run add",
-    "update": "pnpm --filter dapprank run update",
-    "test": "pnpm --filter dapprank run test"
+    "scan": "pnpm --filter dapprank run scan -d ../frontend/public/dapps -c ../llm-cache"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"
