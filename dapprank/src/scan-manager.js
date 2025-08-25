@@ -156,6 +156,12 @@ export class ScanManager {
     const txHash = change.transactionID
     const ownerAddress = change.resolver.domain.wrappedOwnerId || change.resolver.domain.ownerId
     
+    // Skip names that contain [<hex>] pattern (excluding our own generated long-name hashes)
+    if (/\[[0-9a-f]{16,}\]/.test(ensName)) {
+      console.log(`Skipping ENS name with [<hex>] pattern: ${ensName}`);
+      return;
+    }
+    
     // Handle extremely long ENS names that would cause filesystem path issues
     let safeEnsName = ensName
     const maxPathLength = 200 // Conservative limit for filesystem compatibility

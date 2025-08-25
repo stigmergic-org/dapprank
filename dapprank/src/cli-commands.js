@@ -32,7 +32,8 @@ export async function scanCommand(options) {
         console.log(`Final block height: ${result.lastBlockNumber}`);
         
     } catch (error) {
-        console.error('Fatal error during scan:', error);
+        console.error('\n❌ Scan failed');
+        console.error(`Error: ${error.message}`);
         process.exit(1);
     }
 }
@@ -48,7 +49,7 @@ export async function analyzeCommand(ensName, options) {
         console.log(`Starting analysis of scanned results in directory: ${options.directory}`);
         
         const kubo = createKubo({ url: options.ipfs });
-        const analyzeManager = new AnalyzeManager(options.directory, kubo, options.force, options.cache);
+        const analyzeManager = new AnalyzeManager(options.directory, kubo, options.force, options.cache, options.rpc);
         await analyzeManager.initialize();
         
         if (ensName) {
@@ -65,7 +66,15 @@ export async function analyzeCommand(ensName, options) {
         console.log('\nAnalysis completed successfully!');
         
     } catch (error) {
-        console.error('Fatal error during analysis:', error);
+        console.error('\n❌ Analysis failed');
+        console.error(`Error: ${error.message}`);
+        
+        // If there's a cause, show it for debugging
+        if (error.cause) {
+            console.error(`\nTechnical details: ${error.cause.message}`);
+        }
+        console.error(error)
+        
         process.exit(1);
     }
 }

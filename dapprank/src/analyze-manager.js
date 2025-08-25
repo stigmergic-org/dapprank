@@ -4,6 +4,7 @@ import { analyzeHTML, getWebmanifest, getFavicon } from './html-analyzer.js'
 import { detectWindowEthereum, analyzeScript } from './script-analyzer.js'
 import { ensContenthashToCID, detectMimeType, getFilesFromCID, getFileContent } from './ipfs-utils.js'
 import { decodeContenthash } from './ens-utils.js'
+import { analyzeOwner } from './analyze-owner.js'
 import { Report } from './report.js'
 import { CacheManager } from './cache-manager.js'
 
@@ -11,12 +12,13 @@ import { CacheManager } from './cache-manager.js'
 export class AnalyzeManager {
   #cacheManager
   
-  constructor(directory, kubo, forceWrite = false, cachePath = null) {
+  constructor(directory, kubo, forceWrite = false, cachePath = null, rpcUrl = null) {
     this.directory = directory
     this.archivePath = join(directory, 'archive')
     this.statePath = join(directory, 'state.json')
     this.kubo = kubo
     this.forceWrite = forceWrite
+    this.rpcUrl = rpcUrl
     this.#cacheManager = new CacheManager(cachePath)
   }
 
@@ -130,13 +132,17 @@ export class AnalyzeManager {
     console.log(`Found ${toAnalyze.length} domains with new blocks to analyze`)
     
     let newLatestAnalyzed = state.latestAnalyzed
+    let successCount = 0
+    let failureCount = 0
     
     for (const { name, latestNumber } of toAnalyze) {
       try {
         await this.analyzeDomain(name, latestNumber)
         newLatestAnalyzed = Math.max(newLatestAnalyzed, latestNumber)
+        successCount++
       } catch (error) {
         console.error(`Error analyzing ${name} at block ${latestNumber}:`, error.message)
+        failureCount++
       }
     }
     
@@ -148,6 +154,9 @@ export class AnalyzeManager {
       })
       console.log(`Updated latest analyzed block to ${newLatestAnalyzed}`)
     }
+    
+    // Summary
+    console.log(`\nForward analysis completed: ${successCount} succeeded, ${failureCount} failed`)
   }
 
   async analyzeBackwards() {
@@ -180,13 +189,17 @@ export class AnalyzeManager {
     toAnalyze.sort((a, b) => b.latestNumber - a.latestNumber)
     
     let newOldestAnalyzed = startBlock
+    let successCount = 0
+    let failureCount = 0
     
     for (const { name, latestNumber } of toAnalyze) {
       console.log(`Analyzing ${name} at block ${latestNumber}`)
       try {
         await this.analyzeDomain(name, latestNumber)
+        successCount++
       } catch (error) {
         console.error(`Error analyzing ${name} at block ${latestNumber}:`, error.message)
+        failureCount++
       }
       newOldestAnalyzed = Math.min(newOldestAnalyzed, latestNumber)
       
@@ -199,6 +212,9 @@ export class AnalyzeManager {
         console.log(`Updated oldest analyzed block to ${newOldestAnalyzed}`)
       }
     }
+    
+    // Summary
+    console.log(`\nBackwards analysis completed: ${successCount} succeeded, ${failureCount} failed`)
   }
 
   async analyzeSpecificName(targetName) {
@@ -233,8 +249,10 @@ export class AnalyzeManager {
       await this.analyzeDomain(targetName, largestBlock)
       console.log(`Completed analysis for ${targetName}`)
     } catch (error) {
-      console.error(`Error analyzing ${targetName} at block ${largestBlock}:`, error.message)
-      // Don't show "completed analysis" message when it fails
+      // Format the error nicely and throw a cleaner version
+      const cleanError = new Error(`Failed to analyze ${targetName} at block ${largestBlock}: ${error.message}`)
+      cleanError.cause = error // Preserve the original error for debugging
+      throw cleanError
     }
     
   }
@@ -251,7 +269,7 @@ export class AnalyzeManager {
       return
     }
     
-    const analysisUtils = { kubo: this.kubo, cache: this.#cacheManager }
+    const analysisUtils = { kubo: this.kubo, cache: this.#cacheManager, rpcUrl: this.rpcUrl }
     for (const step of ANALYSIS_STEPS) {
       await step(report, analysisUtils)
     }
@@ -343,5 +361,19 @@ const ANALYSIS_STEPS = [
       if (networking?.length > 0) file.networking = networking
       if (fallbacks?.length > 0) file.fallbacks = fallbacks
     }
+  },
+  // analyze the ENS owner
+  async (report, { rpcUrl }) => {
+    const name = report.name
+    const ownerAnalysis = await analyzeOwner(name, rpcUrl)
+    report.set('ownerAnalysis', ownerAnalysis)
+  },
+  // filter out files without additional analysis
+  async (report, _) => {
+    const newFiles = report.content.files.filter(file => {
+      const fileKeys = Object.keys(file);
+      return fileKeys.some(key => !['path', 'size', 'cid'].includes(key)); 
+    });
+    report.set('files', newFiles);
   }
 ]

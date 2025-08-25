@@ -1,0 +1,76 @@
+{
+  "values": {
+    "libraries": [
+      {
+        "name": "viem",
+        "motivation": "The code creates an Ethereum client using a structure highly indicative of `viem`. It uses functions like `createPublicClient` (minified as `(0,x.l)`) and defines transports like `http` (`(0,b.L)`) and `custom` (`(0,f.I)`). It also makes contract calls using an ABI with `readContract`, for example to resolve ENS content hashes."
+      },
+      {
+        "name": "ipfs-unixfs / @ipld/car",
+        "motivation": "The application interacts with IPFS data structures. It uses functions like `fs.cat()` and `fs.ls()` to read files and list directories from a CAR (Content Addressable aRchive) file. The code explicitly parses a CAR file fetched from the server using a CAR reader (`(s=new X.v).fromBytes(a,{verify:!0})`) and interacts with its blockstore, which is characteristic of libraries from the IPFS/IPLD ecosystem."
+      },
+      {
+        "name": "multiformats",
+        "motivation": "The code decodes and encodes CIDs (Content Identifiers). The function `F(n)` processes a content hash, attempting to decode it from various formats, and uses a call like `E.TO.decode(r).toV1().toString(z.base32)`, which is a clear sign of the `multiformats` library being used to handle CID objects and their different bases (like base32)."
+      },
+      {
+        "name": "remark",
+        "motivation": "The code contains a function `bn(n)` that processes markdown strings into HTML. It uses a chain of `.use()` calls and a `processSync()` method (`(0,cn.l)().use(pn.A).use(gn.A).processSync(n)`), which is the standard API for the `unified` ecosystem, of which `remark` is the markdown processor."
+      },
+      {
+        "name": "plausible-tracker",
+        "motivation": "The code initializes an analytics tracker with the domain `dapprank.eth.link` and enables automatic pageviews: `(0,(0,Mn.A)({domain:\"dapprank.eth.link\",trackLocalhost:!0}).enableAutoPageviews)()`. This matches the API and usage pattern of the `plausible-tracker` library."
+      }
+    ],
+    "networking": [
+      {
+        "method": "fetch",
+        "urls": [
+          "https://mainnet.gateway.tenderly.co/"
+        ],
+        "library": "viem",
+        "type": "rpc",
+        "motivation": "The code hardcodes this URL (`o=\"https://mainnet.gateway.tenderly.co/...\") as a fallback Ethereum RPC endpoint when creating the `viem` client. This client is then used for on-chain data lookups, such as resolving ENS names."
+      },
+      {
+        "method": "fetch",
+        "urls": [
+          "/dapps/archive/{dapp_name}/?format=car",
+          "/dapps/archive/{dapp_name}/{block_number}/report.json",
+          "/dapps/archive/{dapp_name}/{block_number}/dappspec.json",
+          "/dapps/archive/{dapp_name}/metadata.json",
+          "/dapps/index/?format=car"
+        ],
+        "type": "self",
+        "motivation": "The code makes multiple `fetch` calls to relative paths to load application data. For example, it constructs a URL `o=\"\".concat(n,\"?format=car\")` where `n` is a path like `/dapps/archive/{dapp_name}/` to retrieve a CAR file containing the dapp's data. Other calls fetch JSON metadata and reports from similar relative paths."
+      },
+      {
+        "method": "fetch",
+        "urls": [
+          "https://delegated-ipfs.dev/routing/v1/providers/{cid}"
+        ],
+        "type": "auxiliary",
+        "motivation": "The code makes a `fetch` call to the `delegated-ipfs.dev` service to get the number of seeders (providers) for a given IPFS content hash (CID). This is an auxiliary network call to display supplementary data about the dapp's distribution."
+      }
+    ],
+    "fallbacks": [
+      {
+        "type": "rpc",
+        "motivation": "The code explicitly parses the URL for a query parameter matching the pattern `?ds-rpc-<CHAIN_ID>=url`. The extracted URL is then used to configure an RPC transport for the `viem` client.\n\n```javascript\nn=function(n){\n  // ...\n  var e=new URLSearchParams(window.location.search)\n  ,r=\"ds-rpc-\".concat(n)\n  ,t=e.get(r);\n  return t?(console.log(\"Using RPC URL from query parameters for chain \".concat(n,\": \").concat(t)),t):null\n}(1)\n```"
+      },
+      {
+        "type": "bundler",
+        "motivation": "The application's UI generation logic includes text stating that bundler fallbacks are supported. The code contains a generic fallback detection function (`In(n,e)`) that is called with `\"bundler\"`. This indicates that the application is designed to detect and potentially use bundler endpoints specified via `?ds-bundler-<CHAIN_ID>=url` as described in the rendered DappSpec information."
+      },
+      {
+        "type": "dservice-self",
+        "motivation": "The application's UI renders a detailed description of the DappSpec standard, which includes support for `?ds-self=url`. The code contains a generic fallback detection function (`In(n,e)`) that is called with `\"dservice\"`, indicating it is designed to parse and handle this type of fallback parameter."
+      },
+      {
+        "type": "dservice-external",
+        "motivation": "The application's UI renders a detailed description of the DappSpec standard, which includes support for `?ds-<ens-name>=url` for external services. The code's generic fallback detection function (`In(n,\"dservice\")`) is designed to handle this type of parameter to allow users to override external DService endpoints."
+      }
+    ]
+  },
+  "timestamp": "2025-08-25T20:57:36.628Z"
+}

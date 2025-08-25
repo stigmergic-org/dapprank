@@ -21,7 +21,7 @@
     "@babel/parser": "^7.27.0",
     "@babel/traverse": "^7.27.0",
     "@google/genai": "^0.8.0",
-    "@simplepg/common": "^0.1.0",
+    "@simplepg/common": "^1.2.1",
     "cheerio": "^1.0.0",
     "commander": "^13.1.0",
     "content-hash": "^2.5.2",

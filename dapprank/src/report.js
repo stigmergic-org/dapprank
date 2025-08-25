@@ -15,6 +15,11 @@ export class Report {
     totalSize: 0,
     webmanifest: '',
     favicon: '',
+    ownerAnalysis: {
+      type: '',
+      ownerAddress: '',
+      config: [],
+    },
   }
   #files = {}
 
