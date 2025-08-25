@@ -1,8 +1,11 @@
 import { GoogleGenAI } from "@google/genai"
 import * as parser from '@babel/parser'
 import traverseDefault from '@babel/traverse'
+import crypto from 'crypto'
+import { getFileContent } from './ipfs-utils.js'
 import { SYSTEM_PROMPT_TEMPLATE } from './constants.js'
-import { getCacheEntry, setCacheEntry, createPromptHash, createCombinedHash } from './cache-manager.js'
+
+const promptHash = createPromptHash(SYSTEM_PROMPT_TEMPLATE);
 
 const traverse = traverseDefault.default
 
@@ -255,54 +258,54 @@ async function geminiAnalysisWithChunking(scriptText, filePath) {
     }
 }
 
+export async function analyzeScript(kubo, cache, file) {
+    if (file.inlineScripts && file.inlineScripts.length > 0) {
+        // Handle multiple inline scripts by concatenating them
+        // Wrap each script in its own script tags for clarity
+        const concatenatedScripts = file.inlineScripts
+            .map((script, index) => `// HTML Inline script ${index + 1}\n${script}`)
+            .join('\n\n');
+        // Create a virtual file path for inline scripts
+        const virtualPath = `${file.path}#inline-scripts`;
+        
+        return await analyzeIndividualScript(virtualPath, concatenatedScripts, cache, file.cid);
+    } else if (file.path.endsWith('.js')) {
+        const scriptText = await getFileContent(kubo, file.cid);
+        return await analyzeIndividualScript(file.path, scriptText, cache, file.cid);
+    }
+    return {};
+}
+
 /**
  * Analyzes a single JavaScript file or inline script
  * @param {string} filePath - Path or identifier for the script
  * @param {string} scriptText - The JavaScript content to analyze
+ * @param {CacheManager} cache - Cache manager instance
+ * @param {string} fileCid - The CID of the file for caching purposes
  * @returns {Object} Analysis results with networkingPurity and ethereum data
  * @throws {Error} If AI analysis fails
  */
-export async function analyzeIndividualScript(filePath, scriptText) {
+export async function analyzeIndividualScript(filePath, scriptText, cache, fileCid) {
     console.log(`Analyzing script: ${filePath}`);
     
     // Initialize empty results
     const result = {
         libraries: [],
         networking: [],
-        ethereum: [],
         fallbacks: []
     };
     
     try {
-        // Skip if script content is too small
-        if (!scriptText || scriptText.trim().length < 20) {
-            console.log(`Script content too small for ${filePath}, skipping analysis`);
-            return result
-        }
-        
-        // Check for window.ethereum occurrences
-        const count = detectWindowEthereum(scriptText);
-        if (count > 0) {
-            result.ethereum.push({ count });
-            // console.log(`Found ${count} occurrences of window.ethereum in ${filePath}`);
-        }
-        
-        // Create a hash of the script content combined with the prompt hash
-        // This ensures the cache is invalidated if either the script or the prompt changes
-        const promptHash = createPromptHash(SYSTEM_PROMPT_TEMPLATE);
-        const combinedHash = createCombinedHash(scriptText, promptHash);
-        
         // Check if we already have an analysis for this script content and prompt
-        if (getCacheEntry(combinedHash)) {
+        const cachedResult = await cache.getEntry(promptHash, fileCid);
+        if (cachedResult) {
             console.log(`Using cached analysis for ${filePath}`);
-            const cachedResult = getCacheEntry(combinedHash);
             
             // Initialize the returning result object
             const cachedAnalysis = {
                 libraries: cachedResult.libraries || [],
                 networking: cachedResult.networking || [],
                 fallbacks: cachedResult.fallbacks || [],
-                ethereum: result.ethereum // Use current ethereum detection result
             };
             return cachedAnalysis;
         }
@@ -327,12 +330,11 @@ export async function analyzeIndividualScript(filePath, scriptText) {
             result.fallbacks = analysis.fallbacks;
         }
         
-        // Store in cache for future use - use combined hash with all data
-        setCacheEntry(combinedHash, {
+        // Store in cache for future use - use file CID for caching
+        await cache.setEntry(promptHash, fileCid, {
             libraries: result.libraries,
             networking: result.networking,
-            fallbacks: result.fallbacks,
-            ethereum: result.ethereum
+            fallbacks: result.fallbacks
         });
         
         console.log(`Successfully analyzed ${filePath}`);
@@ -342,4 +344,9 @@ export async function analyzeIndividualScript(filePath, scriptText) {
     }
     
     return result;
+}
+
+// Cache utility functions
+function createPromptHash(prompt) {
+    return crypto.createHash('sha256').update(prompt).digest('hex').substring(0, 8);
 }

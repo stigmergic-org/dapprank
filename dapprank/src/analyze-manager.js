@@ -1,21 +1,28 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
 import { analyzeHTML, getWebmanifest, getFavicon } from './html-analyzer.js'
-import { ensContenthashToCID, detectMimeType, getFilesFromCID } from './ipfs-utils.js'
+import { detectWindowEthereum, analyzeScript } from './script-analyzer.js'
+import { ensContenthashToCID, detectMimeType, getFilesFromCID, getFileContent } from './ipfs-utils.js'
 import { decodeContenthash } from './ens-utils.js'
 import { Report } from './report.js'
+import { CacheManager } from './cache-manager.js'
+
 
 export class AnalyzeManager {
-  constructor(folderPath, kubo) {
-    this.folderPath = folderPath
-    this.archivePath = join(folderPath, 'archive')
-    this.statePath = join(folderPath, 'state.json')
+  #cacheManager
+  
+  constructor(directory, kubo, forceWrite = false, cachePath = null) {
+    this.directory = directory
+    this.archivePath = join(directory, 'archive')
+    this.statePath = join(directory, 'state.json')
     this.kubo = kubo
+    this.forceWrite = forceWrite
+    this.#cacheManager = new CacheManager(cachePath)
   }
 
   async initialize() {
     // Create folder structure if it doesn't exist
-    await fs.mkdir(this.folderPath, { recursive: true })
+    await fs.mkdir(this.directory, { recursive: true })
     await fs.mkdir(this.archivePath, { recursive: true })
     
     // Initialize analysis state if it doesn't exist
@@ -224,11 +231,12 @@ export class AnalyzeManager {
     // Only analyze the largest block number
     try {
       await this.analyzeDomain(targetName, largestBlock)
+      console.log(`Completed analysis for ${targetName}`)
     } catch (error) {
       console.error(`Error analyzing ${targetName} at block ${largestBlock}:`, error.message)
+      // Don't show "completed analysis" message when it fails
     }
     
-    console.log(`Completed analysis for ${targetName}`)
   }
 
   async analyzeDomain(name, blockNumber) {
@@ -237,42 +245,48 @@ export class AnalyzeManager {
     // Create a new Report instance for this name and block
     const report = new Report(this.archivePath, name, blockNumber)
     
-    // Check if report already exists
-    if (await report.exists()) {
+    // Check if report already exists (skip if force is enabled)
+    if (!this.forceWrite && await report.exists()) {
       console.log(`Report already exists for ${name} at block ${blockNumber}, skipping`)
       return
     }
     
-    const analysisUtils = { kubo: this.kubo }
+    const analysisUtils = { kubo: this.kubo, cache: this.#cacheManager }
     for (const step of ANALYSIS_STEPS) {
       await step(report, analysisUtils)
     }
     
-    // Write the report to filesystem
-    await report.write()
+    // Write the report to filesystem with force flag
+    await report.write(this.forceWrite)
     console.log(`Analysis complete for ${name} at block ${blockNumber}`)
   }
 }
 
 const ANALYSIS_STEPS = [
+  // Decode the contenthash
   async (report, _) => {
     const metadata = await report.readMetadata()
     const { contenthash } = metadata
     report.set('decodedContenthash', await decodeContenthash(contenthash))
   },
+  // Convert the contenthash to a CID
   async (report, { kubo }) => {
     report.set('analyzedCid', await ensContenthashToCID(kubo, report.content.decodedContenthash))
   },
+  // Detect the root mime type
   async (report, { kubo }) => {
     report.set('rootMimeType', await detectMimeType(kubo, report.content.analyzedCid))
   },
+  // Get the files from the root CID
   async (report, { kubo }) => {
     const files = await getFilesFromCID(kubo, report.content.analyzedCid)
     report.set('files', files.map(file => ({ path: file.path, size: file.size, cid: file.cid })))
   },
+  // Calculate the total size of the files
   async (report, _) => {
     report.set('totalSize', report.content.files.reduce((acc, file) => acc + file.size, 0))
   },
+  // Analyze the HTML files
   async (report, { kubo }) => {
     const updatedFiles = report.content.files.map(async file => {
       if (file.path.endsWith('.html')) {
@@ -283,6 +297,7 @@ const ANALYSIS_STEPS = [
     })
     report.set('files', await Promise.all(updatedFiles))
   },
+  // Get the webmanifest, save it and the icons and screenshots
   async (report, { kubo }) => {
     const webmanifest = await getWebmanifest(kubo, report.content.files)
     if (webmanifest.data) {
@@ -295,11 +310,38 @@ const ANALYSIS_STEPS = [
       }
     }
   },
+  // Get the favicon, save it
   async (report, { kubo }) => {
     const favicon = await getFavicon(kubo, report.content.files)
     if (favicon.data) {
       report.set('favicon', favicon.path)
       report.putFile(favicon.path, favicon.data)
+    }
+  },
+  // Detect if the dapp uses window.ethereum
+  async (report, { kubo }) => {
+    for (const file of report.content.files) {
+      let usesWindowEthereum = 0
+      if (file.path.endsWith('.js')) {
+        const scriptText = await getFileContent(kubo, file.cid)
+        usesWindowEthereum = detectWindowEthereum(scriptText)
+      } else if (file.inlineScripts?.length > 0) {
+        for (const script of file.inlineScripts) {
+          usesWindowEthereum += detectWindowEthereum(script)
+        }
+      }
+      if (usesWindowEthereum > 0) {
+        file.usesWindowEthereum = usesWindowEthereum
+      }
+    }
+  },
+  // analyze scripts per file
+  async (report, { kubo, cache }) => {
+    for (const file of report.content.files) {
+      const { libraries, networking, fallbacks } = await analyzeScript(kubo, cache, file)
+      if (libraries?.length > 0) file.libraries = libraries
+      if (networking?.length > 0) file.networking = networking
+      if (fallbacks?.length > 0) file.fallbacks = fallbacks
     }
   }
 ]

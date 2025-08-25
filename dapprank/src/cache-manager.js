@@ -1,55 +1,60 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
-import crypto from 'crypto'
+import { CID } from "multiformats/cid"
+import { toString } from 'uint8arrays/to-string'
 
 // Cache for script analysis to avoid repeated AI calls for identical content
-const scriptAnalysisCache = new Map();
-const CACHE_FILE_PATH = join(process.cwd(), 'script-analysis-cache.json');
+export class CacheManager {
+    constructor(cachePath) {
+        this.cachePath = cachePath;
+        console.log('cachePath', this.cachePath)
+    }
 
-// Load cache from disk if it exists
-export async function loadScriptAnalysisCache() {
-    try {
-        const cacheExists = await fs.access(CACHE_FILE_PATH).then(() => true).catch(() => false);
-        if (cacheExists) {
-            const cacheData = JSON.parse(await fs.readFile(CACHE_FILE_PATH, 'utf-8'));
-            Object.entries(cacheData).forEach(([key, value]) => {
-                scriptAnalysisCache.set(key, value);
-            });
-            console.log(`Loaded script analysis cache with ${scriptAnalysisCache.size} entries`);
+    // Ensure cache directory exists
+    async ensureCacheDirectory(promptVersion) {
+        const promptDir = join(this.cachePath, `prompt-v${promptVersion}`);
+        await fs.mkdir(promptDir, { recursive: true });
+        return promptDir;
+    }
+
+    // Convert CID to base64 multihash
+    cidToBase64Multihash(fileCid) {
+        let cid = fileCid
+        if (typeof fileCid === 'string') {
+            cid = CID.parse(fileCid)
         }
-    } catch (error) {
-        console.error('Failed to load script analysis cache:', error.message);
+        // Convert to base64 and make filesystem-safe by replacing invalid characters
+        const base64 = toString(cid.multihash.digest, 'base64')
+        // Replace '/' with '_' and '=' with '-' to make it filesystem-safe
+        return base64.replace(/\//g, '_').replace(/=/g, '-')
     }
-}
 
-// Save cache to disk
-export async function saveScriptAnalysisCache() {
-    try {
-        const cacheData = Object.fromEntries(scriptAnalysisCache.entries());
-        await fs.writeFile(CACHE_FILE_PATH, JSON.stringify(cacheData, null, 2));
-        console.log(`Saved script analysis cache with ${scriptAnalysisCache.size} entries`);
-    } catch (error) {
-        console.error('Failed to save script analysis cache:', error.message);
+    // Get cache entry
+    async getEntry(promptVersion, fileCid) {
+        const promptDir = await this.ensureCacheDirectory(promptVersion);
+        const multihash = this.cidToBase64Multihash(fileCid);
+        const cacheFile = join(promptDir, `${multihash}.json`);
+        
+        const cacheExists = await fs.access(cacheFile).then(() => true).catch(() => false);
+        if (cacheExists) {
+            const cacheData = JSON.parse(await fs.readFile(cacheFile, 'utf-8'));
+            return cacheData.values || null;
+        }
+        return null;
     }
-}
 
-// Get cache entry
-export function getCacheEntry(key) {
-    return scriptAnalysisCache.get(key);
-}
-
-// Set cache entry
-export function setCacheEntry(key, value) {
-    scriptAnalysisCache.set(key, value);
-}
-
-// Create a stable hash for the system prompt to make sure it's consistent across runs
-export function createPromptHash(systemPrompt) {
-    return crypto.createHash('sha256').update(systemPrompt).digest('hex').slice(0, 8);
-}
-
-// Create a combined hash for script content and prompt
-export function createCombinedHash(scriptText, promptHash) {
-    const scriptHash = crypto.createHash('sha256').update(scriptText).digest('hex');
-    return `${scriptHash}_${promptHash}`;
+    // Set cache entry
+    async setEntry(promptVersion, fileCid, values) {
+        const promptDir = await this.ensureCacheDirectory(promptVersion);
+        const multihash = this.cidToBase64Multihash(fileCid);
+        const cacheFile = join(promptDir, `${multihash}.json`);
+        
+        const cacheData = {
+            values,
+            timestamp: new Date().toISOString()
+        };
+        
+        await fs.writeFile(cacheFile, JSON.stringify(cacheData, null, 2));
+        console.log(`Cached entry for prompt-v${promptVersion}, file ${fileCid}`);
+    }
 }

@@ -3,3 +3,110 @@
 - Run pnpm install to install dependencies
 - Use pnpm add/remove for adding/removing packages
 - Use pnpm run for running scripts
+
+# Error Handling Rules
+
+## Core Principle: Avoid Unnecessary Try/Catch
+
+**Default behavior**: Let errors bubble up naturally to preserve stack traces and debugging information.
+
+## Only Use Try/Catch When:
+
+1. **Catching specific errors**: Handle particular error types differently (e.g., network vs validation)
+2. **Preventing flow interruption**: Continue execution even if a specific operation fails
+3. **Error transformation**: Convert errors with additional context (MUST preserve original error)
+4. **Resource cleanup**: Ensure cleanup happens regardless of success/failure
+5. **Input validation**: Provide better error messages for user input
+6. **Retry logic**: Handle transient failures (timeouts, rate limits)
+
+## What NOT to do:
+
+- ❌ Don't catch errors just to rethrow them with only the message (removes stack traces)
+- ❌ Don't catch errors if you're just going to log and rethrow the same error
+- ❌ Don't use try/catch as a general error suppression mechanism
+- ❌ Don't catch errors without a clear recovery strategy
+- ❌ Don't wrap simple operations in try/catch unless necessary
+
+## Stack Trace Preservation:
+
+### ❌ Bad - Loses stack trace
+```javascript
+try {
+    const result = await someOperation();
+    return result;
+} catch (error) {
+    throw error; // This removes the stack trace!
+}
+```
+
+### ✅ Better - Use Error.cause (Node.js 16+)
+```javascript
+try {
+    const result = await someOperation();
+    return result;
+} catch (error) {
+    const enhancedError = new Error(`Operation failed for ${operationName}: ${error.message}`);
+    enhancedError.cause = error; // Preserves original error and stack trace
+    throw enhancedError;
+}
+```
+
+### ✅ Best - No try/catch needed
+```javascript
+// Let errors bubble up naturally - preserves full stack trace
+async function goodExample() {
+    return await someOperation();
+}
+```
+
+## Examples:
+
+### ✅ Good - Specific error handling
+```javascript
+try {
+    const result = await someOperation();
+    return result;
+} catch (error) {
+    if (error.code === 'ENOENT') {
+        return null; // Handle file not found specifically
+    }
+    throw error; // Preserve stack trace for unexpected errors
+}
+```
+
+### ✅ Good - Prevent flow interruption
+```javascript
+try {
+    await saveToCache(data);
+} catch (error) {
+    // Log but continue - cache failure shouldn't stop main operation
+    console.warn('Cache save failed:', error.message);
+}
+// Continue with main operation
+```
+
+### ✅ Good - Error transformation with context
+```javascript
+try {
+    const result = await someOperation();
+    return result;
+} catch (error) {
+    // Transform error with additional context, preserve original
+    const enhancedError = new Error(`Operation failed for ${operationName}: ${error.message}`);
+    enhancedError.cause = error; // Node.js 16+ - preserves stack trace
+    throw enhancedError;
+}
+```
+
+### ✅ Good - Input validation
+```javascript
+try {
+    const parsed = JSON.parse(userInput);
+    return parsed;
+} catch (error) {
+    throw new Error(`Invalid JSON input: ${userInput}`, { cause: error });
+}
+```
+
+## When in Doubt:
+**Don't use try/catch** - let errors bubble up naturally. It's easier to add error handling later than to fix broken stack traces.

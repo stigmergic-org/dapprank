@@ -22,8 +22,8 @@ export class Report {
     this.name = name
     this.blockNumber = blockNumber.toString()
     this.archivePath = archivePath
-    this.fullPath = join(archivePath, name, blockNumber, 'report.json')
-    this.metadataPath = join(archivePath, name, blockNumber, 'metadata.json')
+    this.fullPath = join(archivePath, name, this.blockNumber, 'report.json')
+    this.metadataPath = join(archivePath, name, this.blockNumber, 'metadata.json')
     this.set('blockNumber', blockNumber)
   }
 
@@ -164,7 +164,9 @@ export class Report {
    * Write the files to the filesystem, in an 'assets' subfolder
    */
   async writeFiles() {
-    const assetsPath = join(this.fullPath, 'assets')
+    // Use the directory path (without the filename) for creating assets subdirectory
+    const dirPath = this.fullPath.substring(0, this.fullPath.lastIndexOf('/'))
+    const assetsPath = join(dirPath, 'assets')
     await fs.mkdir(assetsPath, { recursive: true })
     for (const [path, data] of Object.entries(this.#files)) {
       // Create the full path including any subdirectories
