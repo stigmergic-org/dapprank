@@ -19,8 +19,6 @@ const CONTENTHASH_QUERY = `
       resolver {
         domain {
           name
-          ownerId
-          wrappedOwnerId
         }
       }
       transactionID
@@ -184,7 +182,6 @@ export class ScanManager {
       const metadata = {
         contenthash,
         tx: txHash,
-        ownerAddress,
         originalName: ensName !== safeEnsName ? ensName : undefined // Store original name if truncated
       }
       
