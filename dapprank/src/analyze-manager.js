@@ -309,6 +309,24 @@ export class AnalyzeManager {
         await step(report, analysisUtils)
       }
       
+      // Output files that would be written
+      console.log('\n--- FILES TO BE WRITTEN ---')
+      console.log(`📄 Report: ${report.fullPath}`)
+      const filesCount = Object.keys(report.files || {}).length
+      if (filesCount > 0) {
+        console.log('📁 Assets directory:')
+        const dirPath = report.fullPath.substring(0, report.fullPath.lastIndexOf('/'))
+        const assetsPath = `${dirPath}/assets`
+        console.log(`   ${assetsPath}/`)
+        for (const [filename, data] of Object.entries(report.files || {})) {
+          const size = data instanceof Uint8Array ? data.length : 'unknown'
+          console.log(`   📄 ${filename} (${size} bytes)`)
+        }
+      } else {
+        console.log('No asset files would be written')
+      }
+      console.log('--- END FILES ---\n')
+      
       // Output results to stdout as JSON
       console.log('\n--- DRY RUN RESULTS ---')
       console.log(JSON.stringify(report.content, null, 2))
@@ -386,6 +404,7 @@ const DISTRIBUTION_STEPS = [
   async (report, { kubo }) => {
     const webmanifest = await getWebmanifest(kubo, report.content.files)
     if (webmanifest.data) {
+      report.set('webmanifest', 'manifest.json')
       report.putFile('manifest.json', webmanifest.data)
       for (const icon of webmanifest.icons) {
         report.putFile(icon.path, icon.data)

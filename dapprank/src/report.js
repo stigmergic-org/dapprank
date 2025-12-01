@@ -113,6 +113,10 @@ export class Report {
     return this.#content
   }
 
+  get files() {
+    return this.#files
+  }
+
   /**
    * Check if a report already exists for this path
    * @returns {Promise<boolean>} - True if report exists, false otherwise
