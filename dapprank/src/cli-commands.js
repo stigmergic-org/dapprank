@@ -46,6 +46,20 @@ export async function analyzeCommand(ensName, options) {
             process.exit(1);
         }
 
+        // Validate dry-run flag
+        if (options.dryRun) {
+            const validTypes = ['governance', 'networking', 'distribution', 'all'];
+            if (!validTypes.includes(options.dryRun)) {
+                console.error(`Error: --dry-run must be one of: ${validTypes.join(', ')}`);
+                process.exit(1);
+            }
+            
+            if (!ensName) {
+                console.error('Error: --dry-run can only be used when analyzing a specific ENS name');
+                process.exit(1);
+            }
+        }
+
         console.log(`Starting analysis of scanned results in directory: ${options.directory}`);
         
         const kubo = createKubo({ url: options.ipfs });
@@ -54,7 +68,11 @@ export async function analyzeCommand(ensName, options) {
         
         if (ensName) {
             console.log(`Analyzing only ENS name: ${ensName}`);
-            await analyzeManager.analyzeSpecificName(ensName);
+            if (options.dryRun) {
+                await analyzeManager.dryRunAnalysis(ensName, options.dryRun);
+            } else {
+                await analyzeManager.analyzeSpecificName(ensName);
+            }
         } else if (options.backwards) {
             console.log('Analyzing backwards from oldest block number...');
             await analyzeManager.analyzeBackwards();

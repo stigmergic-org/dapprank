@@ -31,6 +31,7 @@ program
     .command('analyze')
     .description('Analyze scanned results from dapprank scan in archive folder')
     .option('-b, --backwards', 'Analyze backwards from oldest block number', false)
+    .option('--dry-run [type]', 'Dry run analysis to stdout (options: governance, networking, distribution, all)')
     .argument('[ens-name]', 'Optional: Only analyze a specific ENS name')
     .action(async (ensName, options) => {
         const parentOptions = program.optsWithGlobals();

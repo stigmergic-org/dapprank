@@ -217,7 +217,7 @@ export class AnalyzeManager {
     console.log(`\nBackwards analysis completed: ${successCount} succeeded, ${failureCount} failed`)
   }
 
-  async analyzeSpecificName(targetName) {
+  async analyzeSpecificName(targetName, analysisType = null) {
     console.log(`Analyzing specific ENS name: ${targetName}`)
     
     // Check if the target name exists in the archive
@@ -246,7 +246,7 @@ export class AnalyzeManager {
     
     // Only analyze the largest block number
     try {
-      await this.analyzeDomain(targetName, largestBlock)
+      await this.analyzeDomain(targetName, largestBlock, analysisType)
       console.log(`Completed analysis for ${targetName}`)
     } catch (error) {
       // Format the error nicely and throw a cleaner version
@@ -255,6 +255,71 @@ export class AnalyzeManager {
       throw cleanError
     }
     
+  }
+
+  async dryRunAnalysis(targetName, analysisType) {
+    console.log(`Dry run analysis for ${targetName} (${analysisType})`)
+    
+    // Check if the target name exists in the archive
+    const targetPath = join(this.archivePath, targetName)
+    try {
+      await fs.access(targetPath)
+    } catch (error) {
+      throw new Error(`ENS name ${targetName} not found in archive folder`)
+    }
+    
+    // Get all block numbers for this specific name
+    const blockDirs = await fs.readdir(targetPath, { withFileTypes: true })
+    const blockNumbers = blockDirs
+      .filter(entry => entry.isDirectory())
+      .map(entry => parseInt(entry.name))
+      .filter(num => !isNaN(num))
+      .sort((a, b) => b - a) // Sort descending to get largest first
+    
+    if (blockNumbers.length === 0) {
+      console.log(`No block data found for ${targetName}`)
+      return
+    }
+    
+    const largestBlock = blockNumbers[0]
+    console.log(`Found largest block ${largestBlock} for ${targetName}`)
+    
+    // Create a temporary report for dry run (in-memory only)
+    const report = new Report(this.archivePath, targetName, largestBlock)
+    
+    // Determine which steps to run based on analysis type
+    let stepsToRun
+    if (analysisType === 'distribution') {
+      stepsToRun = [...DISTRIBUTION_STEPS, ...CLEANUP_STEPS]
+    } else if (analysisType === 'governance') {
+      stepsToRun = [...GOVERNANCE_STEPS, ...CLEANUP_STEPS]
+    } else if (analysisType === 'networking') {
+      stepsToRun = [...NETWORKING_STEPS, ...CLEANUP_STEPS]
+    } else if (analysisType === 'all') {
+      stepsToRun = ANALYSIS_STEPS
+    } else {
+      throw new Error(`Unknown analysis type: ${analysisType}`)
+    }
+    
+    const analysisUtils = { kubo: this.kubo, cache: this.#cacheManager, rpcUrl: this.rpcUrl }
+    
+    try {
+      // Run the analysis steps
+      for (const step of stepsToRun) {
+        await step(report, analysisUtils)
+      }
+      
+      // Output results to stdout as JSON
+      console.log('\n--- DRY RUN RESULTS ---')
+      console.log(JSON.stringify(report.content, null, 2))
+      console.log('--- END RESULTS ---\n')
+      
+    } catch (error) {
+      // Format the error nicely and throw a cleaner version
+      const cleanError = new Error(`Failed to dry run analyze ${targetName} at block ${largestBlock}: ${error.message}`)
+      cleanError.cause = error // Preserve the original error for debugging
+      throw cleanError
+    }
   }
 
   async analyzeDomain(name, blockNumber) {
@@ -269,6 +334,7 @@ export class AnalyzeManager {
       return
     }
     
+    // Always run all steps for regular analysis
     const analysisUtils = { kubo: this.kubo, cache: this.#cacheManager, rpcUrl: this.rpcUrl }
     for (const step of ANALYSIS_STEPS) {
       await step(report, analysisUtils)
@@ -280,7 +346,8 @@ export class AnalyzeManager {
   }
 }
 
-const ANALYSIS_STEPS = [
+// Distribution analysis steps (steps 1-7): contenthash, files, webmanifest, favicon
+const DISTRIBUTION_STEPS = [
   // Decode the contenthash
   async (report, _) => {
     const metadata = await report.readMetadata()
@@ -335,7 +402,21 @@ const ANALYSIS_STEPS = [
       report.set('favicon', favicon.path)
       report.putFile(favicon.path, favicon.data)
     }
-  },
+  }
+]
+
+// Governance analysis steps (step 10): ENS owner analysis
+const GOVERNANCE_STEPS = [
+  // analyze the ENS owner
+  async (report, { rpcUrl }) => {
+    const name = report.name
+    const ownerAnalysis = await analyzeOwner(name, rpcUrl)
+    report.set('ownerAnalysis', ownerAnalysis)
+  }
+]
+
+// Networking analysis steps (steps 8-9): Web3 detection and script analysis
+const NETWORKING_STEPS = [
   // Detect if the dapp uses window.ethereum
   async (report, { kubo }) => {
     for (const file of report.content.files) {
@@ -361,19 +442,46 @@ const ANALYSIS_STEPS = [
       if (networking?.length > 0) file.networking = networking
       if (fallbacks?.length > 0) file.fallbacks = fallbacks
     }
-  },
-  // analyze the ENS owner
-  async (report, { rpcUrl }) => {
-    const name = report.name
-    const ownerAnalysis = await analyzeOwner(name, rpcUrl)
-    report.set('ownerAnalysis', ownerAnalysis)
-  },
+  }
+]
+
+// Cleanup steps (step 11): filter out files without additional analysis
+const CLEANUP_STEPS = [
   // filter out files without additional analysis
   async (report, _) => {
     const newFiles = report.content.files.filter(file => {
-      const fileKeys = Object.keys(file);
-      return fileKeys.some(key => !['path', 'size', 'cid'].includes(key)); 
+      // Include if index.html and has metadata
+      if (file.path === 'index.html' && file.metadata) {
+        return true;
+      }
+      
+      // Include if distribution purity external* arrays have values
+      if (file.distributionPurity) {
+        const hasExternalMedia = file.distributionPurity.externalMedia && file.distributionPurity.externalMedia.length > 0;
+        const hasExternalScripts = file.distributionPurity.externalScripts && file.distributionPurity.externalScripts.length > 0;
+        if (hasExternalMedia || hasExternalScripts) {
+          return true;
+        }
+      }
+      
+      // Include if networking, fallbacks, or libraries arrays have values
+      const hasNetworking = file.networking && file.networking.length > 0;
+      const hasFallbacks = file.fallbacks && file.fallbacks.length > 0;
+      const hasLibraries = file.libraries && file.libraries.length > 0;
+      if (hasNetworking || hasFallbacks || hasLibraries) {
+        return true;
+      }
+      
+      return false;
     });
     report.set('files', newFiles);
   }
+]
+
+// All analysis steps (original behavior)
+const ANALYSIS_STEPS = [
+  ...DISTRIBUTION_STEPS,
+  ...NETWORKING_STEPS,
+  ...GOVERNANCE_STEPS,
+  ...CLEANUP_STEPS
 ]
