@@ -5,10 +5,11 @@ import { concat, toString } from 'uint8arrays'
 import { WASMagic } from "wasmagic"
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
+import { logger } from './logger.js'
 
 // Function to get all files from a CID
 export async function getFilesFromCID(kubo, cid, result = [], pathCarry = '') {
-    console.log(`Listing files from /${pathCarry}`)
+    logger.debug(`Listing files from /${pathCarry}`)
     const entries = []
     for await (const item of kubo.ls(cid)) {
         entries.push(item)
@@ -71,7 +72,7 @@ export async function getFileContent(kubo, cid) {
 
 // Function to detect MIME type
 export async function detectMimeType(kubo, cid) {
-    console.log('detectMimeType', cid)
+    logger.debug('detectMimeType', cid)
     try {
         const buffer = await getFileBinary(kubo, cid);
         const magic = await WASMagic.create();
@@ -97,7 +98,7 @@ export function processContentHash(contentHash) {
     
     // Check if the contenthash starts with the IPFS protocol prefix
     if (contentHash.startsWith('0xe5010172')) {
-        console.log('IPNS contenthash not supported')
+        logger.warn('IPNS contenthash not supported')
         return ''
     } else if (contentHash.startsWith('0xe3010170')) {
         // Standard IPFS contenthash processing
@@ -112,7 +113,7 @@ export function processContentHash(contentHash) {
             // Return as base32 string
             return cidv1.toString(base32)
         } catch (error) {
-            console.log('Error decoding IPFS CID:', error.message)
+            logger.error('Error decoding IPFS CID:', error.message)
         }
     } 
     
@@ -157,7 +158,7 @@ export function processContentHash(contentHash) {
         // Failed to decode
     }
     
-    console.log('Could not parse content hash in any format')
+    logger.error('Could not parse content hash in any format')
     return ''
 }
 
@@ -168,7 +169,7 @@ export function processContentHash(contentHash) {
  * @returns {Object|null} The parsed dappspec.json content or null if not found
  */
 export async function getDappspecJson(kubo, rootCID) {
-    console.log('Checking for .well-known/dappspec.json...');
+    logger.debug('Checking for .well-known/dappspec.json...');
     
     try {
         // First check if the .well-known directory exists
@@ -179,7 +180,7 @@ export async function getDappspecJson(kubo, rootCID) {
                 entries.push(item);
             }
         } catch (error) {
-            console.log('Error listing root directory:', error.message);
+            logger.error('Error listing root directory:', error.message);
             return null;
         }
         
@@ -190,7 +191,7 @@ export async function getDappspecJson(kubo, rootCID) {
         );
         
         if (!wellKnownDir) {
-            console.log('No .well-known directory found');
+            logger.debug('No .well-known directory found');
             return null;
         }
         
@@ -201,7 +202,7 @@ export async function getDappspecJson(kubo, rootCID) {
                 wellKnownEntries.push(item);
             }
         } catch (error) {
-            console.log('Error listing .well-known directory:', error.message);
+            logger.error('Error listing .well-known directory:', error.message);
             return null;
         }
         
@@ -212,28 +213,28 @@ export async function getDappspecJson(kubo, rootCID) {
         );
         
         if (!dappspecFile) {
-            console.log('No dappspec.json file found in .well-known directory');
+            logger.debug('No dappspec.json file found in .well-known directory');
             return null;
         }
         
         // Get file content
         const content = await getFileContent(kubo, dappspecFile.cid);
         if (!content) {
-            console.log('Failed to read dappspec.json content');
+            logger.error('Failed to read dappspec.json content');
             return null;
         }
         
         // Parse JSON content
         try {
             const jsonContent = JSON.parse(content);
-            console.log('Successfully found and parsed dappspec.json');
+            logger.debug('Successfully found and parsed dappspec.json');
             return jsonContent;
         } catch (jsonError) {
-            console.log('Error parsing dappspec.json content:', jsonError.message);
+            logger.error('Error parsing dappspec.json content:', jsonError.message);
             return null;
         }
     } catch (error) {
-        console.log('Error checking for dappspec.json:', error.message);
+        logger.error('Error checking for dappspec.json:', error.message);
         return null;
     }
 }

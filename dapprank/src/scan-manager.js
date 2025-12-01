@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request'
 import { promises as fs } from 'fs'
 import { join } from 'path'
+import { logger } from './logger.js'
 
 const ENS_API_URL = 'https://api.mainnet.ensnode.io/subgraph'
 
@@ -56,7 +57,7 @@ export class ScanManager {
       const scannedUntil = state.scannedUntil || 0
       return scannedUntil
     } catch (error) {
-      console.warn('Could not read scan height, starting from 0:', error.message)
+      logger.warn('Could not read scan height, starting from 0:', error.message)
       return 0
     }
   }
@@ -82,7 +83,7 @@ export class ScanManager {
   }
 
   async scanContenthashChanges(fromBlock = 0) {
-    console.log(`Scanning for contenthash changes from block ${fromBlock}...`)
+    logger.info(`Scanning for contenthash changes from block ${fromBlock}...`)
     
     let hasMore = true
     let lastBlockNumber = fromBlock
@@ -105,7 +106,7 @@ export class ScanManager {
           break
         }
         
-        console.log(`Found ${changes.length} contenthash changes`)
+        logger.info(`Found ${changes.length} contenthash changes`)
         
         // Process each change
         for (const change of changes) {
@@ -117,7 +118,7 @@ export class ScanManager {
         // Persist scan height after each successful batch
         if (lastBlockNumber > fromBlock) {
           await this.saveScanHeight(lastBlockNumber)
-          console.log(`Progress saved: scan height updated to block ${lastBlockNumber}`)
+          logger.info(`Progress saved: scan height updated to block ${lastBlockNumber}`)
         }
         
         // If we got less than 1000 results, we've reached the end
@@ -139,14 +140,14 @@ export class ScanManager {
       await this.saveScanHeight(lastBlockNumber)
     }
     
-    console.log(`Scan complete. Processed ${totalChanges} changes up to block ${lastBlockNumber}`)
+    logger.info(`Scan complete. Processed ${totalChanges} changes up to block ${lastBlockNumber}`)
     return { totalChanges, lastBlockNumber }
   }
 
   async saveContenthashChange(change) {
     // Skip entries with missing data
     if (!change.resolver || !change.resolver.domain || !change.resolver.domain.name) {
-      console.log(`Skipping entry with missing domain data: ${change.id}`);
+      logger.debug(`Skipping entry with missing domain data: ${change.id}`);
       return;
     }
     
@@ -158,7 +159,7 @@ export class ScanManager {
     
     // Skip names that contain [<hex>] pattern (excluding our own generated long-name hashes)
     if (/\[[0-9a-f]{16,}\]/.test(ensName)) {
-      console.log(`Skipping ENS name with [<hex>] pattern: ${ensName}`);
+      logger.debug(`Skipping ENS name with [<hex>] pattern: ${ensName}`);
       return;
     }
     
@@ -171,7 +172,7 @@ export class ScanManager {
       const crypto = await import('crypto')
       const hash = crypto.createHash('sha256').update(ensName).digest('hex').substring(0, 16)
       safeEnsName = `[${hash}].long-name`
-      console.log(`Truncated extremely long ENS name "${ensName.substring(0, 50)}..." to "${safeEnsName}"`)
+      logger.info(`Truncated extremely long ENS name "${ensName.substring(0, 50)}..." to "${safeEnsName}"`)
     }
     
     try {
@@ -193,7 +194,7 @@ export class ScanManager {
       
       await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
       
-      console.log(`Saved: ${safeEnsName} at block ${blockNumber}`)
+      logger.info(`Saved: ${safeEnsName} at block ${blockNumber}`)
     } catch (error) {
       console.error(`Error saving contenthash change for ${safeEnsName}:`, error.message)
       // Continue processing other entries even if this one fails

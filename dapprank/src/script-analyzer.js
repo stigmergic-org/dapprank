@@ -4,6 +4,7 @@ import traverseDefault from '@babel/traverse'
 import crypto from 'crypto'
 import { getFileContent } from './ipfs-utils.js'
 import { SYSTEM_PROMPT_TEMPLATE } from './constants.js'
+import { logger } from './logger.js'
 
 const promptHash = createPromptHash(SYSTEM_PROMPT_TEMPLATE);
 
@@ -164,10 +165,10 @@ async function geminiAnalysis(scriptText, filePath) {
                 response_schema: responseSchema
             });
             
-            console.log(`Received response from Gemini for ${filePath}`);
+            logger.debug(`Received response from Gemini for ${filePath}`);
 
             if (response.candidates[0].content.parts.length > 1) {
-                console.log('Multiple response parts found:', response.candidates[0].content.parts);
+                logger.debug('Multiple response parts found:', response.candidates[0].content.parts);
                 throw new Error('Multiple parts found in response, not sure how to proceed');
             }
 
@@ -203,7 +204,7 @@ async function geminiAnalysis(scriptText, filePath) {
                 if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
                     break;
                 }
-                console.log(`Error parsing Gemini response for ${filePath}, retrying... (${retries} attempts left)`);
+                logger.warn(`Error parsing Gemini response for ${filePath}, retrying... (${retries} attempts left)`);
                 // Add a small delay between retries
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 continue;
@@ -222,16 +223,16 @@ async function geminiAnalysisWithChunking(scriptText, filePath) {
     } catch (error) {
         // Handle rate limit error (429)
         if (error.message && error.message.includes('status: 429')) {
-            console.log('Rate limit exceeded, waiting for 1 minute before retrying...');
+            logger.warn('Rate limit exceeded, waiting for 1 minute before retrying...');
             await new Promise(resolve => setTimeout(resolve, 60000)); // Wait for 1 minute
             return await geminiAnalysisWithChunking(scriptText, filePath); // Retry recursively
         }
         
         // Handle token count exceeded error
         if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
-            console.log('Token limit exceeded, attempting to chunk the code...');
+            logger.warn('Token limit exceeded, attempting to chunk the code...');
             const chunks = await splitScriptIntoChunks(scriptText);
-            console.log(`Split script into ${chunks.length} chunks`);
+            logger.info(`Split script into ${chunks.length} chunks`);
 
             const results = [];
             for (const chunk of chunks) {
@@ -286,7 +287,7 @@ export async function analyzeScript(kubo, cache, file) {
  * @throws {Error} If AI analysis fails
  */
 export async function analyzeIndividualScript(filePath, scriptText, cache, fileCid) {
-    console.log(`Analyzing script: ${filePath}`);
+    logger.debug(`Analyzing script: ${filePath}`);
     
     // Initialize empty results
     const result = {
@@ -299,7 +300,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         // Check if we already have an analysis for this script content and prompt
         const cachedResult = await cache.getEntry(promptHash, fileCid);
         if (cachedResult) {
-            console.log(`Using cached analysis for ${filePath}`);
+            logger.debug(`Using cached analysis for ${filePath}`);
             
             // Initialize the returning result object
             const cachedAnalysis = {
@@ -337,9 +338,9 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             fallbacks: result.fallbacks
         });
         
-        console.log(`Successfully analyzed ${filePath}`);
+        logger.debug(`Successfully analyzed ${filePath}`);
     } catch (aiError) {
-        console.error(`Error in script analysis for ${filePath}:`, aiError);
+        logger.error(`Error in script analysis for ${filePath}:`, aiError);
         throw aiError; // Re-throw the error to fail the entire process
     }
     

@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
+import { logger } from './logger.js'
 
 export class Report {
   #content = {
@@ -156,13 +157,10 @@ export class Report {
     if ((await this.exists()) && !force){
       throw new Error(`Can't overwrite existing report.json`)
     }
-    console.log('Writing report...')
-    // console.log(JSON.stringify(this.#content, null, 2))
-    // console.log('Files: ', Object.keys(this.#files))
-    // return
+    logger.info('Writing report...')
     try {
       await fs.writeFile(this.fullPath, JSON.stringify(this.#content, null, 2))
-      console.log(`Report written to ${this.fullPath}`)
+      logger.info(`Report written to ${this.fullPath}`)
     } catch (error) {
       throw new Error(`Failed to write report: ${error.message}`)
     }

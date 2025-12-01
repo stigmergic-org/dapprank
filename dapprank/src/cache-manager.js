@@ -2,12 +2,13 @@ import { promises as fs } from 'fs'
 import { join } from 'path'
 import { CID } from "multiformats/cid"
 import { toString } from 'uint8arrays/to-string'
+import { logger } from './logger.js'
 
 // Cache for script analysis to avoid repeated AI calls for identical content
 export class CacheManager {
     constructor(cachePath) {
         this.cachePath = cachePath;
-        console.log('cachePath', this.cachePath)
+        logger.debug('cachePath', this.cachePath)
     }
 
     // Ensure cache directory exists
@@ -55,6 +56,6 @@ export class CacheManager {
         };
         
         await fs.writeFile(cacheFile, JSON.stringify(cacheData, null, 2));
-        console.log(`Cached entry for prompt-v${promptVersion}, file ${fileCid}`);
+        logger.debug(`Cached entry for prompt-v${promptVersion}, file ${fileCid}`);
     }
 }

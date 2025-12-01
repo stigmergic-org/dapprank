@@ -1,4 +1,5 @@
 import contentHash from 'content-hash'
+import { logger } from './logger.js'
 
 /**
  * Decode contenthash to human-readable text format and get codec
@@ -19,7 +20,7 @@ export async function decodeContenthash(contenthash) {
       codec: codec
     }
   } catch (decodeError) {
-    console.log('Error decoding contenthash with content-hash package:', decodeError.message)
+    logger.error('Error decoding contenthash with content-hash package:', decodeError.message)
     return null
   }
 }

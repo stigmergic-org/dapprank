@@ -4,6 +4,7 @@ import { getFilesFromCID, detectMimeType, getDappspecJson } from './ipfs-utils.j
 import { analyzeHTML, getFavicon } from './html-analyzer.js'
 import { analyzeIndividualScript } from './script-analyzer.js'
 import { ANALYSIS_VERSION } from './constants.js'
+import { logger } from './logger.js'
 
 // Helper function to add data to report if not empty
 function addToReportIfNotEmpty(report, analysis, filePath) {
@@ -14,7 +15,7 @@ function addToReportIfNotEmpty(report, analysis, filePath) {
 
 // Load JavaScript file
 async function loadJavaScriptFile(kubo, cid, filePath) {
-    console.log(`Loading JavaScript file: ${filePath}`);
+    logger.debug(`Loading JavaScript file: ${filePath}`);
     const content = await getFileContent(kubo, cid);
     return content
 }
@@ -28,7 +29,7 @@ async function getFileContent(kubo, cid) {
         }
         return Buffer.concat(chunks).toString('utf-8');
     } catch (error) {
-        console.error(`Error getting file content: ${error.message}`);
+        logger.error(`Error getting file content: ${error.message}`);
         return null;
     }
 }
@@ -38,11 +39,11 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
     try {
         // First, detect the MIME type of the root
         const rootMimeType = await detectMimeType(kubo, rootCID);
-        console.log(`Root MIME type: ${rootMimeType}`);
+        logger.debug(`Root MIME type: ${rootMimeType}`);
         
         // Get all files in the IPFS directory
         const files = await getFilesFromCID(kubo, rootCID);
-        console.log(`Found ${files.length} files to analyze`);
+        logger.info(`Found ${files.length} files to analyze`);
         
         // Initialize the report structure
         const report = {
@@ -76,7 +77,7 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
             if (file.path === '.well-known/dappspec.json') continue
             
             const fileMimeType = await detectMimeType(kubo, file.cid);
-            console.log(`File: ${file.path}, Detected MIME type: ${fileMimeType}`);
+            logger.debug(`File: ${file.path}, Detected MIME type: ${fileMimeType}`);
             
             if (fileMimeType.includes('html')) {
                 const { metadata, distributionPurity, scriptContents } = await analyzeHTML(kubo, file.cid, file.path);
@@ -96,14 +97,14 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
 
                 // Process inline scripts from HTML
                 if (scriptContents && scriptContents.length > 0) {
-                    console.log(`Found ${scriptContents.length} inline scripts in ${file.path}`);
+                    logger.debug(`Found ${scriptContents.length} inline scripts in ${file.path}`);
                     
                     // Process each inline script individually
                     for (let i = 0; i < scriptContents.length; i++) {
                         const scriptText = scriptContents[i];
                         if (scriptText && scriptText.trim().length >= 20) {
                             const inlineScriptPath = `${file.path}#inline-script-${i+1}`;
-                            console.log(`Analyzing inline script #${i+1} from ${file.path} (${scriptText.length} bytes)`);
+                            logger.debug(`Analyzing inline script #${i+1} from ${file.path} (${scriptText.length} bytes)`);
                             
                             // Analyze this individual inline script
                             const scriptAnalysis = await analyzeIndividualScript(inlineScriptPath, scriptText);
@@ -129,7 +130,7 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
                 // Load and analyze JavaScript file
                 const content = await loadJavaScriptFile(kubo, file.cid, file.path);
                 if (content && content.trim().length >= 20) {
-                    console.log(`Analyzing JavaScript file: ${file.path} (${content.length} bytes)`);
+                    logger.debug(`Analyzing JavaScript file: ${file.path} (${content.length} bytes)`);
                     
                     // Analyze this individual JS file
                     const scriptAnalysis = await analyzeIndividualScript(file.path, content);
@@ -148,11 +149,11 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
             }
         }
 
-        console.log(`Analysis complete. Total size: ${(report.totalSize / 1024 / 1024).toFixed(2)} MB`);
+        logger.info(`Analysis complete. Total size: ${(report.totalSize / 1024 / 1024).toFixed(2)} MB`);
         return { report, faviconInfo };
     } catch (error) {
-        console.error(`Error generating report: ${error.message}`);
-        console.error(error);
+        logger.error(`Error generating report: ${error.message}`);
+        logger.error(error);
         throw error;
     }
 }
@@ -171,7 +172,7 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
     // Save the report to archive
     const reportPath = join(archiveDir, 'report.json')
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2))
-    console.log(`Report saved to ${reportPath}`)
+    logger.info(`Report saved to ${reportPath}`)
 
     // Check and save dappspec.json if it exists
     let hasDappspec = false
@@ -180,11 +181,11 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
         if (dappspecFile) {
             const dappspecPath = join(archiveDir, 'dappspec.json')
             await fs.writeFile(dappspecPath, JSON.stringify(dappspecFile, null, 2))
-            console.log(`Dappspec saved to ${dappspecPath}`)
+            logger.info(`Dappspec saved to ${dappspecPath}`)
             hasDappspec = true
         }
     } catch (error) {
-        console.log(`No dappspec.json found: ${error.message}`)
+        logger.warn(`No dappspec.json found: ${error.message}`)
     }
 
     // Create metadata.json in the root archive directory if it doesn't exist
@@ -193,7 +194,7 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
         await fs.access(archiveMetadataPath)
     } catch (error) {
         await fs.writeFile(archiveMetadataPath, JSON.stringify({ category: "" }, null, 2))
-        console.log(`Created metadata file at ${archiveMetadataPath}`)
+        logger.info(`Created metadata file at ${archiveMetadataPath}`)
     }
 
     // Clean up the index directory - remove all files except metadata.json
@@ -203,11 +204,11 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
             if (file !== 'metadata.json') {
                 const filePath = join(indexDir, file)
                 await fs.unlink(filePath)
-                console.log(`Removed old file: ${filePath}`)
+                logger.debug(`Removed old file: ${filePath}`)
             }
         }
     } catch (error) {
-        console.log(`Warning: Error cleaning index directory: ${error.message}`)
+        logger.warn(`Error cleaning index directory: ${error.message}`)
     }
 
     // Create metadata.json in the index directory if it doesn't exist
@@ -218,21 +219,21 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
         // Create symlink to root archive directory metadata file
         const relativeMetadataPath = join('../../archive', ensName, 'metadata.json')
         await fs.symlink(relativeMetadataPath, indexMetadataPath)
-        console.log(`Created metadata symlink at ${indexMetadataPath}`)
+        logger.info(`Created metadata symlink at ${indexMetadataPath}`)
     }
 
     // Create symlink to latest report
     const symlinkPath = join(indexDir, 'report.json')
     const relativeReportPath = join('../../archive', ensName, blockNumber.toString(), 'report.json')
     await fs.symlink(relativeReportPath, symlinkPath)
-    console.log(`Symlink created at ${symlinkPath}`)
+    logger.info(`Symlink created at ${symlinkPath}`)
 
     // Create symlink to latest dappspec.json if it exists
     if (hasDappspec) {
         const dappspecSymlinkPath = join(indexDir, 'dappspec.json')
         const relativeDappspecPath = join('../../archive', ensName, blockNumber.toString(), 'dappspec.json')
         await fs.symlink(relativeDappspecPath, dappspecSymlinkPath)
-        console.log(`Dappspec symlink created at ${dappspecSymlinkPath}`)
+        logger.info(`Dappspec symlink created at ${dappspecSymlinkPath}`)
     }
 
     // Try to save favicon to archive directory only if favicon exists
@@ -241,16 +242,16 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
             // Save favicon to archive directory
             const archiveFaviconPath = join(archiveDir, report.favicon)
 
-            console.log('Saving favicon to', archiveFaviconPath)
+            logger.debug('Saving favicon to', archiveFaviconPath)
             await fs.writeFile(archiveFaviconPath, faviconInfo.data)
             
             // No longer creating favicon symlink in index directory
-            console.log('Favicon saved successfully to archive directory')
+            logger.info('Favicon saved successfully to archive directory')
         } catch (error) {
-            console.log('Error saving favicon', error)
+            logger.error('Error saving favicon', error)
         }
     } else {
-        console.log('No favicon found, skipping favicon save')
+        logger.info('No favicon found, skipping favicon save')
     }
 }
 
@@ -295,11 +296,11 @@ export async function reportExistsForCID(ensName, cid) {
             // If the CID matches but version is outdated, return false so a new report will be created
             return reportData.contentHash === cid && reportData.version === ANALYSIS_VERSION;
         } catch (readError) {
-            console.log(`Error reading latest report file ${reportPath}:`, readError.message);
+            logger.error(`Error reading latest report file ${reportPath}:`, readError.message);
             return false;
         }
     } catch (error) {
-        console.log(`Warning: Error checking if report exists: ${error.message}`);
+        logger.warn(`Error checking if report exists: ${error.message}`);
         // If directory doesn't exist or other error, report doesn't exist
         return false;
     }

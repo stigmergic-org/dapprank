@@ -5,6 +5,7 @@ dotenv.config()
 
 import { program } from 'commander'
 import { scanCommand, analyzeCommand } from '../src/cli-commands.js'
+import { logger } from '../src/logger.js'
 
 program
     .name('dapprank')
@@ -14,6 +15,7 @@ program
     .option('-d, --directory <path>', 'Directory to store scan results and analysis')
     .option('-c, --cache <path>', 'Directory to use for cache (defaults to ./llm-cache)', './llm-cache')
     .option('-f, --force', 'Force overwrite existing reports')
+    .option('-l, --log-level <level>', 'Log level (error, warn, info, debug)', 'error')
 
 
 // Scan command
@@ -23,6 +25,14 @@ program
     .action(async (options) => {
         const parentOptions = program.optsWithGlobals();
         const mergedOptions = { ...parentOptions, ...options };
+        
+        // Set log level
+        let logLevel = mergedOptions.logLevel;
+        if (logLevel && logLevel.startsWith('=')) {
+            logLevel = logLevel.substring(1);
+        }
+        logger.setLevel(logLevel);
+        
         await scanCommand(mergedOptions);
     });
 
@@ -36,6 +46,14 @@ program
     .action(async (ensName, options) => {
         const parentOptions = program.optsWithGlobals();
         const mergedOptions = { ...parentOptions, ...options };
+        
+        // Set log level
+        let logLevel = mergedOptions.logLevel;
+        if (logLevel && logLevel.startsWith('=')) {
+            logLevel = logLevel.substring(1);
+        }
+        logger.setLevel(logLevel);
+        
         await analyzeCommand(ensName, mergedOptions);
     });
 

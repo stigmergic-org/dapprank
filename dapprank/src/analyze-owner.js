@@ -1,6 +1,7 @@
 import { createPublicClient, http, getAddress } from 'viem'
 import { mainnet } from 'viem/chains'
 import { resolveEnsOwner } from '@simplepg/common'
+import { logger } from './logger.js'
 
 /**
  * Creates a viem client with the specified RPC URL
@@ -153,7 +154,7 @@ export async function classifyAddress(addr, rpcUrl) {
  */
 export async function analyzeOwner(ensName, rpcUrl) {
   try {
-    console.log(`Analyzing owner for ENS name: ${ensName}`)
+    logger.debug(`Analyzing owner for ENS name: ${ensName}`)
     
     // Create viem client for ENS resolution
     const client = createClient(rpcUrl)
@@ -199,7 +200,7 @@ export async function analyzeOwner(ensName, rpcUrl) {
       config
     }
 
-    console.log(`Owner analysis complete for ${ensName}:`, result)
+    logger.debug(`Owner analysis complete for ${ensName}:`, result)
     return result
     
   } catch (error) {

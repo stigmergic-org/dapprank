@@ -2,11 +2,12 @@ import { createPublicClient, namehash, encodeFunctionData, decodeAbiParameters }
 import { UNIVERSAL_RESOLVER_ADDRESS } from './constants.js'
 import { base32 } from "multiformats/bases/base32"
 import { CID } from "multiformats/cid"
+import { logger } from './logger.js'
 
 // Resolve ENS name using Universal Resolver contract
 export async function resolveENSName(client, ensName, blockNumber) {
     try {
-        console.log(`Resolving ${ensName} using Universal Resolver...`)
+        logger.debug(`Resolving ${ensName} using Universal Resolver...`)
         
         // DNS encode the ENS name (required for Universal Resolver)
         const dnsEncodedName = dnsEncodeName(ensName)
@@ -48,12 +49,12 @@ export async function resolveENSName(client, ensName, blockNumber) {
             args: [dnsEncodedName, calldata],
             blockNumber
         }).catch((error) => {
-            console.log(`Error calling Universal Resolver for ${ensName}:`, error.message)
+            logger.error(`Error calling Universal Resolver for ${ensName}:`, error.message)
             return [null, null]
         })
         
         if (resolveResult && resolveResult !== '0x') {
-            console.log(`Successfully resolved ${ensName} with Universal Resolver. Resolver: ${resolverAddress}`)
+            logger.debug(`Successfully resolved ${ensName} with Universal Resolver. Resolver: ${resolverAddress}`)
             
             // Try to decode the result which is ABI-encoded bytes
             try {
@@ -67,17 +68,17 @@ export async function resolveENSName(client, ensName, blockNumber) {
                     return processContentHash(decoded[0])
                 }
             } catch (decodeError) {
-                console.log(`Error decoding result from Universal Resolver:`, decodeError.message)
+                logger.error(`Error decoding result from Universal Resolver:`, decodeError.message)
                 // If decoding fails, try direct processing as fallback
                 return processContentHash(resolveResult)
             }
         }
         
-        console.log(`Could not resolve ${ensName} using Universal Resolver`)
+        logger.debug(`Could not resolve ${ensName} using Universal Resolver`)
         return ''
     } catch (error) {
-        console.log(`Error in Universal Resolver for ${ensName}:`, error)
-        console.log('Full error:', error.stack)
+        logger.error(`Error in Universal Resolver for ${ensName}:`, error)
+        logger.debug('Full error:', error.stack)
         return ''
     }
 }
@@ -127,7 +128,7 @@ function processContentHash(contentHash) {
     
     // Check if the contenthash starts with the IPFS protocol prefix
     if (contentHash.startsWith('0xe5010172')) {
-        console.log('IPNS contenthash not supported')
+        logger.warn('IPNS contenthash not supported')
         return ''
     } else if (contentHash.startsWith('0xe3010170')) {
         // Standard IPFS contenthash processing
@@ -142,7 +143,7 @@ function processContentHash(contentHash) {
             // Return as base32 string
             return cidv1.toString(base32)
         } catch (error) {
-            console.log('Error decoding IPFS CID:', error.message)
+            logger.error('Error decoding IPFS CID:', error.message)
         }
     } 
     
@@ -187,6 +188,6 @@ function processContentHash(contentHash) {
         // Failed to decode
     }
     
-    console.log('Could not parse content hash in any format')
+    logger.error('Could not parse content hash in any format')
     return ''
 }

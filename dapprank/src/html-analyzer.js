@@ -2,10 +2,10 @@ import * as cheerio from 'cheerio'
 import { getFileContent, getFileBinary } from './ipfs-utils.js'
 import { toString } from 'uint8arrays'
 import { LINK_NON_FETCHING_REL_VALUES } from './constants.js'
+import { logger } from './logger.js'
 
 // Analyze HTML content with Cheerio
 export async function analyzeHTML(kubo, cid, filePath) {
-    // console.log(`Analyzing HTML file: ${filePath}`);
     const fileContent = await getFileContent(kubo, cid);
     if (!fileContent) return {};
     
@@ -55,7 +55,7 @@ export async function analyzeHTML(kubo, cid, filePath) {
     // Extract JavaScript from script tags for AST analysis
     const inlineScripts = [];
     $('script').each((i, elem) => {
-        console.log(`Loading inline script ${i}`)
+        logger.debug(`Loading inline script ${i}`)
         const $elem = $(elem);
         const scriptType = $elem.attr('type');
         
@@ -63,7 +63,7 @@ export async function analyzeHTML(kubo, cid, filePath) {
         if (scriptType && 
             !['text/javascript', 'application/javascript', 'module', ''].includes(scriptType) && 
             !scriptType.includes('javascript')) {
-            console.log(`Skipping non-JS script: ${scriptType}`)
+            logger.debug(`Skipping non-JS script: ${scriptType}`)
             return;
         }
         

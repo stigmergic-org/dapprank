@@ -7,6 +7,7 @@ import { decodeContenthash } from './ens-utils.js'
 import { analyzeOwner } from './analyze-owner.js'
 import { Report } from './report.js'
 import { CacheManager } from './cache-manager.js'
+import { logger } from './logger.js'
 
 
 export class AnalyzeManager {
@@ -52,7 +53,7 @@ export class AnalyzeManager {
       
       return state
     } catch (error) {
-      console.warn('Could not read analysis state, starting fresh:', error.message)
+      logger.warn('Could not read analysis state, starting fresh:', error.message)
       return { oldestAnalyzed: null, latestAnalyzed: null }
     }
   }
@@ -100,14 +101,14 @@ export class AnalyzeManager {
             nameBlockPairs.push({ name, latestNumber })
           }
         } catch (error) {
-          console.warn(`Could not read domain ${name}:`, error.message)
+          logger.warn(`Could not read domain ${name}:`, error.message)
         }
       }
       
       // Sort by block number (ascending)
       return nameBlockPairs.sort((a, b) => a.latestNumber - b.latestNumber)
     } catch (error) {
-      console.error('Error listing archive folders:', error)
+      logger.error('Error listing archive folders:', error)
       return []
     }
   }
@@ -119,17 +120,17 @@ export class AnalyzeManager {
       throw new Error('No latest block number analyzed. Cannot analyze forwards without previous analysis.')
     }
     
-    console.log(`Starting forward analysis from block ${state.latestAnalyzed}`)
+    logger.info(`Starting forward analysis from block ${state.latestAnalyzed}`)
     
     const nameBlockPairs = await this.listArchiveFolders()
     const toAnalyze = nameBlockPairs.filter(item => item.latestNumber > state.latestAnalyzed)
     
     if (toAnalyze.length === 0) {
-      console.log('No new blocks to analyze')
+      logger.info('No new blocks to analyze')
       return
     }
     
-    console.log(`Found ${toAnalyze.length} domains with new blocks to analyze`)
+    logger.info(`Found ${toAnalyze.length} domains with new blocks to analyze`)
     
     let newLatestAnalyzed = state.latestAnalyzed
     let successCount = 0
@@ -152,11 +153,11 @@ export class AnalyzeManager {
         ...state,
         latestAnalyzed: newLatestAnalyzed
       })
-      console.log(`Updated latest analyzed block to ${newLatestAnalyzed}`)
+      logger.info(`Updated latest analyzed block to ${newLatestAnalyzed}`)
     }
     
     // Summary
-    console.log(`\nForward analysis completed: ${successCount} succeeded, ${failureCount} failed`)
+    logger.info(`Forward analysis completed: ${successCount} succeeded, ${failureCount} failed`)
   }
 
   async analyzeBackwards() {
@@ -166,10 +167,10 @@ export class AnalyzeManager {
     let startBlock
     if (state.oldestAnalyzed) {
       startBlock = state.oldestAnalyzed
-      console.log(`Starting backwards analysis from oldest analyzed block ${startBlock}`)
+      logger.info(`Starting backwards analysis from oldest analyzed block ${startBlock}`)
     } else if (state.scannedUntil) {
       startBlock = state.scannedUntil
-      console.log(`Starting backwards analysis from scanned until block ${startBlock}`)
+      logger.info(`Starting backwards analysis from scanned until block ${startBlock}`)
     } else {
       console.error('No reference point for backwards analysis, please run dapprank scan first')
     }
@@ -179,11 +180,11 @@ export class AnalyzeManager {
     const toAnalyze = nameBlockPairs.filter(item => item.latestNumber <= startBlock)
     
     if (toAnalyze.length === 0) {
-      console.log('No older blocks to analyze')
+      logger.info('No older blocks to analyze')
       return
     }
     
-    console.log(`Found ${toAnalyze.length} domains with older blocks to analyze`)
+    logger.info(`Found ${toAnalyze.length} domains with older blocks to analyze`)
     
     // Sort by block number descending for backwards analysis (newest to oldest)
     toAnalyze.sort((a, b) => b.latestNumber - a.latestNumber)
@@ -193,7 +194,7 @@ export class AnalyzeManager {
     let failureCount = 0
     
     for (const { name, latestNumber } of toAnalyze) {
-      console.log(`Analyzing ${name} at block ${latestNumber}`)
+      logger.debug(`Analyzing ${name} at block ${latestNumber}`)
       try {
         await this.analyzeDomain(name, latestNumber)
         successCount++
@@ -209,16 +210,16 @@ export class AnalyzeManager {
           ...state,
           oldestAnalyzed: newOldestAnalyzed
         })
-        console.log(`Updated oldest analyzed block to ${newOldestAnalyzed}`)
+        logger.info(`Updated oldest analyzed block to ${newOldestAnalyzed}`)
       }
     }
     
     // Summary
-    console.log(`\nBackwards analysis completed: ${successCount} succeeded, ${failureCount} failed`)
+    logger.info(`Backwards analysis completed: ${successCount} succeeded, ${failureCount} failed`)
   }
 
   async analyzeSpecificName(targetName, analysisType = null) {
-    console.log(`Analyzing specific ENS name: ${targetName}`)
+    logger.info(`Analyzing specific ENS name: ${targetName}`)
     
     // Check if the target name exists in the archive
     const targetPath = join(this.archivePath, targetName)
@@ -237,17 +238,17 @@ export class AnalyzeManager {
       .sort((a, b) => b - a) // Sort descending to get largest first
     
     if (blockNumbers.length === 0) {
-      console.log(`No block data found for ${targetName}`)
+      logger.warn(`No block data found for ${targetName}`)
       return
     }
     
     const largestBlock = blockNumbers[0]
-    console.log(`Found largest block ${largestBlock} for ${targetName}`)
+    logger.info(`Found largest block ${largestBlock} for ${targetName}`)
     
     // Only analyze the largest block number
     try {
       await this.analyzeDomain(targetName, largestBlock, analysisType)
-      console.log(`Completed analysis for ${targetName}`)
+      logger.info(`Completed analysis for ${targetName}`)
     } catch (error) {
       // Format the error nicely and throw a cleaner version
       const cleanError = new Error(`Failed to analyze ${targetName} at block ${largestBlock}: ${error.message}`)
@@ -258,7 +259,7 @@ export class AnalyzeManager {
   }
 
   async dryRunAnalysis(targetName, analysisType) {
-    console.log(`Dry run analysis for ${targetName} (${analysisType})`)
+    logger.info(`Dry run analysis for ${targetName} (${analysisType})`)
     
     // Check if the target name exists in the archive
     const targetPath = join(this.archivePath, targetName)
@@ -277,12 +278,12 @@ export class AnalyzeManager {
       .sort((a, b) => b - a) // Sort descending to get largest first
     
     if (blockNumbers.length === 0) {
-      console.log(`No block data found for ${targetName}`)
+      logger.warn(`No block data found for ${targetName}`)
       return
     }
     
     const largestBlock = blockNumbers[0]
-    console.log(`Found largest block ${largestBlock} for ${targetName}`)
+    logger.info(`Found largest block ${largestBlock} for ${targetName}`)
     
     // Create a temporary report for dry run (in-memory only)
     const report = new Report(this.archivePath, targetName, largestBlock)
@@ -310,27 +311,27 @@ export class AnalyzeManager {
       }
       
       // Output files that would be written
-      console.log('\n--- FILES TO BE WRITTEN ---')
-      console.log(`📄 Report: ${report.fullPath}`)
+      logger.info('\n--- FILES TO BE WRITTEN ---')
+      logger.info(`📄 Report: ${report.fullPath}`)
       const filesCount = Object.keys(report.files || {}).length
       if (filesCount > 0) {
-        console.log('📁 Assets directory:')
+        logger.info('📁 Assets directory:')
         const dirPath = report.fullPath.substring(0, report.fullPath.lastIndexOf('/'))
         const assetsPath = `${dirPath}/assets`
-        console.log(`   ${assetsPath}/`)
+        logger.info(`   ${assetsPath}/`)
         for (const [filename, data] of Object.entries(report.files || {})) {
           const size = data instanceof Uint8Array ? data.length : 'unknown'
-          console.log(`   📄 ${filename} (${size} bytes)`)
+          logger.info(`   📄 ${filename} (${size} bytes)`)
         }
       } else {
-        console.log('No asset files would be written')
+        logger.info('No asset files would be written')
       }
-      console.log('--- END FILES ---\n')
+      logger.info('--- END FILES ---\n')
       
       // Output results to stdout as JSON
-      console.log('\n--- DRY RUN RESULTS ---')
-      console.log(JSON.stringify(report.content, null, 2))
-      console.log('--- END RESULTS ---\n')
+      logger.info('\n--- DRY RUN RESULTS ---')
+      logger.info(JSON.stringify(report.content, null, 2))
+      logger.info('--- END RESULTS ---\n')
       
     } catch (error) {
       // Format the error nicely and throw a cleaner version
@@ -341,14 +342,14 @@ export class AnalyzeManager {
   }
 
   async analyzeDomain(name, blockNumber) {
-    console.log(`Analyzing ${name} at block ${blockNumber}`)
+    logger.debug(`Analyzing ${name} at block ${blockNumber}`)
     
     // Create a new Report instance for this name and block
     const report = new Report(this.archivePath, name, blockNumber)
     
     // Check if report already exists (skip if force is enabled)
     if (!this.forceWrite && await report.exists()) {
-      console.log(`Report already exists for ${name} at block ${blockNumber}, skipping`)
+      logger.info(`Report already exists for ${name} at block ${blockNumber}, skipping`)
       return
     }
     
@@ -360,7 +361,7 @@ export class AnalyzeManager {
     
     // Write the report to filesystem with force flag
     await report.write(this.forceWrite)
-    console.log(`Analysis complete for ${name} at block ${blockNumber}`)
+    logger.info(`Analysis complete for ${name} at block ${blockNumber}`)
   }
 }
 
