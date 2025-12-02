@@ -11,7 +11,7 @@ program
     .name('dapprank')
     .description('Analyze ENS sites for external dependencies and Web3 APIs')
     .option('-i, --ipfs <url>', 'IPFS API URL', 'http://localhost:5001')
-    .option('-r, --rpc <url>', 'Ethereum RPC URL', 'http://localhost:8545')
+    .option('-r, --rpc <url>', 'Ethereum RPC URL', 'https://eth.drpc.org')
     .option('-d, --directory <path>', 'Directory to store scan results and analysis')
     .option('-c, --cache <path>', 'Directory to use for cache (defaults to ./llm-cache)', './llm-cache')
     .option('-f, --force', 'Force overwrite existing reports')
