@@ -7,7 +7,7 @@ ENS site analysis and ranking tool with a web frontend and CLI backend.
 This is a pnpm workspace with two packages:
 
 - **`frontend/`** - Web application built with webpack and TypeScript
-- **`dapprank/`** - CLI tool for analyzing ENS sites
+- **`cli/`** - CLI tool for analyzing ENS sites
 
 ## Development
 
