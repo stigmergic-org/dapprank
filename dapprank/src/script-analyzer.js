@@ -6,7 +6,7 @@ import { getFileContent } from './ipfs-utils.js'
 import { SYSTEM_PROMPT_TEMPLATE } from './constants.js'
 import { logger } from './logger.js'
 import { validateUrls, normalizeUrl, stripApiKey } from './url-validator.js'
-import { deduplicateLibraries, deduplicateNetworking, deduplicateFallbacks } from './deduplication.js'
+import { deduplicateNetworking, deduplicateFallbacks } from './deduplication.js'
 import { getRateLimiter } from './rate-limiter.js'
 
 const promptHash = createPromptHash(SYSTEM_PROMPT_TEMPLATE);
@@ -90,21 +90,10 @@ async function geminiAnalysis(scriptText, filePath) {
     // Define the response schema structure
     const responseSchema = {
         type: "object",
-        required: ["libraries", "networking", "windowEthereum"],
+        required: ["networking", "windowEthereum"],
         properties: {
             windowEthereum: {
                 type: "boolean"
-            },
-            libraries: {
-                type: "array",
-                items: {
-                    type: "object",
-                    required: ["name", "motivation"],
-                    properties: {
-                        name: { type: "string" },
-                        motivation: { type: "string" }
-                    }
-                }
             },
             networking: {
                 type: "array",
@@ -217,7 +206,6 @@ async function geminiAnalysis(scriptText, filePath) {
                 const analysis = JSON.parse(textContent);
                 return {
                     windowEthereum: analysis.windowEthereum || false,
-                    libraries: analysis.libraries || [],
                     networking: analysis.networking || [],
                     fallbacks: analysis.fallbacks || [],
                     dynamicResourceLoading: analysis.dynamicResourceLoading || []
@@ -232,7 +220,6 @@ async function geminiAnalysis(scriptText, filePath) {
                 const analysis = JSON.parse(markdownMatch[1]);
                 return {
                     windowEthereum: analysis.windowEthereum || false,
-                    libraries: analysis.libraries || [],
                     networking: analysis.networking || [],
                     fallbacks: analysis.fallbacks || [],
                     dynamicResourceLoading: analysis.dynamicResourceLoading || []
@@ -301,7 +288,6 @@ async function geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries
             }
 
             // Merge and deduplicate results from all chunks
-            const allLibraries = results.reduce((acc, curr) => [...acc, ...(curr.libraries || [])], []);
             const allNetworking = results.reduce((acc, curr) => [...acc, ...(curr.networking || [])], []);
             const allFallbacks = results.reduce((acc, curr) => [...acc, ...(curr.fallbacks || [])], []);
             const allDynamicLoading = results.reduce((acc, curr) => [...acc, ...(curr.dynamicResourceLoading || [])], []);
@@ -310,7 +296,6 @@ async function geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries
             
             const mergedResults = {
                 windowEthereum,
-                libraries: deduplicateLibraries(allLibraries),
                 networking: deduplicateNetworking(allNetworking),
                 fallbacks: deduplicateFallbacks(allFallbacks),
                 dynamicResourceLoading: deduplicateNetworking(allDynamicLoading) // Use same logic as networking
@@ -318,7 +303,6 @@ async function geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries
             
             logger.debug('Merged chunked results', {
                 windowEthereum: mergedResults.windowEthereum,
-                libraries: mergedResults.libraries.length,
                 networking: mergedResults.networking.length,
                 fallbacks: mergedResults.fallbacks.length,
                 dynamicResourceLoading: mergedResults.dynamicResourceLoading.length
@@ -364,7 +348,6 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
     // Initialize empty results
     const result = {
         windowEthereum: false,
-        libraries: [],
         networking: [],
         fallbacks: [],
         dynamicResourceLoading: []
@@ -382,7 +365,6 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             // Return cached result
             const cachedAnalysis = {
                 windowEthereum: cachedResult.windowEthereum || false,
-                libraries: cachedResult.libraries || [],
                 networking: cachedResult.networking || [],
                 fallbacks: cachedResult.fallbacks || [],
                 dynamicResourceLoading: cachedResult.dynamicResourceLoading || []
@@ -434,11 +416,6 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             result.networking = validatedNetworking;
         }
         
-        // Process libraries
-        if (analysis.libraries && analysis.libraries.length > 0) {
-            result.libraries = analysis.libraries;
-        }
-        
         // Process fallbacks
         if (analysis.fallbacks && analysis.fallbacks.length > 0) {
             result.fallbacks = analysis.fallbacks;
@@ -472,7 +449,6 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         }
         
         // Deduplicate within single file results
-        result.libraries = deduplicateLibraries(result.libraries);
         result.networking = deduplicateNetworking(result.networking);
         result.fallbacks = deduplicateFallbacks(result.fallbacks);
         result.dynamicResourceLoading = deduplicateNetworking(result.dynamicResourceLoading); // Use same logic
@@ -480,7 +456,6 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         // Store in cache for future use - use file CID for caching
         await cache.setEntry(promptHash, fileCid, {
             windowEthereum: result.windowEthereum,
-            libraries: result.libraries,
             networking: result.networking,
             fallbacks: result.fallbacks,
             dynamicResourceLoading: result.dynamicResourceLoading
@@ -493,7 +468,6 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             cacheHit: false,
             durationMs: endTime - startTime,
             windowEthereum: result.windowEthereum,
-            libraryCount: result.libraries.length,
             networkingCount: result.networking.length,
             fallbackCount: result.fallbacks.length,
             dynamicLoadingCount: result.dynamicResourceLoading.length

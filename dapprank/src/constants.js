@@ -31,11 +31,7 @@ Analyze the provided JavaScript code and answer the following questions thorough
 
 IMPORTANT: Normalize all URLs by lowercasing domains and removing trailing slashes before returning them.
 
-1. What top level javascript libraries are being used?
-    - name: explicit name or descriptive title of the library
-    - motivation: say why you concluded the code uses this library (formatted as markdown)
-
-2. What calls are there to networking APIs, and what url is being passed? (if one of the methods is detected, there MUST be a corresponding entry in the networking section)
+1. What calls are there to networking APIs, and what url is being passed? (if one of the methods is detected, there MUST be a corresponding entry in the networking section)
     - method: look only for fetch, XMLHttpRequest, navigator.sendBeacon, WebSocket, WebSocketStream, EventSource, RTCPeerConnection
     - httpMethod: if determinable from the code, specify GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS; otherwise use UNKNOWN
     - urls: extract URLs with these rules:
@@ -46,7 +42,7 @@ IMPORTANT: Normalize all URLs by lowercasing domains and removing trailing slash
         * For APIs with keys in URL path (e.g., /v3/abc123), replace the key with placeholder (e.g., "https://api.com/v3/<api-key>")
         * Don't include urls that are only 'window.ethereum' or query param '?ds-rpc-<CHAIN_ID>'
         * Don't include API keys or secrets in URLs - replace them with <api-key> placeholder
-    - library: best guess if this call originates from one of the libraries from (1), or otherwise leave empty
+    - library: best guess which library makes this call, or otherwise leave empty
     - type: one of:
         - rpc: urls that are ethereum rpc endpoints
         - bundler: urls that are 4337 account abstraction bundler endpoints
@@ -55,14 +51,14 @@ IMPORTANT: Normalize all URLs by lowercasing domains and removing trailing slash
         - self: urls that are relative to the current domain, e.g. /path/to/resource
     - motivation: explain HOW the URL was identified (show code patterns like template literals, concatenation, etc.), specify source if dynamic/arbitrary (e.g., "from config.rpcUrl variable"), make sure to exclude api keys and other sensitive information
 
-3. What dappspec fallback mechanisms are supported? Look for code that parses URL query parameters and uses them as endpoints.
+2. What dappspec fallback mechanisms are supported? Look for code that parses URL query parameters and uses them as endpoints.
     - type: one of:
         - rpc: provided through '?ds-rpc-<CHAIN_ID>=<url>' (Ethereum RPC endpoint override for specific chain)
         - bundler: provided through '?ds-bundler-<CHAIN_ID>=<url>' (4337 bundler endpoint override for specific chain)
         - dservice-external: provided through '?ds-<ens-name>=<url>' (External ENS name resolution endpoint override)
     - motivation: Show HOW the code parses the parameter (e.g., "new URLSearchParams(location.search).get('ds-rpc-1')") and HOW it's used (e.g., "passed to ethers.JsonRpcProvider constructor"). IMPORTANT: Only report if code demonstrates BOTH parsing AND usage of the parameter value.
 
-5. Does the code access window.ethereum? Look for any way the code might access the ethereum property on the window object.
+3. Does the code access window.ethereum? Look for any way the code might access the ethereum property on the window object.
     - This includes: window.ethereum, window['ethereum'], const eth = window.ethereum, or any other access pattern
     - Return true if found, false otherwise
 
@@ -92,28 +88,11 @@ Return ONLY valid JSON that conforms to this OpenAPI 3.0 schema:
     "schemas": {
       "AnalysisResult": {
         "type": "object",
-        "required": ["libraries", "networking", "windowEthereum"],
+        "required": ["networking", "windowEthereum"],
         "properties": {
           "windowEthereum": {
             "type": "boolean",
             "description": "Whether code accesses window.ethereum"
-          },
-          "libraries": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["name", "motivation"],
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Name or descriptive title of the library"
-                },
-                "motivation": {
-                  "type": "string",
-                  "description": "Explanation for why this library was identified"
-                }
-              }
-            }
           },
           "networking": {
             "type": "array",

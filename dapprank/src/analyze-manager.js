@@ -444,14 +444,13 @@ const NETWORKING_STEPS = [
     
     for (const file of report.content.files) {
       try {
-        const { windowEthereum, libraries, networking, fallbacks, dynamicResourceLoading } = await analyzeScript(kubo, cache, file);
+        const { windowEthereum, networking, fallbacks, dynamicResourceLoading } = await analyzeScript(kubo, cache, file);
         
         // Set window.ethereum detection from AI
         if (windowEthereum) {
           file.usesWindowEthereum = true;
         }
         
-        if (libraries?.length > 0) file.libraries = libraries;
         if (networking?.length > 0) file.networking = networking;
         if (fallbacks?.length > 0) file.fallbacks = fallbacks;
         
@@ -519,11 +518,10 @@ const CLEANUP_STEPS = [
         }
       }
       
-      // Include if networking, fallbacks, or libraries arrays have values
+      // Include if networking or fallbacks arrays have values
       const hasNetworking = file.networking && file.networking.length > 0;
       const hasFallbacks = file.fallbacks && file.fallbacks.length > 0;
-      const hasLibraries = file.libraries && file.libraries.length > 0;
-      if (hasNetworking || hasFallbacks || hasLibraries) {
+      if (hasNetworking || hasFallbacks) {
         return true;
       }
       

@@ -60,7 +60,6 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
                 externalMedia: [],
             },
             networkingPurity: [],
-            libraryUsage: [],
             urls: [],
             ethereum: [], // Field to store unique files that access window.ethereum
             fallbacks: [] // New field to store dappspec fallback support
@@ -111,8 +110,6 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
                             
                             // Add networking purity findings to the report
                             addToReportIfNotEmpty(report.networkingPurity, scriptAnalysis.networking, inlineScriptPath);
-                            // Add libraries findings to the report
-                            addToReportIfNotEmpty(report.libraryUsage, scriptAnalysis.libraries, inlineScriptPath);
                             // Add Ethereum findings to the report
                             addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, inlineScriptPath);
                             // Add urls findings to the report
@@ -137,8 +134,6 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
                     
                     // Add networking findings to the report
                     addToReportIfNotEmpty(report.networkingPurity, scriptAnalysis.networking, file.path);
-                    // Add libraries findings to the report
-                    addToReportIfNotEmpty(report.libraryUsage, scriptAnalysis.libraries, file.path);
                     // Add Ethereum findings to the report
                     addToReportIfNotEmpty(report.ethereum, scriptAnalysis.ethereum, file.path);
                     // Add urls findings to the report
