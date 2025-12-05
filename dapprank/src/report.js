@@ -4,7 +4,7 @@ import { logger } from './logger.js'
 
 export class Report {
   #content = {
-    version: 3,
+    version: 4,
     blockNumber: 0,
     decodedContenthash: {
       codec: '',
@@ -16,6 +16,7 @@ export class Report {
     totalSize: 0,
     webmanifest: '',
     favicon: '',
+    failedScriptAnalysis: [],
     ownerAnalysis: {
       type: '',
       ownerAddress: '',

@@ -27,7 +27,8 @@ export async function analyzeHTML(kubo, cid, filePath) {
         if (src && src.startsWith('http')) {
             externalMedia.push({
                 type: elem.tagName.toLowerCase(),
-                url: src
+                url: src,
+                source: 'static'
             });
         }
     });
@@ -48,7 +49,8 @@ export async function analyzeHTML(kubo, cid, filePath) {
         
         externalScripts.push({
             type: elem.tagName.toLowerCase(),
-            url: src
+            url: src,
+            source: 'static'
         });
     });
     

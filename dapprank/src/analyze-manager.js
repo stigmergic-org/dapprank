@@ -295,7 +295,8 @@ export class AnalyzeManager {
     } else if (analysisType === 'governance') {
       stepsToRun = [...GOVERNANCE_STEPS, ...CLEANUP_STEPS]
     } else if (analysisType === 'networking') {
-      stepsToRun = [...NETWORKING_STEPS, ...CLEANUP_STEPS]
+      // Networking requires files to be loaded first, so include distribution steps
+      stepsToRun = [...DISTRIBUTION_STEPS, ...NETWORKING_STEPS, ...CLEANUP_STEPS]
     } else if (analysisType === 'all') {
       stepsToRun = ANALYSIS_STEPS
     } else {
@@ -437,30 +438,64 @@ const GOVERNANCE_STEPS = [
 
 // Networking analysis steps (steps 8-9): Web3 detection and script analysis
 const NETWORKING_STEPS = [
-  // Detect if the dapp uses window.ethereum
-  async (report, { kubo }) => {
+  // analyze scripts per file (includes window.ethereum detection from AI)
+  async (report, { kubo, cache }) => {
+    const failedFiles = [];
+    
     for (const file of report.content.files) {
-      let usesWindowEthereum = 0
-      if (file.path.endsWith('.js')) {
-        const scriptText = await getFileContent(kubo, file.cid)
-        usesWindowEthereum = detectWindowEthereum(scriptText)
-      } else if (file.inlineScripts?.length > 0) {
-        for (const script of file.inlineScripts) {
-          usesWindowEthereum += detectWindowEthereum(script)
+      try {
+        const { windowEthereum, libraries, networking, fallbacks, dynamicResourceLoading } = await analyzeScript(kubo, cache, file);
+        
+        // Set window.ethereum detection from AI
+        if (windowEthereum) {
+          file.usesWindowEthereum = true;
         }
-      }
-      if (usesWindowEthereum > 0) {
-        file.usesWindowEthereum = usesWindowEthereum
+        
+        if (libraries?.length > 0) file.libraries = libraries;
+        if (networking?.length > 0) file.networking = networking;
+        if (fallbacks?.length > 0) file.fallbacks = fallbacks;
+        
+        // Merge dynamic resource loading into distributionPurity structure
+        if (dynamicResourceLoading?.length > 0) {
+          // Initialize distributionPurity if it doesn't exist
+          if (!file.distributionPurity) {
+            file.distributionPurity = {
+              externalScripts: [],
+              externalMedia: []
+            };
+          }
+          
+          // Classify and merge dynamic loading into appropriate arrays
+          for (const item of dynamicResourceLoading) {
+            const dynamicItem = {
+              type: item.type === 'script' || item.type === 'stylesheet' ? 'script' : 
+                    item.type === 'media' ? item.urls[0]?.includes('image') ? 'img' : 'media' :
+                    'other',
+              url: item.urls[0] || '<unknown>',
+              method: item.method,
+              source: 'dynamic',
+              motivation: item.motivation
+            };
+            
+            // Add to appropriate array based on resource type
+            if (item.type === 'script' || item.type === 'stylesheet') {
+              file.distributionPurity.externalScripts.push(dynamicItem);
+            } else {
+              file.distributionPurity.externalMedia.push(dynamicItem);
+            }
+          }
+        }
+      } catch (error) {
+        logger.warn(`Failed to analyze ${file.path}:`, error.message);
+        failedFiles.push({
+          path: file.path,
+          error: error.message
+        });
       }
     }
-  },
-  // analyze scripts per file
-  async (report, { kubo, cache }) => {
-    for (const file of report.content.files) {
-      const { libraries, networking, fallbacks } = await analyzeScript(kubo, cache, file)
-      if (libraries?.length > 0) file.libraries = libraries
-      if (networking?.length > 0) file.networking = networking
-      if (fallbacks?.length > 0) file.fallbacks = fallbacks
+    
+    if (failedFiles.length > 0) {
+      report.set('failedScriptAnalysis', failedFiles);
     }
   }
 ]

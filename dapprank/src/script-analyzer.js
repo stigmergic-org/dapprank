@@ -5,25 +5,26 @@ import crypto from 'crypto'
 import { getFileContent } from './ipfs-utils.js'
 import { SYSTEM_PROMPT_TEMPLATE } from './constants.js'
 import { logger } from './logger.js'
+import { validateUrls, normalizeUrl, stripApiKey } from './url-validator.js'
+import { deduplicateLibraries, deduplicateNetworking, deduplicateFallbacks } from './deduplication.js'
+import { getRateLimiter } from './rate-limiter.js'
 
 const promptHash = createPromptHash(SYSTEM_PROMPT_TEMPLATE);
 
 const traverse = traverseDefault.default
 
 /**
- * Detect window.ethereum occurrences in JavaScript code
+ * Detect window.ethereum usage in JavaScript code
  * @param {string} scriptText - The JavaScript content to analyze
- * @returns {number} Number of occurrences found, 0 if none
+ * @returns {boolean} Whether window.ethereum is used
  */
 export function detectWindowEthereum(scriptText) {
     if (!scriptText || scriptText.trim().length < 20) {
-        return 0;
+        return false;
     }
     
-    const windowEthereumPattern = /window\.ethereum/g;
-    const matches = scriptText.match(windowEthereumPattern);
-    
-    return matches ? matches.length : 0;
+    const windowEthereumPattern = /window\.ethereum/;
+    return windowEthereumPattern.test(scriptText);
 }
 
 /**
@@ -89,8 +90,11 @@ async function geminiAnalysis(scriptText, filePath) {
     // Define the response schema structure
     const responseSchema = {
         type: "object",
-        required: ["libraries", "networking", "urls"],
+        required: ["libraries", "networking", "windowEthereum"],
         properties: {
+            windowEthereum: {
+                type: "boolean"
+            },
             libraries: {
                 type: "array",
                 items: {
@@ -109,6 +113,10 @@ async function geminiAnalysis(scriptText, filePath) {
                     required: ["method", "urls", "type", "motivation"],
                     properties: {
                         method: { type: "string" },
+                        httpMethod: { 
+                            type: "string",
+                            enum: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "UNKNOWN"]
+                        },
                         urls: { 
                             type: "array",
                             items: { type: "string" }
@@ -130,7 +138,29 @@ async function geminiAnalysis(scriptText, filePath) {
                     properties: {
                         type: { 
                             type: "string",
-                            enum: ["rpc", "bundler", "dservice-self", "dservice-external"]
+                            enum: ["rpc", "bundler", "dservice-external"]
+                        },
+                        motivation: { type: "string" }
+                    }
+                }
+            },
+            dynamicResourceLoading: {
+                type: "array",
+                items: {
+                    type: "object",
+                    required: ["method", "urls", "type", "motivation"],
+                    properties: {
+                        method: {
+                            type: "string",
+                            enum: ["dynamic-import", "script-injection", "link-injection", "image-tracking", "iframe-injection", "video-injection", "audio-injection"]
+                        },
+                        urls: {
+                            type: "array",
+                            items: { type: "string" }
+                        },
+                        type: {
+                            type: "string",
+                            enum: ["script", "stylesheet", "media", "other"]
                         },
                         motivation: { type: "string" }
                     }
@@ -144,10 +174,18 @@ async function geminiAnalysis(scriptText, filePath) {
 
     while (retries > 0) {
         try {
+            // Wait for rate limiter before making API call
+            const rateLimiter = getRateLimiter(2); // 2 requests per minute
+            await rateLimiter.waitForSlot();
+            
             // Query the Gemini model with structured output
             const response = await ai.models.generateContent({
-                // model: "gemini-2.5-pro-exp-03-25", // free model
-                model: "gemini-2.5-pro-preview-03-25",
+                model: "gemini-2.5-pro",
+                requestOptions: { apiClient: "rest" },
+                thinkingConfig: { 
+                  includeThoughts: true,
+                  thinkingBudget: 8192
+                },
                 contents: [
                     {
                         role: "user",
@@ -178,9 +216,11 @@ async function geminiAnalysis(scriptText, filePath) {
                 // First try to parse as direct JSON
                 const analysis = JSON.parse(textContent);
                 return {
-                    libraries: analysis.libraries,
-                    networking: analysis.networking,
-                    fallbacks: analysis.fallbacks
+                    windowEthereum: analysis.windowEthereum || false,
+                    libraries: analysis.libraries || [],
+                    networking: analysis.networking || [],
+                    fallbacks: analysis.fallbacks || [],
+                    dynamicResourceLoading: analysis.dynamicResourceLoading || []
                 };
             } catch (jsonError) {
                 // If direct JSON parse fails, try markdown extraction
@@ -191,9 +231,11 @@ async function geminiAnalysis(scriptText, filePath) {
                 
                 const analysis = JSON.parse(markdownMatch[1]);
                 return {
-                    libraries: analysis.libraries,
-                    networking: analysis.networking,
-                    fallbacks: analysis.fallbacks
+                    windowEthereum: analysis.windowEthereum || false,
+                    libraries: analysis.libraries || [],
+                    networking: analysis.networking || [],
+                    fallbacks: analysis.fallbacks || [],
+                    dynamicResourceLoading: analysis.dynamicResourceLoading || []
                 };
             }
         } catch (error) {
@@ -205,11 +247,17 @@ async function geminiAnalysis(scriptText, filePath) {
                     break;
                 }
                 logger.warn(`Error parsing Gemini response for ${filePath}, retrying... (${retries} attempts left)`);
+                logger.debug(`Error details: ${error.message}`);
+                if (error.stack) {
+                    logger.debug(`Stack trace: ${error.stack}`);
+                }
                 // Add a small delay between retries
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 continue;
             }
             
+            logger.error(`Failed to parse Gemini response after all retries for ${filePath}`);
+            logger.debug(`Final error: ${error.message}`);
             throw lastError;
         }
     }
@@ -217,15 +265,27 @@ async function geminiAnalysis(scriptText, filePath) {
     throw lastError;
 }
 
-async function geminiAnalysisWithChunking(scriptText, filePath) {
+async function geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries = 0) {
+    const MAX_RATE_LIMIT_RETRIES = 3;
+    
     try {
         return await geminiAnalysis(scriptText, filePath);
     } catch (error) {
-        // Handle rate limit error (429)
+        // Check if this is a quota exhaustion (don't retry)
+        if (error.message && error.message.includes('Quota exceeded')) {
+            logger.error(`Quota exceeded for ${filePath}: ${error.message}`);
+            throw error; // Don't retry quota exhaustion
+        }
+        
+        // Handle rate limit error (429) - but not quota exhaustion
         if (error.message && error.message.includes('status: 429')) {
-            logger.warn('Rate limit exceeded, waiting for 1 minute before retrying...');
+            if (rateLimitRetries >= MAX_RATE_LIMIT_RETRIES) {
+                logger.error(`Rate limit exceeded after ${MAX_RATE_LIMIT_RETRIES} retries, giving up on ${filePath}`);
+                throw error;
+            }
+            logger.warn(`Rate limit exceeded (retry ${rateLimitRetries + 1}/${MAX_RATE_LIMIT_RETRIES}), waiting for 1 minute before retrying...`);
             await new Promise(resolve => setTimeout(resolve, 60000)); // Wait for 1 minute
-            return await geminiAnalysisWithChunking(scriptText, filePath); // Retry recursively
+            return await geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries + 1); // Retry with incremented counter
         }
         
         // Handle token count exceeded error
@@ -240,18 +300,29 @@ async function geminiAnalysisWithChunking(scriptText, filePath) {
                 results.push(result);
             }
 
-            const mergedResults = results.reduce((acc, curr) => {
-                if (curr.libraries) {
-                    acc.libraries = [...acc.libraries, ...curr.libraries];
-                }
-                if (curr.networking) {
-                    acc.networking = [...acc.networking, ...curr.networking];
-                }
-                if (curr.fallbacks) {
-                    acc.fallbacks = [...acc.fallbacks, ...curr.fallbacks];
-                }
-                return acc;
-            }, { libraries: [], networking: [], fallbacks: [] });
+            // Merge and deduplicate results from all chunks
+            const allLibraries = results.reduce((acc, curr) => [...acc, ...(curr.libraries || [])], []);
+            const allNetworking = results.reduce((acc, curr) => [...acc, ...(curr.networking || [])], []);
+            const allFallbacks = results.reduce((acc, curr) => [...acc, ...(curr.fallbacks || [])], []);
+            const allDynamicLoading = results.reduce((acc, curr) => [...acc, ...(curr.dynamicResourceLoading || [])], []);
+            // windowEthereum: true if ANY chunk detected it
+            const windowEthereum = results.some(curr => curr.windowEthereum);
+            
+            const mergedResults = {
+                windowEthereum,
+                libraries: deduplicateLibraries(allLibraries),
+                networking: deduplicateNetworking(allNetworking),
+                fallbacks: deduplicateFallbacks(allFallbacks),
+                dynamicResourceLoading: deduplicateNetworking(allDynamicLoading) // Use same logic as networking
+            };
+            
+            logger.debug('Merged chunked results', {
+                windowEthereum: mergedResults.windowEthereum,
+                libraries: mergedResults.libraries.length,
+                networking: mergedResults.networking.length,
+                fallbacks: mergedResults.fallbacks.length,
+                dynamicResourceLoading: mergedResults.dynamicResourceLoading.length
+            });
             
             return mergedResults;
         }
@@ -287,55 +358,145 @@ export async function analyzeScript(kubo, cache, file) {
  * @throws {Error} If AI analysis fails
  */
 export async function analyzeIndividualScript(filePath, scriptText, cache, fileCid) {
+    const startTime = Date.now();
     logger.debug(`Analyzing script: ${filePath}`);
     
     // Initialize empty results
     const result = {
+        windowEthereum: false,
         libraries: [],
         networking: [],
-        fallbacks: []
+        fallbacks: [],
+        dynamicResourceLoading: []
     };
+    
+    let cacheHit = false;
     
     try {
         // Check if we already have an analysis for this script content and prompt
         const cachedResult = await cache.getEntry(promptHash, fileCid);
         if (cachedResult) {
+            cacheHit = true;
             logger.debug(`Using cached analysis for ${filePath}`);
             
-            // Initialize the returning result object
+            // Return cached result
             const cachedAnalysis = {
+                windowEthereum: cachedResult.windowEthereum || false,
                 libraries: cachedResult.libraries || [],
                 networking: cachedResult.networking || [],
                 fallbacks: cachedResult.fallbacks || [],
+                dynamicResourceLoading: cachedResult.dynamicResourceLoading || []
             };
+            
+            // Log metrics
+            logger.debug('Analysis metrics', {
+                file: filePath,
+                cacheHit: true,
+                durationMs: Date.now() - startTime
+            });
+            
             return cachedAnalysis;
         }
         
         const analysis = await geminiAnalysisWithChunking(scriptText, filePath);
-
         
         if (!analysis) {
             throw new Error('No valid analysis data extracted from response');
         }
         
-        // Process the results 
+        // Process window.ethereum detection
+        result.windowEthereum = analysis.windowEthereum || false;
+        
+        // Process and validate networking results
         if (analysis.networking && analysis.networking.length > 0) {
-            result.networking = analysis.networking;
+            const validatedNetworking = [];
+            
+            for (const item of analysis.networking) {
+                // Validate URLs against source code
+                const validation = validateUrls(item.urls || [], scriptText);
+                const invalidUrls = validation.filter(v => !v.valid);
+                
+                if (invalidUrls.length > 0) {
+                    logger.warn(`Invalid URLs detected in ${filePath}:`, invalidUrls.map(v => v.url));
+                }
+                
+                // Keep only valid URLs
+                const validUrls = validation.filter(v => v.valid).map(v => v.url);
+                
+                if (validUrls.length > 0) {
+                    validatedNetworking.push({
+                        ...item,
+                        urls: validUrls
+                    });
+                }
+            }
+            
+            result.networking = validatedNetworking;
         }
         
+        // Process libraries
         if (analysis.libraries && analysis.libraries.length > 0) {
             result.libraries = analysis.libraries;
         }
         
+        // Process fallbacks
         if (analysis.fallbacks && analysis.fallbacks.length > 0) {
             result.fallbacks = analysis.fallbacks;
         }
         
+        // Process dynamic resource loading and validate URLs
+        if (analysis.dynamicResourceLoading && analysis.dynamicResourceLoading.length > 0) {
+            const validatedDynamic = [];
+            
+            for (const item of analysis.dynamicResourceLoading) {
+                // Validate URLs against source code
+                const validation = validateUrls(item.urls || [], scriptText);
+                const invalidUrls = validation.filter(v => !v.valid);
+                
+                if (invalidUrls.length > 0) {
+                    logger.warn(`Invalid dynamic loading URLs in ${filePath}:`, invalidUrls.map(v => v.url));
+                }
+                
+                // Keep only valid URLs
+                const validUrls = validation.filter(v => v.valid).map(v => v.url);
+                
+                if (validUrls.length > 0) {
+                    validatedDynamic.push({
+                        ...item,
+                        urls: validUrls
+                    });
+                }
+            }
+            
+            result.dynamicResourceLoading = validatedDynamic;
+        }
+        
+        // Deduplicate within single file results
+        result.libraries = deduplicateLibraries(result.libraries);
+        result.networking = deduplicateNetworking(result.networking);
+        result.fallbacks = deduplicateFallbacks(result.fallbacks);
+        result.dynamicResourceLoading = deduplicateNetworking(result.dynamicResourceLoading); // Use same logic
+        
         // Store in cache for future use - use file CID for caching
         await cache.setEntry(promptHash, fileCid, {
+            windowEthereum: result.windowEthereum,
             libraries: result.libraries,
             networking: result.networking,
-            fallbacks: result.fallbacks
+            fallbacks: result.fallbacks,
+            dynamicResourceLoading: result.dynamicResourceLoading
+        });
+        
+        // Log metrics
+        const endTime = Date.now();
+        logger.debug('Analysis metrics', {
+            file: filePath,
+            cacheHit: false,
+            durationMs: endTime - startTime,
+            windowEthereum: result.windowEthereum,
+            libraryCount: result.libraries.length,
+            networkingCount: result.networking.length,
+            fallbackCount: result.fallbacks.length,
+            dynamicLoadingCount: result.dynamicResourceLoading.length
         });
         
         logger.debug(`Successfully analyzed ${filePath}`);
