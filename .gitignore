@@ -111,3 +111,7 @@ package-lock.json
 
 # DappRank script analysis cache
 script-analysis-cache.json
+llm-cache
+cli/llm-cache
+cli/tmp
+dapprank-data

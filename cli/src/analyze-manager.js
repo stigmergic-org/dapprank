@@ -499,8 +499,16 @@ const NETWORKING_STEPS = [
   }
 ]
 
-// Cleanup steps (step 11): filter out files without additional analysis
+// Cleanup steps (step 11): remove inline scripts content and filter out files without additional analysis
 const CLEANUP_STEPS = [
+  // Remove inline scripts content from files (keep analysis results only)
+  async (report, _) => {
+    const cleanedFiles = report.content.files.map(file => {
+      const { inlineScripts, ...cleanFile } = file;
+      return cleanFile;
+    });
+    report.set('files', cleanedFiles);
+  },
   // filter out files without additional analysis
   async (report, _) => {
     const newFiles = report.content.files.filter(file => {
