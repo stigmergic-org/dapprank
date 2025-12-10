@@ -350,7 +350,8 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         windowEthereum: false,
         networking: [],
         fallbacks: [],
-        dynamicResourceLoading: []
+        dynamicResourceLoading: [],
+        invalidDynamicUrls: []
     };
     
     let cacheHit = false;
@@ -367,7 +368,8 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
                 windowEthereum: cachedResult.windowEthereum || false,
                 networking: cachedResult.networking || [],
                 fallbacks: cachedResult.fallbacks || [],
-                dynamicResourceLoading: cachedResult.dynamicResourceLoading || []
+                dynamicResourceLoading: cachedResult.dynamicResourceLoading || [],
+                invalidDynamicUrls: cachedResult.invalidDynamicUrls || []
             };
             
             // Log metrics
@@ -424,6 +426,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         // Process dynamic resource loading and validate URLs
         if (analysis.dynamicResourceLoading && analysis.dynamicResourceLoading.length > 0) {
             const validatedDynamic = [];
+            const invalidUrlDetails = [];  // Track invalid URLs
             
             for (const item of analysis.dynamicResourceLoading) {
                 // Validate URLs against source code
@@ -432,6 +435,14 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
                 
                 if (invalidUrls.length > 0) {
                     logger.warn(`Invalid dynamic loading URLs in ${filePath}:`, invalidUrls.map(v => v.url));
+                    
+                    // Collect invalid URL details for reporting
+                    invalidUrlDetails.push({
+                        method: item.method,
+                        type: item.type,
+                        invalidUrls: invalidUrls.map(v => ({ url: v.url, reason: v.reason })),
+                        motivation: item.motivation
+                    });
                 }
                 
                 // Keep only valid URLs
@@ -446,6 +457,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             }
             
             result.dynamicResourceLoading = validatedDynamic;
+            result.invalidDynamicUrls = invalidUrlDetails;  // Store for reporting
         }
         
         // Deduplicate within single file results
@@ -458,7 +470,8 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             windowEthereum: result.windowEthereum,
             networking: result.networking,
             fallbacks: result.fallbacks,
-            dynamicResourceLoading: result.dynamicResourceLoading
+            dynamicResourceLoading: result.dynamicResourceLoading,
+            invalidDynamicUrls: result.invalidDynamicUrls
         });
         
         // Log metrics

@@ -35,34 +35,41 @@ export function validateUrls(urls, scriptText) {
   return urls.map(url => {
     const normalized = normalizeUrl(url);
     
-    // Handle special markers - always valid
-    if (url.startsWith('<') && url.endsWith('>')) {
-      return { url, valid: true, reason: 'marker' };
-    }
-    
-    // Direct string match (exact)
-    if (scriptText.includes(url)) {
-      return { url: normalized, valid: true, reason: 'direct' };
-    }
-    
+    // Priority 1: Domain match
     // Try to extract domain and check if it exists in code
     try {
       const urlObj = new URL(url);
       const domain = urlObj.hostname;
       
       // Check if domain exists anywhere in code
-      // Don't try to guess how it's templated - source code can do it arbitrarily
       if (scriptText.includes(domain)) {
         return { url: normalized, valid: true, reason: 'domain-found' };
       }
     } catch {
-      // Not a valid URL, check if it's a relative path
-      const cleanPath = url.replace(/^\//, '');
+      // Not a valid URL with domain, continue to next priority
+    }
+    
+    // Priority 2: Relative path match
+    // Check if it starts with / or ./ and exists in source
+    if (url.startsWith('/') || url.startsWith('./')) {
+      const cleanPath = url.replace(/^\.?\//, '');
       if (scriptText.includes(url) || scriptText.includes(cleanPath)) {
         return { url: normalized, valid: true, reason: 'relative' };
       }
     }
     
+    // Priority 3: Dynamic/Arbitrary marker check
+    // Only accept <dynamic> or <arbitrary> markers (not other placeholders)
+    if (url.includes('<dynamic>') || url.includes('<arbitrary>')) {
+      return { url, valid: true, reason: 'marker' };
+    }
+    
+    // Priority 4: Direct match (fallback for edge cases)
+    if (scriptText.includes(url)) {
+      return { url: normalized, valid: true, reason: 'direct' };
+    }
+    
+    // Otherwise invalid
     return { url, valid: false, reason: 'not-found' };
   });
 }
