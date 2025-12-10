@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { program } from 'commander'
-import { scanCommand, analyzeCommand } from '../src/cli-commands.js'
+import { scanCommand, analyzeCommand, buildIdxsCommand } from '../src/cli-commands.js'
 import { logger } from '../src/logger.js'
 
 program
@@ -57,5 +57,22 @@ program
         await analyzeCommand(ensName, mergedOptions);
     });
 
+// Build indexes command
+program
+    .command('build-idxs')
+    .description('Build directory indexes from archive (live, webapps)')
+    .action(async (options) => {
+        const parentOptions = program.optsWithGlobals();
+        const mergedOptions = { ...parentOptions, ...options };
+        
+        // Set log level
+        let logLevel = mergedOptions.logLevel;
+        if (logLevel && logLevel.startsWith('=')) {
+            logLevel = logLevel.substring(1);
+        }
+        logger.setLevel(logLevel);
+        
+        await buildIdxsCommand(mergedOptions);
+    });
 
 program.parseAsync();

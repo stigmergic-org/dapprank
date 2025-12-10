@@ -2,6 +2,7 @@ import { create as createKubo } from 'kubo-rpc-client'
 import { promises as fs } from 'fs'
 import { ScanManager } from './scan-manager.js'
 import { AnalyzeManager } from './analyze-manager.js'
+import { IndexBuilder } from './index-builder.js'
 import { logger } from './logger.js'
 
 // Scan command
@@ -94,6 +95,33 @@ export async function analyzeCommand(ensName, options) {
         }
         logger.debug(error);
         
+        process.exit(1);
+    }
+}
+
+// Build indexes command
+export async function buildIdxsCommand(options) {
+    try {
+        if (!options.directory) {
+            logger.error('--directory (-d) option is required');
+            process.exit(1);
+        }
+
+        logger.info(`Building indexes in directory: ${options.directory}`);
+        
+        const indexBuilder = new IndexBuilder(options.directory);
+        await indexBuilder.initialize();
+        
+        const stats = await indexBuilder.buildAllIndexes();
+        
+        logger.success('Indexes built successfully!');
+        logger.info(`Live apps: ${stats.liveCount}`);
+        logger.info(`Webapps: ${stats.webappsCount}`);
+        logger.info(`Completed in ${stats.elapsedSeconds}s`);
+        
+    } catch (error) {
+        logger.error('Failed to build indexes');
+        logger.error(`Error: ${error.message}`);
         process.exit(1);
     }
 }
