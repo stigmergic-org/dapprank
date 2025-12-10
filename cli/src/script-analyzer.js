@@ -3,7 +3,7 @@ import * as parser from '@babel/parser'
 import traverseDefault from '@babel/traverse'
 import crypto from 'crypto'
 import { getFileContent } from './ipfs-utils.js'
-import { SYSTEM_PROMPT_TEMPLATE } from './constants.js'
+import { SYSTEM_PROMPT_TEMPLATE, AI_REQUESTS_PER_MINUTE } from './constants.js'
 import { logger } from './logger.js'
 import { validateUrls, normalizeUrl, stripApiKey } from './url-validator.js'
 import { deduplicateNetworking, deduplicateFallbacks } from './deduplication.js'
@@ -164,7 +164,7 @@ async function geminiAnalysis(scriptText, filePath) {
     while (retries > 0) {
         try {
             // Wait for rate limiter before making API call
-            const rateLimiter = getRateLimiter(2); // 2 requests per minute
+            const rateLimiter = getRateLimiter(AI_REQUESTS_PER_MINUTE);
             await rateLimiter.waitForSlot();
             
             // Query the Gemini model with structured output
