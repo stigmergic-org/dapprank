@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { program } from 'commander'
-import { scanCommand, analyzeCommand, buildIdxsCommand } from '../src/cli-commands.js'
+import { scanCommand, analyzeCommand, buildIdxsCommand, rankCommand } from '../src/cli-commands.js'
 import { logger } from '../src/logger.js'
 
 program
@@ -73,6 +73,26 @@ program
         logger.setLevel(logLevel);
         
         await buildIdxsCommand(mergedOptions);
+    });
+
+// Rank command
+program
+    .command('rank')
+    .description('Calculate censorship resistance rank score for a dapp')
+    .argument('<ens-name>', 'ENS name to rank')
+    .option('--json', 'Output in JSON format', false)
+    .action(async (ensName, options) => {
+        const parentOptions = program.optsWithGlobals();
+        const mergedOptions = { ...parentOptions, ...options };
+        
+        // Set log level
+        let logLevel = mergedOptions.logLevel;
+        if (logLevel && logLevel.startsWith('=')) {
+            logLevel = logLevel.substring(1);
+        }
+        logger.setLevel(logLevel);
+        
+        await rankCommand(ensName, mergedOptions);
     });
 
 program.parseAsync();

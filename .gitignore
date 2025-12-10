@@ -115,3 +115,4 @@ llm-cache
 cli/llm-cache
 cli/tmp
 dapprank-data
+cli/test-data

@@ -7,3 +7,4 @@ export { detectWindowEthereum, splitScriptIntoChunks, analyzeIndividualScript } 
 export { generateReport, saveReport, reportExistsForCID } from './report-generator.js'
 export { addCommand, updateCommand, testCommand, initializeCache } from './cli-commands.js'
 export { resolveENSName } from './ens-resolver.js'
+export { calculateRankScore, scoreDistribution, scoreNetworking, scoreGovernance, scoreManifest, RANK_VERSION, CATEGORY_WEIGHTS } from './rank-calculator.js'
