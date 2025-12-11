@@ -26,7 +26,8 @@ export function normalizeUrl(url) {
 
 /**
  * Validate URLs against source code
- * Simplified: only checks if domain exists in source code
+ * Only checks if domain exists in source code for absolute URLs
+ * Accepts all relative URLs without validation
  * @param {string[]} urls - Array of URLs to validate
  * @param {string} scriptText - Source code to validate against
  * @returns {Array<{url: string, valid: boolean, reason: string}>} Validation results
@@ -35,7 +36,18 @@ export function validateUrls(urls, scriptText) {
   return urls.map(url => {
     const normalized = normalizeUrl(url);
     
-    // Priority 1: Domain match
+    // Priority 1: Relative URLs - accept all relative URLs without checking
+    if (url.startsWith('/') || url.startsWith('./')) {
+      return { url: normalized, valid: true, reason: 'relative' };
+    }
+    
+    // Priority 2: Dynamic/Arbitrary marker check
+    // Accept markers like <dynamic> or <arbitrary>
+    if (url.includes('<dynamic>') || url.includes('<arbitrary>')) {
+      return { url, valid: true, reason: 'marker' };
+    }
+    
+    // Priority 3: Domain match for absolute URLs
     // Try to extract domain and check if it exists in code
     try {
       const urlObj = new URL(url);
@@ -45,23 +57,11 @@ export function validateUrls(urls, scriptText) {
       if (scriptText.includes(domain)) {
         return { url: normalized, valid: true, reason: 'domain-found' };
       }
+      
+      // Domain not found in source
+      return { url, valid: false, reason: 'domain-not-found' };
     } catch {
-      // Not a valid URL with domain, continue to next priority
-    }
-    
-    // Priority 2: Relative path match
-    // Check if it starts with / or ./ and exists in source
-    if (url.startsWith('/') || url.startsWith('./')) {
-      const cleanPath = url.replace(/^\.?\//, '');
-      if (scriptText.includes(url) || scriptText.includes(cleanPath)) {
-        return { url: normalized, valid: true, reason: 'relative' };
-      }
-    }
-    
-    // Priority 3: Dynamic/Arbitrary marker check
-    // Only accept <dynamic> or <arbitrary> markers (not other placeholders)
-    if (url.includes('<dynamic>') || url.includes('<arbitrary>')) {
-      return { url, valid: true, reason: 'marker' };
+      // Not a valid absolute URL, check direct match as fallback
     }
     
     // Priority 4: Direct match (fallback for edge cases)
