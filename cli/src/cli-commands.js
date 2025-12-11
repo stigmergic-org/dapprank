@@ -245,7 +245,7 @@ export async function rankCommand(ensName, options) {
         
         // Filter to only numeric directory names and sort to find latest
         const blockNumbers = blockDirs
-            .filter(entry => entry.type === 1) // directories only
+            .filter(entry => entry.type === 'directory') // directories only
             .map(entry => parseInt(entry.name))
             .filter(num => !isNaN(num))
             .sort((a, b) => b - a) // Sort descending to get latest first
@@ -281,8 +281,8 @@ export async function rankCommand(ensName, options) {
         // Calculate rank score
         let rankScore
         try {
-            // Pass the report directory (where assets/ subfolder is located)
-            rankScore = await calculateRankScore(report, reportDir)
+            // Pass storage and report directory (where assets/ subfolder is located)
+            rankScore = await calculateRankScore(report, storage, reportDir)
         } catch (error) {
             logger.error(`Failed to calculate rank: ${error.message}`)
             process.exit(1)

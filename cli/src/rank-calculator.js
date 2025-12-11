@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs'
-import { join } from 'path'
 import { ANALYSIS_VERSION } from './constants.js'
 import { logger } from './logger.js'
 
@@ -165,10 +163,11 @@ export function scoreGovernance(report) {
  * Score the manifest completeness (15 points max)
  * Higher scores for complete PWA manifest
  * @param {Object} report - The dapp report
+ * @param {Object} storage - Storage interface for reading files
  * @param {string} reportDir - Directory where the report is located
  * @returns {Promise<number>} Score out of 15
  */
-export async function scoreManifest(report, reportDir) {
+export async function scoreManifest(report, storage, reportDir) {
   // Check if manifest file reference exists in report
   if (!report.webmanifest || report.webmanifest === '') {
     logger.debug('Manifest: No manifest file referenced in report')
@@ -176,11 +175,11 @@ export async function scoreManifest(report, reportDir) {
   }
   
   // Try to load the manifest.json from assets directory
-  const manifestPath = join(reportDir, 'assets', report.webmanifest)
+  const manifestPath = `${reportDir}/assets/${report.webmanifest}`
   
   let manifest
   try {
-    const manifestContent = await fs.readFile(manifestPath, 'utf8')
+    const manifestContent = await storage.readFileString(manifestPath)
     manifest = JSON.parse(manifestContent)
   } catch (error) {
     throw new Error(`Manifest file referenced but not found in assets: ${manifestPath}\nThis may indicate a corrupted report. Please re-analyze.`)
@@ -234,10 +233,11 @@ export function validateReportVersion(report) {
 /**
  * Calculate the overall rank score for a dapp
  * @param {Object} report - The dapp report
+ * @param {Object} storage - Storage interface for reading files
  * @param {string} reportDir - Directory where the report is located
  * @returns {Promise<Object>} Rank score with breakdown
  */
-export async function calculateRankScore(report, reportDir) {
+export async function calculateRankScore(report, storage, reportDir) {
   // Validate report version first
   validateReportVersion(report)
   
@@ -245,7 +245,7 @@ export async function calculateRankScore(report, reportDir) {
   const distribution = scoreDistribution(report)
   const networking = scoreNetworking(report)
   const governance = scoreGovernance(report)
-  const manifest = await scoreManifest(report, reportDir)
+  const manifest = await scoreManifest(report, storage, reportDir)
   
   // Calculate overall score
   const overallScore = distribution + networking + governance + manifest

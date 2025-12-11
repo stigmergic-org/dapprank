@@ -74,7 +74,7 @@ export class AnalyzeManager {
   async listArchiveFolders() {
     try {
       const entries = await this.storage.listDirectory('/archive')
-      const folders = entries.filter(e => e.type === 1) // directories only
+      const folders = entries.filter(e => e.type === 'directory') // directories only
       
       const nameBlockPairs = []
       
@@ -85,7 +85,7 @@ export class AnalyzeManager {
         try {
           const blockDirs = await this.storage.listDirectory(domainPath)
           const blockNumbers = blockDirs
-            .filter(entry => entry.type === 1) // directories only
+            .filter(entry => entry.type === 'directory') // directories only
             .map(entry => parseInt(entry.name))
             .filter(num => !isNaN(num))
           
@@ -223,7 +223,7 @@ export class AnalyzeManager {
     // Get all block numbers for this specific name
     const blockDirs = await this.storage.listDirectory(targetPath)
     const blockNumbers = blockDirs
-      .filter(entry => entry.type === 1) // directories only
+      .filter(entry => entry.type === 'directory') // directories only
       .map(entry => parseInt(entry.name))
       .filter(num => !isNaN(num))
       .sort((a, b) => b - a) // Sort descending to get largest first
@@ -261,7 +261,7 @@ export class AnalyzeManager {
     // Get all block numbers for this specific name
     const blockDirs = await this.storage.listDirectory(targetPath)
     const blockNumbers = blockDirs
-      .filter(entry => entry.type === 1) // directories only
+      .filter(entry => entry.type === 'directory') // directories only
       .map(entry => parseInt(entry.name))
       .filter(num => !isNaN(num))
       .sort((a, b) => b - a) // Sort descending to get largest first
@@ -274,8 +274,8 @@ export class AnalyzeManager {
     const largestBlock = blockNumbers[0]
     logger.info(`Found largest block ${largestBlock} for ${targetName}`)
     
-    // Create a temporary report for dry run (in-memory only)
-    const report = new Report(this.archivePath, targetName, largestBlock)
+    // Create a new Report instance for dry run
+    const report = new Report(this.storage, targetName, largestBlock)
     
     // Determine which steps to run based on analysis type
     let stepsToRun
@@ -335,7 +335,7 @@ export class AnalyzeManager {
     logger.debug(`Analyzing ${name} at block ${blockNumber}`)
     
     // Create a new Report instance for this name and block
-    const report = new Report(this.archivePath, name, blockNumber)
+    const report = new Report(this.storage, name, blockNumber)
     
     // Check if report already exists (skip if force is enabled)
     if (!this.forceWrite && await report.exists()) {

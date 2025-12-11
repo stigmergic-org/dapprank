@@ -116,3 +116,4 @@ cli/llm-cache
 cli/tmp
 dapprank-data
 cli/test-data
+data-pointer.txt

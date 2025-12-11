@@ -207,7 +207,7 @@ export async function reportExistsForCID(ensName, cid, storage) {
         // Get all block number directories
         const entries = await storage.listDirectory(archiveDir);
         const blockDirs = entries
-            .filter(entry => entry.type === 1) // directories only
+            .filter(entry => entry.type === 'directory') // directories only
             .map(entry => entry.name)
             .filter(dir => !isNaN(Number(dir))); // Filter out non-numeric directories
         

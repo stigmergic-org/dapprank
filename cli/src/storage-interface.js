@@ -107,7 +107,7 @@ export class FilesystemStorage extends StorageInterface {
     const entries = await fs.readdir(fullPath, { withFileTypes: true })
     return entries.map(entry => ({
       name: entry.name,
-      type: entry.isDirectory() ? 1 : 0, // Match MFS convention
+      type: entry.isDirectory() ? 'directory' : 'file',
       size: 0
     }))
   }

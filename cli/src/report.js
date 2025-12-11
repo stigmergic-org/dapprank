@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs'
-import { join } from 'path'
 import { logger } from './logger.js'
 
 export class Report {
@@ -25,17 +23,17 @@ export class Report {
   }
   #files = {}
 
-  constructor(archivePath, name, blockNumber) {
+  constructor(storage, name, blockNumber) {
+    this.storage = storage
     this.name = name
     this.blockNumber = blockNumber.toString()
-    this.archivePath = archivePath
-    this.fullPath = join(archivePath, name, this.blockNumber, 'report.json')
-    this.metadataPath = join(archivePath, name, this.blockNumber, 'metadata.json')
+    this.basePath = `/archive/${name}/${this.blockNumber}`
     this.set('blockNumber', blockNumber)
   }
 
   async readMetadata() {
-    const metadataContent = await fs.readFile(this.metadataPath, 'utf8')
+    const metadataPath = `${this.basePath}/metadata.json`
+    const metadataContent = await this.storage.readFileString(metadataPath)
     return JSON.parse(metadataContent)
   }
 
@@ -124,12 +122,8 @@ export class Report {
    * @returns {Promise<boolean>} - True if report exists, false otherwise
    */
   async exists() {
-    try {
-      await fs.access(this.fullPath)
-      return true
-    } catch {
-      return false
-    }
+    const reportPath = `${this.basePath}/report.json`
+    return await this.storage.exists(reportPath)
   }
 
   /**
@@ -138,7 +132,8 @@ export class Report {
    */
   async load() {
     try {
-      const reportContent = await fs.readFile(this.fullPath, 'utf8')
+      const reportPath = `${this.basePath}/report.json`
+      const reportContent = await this.storage.readFileString(reportPath)
       const reportData = JSON.parse(reportContent)
       
       // Merge existing data with current instance
@@ -151,7 +146,7 @@ export class Report {
   }
 
   /**
-   * Write the report to the filesystem as report.json
+   * Write the report to storage as report.json
    * @returns {Promise<void>}
    */
   async write(force = false) {
@@ -160,8 +155,9 @@ export class Report {
     }
     logger.info('Writing report...')
     try {
-      await fs.writeFile(this.fullPath, JSON.stringify(this.#content, null, 2))
-      logger.info(`Report written to ${this.fullPath}`)
+      const reportPath = `${this.basePath}/report.json`
+      await this.storage.writeFile(reportPath, JSON.stringify(this.#content, null, 2))
+      logger.info(`Report written to ${reportPath}`)
     } catch (error) {
       throw new Error(`Failed to write report: ${error.message}`)
     }
@@ -169,24 +165,20 @@ export class Report {
   }
 
   /**
-   * Write the files to the filesystem, in an 'assets' subfolder
+   * Write the files to storage, in an 'assets' subfolder
    */
   async writeFiles() {
-    // Use the directory path (without the filename) for creating assets subdirectory
-    const dirPath = this.fullPath.substring(0, this.fullPath.lastIndexOf('/'))
-    const assetsPath = join(dirPath, 'assets')
-    await fs.mkdir(assetsPath, { recursive: true })
+    const assetsPath = `${this.basePath}/assets`
+    
     for (const [path, data] of Object.entries(this.#files)) {
-      // Create the full path including any subdirectories
-      const fullPath = join(assetsPath, path)
-      // Get directory path by removing the filename
-      const lastSlashIndex = fullPath.lastIndexOf('/')
-      if (lastSlashIndex > 0) { // Only create dirs if path contains a slash
-        const dirPath = fullPath.substring(0, lastSlashIndex)
-        // Create parent directories if they don't exist
-        await fs.mkdir(dirPath, { recursive: true })
+      const fullPath = `${assetsPath}/${path}`
+      
+      try {
+        await this.storage.writeFile(fullPath, data)
+        logger.debug(`Wrote asset: ${fullPath}`)
+      } catch (error) {
+        logger.warn(`Failed to write asset ${path}: ${error.message}`)
       }
-      await fs.writeFile(fullPath, data)
     }
   }
 }

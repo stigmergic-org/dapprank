@@ -29,7 +29,7 @@ export class IndexBuilder {
   async getAllLiveApps() {
     // 1. Read archive directory
     const entries = await this.storage.listDirectory('/archive')
-    const folders = entries.filter(e => e.type === 1) // directories only
+    const folders = entries.filter(e => e.type === 'directory') // directories only
     
     const liveApps = []
     
@@ -41,7 +41,7 @@ export class IndexBuilder {
         // 2. Get all block directories
         const blockDirs = await this.storage.listDirectory(domainPath)
         const blockNumbers = blockDirs
-          .filter(e => e.type === 1) // directories only
+          .filter(e => e.type === 'directory') // directories only
           .map(e => parseInt(e.name))
           .filter(n => !isNaN(n))
         
@@ -96,8 +96,8 @@ export class IndexBuilder {
         const reportContent = await this.storage.readFileString(app.reportPath)
         const report = JSON.parse(reportContent)
         
-        // Calculate rank score (requires report + reportDir for manifest files)
-        const rankScore = await calculateRankScore(report, reportDir)
+        // Calculate rank score (requires report + storage + reportDir for manifest files)
+        const rankScore = await calculateRankScore(report, this.storage, reportDir)
         
         appsWithScores.push({
           name: app.name,
