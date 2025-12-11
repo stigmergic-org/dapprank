@@ -283,11 +283,12 @@ export class MFSStorage extends StorageInterface {
       const rootCid = await this.getRootCID()
       if (rootCid) {
         await fs.writeFile(this.dataPointerPath, rootCid)
-        logger.debug(`Data pointer updated: ${rootCid}`)
+        logger.info(`Data pointer updated: ${rootCid}`)
+        logger.info(`  View at: /ipfs/${rootCid}`)
       }
     } catch (error) {
       // Log warning but don't fail the flush - MFS data is already persisted
-      logger.warn(`Failed to update data pointer file: ${error.message}`)
+      logger.warn(`Failed to update data pointer file at ${this.dataPointerPath}: ${error.message}`)
     }
   }
 
@@ -296,7 +297,7 @@ export class MFSStorage extends StorageInterface {
       const stat = await this.kubo.files.stat(this.rootPath)
       return stat.cid.toString()
     } catch (error) {
-      logger.warn(`Failed to get root CID: ${error.message}`)
+      logger.warn(`Failed to get root CID for path ${this.rootPath}: ${error.message}`)
       return null
     }
   }

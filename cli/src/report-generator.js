@@ -27,7 +27,7 @@ async function getFileContent(kubo, cid) {
         }
         return Buffer.concat(chunks).toString('utf-8');
     } catch (error) {
-        logger.error(`Error getting file content: ${error.message}`);
+        logger.error(`Error getting file content for CID ${cid}: ${error.message}`);
         return null;
     }
 }

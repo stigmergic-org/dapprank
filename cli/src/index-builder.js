@@ -84,13 +84,19 @@ export class IndexBuilder {
     // 1. Get all live apps (apps with report.json and non-empty contenthash)
     const liveApps = await this.getAllLiveApps()
     
-    logger.info(`Calculating rank scores for ${liveApps.length} apps...`)
+    const totalApps = liveApps.length
+    logger.info(`Calculating rank scores for ${totalApps} apps...`)
     
     // 2. Calculate scores for each app
     const appsWithScores = []
     
-    for (const app of liveApps) {
+    for (let i = 0; i < liveApps.length; i++) {
+      const app = liveApps[i]
       try {
+        if (i % 50 === 0 && i > 0) {
+          logger.info(`Progress: ${i}/${totalApps} apps scored`)
+        }
+        
         // reportDir is the directory containing the report, needed for manifest files
         const reportDir = `/archive/${app.name}/${app.blockNumber}`
         const reportContent = await this.storage.readFileString(app.reportPath)

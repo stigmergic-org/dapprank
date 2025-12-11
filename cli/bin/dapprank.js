@@ -15,7 +15,7 @@ program
     .option('-d, --directory <path>', 'Output directory (only used when --use-mfs=false)', 'public/dapps')
     .option('-c, --cache <path>', 'Directory to use for cache (defaults to ./llm-cache)', './llm-cache')
     .option('-f, --force', 'Force overwrite existing reports')
-    .option('-l, --log-level <level>', 'Log level (error, warn, info, debug)', 'error')
+    .option('-l, --log-level <level>', 'Log level (error, warn, info, debug)', process.env.LOG_LEVEL || 'error')
     .option('--use-mfs', 'Use IPFS MFS for storage', true)
     .option('-p, --data-pointer <path>', 'File to store MFS root CID', './data-pointer.txt')
 

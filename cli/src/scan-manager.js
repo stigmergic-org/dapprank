@@ -76,6 +76,7 @@ export class ScanManager {
   }
 
   async scanContenthashChanges(fromBlock = 0) {
+    const startTime = Date.now()
     logger.info(`Scanning for contenthash changes from block ${fromBlock}...`)
     
     let hasMore = true
@@ -124,7 +125,7 @@ export class ScanManager {
         }
         
       } catch (error) {
-        console.error('Error fetching contenthash changes:', error)
+        logger.error(`Error fetching contenthash changes: ${error.message}`)
         hasMore = false
       }
     }
@@ -134,7 +135,10 @@ export class ScanManager {
       await this.saveScanHeight(lastBlockNumber)
     }
     
-    logger.info(`Scan complete. Processed ${totalChanges} changes up to block ${lastBlockNumber}`)
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1)
+    const blocksProcessed = lastBlockNumber - fromBlock
+    const rate = blocksProcessed > 0 && duration > 0 ? (blocksProcessed / parseFloat(duration)).toFixed(0) : '0'
+    logger.info(`Scan complete. Processed ${totalChanges} changes up to block ${lastBlockNumber} in ${duration}s (${rate} blocks/sec)`)
     return { totalChanges, lastBlockNumber }
   }
 
@@ -182,7 +186,7 @@ export class ScanManager {
       
       logger.info(`Saved: ${safeEnsName} at block ${blockNumber}`)
     } catch (error) {
-      console.error(`Error saving contenthash change for ${safeEnsName}:`, error.message)
+      logger.error(`Error saving contenthash change for ${safeEnsName}: ${error.message}`)
       // Continue processing other entries even if this one fails
     }
   }

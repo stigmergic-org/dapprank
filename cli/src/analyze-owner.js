@@ -180,7 +180,9 @@ export async function classifyAddress(addr, rpcUrl) {
           totalOwners: owners.length
         }
       }
-    } catch {}
+    } catch (error) {
+      logger.debug(`Not a Safe contract at ${address}: ${error.message}`)
+    }
 
     // Check if it's an OpenZeppelin Governor
     try {
@@ -191,7 +193,9 @@ export async function classifyAddress(addr, rpcUrl) {
         args: [0n] 
       })
       return { type: 'DAO_Governor' }
-    } catch {}
+    } catch (error) {
+      logger.debug(`Not a Governor contract at ${address}: ${error.message}`)
+    }
 
     // Check if it's a Moloch/Baal DAO
     try {
@@ -201,7 +205,9 @@ export async function classifyAddress(addr, rpcUrl) {
         functionName: 'sharesToken' 
       })
       return { type: 'DAO_MolochBaal' }
-    } catch {}
+    } catch (error) {
+      logger.debug(`Not a Moloch/Baal DAO at ${address}: ${error.message}`)
+    }
 
     // Check if it's a generic single-owner contract
     try {
@@ -211,12 +217,14 @@ export async function classifyAddress(addr, rpcUrl) {
         functionName: 'owner' 
       })
       return { type: 'ContractWallet_SingleOwner', owner }
-    } catch {}
+    } catch (error) {
+      logger.debug(`Not a single-owner contract at ${address}: ${error.message}`)
+    }
 
     // Fallback for unknown contracts
     return { type: 'Contract_Unknown' }
   } catch (error) {
-    console.error(`Error classifying address ${addr}:`, error.message)
+    logger.error(`Error classifying address ${addr}: ${error.message}`)
     return { type: 'Error', error: error.message }
   }
 }
@@ -336,7 +344,7 @@ export async function analyzeOwners(ensNames, rpcUrl) {
       const result = await analyzeOwner(ensName, rpcUrl)
       results.push(result)
     } catch (error) {
-      console.error(`Error in batch analysis for ${ensName}:`, error.message)
+      logger.error(`Error in batch analysis for ${ensName}: ${error.message}`)
       results.push({
         type: 'Error',
         ownerAddress: '',

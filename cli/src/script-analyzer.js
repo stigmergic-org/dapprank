@@ -64,7 +64,7 @@ export function splitScriptIntoChunks(scriptText) {
             splitIndex = closestNode.start;
         }
     } catch (err) {
-        console.warn('AST parsing failed — falling back to char-based split.', err);
+        logger.warn(`AST parsing failed — falling back to char-based split: ${err.message}`);
     }
 
     // Perform the split

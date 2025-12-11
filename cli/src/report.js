@@ -140,7 +140,7 @@ export class Report {
       Object.assign(this.#content, reportData)
       return true
     } catch (error) {
-      console.warn(`Could not load existing report: ${error.message}`)
+      logger.warn(`Could not load existing report: ${error.message}`)
       return false
     }
   }

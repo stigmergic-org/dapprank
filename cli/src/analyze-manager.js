@@ -101,7 +101,7 @@ export class AnalyzeManager {
       // Sort by block number (ascending)
       return nameBlockPairs.sort((a, b) => a.latestNumber - b.latestNumber)
     } catch (error) {
-      logger.error('Error listing archive folders:', error)
+      logger.warn(`Error listing archive folders: ${error.message}`)
       return []
     }
   }
@@ -113,6 +113,7 @@ export class AnalyzeManager {
       throw new Error('No latest block number analyzed. Cannot analyze forwards without previous analysis.')
     }
     
+    const startTime = Date.now()
     logger.info(`Starting forward analysis from block ${state.latestAnalyzed}`)
     
     const nameBlockPairs = await this.listArchiveFolders()
@@ -128,14 +129,18 @@ export class AnalyzeManager {
     let newLatestAnalyzed = state.latestAnalyzed
     let successCount = 0
     let failureCount = 0
+    const totalDomains = toAnalyze.length
     
-    for (const { name, latestNumber } of toAnalyze) {
+    for (let i = 0; i < toAnalyze.length; i++) {
+      const { name, latestNumber } = toAnalyze[i]
+      const progress = `(${i + 1}/${totalDomains})`
       try {
+        logger.info(`Analyzing ${name} at block ${latestNumber} ${progress}`)
         await this.analyzeDomain(name, latestNumber)
         newLatestAnalyzed = Math.max(newLatestAnalyzed, latestNumber)
         successCount++
       } catch (error) {
-        console.error(`Error analyzing ${name} at block ${latestNumber}:`, error.message)
+        logger.error(`Error analyzing ${name} at block ${latestNumber} ${progress}: ${error.message}`)
         failureCount++
       }
     }
@@ -150,10 +155,13 @@ export class AnalyzeManager {
     }
     
     // Summary
-    logger.info(`Forward analysis completed: ${successCount} succeeded, ${failureCount} failed`)
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1)
+    const rate = totalDomains > 0 ? (totalDomains / (duration / 60)).toFixed(2) : '0'
+    logger.info(`Forward analysis completed: ${successCount} succeeded, ${failureCount} failed in ${duration}s (${rate} domains/min)`)
   }
 
   async analyzeBackwards() {
+    const startTime = Date.now()
     const state = await this.getAnalysisState()
     
     // Determine starting point for backwards analysis
@@ -165,7 +173,7 @@ export class AnalyzeManager {
       startBlock = state.scannedUntil
       logger.info(`Starting backwards analysis from scanned until block ${startBlock}`)
     } else {
-      console.error('No reference point for backwards analysis, please run dapprank scan first')
+      logger.error('No reference point for backwards analysis, please run dapprank scan first')
     }
     
     // Now analyze blocks that are older than our starting point
@@ -185,14 +193,17 @@ export class AnalyzeManager {
     let newOldestAnalyzed = startBlock
     let successCount = 0
     let failureCount = 0
+    const totalDomains = toAnalyze.length
     
-    for (const { name, latestNumber } of toAnalyze) {
-      logger.debug(`Analyzing ${name} at block ${latestNumber}`)
+    for (let i = 0; i < toAnalyze.length; i++) {
+      const { name, latestNumber } = toAnalyze[i]
+      const progress = `(${i + 1}/${totalDomains})`
+      logger.info(`Analyzing ${name} at block ${latestNumber} ${progress}`)
       try {
         await this.analyzeDomain(name, latestNumber)
         successCount++
       } catch (error) {
-        console.error(`Error analyzing ${name} at block ${latestNumber}:`, error.message)
+        logger.error(`Error analyzing ${name} at block ${latestNumber} ${progress}: ${error.message}`)
         failureCount++
       }
       newOldestAnalyzed = Math.min(newOldestAnalyzed, latestNumber)
@@ -208,7 +219,9 @@ export class AnalyzeManager {
     }
     
     // Summary
-    logger.info(`Backwards analysis completed: ${successCount} succeeded, ${failureCount} failed`)
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1)
+    const rate = totalDomains > 0 ? (totalDomains / (duration / 60)).toFixed(2) : '0'
+    logger.info(`Backwards analysis completed: ${successCount} succeeded, ${failureCount} failed in ${duration}s (${rate} domains/min)`)
   }
 
   async analyzeSpecificName(targetName, analysisType = null) {

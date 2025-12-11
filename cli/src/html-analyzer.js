@@ -183,7 +183,7 @@ export async function getFavicon(kubo, files) {
                         isDataUrl: true
                     });
                 } catch (error) {
-                    console.warn('Failed to decode data URL:', error);
+                    logger.warn(`Failed to decode data URL: ${error.message}`);
                 }
             }
         } else {
