@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import { join } from 'path'
-import { getFilesFromCID, detectMimeType, getDappspecJson } from './ipfs-utils.js'
+import { getFilesFromCID, detectMimeType } from './ipfs-utils.js'
 import { analyzeHTML, getFavicon } from './html-analyzer.js'
 import { analyzeIndividualScript } from './script-analyzer.js'
 import { ANALYSIS_VERSION } from './constants.js'
@@ -73,7 +73,6 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
             report.totalSize += file.size;
 
             if (file.path.includes('.well-known/source.git')) continue
-            if (file.path === '.well-known/dappspec.json') continue
             
             const fileMimeType = await detectMimeType(kubo, file.cid);
             logger.debug(`File: ${file.path}, Detected MIME type: ${fileMimeType}`);
@@ -169,20 +168,6 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2))
     logger.info(`Report saved to ${reportPath}`)
 
-    // Check and save dappspec.json if it exists
-    let hasDappspec = false
-    try {
-        const dappspecFile = await getDappspecJson(kubo, report.contentHash)
-        if (dappspecFile) {
-            const dappspecPath = join(archiveDir, 'dappspec.json')
-            await fs.writeFile(dappspecPath, JSON.stringify(dappspecFile, null, 2))
-            logger.info(`Dappspec saved to ${dappspecPath}`)
-            hasDappspec = true
-        }
-    } catch (error) {
-        logger.warn(`No dappspec.json found: ${error.message}`)
-    }
-
     // Create metadata.json in the root archive directory if it doesn't exist
     const archiveMetadataPath = join(rootArchiveDir, 'metadata.json')
     try {
@@ -222,14 +207,6 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
     const relativeReportPath = join('../../archive', ensName, blockNumber.toString(), 'report.json')
     await fs.symlink(relativeReportPath, symlinkPath)
     logger.info(`Symlink created at ${symlinkPath}`)
-
-    // Create symlink to latest dappspec.json if it exists
-    if (hasDappspec) {
-        const dappspecSymlinkPath = join(indexDir, 'dappspec.json')
-        const relativeDappspecPath = join('../../archive', ensName, blockNumber.toString(), 'dappspec.json')
-        await fs.symlink(relativeDappspecPath, dappspecSymlinkPath)
-        logger.info(`Dappspec symlink created at ${dappspecSymlinkPath}`)
-    }
 
     // Try to save favicon to archive directory only if favicon exists
     if (report.favicon && faviconInfo && faviconInfo.data) {
