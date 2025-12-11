@@ -116,9 +116,21 @@ export async function buildIdxsCommand(options) {
         
         const stats = await indexBuilder.buildAllIndexes();
         
+        if (stats.scoredApps === 0) {
+            logger.warn('No apps could be scored. No indexes created.');
+            return;
+        }
+        
         logger.success('Indexes built successfully!');
-        logger.info(`Live apps: ${stats.liveCount}`);
-        logger.info(`Webapps: ${stats.webappsCount}`);
+        logger.info(`Total apps in archive: ${stats.totalApps}`);
+        logger.info(`Apps successfully scored: ${stats.scoredApps}`);
+        logger.info(`Categories indexed: ${Object.keys(stats.categories).length}`);
+        
+        // Show per-category stats
+        for (const [category, catStats] of Object.entries(stats.categories)) {
+            logger.info(`  ${category}: ${catStats.totalRanges} ranges`);
+        }
+        
         logger.info(`Completed in ${stats.elapsedSeconds}s`);
         
     } catch (error) {

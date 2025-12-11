@@ -1,6 +1,19 @@
 import { promises as fs } from 'fs'
 import { join, dirname } from 'path'
 import { logger } from './logger.js'
+import { calculateRankScore, CATEGORY_WEIGHTS } from './rank-calculator.js'
+
+const BUCKET_SIZE = 25
+
+const CATEGORIES = ['total', 'distribution', 'networking', 'governance', 'manifest']
+
+const CATEGORY_SHORT_NAMES = {
+  'total': 'total',
+  'distribution': 'dist',
+  'networking': 'net',
+  'governance': 'gov',
+  'manifest': 'mani'
+}
 
 export class IndexBuilder {
   constructor(directory) {
@@ -8,13 +21,15 @@ export class IndexBuilder {
     this.archivePath = join(directory, 'archive')
     this.indexPath = join(directory, 'index')
     this.livePath = join(this.indexPath, 'live')
-    this.webappsPath = join(this.indexPath, 'webapps')
+    this.scorePath = join(this.indexPath, 'score')
+    this.bucketSize = BUCKET_SIZE
+    this.categories = CATEGORIES
   }
 
   async initialize() {
     // Create index directories
     await fs.mkdir(this.livePath, { recursive: true })
-    await fs.mkdir(this.webappsPath, { recursive: true })
+    await fs.mkdir(this.scorePath, { recursive: true })
   }
 
   async getAllLiveApps() {
@@ -72,44 +87,46 @@ export class IndexBuilder {
     return liveApps.sort((a, b) => a.name.localeCompare(b.name))
   }
 
-  async validateWebmanifest(reportPath) {
-    try {
-      // 1. Read report.json
-      const reportContent = await fs.readFile(reportPath, 'utf8')
-      const report = JSON.parse(reportContent)
-      
-      // 2. Check if webmanifest field exists and is non-empty
-      if (!report.webmanifest) return false
-      
-      // 3. Load manifest.json from same directory
-      const manifestPath = join(dirname(reportPath), report.webmanifest)
-      const manifestContent = await fs.readFile(manifestPath, 'utf8')
-      const manifest = JSON.parse(manifestContent)
-      
-      // 4. Validate required fields
-      const hasName = typeof manifest.name === 'string' && manifest.name.trim().length > 0
-      const hasDescription = typeof manifest.description === 'string' && manifest.description.trim().length > 0
-      const hasIcons = Array.isArray(manifest.icons) && manifest.icons.length > 0
-      
-      return hasName && hasDescription && hasIcons
-      
-    } catch (error) {
-      logger.debug(`Webmanifest validation failed for ${reportPath}: ${error.message}`)
-      return false
-    }
-  }
-
-  async getWebapps(liveApps) {
-    const webapps = []
+  async getAllAppsWithScores() {
+    // 1. Get all live apps (apps with report.json and non-empty contenthash)
+    const liveApps = await this.getAllLiveApps()
+    
+    logger.info(`Calculating rank scores for ${liveApps.length} apps...`)
+    
+    // 2. Calculate scores for each app
+    const appsWithScores = []
     
     for (const app of liveApps) {
-      const isValid = await this.validateWebmanifest(app.reportPath)
-      if (isValid) {
-        webapps.push(app)
+      try {
+        const reportDir = dirname(app.reportPath)
+        const reportContent = await fs.readFile(app.reportPath, 'utf8')
+        const report = JSON.parse(reportContent)
+        
+        // Calculate rank score (requires report + reportDir for manifest files)
+        const rankScore = await calculateRankScore(report, reportDir)
+        
+        appsWithScores.push({
+          name: app.name,
+          blockNumber: app.blockNumber,
+          reportPath: app.reportPath,
+          rankScore: rankScore, // Full rank score object
+          scores: {
+            total: rankScore.overallScore,
+            dist: rankScore.categories.distribution.score,
+            net: rankScore.categories.networking.score,
+            gov: rankScore.categories.governance.score,
+            mani: rankScore.categories.manifest.score
+          }
+        })
+      } catch (error) {
+        // Skip apps that fail scoring (missing required fields, etc.)
+        logger.debug(`Skipping ${app.name}: ${error.message}`)
       }
     }
     
-    return webapps
+    logger.info(`Successfully scored ${appsWithScores.length} apps`)
+    
+    return appsWithScores
   }
 
   async cleanIndex(indexPath) {
@@ -121,10 +138,12 @@ export class IndexBuilder {
         if (entry.name === 'stats.json') continue
         
         const entryPath = join(indexPath, entry.name)
-        // Remove symlinks only (safety check)
-        const stats = await fs.lstat(entryPath)
-        if (stats.isSymbolicLink()) {
+        
+        if (entry.isSymbolicLink()) {
           await fs.unlink(entryPath)
+        } else if (entry.isDirectory()) {
+          // Remove entire directory tree (including all files and subdirectories)
+          await fs.rm(entryPath, { recursive: true, force: true })
         }
       }
     } catch (error) {
@@ -133,62 +152,151 @@ export class IndexBuilder {
     }
   }
 
-  async saveIndexStats(indexPath, count, indexName) {
-    const statsPath = join(indexPath, 'stats.json')
-    const stats = {
-      count,
-      lastUpdated: new Date().toISOString(),
-      indexName
-    }
-    await fs.writeFile(statsPath, JSON.stringify(stats, null, 2))
-  }
-
-  async buildLiveIndex(liveApps) {
-    logger.info(`Building live index...`)
+  async buildLiveIndex(apps) {
+    logger.info('Building live index...')
     
-    // Clean existing symlinks
+    // Clean existing directories and symlinks
     await this.cleanIndex(this.livePath)
     
-    // Create symlinks
-    for (const app of liveApps) {
-      const symlinkPath = join(this.livePath, app.name)
-      const targetPath = join('..', '..', 'archive', app.name, app.blockNumber.toString())
+    // Sort by ENS name for consistent ordering
+    const sortedApps = [...apps].sort((a, b) => a.name.localeCompare(b.name))
+    
+    // Calculate score stats for live index
+    const scores = sortedApps.map(app => app.scores.total)
+    const scoreStats = {
+      min: Math.min(...scores),
+      max: Math.max(...scores),
+      avg: scores.reduce((a, b) => a + b, 0) / scores.length
+    }
+    
+    // Create directory for each app with report.json and score.json
+    for (const app of sortedApps) {
+      const appDirPath = join(this.livePath, app.name)
+      
+      // Create app directory
+      await fs.mkdir(appDirPath, { recursive: true })
+      
+      // Create report.json symlink -> archive
+      const reportSymlinkPath = join(appDirPath, 'report.json')
+      const reportTargetPath = join('..', '..', '..', 'archive', app.name, app.blockNumber.toString(), 'report.json')
       
       try {
-        await fs.symlink(targetPath, symlinkPath)
+        await fs.symlink(reportTargetPath, reportSymlinkPath)
       } catch (error) {
-        logger.warn(`Failed to create symlink for ${app.name}: ${error.message}`)
+        logger.warn(`Failed to create report symlink for ${app.name}: ${error.message}`)
+        continue
+      }
+      
+      // Create score.json file (without maxScore - it's in stats.json)
+      const scoreFilePath = join(appDirPath, 'score.json')
+      const scoreData = {
+        rankVersion: app.rankScore.rankVersion,
+        overallScore: app.rankScore.overallScore,
+        categories: {
+          distribution: app.rankScore.categories.distribution.score,
+          networking: app.rankScore.categories.networking.score,
+          governance: app.rankScore.categories.governance.score,
+          manifest: app.rankScore.categories.manifest.score
+        }
+      }
+      
+      try {
+        await fs.writeFile(scoreFilePath, JSON.stringify(scoreData, null, 2))
+      } catch (error) {
+        logger.warn(`Failed to create score.json for ${app.name}: ${error.message}`)
       }
     }
     
-    // Save stats
-    await this.saveIndexStats(this.livePath, liveApps.length, 'live')
+    // Save stats with total count, score stats, and maxScores
+    const maxScores = {
+      total: 100,
+      distribution: CATEGORY_WEIGHTS.distribution,
+      networking: CATEGORY_WEIGHTS.networking,
+      governance: CATEGORY_WEIGHTS.governance,
+      manifest: CATEGORY_WEIGHTS.manifest
+    }
     
-    logger.success(`Live index created: ${liveApps.length} apps`)
+    await fs.writeFile(
+      join(this.livePath, 'stats.json'),
+      JSON.stringify({
+        count: sortedApps.length,
+        lastUpdated: new Date().toISOString(),
+        scoreStats: scoreStats,
+        maxScores: maxScores
+      }, null, 2)
+    )
+    
+    logger.success(`Live index created: ${sortedApps.length} apps`)
   }
 
-  async buildWebappsIndex(webapps) {
-    logger.info(`Building webapps index...`)
+  async buildScoreIndex(category, apps) {
+    const categoryName = category // 'total', 'distribution', etc.
+    const categoryPath = join(this.scorePath, categoryName)
+    const scoreKey = CATEGORY_SHORT_NAMES[category]
     
-    // Clean existing symlinks
-    await this.cleanIndex(this.webappsPath)
+    // Create category directory
+    await fs.mkdir(categoryPath, { recursive: true })
     
-    // Create symlinks
-    for (const app of webapps) {
-      const symlinkPath = join(this.webappsPath, app.name)
-      const targetPath = join('..', '..', 'archive', app.name, app.blockNumber.toString())
+    // Sort apps by score (descending), then by name (ascending) for tiebreaking
+    const sortedApps = [...apps].sort((a, b) => {
+      const scoreDiff = b.scores[scoreKey] - a.scores[scoreKey]
+      if (scoreDiff !== 0) return scoreDiff
+      return a.name.localeCompare(b.name) // Tiebreaker
+    })
+    
+    // Calculate how many range directories we need
+    const totalRanges = Math.ceil(sortedApps.length / this.bucketSize)
+    
+    // Create all range directories (even if partially empty)
+    for (let i = 0; i < totalRanges; i++) {
+      const rangeStart = i * this.bucketSize + 1
+      const rangeEnd = rangeStart + this.bucketSize - 1
+      const rangeLabel = `${rangeStart}-${rangeEnd}` // Always show full range
+      const rangePath = join(categoryPath, rangeLabel)
       
-      try {
-        await fs.symlink(targetPath, symlinkPath)
-      } catch (error) {
-        logger.warn(`Failed to create symlink for ${app.name}: ${error.message}`)
+      // Create range directory
+      await fs.mkdir(rangePath, { recursive: true })
+      await this.cleanIndex(rangePath)
+      
+      // Get apps for this range
+      const rangeApps = sortedApps.slice(i * this.bucketSize, (i + 1) * this.bucketSize)
+      
+      // Create directory symlinks to live index
+      for (const app of rangeApps) {
+        const symlinkPath = join(rangePath, app.name)
+        const targetPath = join('..', '..', '..', 'live', app.name)
+        
+        try {
+          await fs.symlink(targetPath, symlinkPath, 'dir')
+        } catch (error) {
+          logger.warn(`Failed to create directory symlink for ${app.name} in ${rangeLabel}: ${error.message}`)
+        }
       }
+      
+      // Save range-level stats with total count
+      await fs.writeFile(
+        join(rangePath, 'stats.json'),
+        JSON.stringify({
+          count: rangeApps.length,
+          category: categoryName,
+          lastUpdated: new Date().toISOString()
+        }, null, 2)
+      )
     }
     
-    // Save stats
-    await this.saveIndexStats(this.webappsPath, webapps.length, 'webapps')
+    // Save category-level stats with total count
+    await fs.writeFile(
+      join(categoryPath, 'stats.json'),
+      JSON.stringify({
+        count: sortedApps.length,
+        category: categoryName,
+        lastUpdated: new Date().toISOString()
+      }, null, 2)
+    )
     
-    logger.success(`Webapps index created: ${webapps.length} apps`)
+    logger.success(`${categoryName}: ${totalRanges} ranges created`)
+    
+    return { totalRanges, totalApps: sortedApps.length }
   }
 
   async buildAllIndexes() {
@@ -199,21 +307,39 @@ export class IndexBuilder {
     const liveApps = await this.getAllLiveApps()
     logger.info(`Found ${liveApps.length} live apps`)
     
-    // 2. Filter for webapps
-    logger.info('Filtering for webapps with valid manifests...')
-    const webapps = await this.getWebapps(liveApps)
-    logger.info(`Found ${webapps.length} webapps`)
+    // 2. Calculate scores for all apps
+    const appsWithScores = await this.getAllAppsWithScores()
     
-    // 3. Build indexes
-    await this.buildLiveIndex(liveApps)
-    await this.buildWebappsIndex(webapps)
+    // 3. Check if we have any scoreable apps
+    if (appsWithScores.length === 0) {
+      logger.warn('No apps could be scored. Not creating any indexes.')
+      return {
+        totalApps: liveApps.length,
+        scoredApps: 0,
+        categories: {},
+        elapsedSeconds: ((Date.now() - startTime) / 1000).toFixed(2)
+      }
+    }
+    
+    // 4. Build live index
+    await this.buildLiveIndex(appsWithScores)
+    
+    // 5. Build score indexes for each category
+    const categoryStats = {}
+    
+    for (const category of this.categories) {
+      logger.info(`Building ${category} score index...`)
+      const stats = await this.buildScoreIndex(category, appsWithScores)
+      categoryStats[category] = stats
+    }
     
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(2)
     logger.info(`Index build completed in ${elapsed}s`)
     
     return {
-      liveCount: liveApps.length,
-      webappsCount: webapps.length,
+      totalApps: liveApps.length,
+      scoredApps: appsWithScores.length,
+      categories: categoryStats,
       elapsedSeconds: elapsed
     }
   }
