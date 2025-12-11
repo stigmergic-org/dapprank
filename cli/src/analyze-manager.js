@@ -215,12 +215,14 @@ export class AnalyzeManager {
     logger.info(`Analyzing specific ENS name: ${targetName}`)
     
     // Check if the target name exists in the archive
+    logger.debug(`Checking if ${targetName} exists in archive...`)
     const targetPath = `/archive/${targetName}`
     if (!(await this.storage.exists(targetPath))) {
-      throw new Error(`ENS name ${targetName} not found in archive folder`)
+      throw new Error(`ENS name ${targetName} not found in archive folder. Run 'dapprank scan' first.`)
     }
     
     // Get all block numbers for this specific name
+    logger.debug(`Reading block directories for ${targetName}...`)
     const blockDirs = await this.storage.listDirectory(targetPath)
     const blockNumbers = blockDirs
       .filter(entry => entry.type === 'directory') // directories only
@@ -234,16 +236,22 @@ export class AnalyzeManager {
     }
     
     const largestBlock = blockNumbers[0]
-    logger.info(`Found largest block ${largestBlock} for ${targetName}`)
+    logger.debug(`Found ${blockNumbers.length} block(s) for ${targetName}`)
+    logger.info(`Using latest block: ${largestBlock}`)
     
     // Only analyze the largest block number
     try {
       await this.analyzeDomain(targetName, largestBlock, analysisType)
-      logger.info(`Completed analysis for ${targetName}`)
+      logger.success(`✅ Completed analysis for ${targetName}`)
     } catch (error) {
       // Format the error nicely and throw a cleaner version
-      const cleanError = new Error(`Failed to analyze ${targetName} at block ${largestBlock}: ${error.message}`)
+      logger.error(`Failed during analysis of ${targetName} at block ${largestBlock}`)
+      const cleanError = new Error(`Analysis failed: ${error.message}`)
       cleanError.cause = error // Preserve the original error for debugging
+      cleanError.details = {
+        ensName: targetName,
+        blockNumber: largestBlock
+      }
       throw cleanError
     }
     
@@ -332,7 +340,7 @@ export class AnalyzeManager {
   }
 
   async analyzeDomain(name, blockNumber) {
-    logger.debug(`Analyzing ${name} at block ${blockNumber}`)
+    logger.info(`🔍 Analyzing ${name} at block ${blockNumber}`)
     
     // Create a new Report instance for this name and block
     const report = new Report(this.storage, name, blockNumber)
@@ -345,13 +353,29 @@ export class AnalyzeManager {
     
     // Always run all steps for regular analysis
     const analysisUtils = { kubo: this.kubo, cache: this.#cacheManager, rpcUrl: this.rpcUrl }
+    const totalSteps = ANALYSIS_STEPS.length
+    let currentStep = 0
+    
     for (const step of ANALYSIS_STEPS) {
-      await step(report, analysisUtils)
+      currentStep++
+      logger.debug(`Step ${currentStep}/${totalSteps}: Running analysis step`)
+      const stepStart = Date.now()
+      
+      try {
+        await step(report, analysisUtils)
+        const stepDuration = Date.now() - stepStart
+        logger.debug(`Step ${currentStep}/${totalSteps}: Completed in ${stepDuration}ms`)
+      } catch (error) {
+        logger.error(`Step ${currentStep}/${totalSteps}: Failed`)
+        logger.debug(`Step error: ${error.message}`)
+        throw error
+      }
     }
     
     // Write the report to filesystem with force flag
+    logger.debug('Writing report to storage...')
     await report.write(this.forceWrite)
-    logger.info(`Analysis complete for ${name} at block ${blockNumber}`)
+    logger.success(`✅ Analysis complete for ${name} at block ${blockNumber}`)
   }
 }
 

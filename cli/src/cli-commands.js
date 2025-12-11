@@ -120,19 +120,30 @@ export async function analyzeCommand(ensName, options) {
             }
         }
 
+        logger.debug(`IPFS endpoint: ${options.ipfs}`)
+        logger.debug(`RPC endpoint: ${options.rpc}`)
+        logger.debug(`Cache path: ${options.cache}`)
+        
+        logger.debug('Creating Kubo client...')
         const kubo = createKubo({ url: options.ipfs })
+        
+        logger.debug('Creating storage interface...')
         const storage = createStorage(options, kubo)
         const storageType = options.useMfs ? 'MFS' : 'filesystem'
         logger.info(`Starting analysis using ${storageType} storage`)
         
+        logger.debug('Initializing AnalyzeManager...')
         const analyzeManager = new AnalyzeManager(storage, kubo, options.force, options.cache, options.rpc)
         await analyzeManager.initialize()
+        logger.debug('AnalyzeManager initialized successfully')
         
         if (ensName) {
             logger.info(`Analyzing only ENS name: ${ensName}`)
             if (options.dryRun) {
+                logger.debug(`Running dry-run analysis (type: ${options.dryRun})`)
                 await analyzeManager.dryRunAnalysis(ensName, options.dryRun)
             } else {
+                logger.debug('Running full analysis')
                 await analyzeManager.analyzeSpecificName(ensName)
             }
         } else if (options.backwards) {
@@ -149,11 +160,35 @@ export async function analyzeCommand(ensName, options) {
         logger.error('Analysis failed')
         logger.error(`Error: ${error.message}`)
         
-        // If there's a cause, show it for debugging
-        if (error.cause) {
-            logger.debug(`Technical details: ${error.cause.message}`)
+        // Show error details if available
+        if (error.details) {
+            if (error.details.endpoint) {
+                logger.debug(`Endpoint: ${error.details.endpoint}`)
+            }
+            if (error.details.ensName) {
+                logger.debug(`ENS name: ${error.details.ensName}`)
+            }
+            if (error.details.suggestion) {
+                logger.info(`💡 ${error.details.suggestion}`)
+            }
         }
-        logger.debug(error)
+        
+        // Walk through the error cause chain
+        let currentError = error.cause
+        let depth = 0
+        while (currentError && depth < 5) {
+            const causeMessage = typeof currentError === 'object' ? 
+                (currentError.message || currentError.toString()) : 
+                currentError.toString()
+            logger.debug(`  Caused by: ${causeMessage}`)
+            currentError = currentError.cause
+            depth++
+        }
+        
+        // Show stack trace in debug mode
+        if (error.stack && logger.currentLevel >= logger.levels.debug) {
+            logger.debug(`Stack trace:\n${error.stack}`)
+        }
         
         process.exit(1)
     }

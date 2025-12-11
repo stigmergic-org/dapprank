@@ -11,7 +11,11 @@ import { logger } from './logger.js'
 function createClient(rpcUrl) {
    return createPublicClient({
      chain: mainnet,
-     transport: http(rpcUrl)
+     transport: http(rpcUrl, {
+       timeout: 30_000, // 30 second timeout
+       retryCount: 3,
+       retryDelay: 1000, // 1 second between retries
+     })
    })
 }
 
@@ -22,10 +26,23 @@ function createClient(rpcUrl) {
  */
 async function testRpcConnectivity(rpcUrl) {
   try {
+    logger.debug(`Testing RPC connectivity to: ${rpcUrl}`)
+    const startTime = Date.now()
     const client = createClient(rpcUrl)
-    await client.getBlockNumber()
+    const blockNumber = await client.getBlockNumber()
+    const elapsed = Date.now() - startTime
+    logger.debug(`RPC connection successful (${elapsed}ms), current block: ${blockNumber}`)
     return true
   } catch (error) {
+    logger.error(`RPC connectivity test failed for ${rpcUrl}`)
+    logger.debug(`RPC error type: ${error.name}`)
+    logger.debug(`RPC error message: ${error.message}`)
+    if (error.cause) {
+      logger.debug(`RPC error cause: ${error.cause.message || error.cause}`)
+    }
+    if (error.code) {
+      logger.debug(`RPC error code: ${error.code}`)
+    }
     return false
   }
 }
@@ -89,8 +106,10 @@ const OWNER_ABI = [
  */
 export async function classifyAddress(addr, rpcUrl) {
   try {
+    logger.debug(`Classifying address: ${addr}`)
     const address = getAddress(addr)
     const client = createClient(rpcUrl)
+    logger.debug(`Fetching bytecode for address: ${address}`)
     const code = await client.getBytecode({ address })
     
     if (!code || code === '0x') {
@@ -210,21 +229,31 @@ export async function classifyAddress(addr, rpcUrl) {
  */
 export async function analyzeOwner(ensName, rpcUrl) {
   logger.debug(`Analyzing owner for ENS name: ${ensName}`)
+  logger.debug(`Using RPC endpoint: ${rpcUrl}`)
 
   // Test RPC connectivity first
   const isRpcReachable = await testRpcConnectivity(rpcUrl)
   if (!isRpcReachable) {
-    throw new Error(`RPC endpoint ${rpcUrl} is not reachable`)
+    const error = new Error(`RPC endpoint is not reachable or timed out`)
+    error.details = {
+      endpoint: rpcUrl,
+      ensName: ensName,
+      suggestion: 'Try using a different RPC endpoint with --rpc <url> or check your network connection'
+    }
+    throw error
   }
 
   try {
     // Create viem client for ENS resolution
+    logger.debug(`Creating viem client for ENS resolution`)
     const client = createClient(rpcUrl)
 
     // Resolve the current owner using @simplepg/common with proper parameters
+    logger.debug(`Resolving ENS owner for: ${ensName}`)
     const ownerAddress = await resolveEnsOwner(client, ensName, 1) // 1 = mainnet chainId
 
     if (!ownerAddress) {
+      logger.debug(`No owner found for ${ensName}`)
       return {
         type: 'No_Owner_Found',
         ownerAddress: '',
@@ -232,7 +261,10 @@ export async function analyzeOwner(ensName, rpcUrl) {
       }
     }
 
+    logger.debug(`Owner address resolved: ${ownerAddress}`)
+
     // Classify the owner address
+    logger.debug(`Classifying owner address: ${ownerAddress}`)
     const classification = await classifyAddress(ownerAddress, rpcUrl)
 
     // Transform classification to match report.js schema
@@ -270,7 +302,16 @@ export async function analyzeOwner(ensName, rpcUrl) {
     return result
 
   } catch (error) {
-    console.error(`Error analyzing owner for ${ensName}:`, error.message)
+    logger.error(`Error analyzing owner for ${ensName}`)
+    logger.debug(`Error type: ${error.name || 'Unknown'}`)
+    logger.debug(`Error message: ${error.message}`)
+    if (error.cause) {
+      logger.debug(`Error cause: ${typeof error.cause === 'object' ? error.cause.message : error.cause}`)
+    }
+    if (error.stack && logger.currentLevel >= logger.levels.debug) {
+      logger.debug(`Stack trace:\n${error.stack}`)
+    }
+    
     return {
       type: 'Error',
       ownerAddress: '',

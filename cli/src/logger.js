@@ -15,7 +15,13 @@ class Logger {
 
     error(message, ...args) {
         if (this.currentLevel >= this.levels.error) {
-            console.error(`❌ ${message}`, ...args);
+            // If the first arg is an Error object, format it properly
+            if (args.length === 1 && args[0] instanceof Error) {
+                console.error(`❌ ${message}`);
+                this._logError(args[0]);
+            } else {
+                console.error(`❌ ${message}`, ...args);
+            }
         }
     }
 
@@ -33,13 +39,46 @@ class Logger {
 
     debug(message, ...args) {
         if (this.currentLevel >= this.levels.debug) {
-            console.log(`🐛 ${message}`, ...args);
+            // If the only arg is an Error object, format it properly
+            if (args.length === 1 && args[0] instanceof Error) {
+                console.log(`🐛 ${message}`);
+                this._logError(args[0], true);
+            } else {
+                console.log(`🐛 ${message}`, ...args);
+            }
         }
     }
 
     success(message, ...args) {
         if (this.currentLevel >= this.levels.info) {
             console.log(`✅ ${message}`, ...args);
+        }
+    }
+
+    /**
+     * Internal method to log Error objects with proper formatting
+     * @param {Error} error - The error object to log
+     * @param {boolean} includeStack - Whether to include the stack trace
+     */
+    _logError(error, includeStack = false) {
+        if (this.currentLevel >= this.levels.debug) {
+            console.log(`🐛 Error name: ${error.name || 'Error'}`);
+            console.log(`🐛 Error message: ${error.message}`);
+            
+            if (error.code) {
+                console.log(`🐛 Error code: ${error.code}`);
+            }
+            
+            if (error.cause) {
+                const causeMessage = typeof error.cause === 'object' ? 
+                    (error.cause.message || error.cause.toString()) : 
+                    error.cause.toString();
+                console.log(`🐛 Caused by: ${causeMessage}`);
+            }
+            
+            if (includeStack && error.stack) {
+                console.log(`🐛 Stack trace:\n${error.stack}`);
+            }
         }
     }
 }
