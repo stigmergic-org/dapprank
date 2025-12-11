@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs'
-import { join, dirname } from 'path'
 import { logger } from './logger.js'
 import { calculateRankScore, CATEGORY_WEIGHTS } from './rank-calculator.js'
 
@@ -16,38 +14,34 @@ const CATEGORY_SHORT_NAMES = {
 }
 
 export class IndexBuilder {
-  constructor(directory) {
-    this.directory = directory
-    this.archivePath = join(directory, 'archive')
-    this.indexPath = join(directory, 'index')
-    this.livePath = join(this.indexPath, 'live')
-    this.scorePath = join(this.indexPath, 'score')
+  constructor(storage) {
+    this.storage = storage
     this.bucketSize = BUCKET_SIZE
     this.categories = CATEGORIES
   }
 
   async initialize() {
     // Create index directories
-    await fs.mkdir(this.livePath, { recursive: true })
-    await fs.mkdir(this.scorePath, { recursive: true })
+    await this.storage.ensureDirectory('/index/live')
+    await this.storage.ensureDirectory('/index/score')
   }
 
   async getAllLiveApps() {
     // 1. Read archive directory
-    const entries = await fs.readdir(this.archivePath, { withFileTypes: true })
-    const folders = entries.filter(e => e.isDirectory())
+    const entries = await this.storage.listDirectory('/archive')
+    const folders = entries.filter(e => e.type === 1) // directories only
     
     const liveApps = []
     
     for (const folder of folders) {
       const name = folder.name
-      const domainPath = join(this.archivePath, name)
+      const domainPath = `/archive/${name}`
       
       try {
         // 2. Get all block directories
-        const blockDirs = await fs.readdir(domainPath, { withFileTypes: true })
+        const blockDirs = await this.storage.listDirectory(domainPath)
         const blockNumbers = blockDirs
-          .filter(e => e.isDirectory())
+          .filter(e => e.type === 1) // directories only
           .map(e => parseInt(e.name))
           .filter(n => !isNaN(n))
         
@@ -55,16 +49,15 @@ export class IndexBuilder {
         
         // 3. Get latest block
         const latestBlock = Math.max(...blockNumbers)
-        const blockPath = join(domainPath, latestBlock.toString())
         
         // 4. Check for report.json
-        const reportPath = join(blockPath, 'report.json')
+        const reportPath = `/archive/${name}/${latestBlock}/report.json`
         try {
-          await fs.access(reportPath)
+          await this.storage.getStats(reportPath)
           
           // 5. Check metadata for empty contenthash (EXCLUDE if empty)
-          const metadataPath = join(blockPath, 'metadata.json')
-          const metadataContent = await fs.readFile(metadataPath, 'utf8')
+          const metadataPath = `/archive/${name}/${latestBlock}/metadata.json`
+          const metadataContent = await this.storage.readFileString(metadataPath)
           const metadata = JSON.parse(metadataContent)
           
           // Skip if contenthash is empty, null, or "0x"
@@ -98,8 +91,9 @@ export class IndexBuilder {
     
     for (const app of liveApps) {
       try {
-        const reportDir = dirname(app.reportPath)
-        const reportContent = await fs.readFile(app.reportPath, 'utf8')
+        // reportDir is the directory containing the report, needed for manifest files
+        const reportDir = `/archive/${app.name}/${app.blockNumber}`
+        const reportContent = await this.storage.readFileString(app.reportPath)
         const report = JSON.parse(reportContent)
         
         // Calculate rank score (requires report + reportDir for manifest files)
@@ -131,20 +125,16 @@ export class IndexBuilder {
 
   async cleanIndex(indexPath) {
     try {
-      const entries = await fs.readdir(indexPath, { withFileTypes: true })
+      const entries = await this.storage.listDirectory(indexPath)
       
       for (const entry of entries) {
         // Skip stats.json
         if (entry.name === 'stats.json') continue
         
-        const entryPath = join(indexPath, entry.name)
+        const entryPath = `${indexPath}/${entry.name}`
         
-        if (entry.isSymbolicLink()) {
-          await fs.unlink(entryPath)
-        } else if (entry.isDirectory()) {
-          // Remove entire directory tree (including all files and subdirectories)
-          await fs.rm(entryPath, { recursive: true, force: true })
-        }
+        // Remove entire directory tree (including all files and subdirectories)
+        await this.storage.removeFile(entryPath, true)
       }
     } catch (error) {
       // Directory might not exist yet, that's ok
@@ -155,8 +145,8 @@ export class IndexBuilder {
   async buildLiveIndex(apps) {
     logger.info('Building live index...')
     
-    // Clean existing directories and symlinks
-    await this.cleanIndex(this.livePath)
+    // Clean existing directories
+    await this.cleanIndex('/index/live')
     
     // Sort by ENS name for consistent ordering
     const sortedApps = [...apps].sort((a, b) => a.name.localeCompare(b.name))
@@ -171,24 +161,21 @@ export class IndexBuilder {
     
     // Create directory for each app with report.json and score.json
     for (const app of sortedApps) {
-      const appDirPath = join(this.livePath, app.name)
+      const appDirPath = `/index/live/${app.name}`
       
-      // Create app directory
-      await fs.mkdir(appDirPath, { recursive: true })
-      
-      // Create report.json symlink -> archive
-      const reportSymlinkPath = join(appDirPath, 'report.json')
-      const reportTargetPath = join('..', '..', '..', 'archive', app.name, app.blockNumber.toString(), 'report.json')
+      // Copy report from archive (replaces symlink)
+      const sourcePath = `/archive/${app.name}/${app.blockNumber}/report.json`
+      const destPath = `${appDirPath}/report.json`
       
       try {
-        await fs.symlink(reportTargetPath, reportSymlinkPath)
+        await this.storage.copyFile(sourcePath, destPath)
       } catch (error) {
-        logger.warn(`Failed to create report symlink for ${app.name}: ${error.message}`)
+        logger.warn(`Failed to copy report for ${app.name}: ${error.message}`)
         continue
       }
       
       // Create score.json file (without maxScore - it's in stats.json)
-      const scoreFilePath = join(appDirPath, 'score.json')
+      const scoreFilePath = `${appDirPath}/score.json`
       const scoreData = {
         rankVersion: app.rankScore.rankVersion,
         overallScore: app.rankScore.overallScore,
@@ -201,7 +188,7 @@ export class IndexBuilder {
       }
       
       try {
-        await fs.writeFile(scoreFilePath, JSON.stringify(scoreData, null, 2))
+        await this.storage.writeFile(scoreFilePath, JSON.stringify(scoreData, null, 2))
       } catch (error) {
         logger.warn(`Failed to create score.json for ${app.name}: ${error.message}`)
       }
@@ -216,8 +203,8 @@ export class IndexBuilder {
       manifest: CATEGORY_WEIGHTS.manifest
     }
     
-    await fs.writeFile(
-      join(this.livePath, 'stats.json'),
+    await this.storage.writeFile(
+      '/index/live/stats.json',
       JSON.stringify({
         count: sortedApps.length,
         lastUpdated: new Date().toISOString(),
@@ -226,16 +213,17 @@ export class IndexBuilder {
       }, null, 2)
     )
     
+    await this.storage.flush()
     logger.success(`Live index created: ${sortedApps.length} apps`)
   }
 
   async buildScoreIndex(category, apps) {
     const categoryName = category // 'total', 'distribution', etc.
-    const categoryPath = join(this.scorePath, categoryName)
+    const categoryPath = `/index/score/${categoryName}`
     const scoreKey = CATEGORY_SHORT_NAMES[category]
     
     // Create category directory
-    await fs.mkdir(categoryPath, { recursive: true })
+    await this.storage.ensureDirectory(categoryPath)
     
     // Sort apps by score (descending), then by name (ascending) for tiebreaking
     const sortedApps = [...apps].sort((a, b) => {
@@ -252,30 +240,40 @@ export class IndexBuilder {
       const rangeStart = i * this.bucketSize + 1
       const rangeEnd = rangeStart + this.bucketSize - 1
       const rangeLabel = `${rangeStart}-${rangeEnd}` // Always show full range
-      const rangePath = join(categoryPath, rangeLabel)
+      const rangePath = `${categoryPath}/${rangeLabel}`
       
-      // Create range directory
-      await fs.mkdir(rangePath, { recursive: true })
+      // Create range directory and clean it
+      await this.storage.ensureDirectory(rangePath)
       await this.cleanIndex(rangePath)
       
       // Get apps for this range
       const rangeApps = sortedApps.slice(i * this.bucketSize, (i + 1) * this.bucketSize)
       
-      // Create directory symlinks to live index
+      // Copy files into {ensName}/ directories (replaces directory symlinks)
       for (const app of rangeApps) {
-        const symlinkPath = join(rangePath, app.name)
-        const targetPath = join('..', '..', '..', 'live', app.name)
+        const appPath = `${rangePath}/${app.name}`
+        await this.storage.ensureDirectory(appPath)
         
         try {
-          await fs.symlink(targetPath, symlinkPath, 'dir')
+          // Copy report.json
+          await this.storage.copyFile(
+            `/index/live/${app.name}/report.json`,
+            `${appPath}/report.json`
+          )
+          
+          // Copy score.json
+          await this.storage.copyFile(
+            `/index/live/${app.name}/score.json`,
+            `${appPath}/score.json`
+          )
         } catch (error) {
-          logger.warn(`Failed to create directory symlink for ${app.name} in ${rangeLabel}: ${error.message}`)
+          logger.warn(`Failed to copy files for ${app.name}: ${error.message}`)
         }
       }
       
       // Save range-level stats with total count
-      await fs.writeFile(
-        join(rangePath, 'stats.json'),
+      await this.storage.writeFile(
+        `${rangePath}/stats.json`,
         JSON.stringify({
           count: rangeApps.length,
           category: categoryName,
@@ -285,8 +283,8 @@ export class IndexBuilder {
     }
     
     // Save category-level stats with total count
-    await fs.writeFile(
-      join(categoryPath, 'stats.json'),
+    await this.storage.writeFile(
+      `${categoryPath}/stats.json`,
       JSON.stringify({
         count: sortedApps.length,
         category: categoryName,
@@ -294,6 +292,7 @@ export class IndexBuilder {
       }, null, 2)
     )
     
+    await this.storage.flush()
     logger.success(`${categoryName}: ${totalRanges} ranges created`)
     
     return { totalRanges, totalApps: sortedApps.length }

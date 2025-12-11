@@ -1,6 +1,4 @@
 import { GraphQLClient } from 'graphql-request'
-import { promises as fs } from 'fs'
-import { join } from 'path'
 import { logger } from './logger.js'
 
 const ENS_API_URL = 'https://api.mainnet.ensnode.io/subgraph'
@@ -28,30 +26,25 @@ const CONTENTHASH_QUERY = `
 `
 
 export class ScanManager {
-  constructor(folderPath) {
-    this.folderPath = folderPath
-    this.archivePath = join(folderPath, 'archive')
-    this.statePath = join(folderPath, 'state.json')
+  constructor(storage) {
+    this.storage = storage
+    this.statePath = '/state.json'
     this.client = new GraphQLClient(ENS_API_URL)
   }
 
   async initialize() {
     // Create folder structure if it doesn't exist
-    await fs.mkdir(this.folderPath, { recursive: true })
-    await fs.mkdir(this.archivePath, { recursive: true })
+    await this.storage.ensureDirectory('/archive')
     
     // Initialize scan height if it doesn't exist
-    try {
-      await fs.access(this.statePath)
-    } catch {
-      // File doesn't exist, create with initial height
+    if (!(await this.storage.exists(this.statePath))) {
       await this.saveScanHeight(0)
     }
   }
 
   async getLastScanHeight() {
     try {
-      const data = await fs.readFile(this.statePath, 'utf8')
+      const data = await this.storage.readFileString(this.statePath)
       const state = JSON.parse(data)
       // Handle legacy format with blockNumber
       const scannedUntil = state.scannedUntil || 0
@@ -65,7 +58,7 @@ export class ScanManager {
   async saveScanHeight(blockNumber) {
     try {
       // Read existing state to preserve other fields
-      const existingData = await fs.readFile(this.statePath, 'utf8')
+      const existingData = await this.storage.readFileString(this.statePath)
       const existingState = JSON.parse(existingData)
       
       // Merge with existing state, updating scannedUntil
@@ -74,11 +67,11 @@ export class ScanManager {
         scannedUntil: blockNumber
       }
       
-      await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+      await this.storage.writeFile(this.statePath, JSON.stringify(data, null, 2))
     } catch (error) {
       // If we can't read existing state, just save the new state
       const data = { scannedUntil: blockNumber }
-      await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+      await this.storage.writeFile(this.statePath, JSON.stringify(data, null, 2))
     }
   }
 
@@ -118,6 +111,7 @@ export class ScanManager {
         // Persist scan height after each successful batch
         if (lastBlockNumber > fromBlock) {
           await this.saveScanHeight(lastBlockNumber)
+          await this.storage.flush()
           logger.info(`Progress saved: scan height updated to block ${lastBlockNumber}`)
         }
         
@@ -176,23 +170,15 @@ export class ScanManager {
     }
     
     try {
-      // Create domain directory
-      const domainPath = join(this.archivePath, safeEnsName)
-      await fs.mkdir(domainPath, { recursive: true })
-      
-      // Create block directory
-      const blockPath = join(domainPath, blockNumber.toString())
-      await fs.mkdir(blockPath, { recursive: true })
-      
       // Create metadata.json file
-      const metadataPath = join(blockPath, 'metadata.json')
+      const metadataPath = `/archive/${safeEnsName}/${blockNumber}/metadata.json`
       const metadata = {
         contenthash,
         tx: txHash,
         originalName: ensName !== safeEnsName ? ensName : undefined // Store original name if truncated
       }
       
-      await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
+      await this.storage.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
       
       logger.info(`Saved: ${safeEnsName} at block ${blockNumber}`)
     } catch (error) {

@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs'
-import { join } from 'path'
 import { analyzeHTML, getWebmanifest, getFavicon } from './html-analyzer.js'
 import { detectWindowEthereum, analyzeScript } from './script-analyzer.js'
 import { ensContenthashToCID, detectMimeType, getFilesFromCID, getFileContent } from './ipfs-utils.js'
@@ -13,10 +11,9 @@ import { logger } from './logger.js'
 export class AnalyzeManager {
   #cacheManager
   
-  constructor(directory, kubo, forceWrite = false, cachePath = null, rpcUrl = null) {
-    this.directory = directory
-    this.archivePath = join(directory, 'archive')
-    this.statePath = join(directory, 'state.json')
+  constructor(storage, kubo, forceWrite = false, cachePath = null, rpcUrl = null) {
+    this.storage = storage
+    this.statePath = '/state.json'
     this.kubo = kubo
     this.forceWrite = forceWrite
     this.rpcUrl = rpcUrl
@@ -25,21 +22,17 @@ export class AnalyzeManager {
 
   async initialize() {
     // Create folder structure if it doesn't exist
-    await fs.mkdir(this.directory, { recursive: true })
-    await fs.mkdir(this.archivePath, { recursive: true })
+    await this.storage.ensureDirectory('/archive')
     
     // Initialize analysis state if it doesn't exist
-    try {
-      await fs.access(this.statePath)
-    } catch {
-      // File doesn't exist, create with initial state
+    if (!(await this.storage.exists(this.statePath))) {
       await this.saveAnalysisState({ oldestAnalyzed: null, latestAnalyzed: null })
     }
   }
 
   async getAnalysisState() {
     try {
-      const data = await fs.readFile(this.statePath, 'utf8')
+      const data = await this.storage.readFileString(this.statePath)
       const state = JSON.parse(data)
       
       // Handle legacy state.json format that only has blockNumber or scannedUntil
@@ -61,7 +54,7 @@ export class AnalyzeManager {
   async saveAnalysisState(state) {
     try {
       // Read existing state to preserve scannedUntil field
-      const existingData = await fs.readFile(this.statePath, 'utf8')
+      const existingData = await this.storage.readFileString(this.statePath)
       const existingState = JSON.parse(existingData)
       
       // Merge new state with existing state, preserving scannedUntil
@@ -70,29 +63,29 @@ export class AnalyzeManager {
         ...state           // Override with new analysis state
       }
       
-      await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+      await this.storage.writeFile(this.statePath, JSON.stringify(data, null, 2))
     } catch (error) {
       // If we can't read existing state, just save the new state
       const data = { ...state }
-      await fs.writeFile(this.statePath, JSON.stringify(data, null, 2))
+      await this.storage.writeFile(this.statePath, JSON.stringify(data, null, 2))
     }
   }
 
   async listArchiveFolders() {
     try {
-      const entries = await fs.readdir(this.archivePath, { withFileTypes: true })
-      const folders = entries.filter(entry => entry.isDirectory())
+      const entries = await this.storage.listDirectory('/archive')
+      const folders = entries.filter(e => e.type === 1) // directories only
       
       const nameBlockPairs = []
       
       for (const folder of folders) {
         const name = folder.name
-        const domainPath = join(this.archivePath, name)
+        const domainPath = `/archive/${name}`
         
         try {
-          const blockDirs = await fs.readdir(domainPath, { withFileTypes: true })
+          const blockDirs = await this.storage.listDirectory(domainPath)
           const blockNumbers = blockDirs
-            .filter(entry => entry.isDirectory())
+            .filter(entry => entry.type === 1) // directories only
             .map(entry => parseInt(entry.name))
             .filter(num => !isNaN(num))
           
@@ -222,17 +215,15 @@ export class AnalyzeManager {
     logger.info(`Analyzing specific ENS name: ${targetName}`)
     
     // Check if the target name exists in the archive
-    const targetPath = join(this.archivePath, targetName)
-    try {
-      await fs.access(targetPath)
-    } catch (error) {
+    const targetPath = `/archive/${targetName}`
+    if (!(await this.storage.exists(targetPath))) {
       throw new Error(`ENS name ${targetName} not found in archive folder`)
     }
     
     // Get all block numbers for this specific name
-    const blockDirs = await fs.readdir(targetPath, { withFileTypes: true })
+    const blockDirs = await this.storage.listDirectory(targetPath)
     const blockNumbers = blockDirs
-      .filter(entry => entry.isDirectory())
+      .filter(entry => entry.type === 1) // directories only
       .map(entry => parseInt(entry.name))
       .filter(num => !isNaN(num))
       .sort((a, b) => b - a) // Sort descending to get largest first
@@ -262,17 +253,15 @@ export class AnalyzeManager {
     logger.info(`Dry run analysis for ${targetName} (${analysisType})`)
     
     // Check if the target name exists in the archive
-    const targetPath = join(this.archivePath, targetName)
-    try {
-      await fs.access(targetPath)
-    } catch (error) {
+    const targetPath = `/archive/${targetName}`
+    if (!(await this.storage.exists(targetPath))) {
       throw new Error(`ENS name ${targetName} not found in archive folder`)
     }
     
     // Get all block numbers for this specific name
-    const blockDirs = await fs.readdir(targetPath, { withFileTypes: true })
+    const blockDirs = await this.storage.listDirectory(targetPath)
     const blockNumbers = blockDirs
-      .filter(entry => entry.isDirectory())
+      .filter(entry => entry.type === 1) // directories only
       .map(entry => parseInt(entry.name))
       .filter(num => !isNaN(num))
       .sort((a, b) => b - a) // Sort descending to get largest first

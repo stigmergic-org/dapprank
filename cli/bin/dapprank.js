@@ -12,10 +12,12 @@ program
     .description('Analyze ENS sites for external dependencies and Web3 APIs')
     .option('-i, --ipfs <url>', 'IPFS API URL', 'http://localhost:5001')
     .option('-r, --rpc <url>', 'Ethereum RPC URL', 'https://eth.drpc.org')
-    .option('-d, --directory <path>', 'Directory to store scan results and analysis')
+    .option('-d, --directory <path>', 'Output directory (only used when --use-mfs=false)', 'public/dapps')
     .option('-c, --cache <path>', 'Directory to use for cache (defaults to ./llm-cache)', './llm-cache')
     .option('-f, --force', 'Force overwrite existing reports')
     .option('-l, --log-level <level>', 'Log level (error, warn, info, debug)', 'error')
+    .option('--use-mfs', 'Use IPFS MFS for storage', true)
+    .option('-p, --data-pointer <path>', 'File to store MFS root CID', './data-pointer.txt')
 
 
 // Scan command

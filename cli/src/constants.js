@@ -28,6 +28,10 @@ export const ANALYSIS_VERSION = 4
 // Rate limiting for AI analysis requests
 export const AI_REQUESTS_PER_MINUTE = 50
 
+// MFS storage configuration
+export const MFS_ROOT_PATH = 'dapprank-data'
+export const DEFAULT_DATA_POINTER_FILE = './data-pointer.txt'
+
 // Create a stable hash for the system prompt to make sure it's consistent across runs
 export const SYSTEM_PROMPT_TEMPLATE = `
 Analyze the provided JavaScript code and answer the following questions thoroughly.

@@ -1,5 +1,3 @@
-import { promises as fs } from 'fs'
-import { join } from 'path'
 import { getFilesFromCID, detectMimeType } from './ipfs-utils.js'
 import { analyzeHTML, getFavicon } from './html-analyzer.js'
 import { analyzeIndividualScript } from './script-analyzer.js'
@@ -153,71 +151,37 @@ export async function generateReport(kubo, rootCID, blockNumber = null) {
 }
 
 // Save report to disk and create necessary directories and symlinks
-export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo) {
-    // Create directory paths
-    const archiveDir = join(process.cwd(), 'public/dapps/archive', ensName, blockNumber.toString())
-    const indexDir = join(process.cwd(), 'public/dapps/index', ensName)
-    const rootArchiveDir = join(process.cwd(), 'public/dapps/archive', ensName)
-    
-    // Create directories
-    await fs.mkdir(archiveDir, { recursive: true })
-    await fs.mkdir(indexDir, { recursive: true })
-    
-    // Save the report to archive
-    const reportPath = join(archiveDir, 'report.json')
-    await fs.writeFile(reportPath, JSON.stringify(report, null, 2))
-    logger.info(`Report saved to ${reportPath}`)
+export async function saveReport(report, ensName, blockNumber, storage, faviconInfo) {
+    // Save the report to archive directory
+    const reportPath = `/archive/${ensName}/${blockNumber}/report.json`
+    await storage.writeFile(reportPath, JSON.stringify(report, null, 2))
+    logger.info('Report saved to', reportPath)
 
-    // Create metadata.json in the root archive directory if it doesn't exist
-    const archiveMetadataPath = join(rootArchiveDir, 'metadata.json')
-    try {
-        await fs.access(archiveMetadataPath)
-    } catch (error) {
-        await fs.writeFile(archiveMetadataPath, JSON.stringify({ category: "" }, null, 2))
-        logger.info(`Created metadata file at ${archiveMetadataPath}`)
-    }
-
-    // Clean up the index directory - remove all files except metadata.json
-    try {
-        const files = await fs.readdir(indexDir)
-        for (const file of files) {
-            if (file !== 'metadata.json') {
-                const filePath = join(indexDir, file)
-                await fs.unlink(filePath)
-                logger.debug(`Removed old file: ${filePath}`)
-            }
+    // Create metadata.json in archive root directory if it doesn't exist
+    const metadataArchivePath = `/archive/${ensName}/metadata.json`
+    if (!(await storage.exists(metadataArchivePath))) {
+        // metadata.json doesn't exist, create it with default category
+        const defaultMetadata = {
+            category: ""  // Empty string for default/uncategorized
         }
-    } catch (error) {
-        logger.warn(`Error cleaning index directory: ${error.message}`)
+        await storage.writeFile(metadataArchivePath, JSON.stringify(defaultMetadata, null, 2))
+        logger.info(`Created default metadata.json for ${ensName}`)
     }
 
-    // Create metadata.json in the index directory if it doesn't exist
-    const indexMetadataPath = join(indexDir, 'metadata.json')
-    try {
-        await fs.access(indexMetadataPath)
-    } catch (error) {
-        // Create symlink to root archive directory metadata file
-        const relativeMetadataPath = join('../../archive', ensName, 'metadata.json')
-        await fs.symlink(relativeMetadataPath, indexMetadataPath)
-        logger.info(`Created metadata symlink at ${indexMetadataPath}`)
-    }
-
-    // Create symlink to latest report
-    const symlinkPath = join(indexDir, 'report.json')
-    const relativeReportPath = join('../../archive', ensName, blockNumber.toString(), 'report.json')
-    await fs.symlink(relativeReportPath, symlinkPath)
-    logger.info(`Symlink created at ${symlinkPath}`)
+    // Copy report to live index (replaces symlink)
+    const liveReportPath = `/index/live/${ensName}/report.json`
+    await storage.copyFile(reportPath, liveReportPath)
+    logger.info(`Copied report to live index`)
 
     // Try to save favicon to archive directory only if favicon exists
     if (report.favicon && faviconInfo && faviconInfo.data) {
         try {
             // Save favicon to archive directory
-            const archiveFaviconPath = join(archiveDir, report.favicon)
+            const archiveFaviconPath = `/archive/${ensName}/${blockNumber}/${report.favicon}`
 
             logger.debug('Saving favicon to', archiveFaviconPath)
-            await fs.writeFile(archiveFaviconPath, faviconInfo.data)
+            await storage.writeFile(archiveFaviconPath, faviconInfo.data)
             
-            // No longer creating favicon symlink in index directory
             logger.info('Favicon saved successfully to archive directory')
         } catch (error) {
             logger.error('Error saving favicon', error)
@@ -225,23 +189,27 @@ export async function saveReport(report, ensName, blockNumber, kubo, faviconInfo
     } else {
         logger.info('No favicon found, skipping favicon save')
     }
+    
+    // Flush changes
+    await storage.flush()
 }
 
 // Check if a report for a CID already exists
-export async function reportExistsForCID(ensName, cid) {
+export async function reportExistsForCID(ensName, cid, storage) {
     try {
-        const archiveDir = join(process.cwd(), 'public/dapps/archive', ensName);
+        const archiveDir = `/archive/${ensName}`;
         
         // Check if the archive directory exists
-        try {
-            await fs.access(archiveDir);
-        } catch (error) {
-            // Directory doesn't exist, so no reports exist
+        if (!(await storage.exists(archiveDir))) {
             return false;
         }
         
         // Get all block number directories
-        const blockDirs = await fs.readdir(archiveDir);
+        const entries = await storage.listDirectory(archiveDir);
+        const blockDirs = entries
+            .filter(entry => entry.type === 1) // directories only
+            .map(entry => entry.name)
+            .filter(dir => !isNaN(Number(dir))); // Filter out non-numeric directories
         
         // If no directories, return false
         if (blockDirs.length === 0) {
@@ -250,7 +218,6 @@ export async function reportExistsForCID(ensName, cid) {
         
         // Find the directory with the highest block number (latest report)
         const latestBlockDir = blockDirs
-            .filter(dir => !isNaN(Number(dir))) // Filter out non-numeric directories
             .sort((a, b) => Number(b) - Number(a))[0]; // Sort in descending order and take first
         
         if (!latestBlockDir) {
@@ -258,10 +225,10 @@ export async function reportExistsForCID(ensName, cid) {
         }
         
         // Check only the report in the latest block directory
-        const reportPath = join(archiveDir, latestBlockDir, 'report.json');
+        const reportPath = `/archive/${ensName}/${latestBlockDir}/report.json`;
         
         try {
-            const reportContent = await fs.readFile(reportPath, 'utf-8');
+            const reportContent = await storage.readFileString(reportPath);
             const reportData = JSON.parse(reportContent);
             
             // Check if both the CID and version match
