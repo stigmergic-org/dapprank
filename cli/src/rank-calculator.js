@@ -189,8 +189,8 @@ export async function scoreManifest(report, storage, reportDir) {
   let score = 0
   
   if (manifest.name && manifest.name.trim() !== '') {
-    score += 6
-    logger.debug('Manifest: +6 for name field')
+    score += 5
+    logger.debug('Manifest: +5 for name field')
   }
   
   if (manifest.description && manifest.description.trim() !== '') {
@@ -198,9 +198,14 @@ export async function scoreManifest(report, storage, reportDir) {
     logger.debug('Manifest: +4 for description field')
   }
   
+  if (manifest.category && manifest.category.trim() !== '') {
+    score += 2
+    logger.debug('Manifest: +2 for category field')
+  }
+  
   if (manifest.icons && Array.isArray(manifest.icons) && manifest.icons.length > 0) {
-    score += 3
-    logger.debug(`Manifest: +3 for ${manifest.icons.length} icon(s)`)
+    score += 2
+    logger.debug(`Manifest: +2 for ${manifest.icons.length} icon(s)`)
   }
   
   if (manifest.screenshots && Array.isArray(manifest.screenshots) && manifest.screenshots.length > 0) {
