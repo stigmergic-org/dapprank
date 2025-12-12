@@ -179,6 +179,8 @@ export class MFSStorage extends StorageInterface {
         cidVersion: 1,
         hash: 'sha2-256'
       })
+      // Flush after directory creation for resilience
+      await this.kubo.files.flush(fullPath)
     } catch (error) {
       // Ignore if directory already exists
       if (!error.message.includes('already exists')) {
@@ -196,6 +198,8 @@ export class MFSStorage extends StorageInterface {
       cidVersion: 1,
       hash: 'sha2-256'
     })
+    // Flush after write for resilience
+    await this.kubo.files.flush(fullPath)
   }
 
   async copyFile(source, dest) {
@@ -204,6 +208,8 @@ export class MFSStorage extends StorageInterface {
     
     try {
       await this.kubo.files.cp(sourcePath, destPath, { parents: true })
+      // Flush after copy for resilience
+      await this.kubo.files.flush(destPath)
     } catch (error) {
       if (error.message.includes('does not exist')) {
         throw new Error(`Source file not found: ${source}`)
