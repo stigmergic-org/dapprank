@@ -16,7 +16,7 @@ program
     .option('-c, --cache <path>', 'Directory to use for cache (defaults to ./llm-cache)', './llm-cache')
     .option('-f, --force', 'Force overwrite existing reports')
     .option('-l, --log-level <level>', 'Log level (error, warn, info, debug)', process.env.LOG_LEVEL || 'error')
-    .option('--mfs <boolean>', 'Use IPFS MFS for storage (default: true)', 'true')
+    .option('--mfs <boolean>', 'Use IPFS MFS for storage (default: false)', 'false')
     .option('-p, --data-pointer <path>', 'File to store MFS root CID', './data-pointer.txt')
 
 
