@@ -225,6 +225,12 @@ export async function buildIdxsCommand(options) {
         logger.success('Indexes built successfully!')
         logger.info(`Total apps in archive: ${stats.totalApps}`)
         logger.info(`Apps successfully scored: ${stats.scoredApps}`)
+        
+        // Show latest index stats
+        if (stats.latest) {
+            logger.info(`Latest apps index: ${stats.latest.totalRanges} ranges (${stats.latest.totalApps} apps)`)
+        }
+        
         logger.info(`Categories indexed: ${Object.keys(stats.categories).length}`)
         
         // Show per-category stats

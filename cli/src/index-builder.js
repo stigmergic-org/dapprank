@@ -24,6 +24,7 @@ export class IndexBuilder {
     // Create index directories
     await this.storage.ensureDirectory('/index/live')
     await this.storage.ensureDirectory('/index/score')
+    await this.storage.ensureDirectory('/index/latest')
   }
 
   async getAllLiveApps() {
@@ -304,6 +305,110 @@ export class IndexBuilder {
     return { totalRanges, totalApps: sortedApps.length }
   }
 
+  async buildLatestIndex(apps) {
+    const indexPath = '/index/latest'
+    const maxApps = 200
+    
+    logger.info('Building latest apps index...')
+    
+    // Clean existing index
+    await this.cleanIndex(indexPath)
+    
+    // Sort by block number (descending), then by name for tiebreaking
+    const sortedApps = [...apps].sort((a, b) => {
+      const blockDiff = b.blockNumber - a.blockNumber
+      if (blockDiff !== 0) return blockDiff
+      return a.name.localeCompare(b.name) // Tiebreaker
+    })
+    
+    // Take only first 200 (or fewer if less than 200 exist)
+    const latestApps = sortedApps.slice(0, maxApps)
+    
+    if (latestApps.length === 0) {
+      logger.warn('No apps available for latest index')
+      return { totalRanges: 0, totalApps: 0 }
+    }
+    
+    // Calculate block range for stats
+    const newestBlock = latestApps[0].blockNumber
+    const oldestBlock = latestApps[latestApps.length - 1].blockNumber
+    
+    // Calculate how many range directories we need
+    const totalRanges = Math.ceil(latestApps.length / this.bucketSize)
+    
+    // Create all range directories
+    for (let i = 0; i < totalRanges; i++) {
+      const rangeStart = i * this.bucketSize + 1
+      const rangeEnd = rangeStart + this.bucketSize - 1
+      const rangeLabel = `${rangeStart}-${rangeEnd}` // Always show full range
+      const rangePath = `${indexPath}/${rangeLabel}`
+      
+      // Create range directory and clean it
+      await this.storage.ensureDirectory(rangePath)
+      await this.cleanIndex(rangePath)
+      
+      // Get apps for this range
+      const rangeApps = latestApps.slice(i * this.bucketSize, (i + 1) * this.bucketSize)
+      
+      // Copy files into {ensName}/ directories (symlinks to live index)
+      for (const app of rangeApps) {
+        const appPath = `${rangePath}/${app.name}`
+        await this.storage.ensureDirectory(appPath)
+        
+        try {
+          // Copy report.json (creates symlink)
+          await this.storage.copyFile(
+            `/index/live/${app.name}/report.json`,
+            `${appPath}/report.json`
+          )
+          
+          // Copy score.json (creates symlink)
+          await this.storage.copyFile(
+            `/index/live/${app.name}/score.json`,
+            `${appPath}/score.json`
+          )
+        } catch (error) {
+          logger.warn(`Failed to copy files for ${app.name}: ${error.message}`)
+        }
+      }
+      
+      // Calculate block range for this bucket
+      const bucketNewestBlock = rangeApps[0].blockNumber
+      const bucketOldestBlock = rangeApps[rangeApps.length - 1].blockNumber
+      
+      // Save range-level stats with block range
+      await this.storage.writeFile(
+        `${rangePath}/stats.json`,
+        JSON.stringify({
+          count: rangeApps.length,
+          blockRange: {
+            newest: bucketNewestBlock,
+            oldest: bucketOldestBlock
+          },
+          lastUpdated: new Date().toISOString()
+        }, null, 2)
+      )
+    }
+    
+    // Save index-level stats with overall block range
+    await this.storage.writeFile(
+      `${indexPath}/stats.json`,
+      JSON.stringify({
+        count: latestApps.length,
+        blockRange: {
+          newest: newestBlock,
+          oldest: oldestBlock
+        },
+        lastUpdated: new Date().toISOString()
+      }, null, 2)
+    )
+    
+    await this.storage.flush()
+    logger.success(`Latest index created: ${totalRanges} ranges`)
+    
+    return { totalRanges, totalApps: latestApps.length }
+  }
+
   async buildAllIndexes() {
     const startTime = Date.now()
     
@@ -329,7 +434,10 @@ export class IndexBuilder {
     // 4. Build live index
     await this.buildLiveIndex(appsWithScores)
     
-    // 5. Build score indexes for each category
+    // 5. Build latest index
+    const latestStats = await this.buildLatestIndex(appsWithScores)
+    
+    // 6. Build score indexes for each category
     const categoryStats = {}
     
     for (const category of this.categories) {
@@ -344,6 +452,7 @@ export class IndexBuilder {
     return {
       totalApps: liveApps.length,
       scoredApps: appsWithScores.length,
+      latest: latestStats,
       categories: categoryStats,
       elapsedSeconds: elapsed
     }
