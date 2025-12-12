@@ -277,13 +277,14 @@ async function geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries
         
         // Handle token count exceeded error
         if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
-            logger.warn('Token limit exceeded, attempting to chunk the code...');
+            logger.warn('  ⚠️  Token limit exceeded, splitting into chunks...');
             const chunks = await splitScriptIntoChunks(scriptText);
-            logger.info(`Split script into ${chunks.length} chunks`);
+            logger.info(`  📦 Analyzing ${chunks.length} chunks separately...`);
 
             const results = [];
-            for (const chunk of chunks) {
-                const result = await geminiAnalysisWithChunking(chunk, filePath);
+            for (let i = 0; i < chunks.length; i++) {
+                logger.info(`  🤖 Analyzing chunk ${i + 1}/${chunks.length}...`);
+                const result = await geminiAnalysisWithChunking(chunks[i], filePath);
                 results.push(result);
             }
 
@@ -361,7 +362,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         const cachedResult = await cache.getEntry(promptHash, fileCid);
         if (cachedResult) {
             cacheHit = true;
-            logger.debug(`Using cached analysis for ${filePath}`);
+            logger.debug(`✓ Using cached analysis for ${filePath}`);
             
             // Return cached result
             const cachedAnalysis = {
@@ -382,6 +383,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             return cachedAnalysis;
         }
         
+        logger.info(`  🤖 Running AI analysis...`);
         const analysis = await geminiAnalysisWithChunking(scriptText, filePath);
         
         if (!analysis) {

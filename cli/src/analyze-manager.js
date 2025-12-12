@@ -369,24 +369,51 @@ export class AnalyzeManager {
     const totalSteps = ANALYSIS_STEPS.length
     let currentStep = 0
     
+    // Step names for better progress indication (only show important steps)
+    const stepNames = [
+      null, // 'Decoding contenthash' - silent
+      null, // 'Converting to CID' - silent
+      null, // 'Detecting MIME type' - silent
+      'Fetching files',
+      null, // 'Calculating size' - silent
+      null, // 'Analyzing HTML' - silent
+      'Processing webmanifest',
+      'Processing favicon',
+      'Analyzing scripts',
+      'Analyzing ENS owner',
+      null, // 'Cleaning up data' - silent
+      null  // 'Filtering files' - silent
+    ]
+    
     for (const step of ANALYSIS_STEPS) {
       currentStep++
-      logger.debug(`Step ${currentStep}/${totalSteps}: Running analysis step`)
+      const stepName = stepNames[currentStep - 1]
+      
+      // Only log if stepName is not null
+      if (stepName) {
+        logger.info(`⏳ ${stepName}...`)
+      }
+      
       const stepStart = Date.now()
       
       try {
         await step(report, analysisUtils)
         const stepDuration = Date.now() - stepStart
-        logger.debug(`Step ${currentStep}/${totalSteps}: Completed in ${stepDuration}ms`)
+        if (stepName) {
+          logger.debug(`Step ${currentStep}/${totalSteps} (${stepName}): Completed in ${stepDuration}ms`)
+        } else {
+          logger.debug(`Step ${currentStep}/${totalSteps}: Completed in ${stepDuration}ms`)
+        }
       } catch (error) {
-        logger.error(`Step ${currentStep}/${totalSteps}: Failed`)
+        const errorName = stepName || `Step ${currentStep}`
+        logger.error(`${errorName}: Failed`)
         logger.debug(`Step error: ${error.message}`)
         throw error
       }
     }
     
     // Write the report to filesystem with force flag
-    logger.debug('Writing report to storage...')
+    logger.info('💾 Writing report to storage...')
     await report.write(this.forceWrite)
     logger.success(`✅ Analysis complete for ${name} at block ${blockNumber}`)
   }
@@ -468,9 +495,53 @@ const NETWORKING_STEPS = [
   async (report, { kubo, cache }) => {
     const failedFiles = [];
     
+    // Count files that need script analysis (.js files or files with inline scripts)
+    const filesToAnalyze = report.content.files.filter(file => 
+      file.path.endsWith('.js') || (file.inlineScripts && file.inlineScripts.length > 0)
+    );
+    const totalFiles = filesToAnalyze.length;
+    let processedFiles = 0;
+    const startTime = Date.now();
+    const fileTimes = [];
+    
+    if (totalFiles > 0) {
+      logger.info(`📝 Starting script analysis (${totalFiles} file${totalFiles !== 1 ? 's' : ''} to analyze)`);
+    }
+    
     for (const file of report.content.files) {
       try {
+        // Only show progress for files that will actually be analyzed
+        const needsAnalysis = file.path.endsWith('.js') || (file.inlineScripts && file.inlineScripts.length > 0);
+        const fileStart = Date.now();
+        
+        if (needsAnalysis && totalFiles > 0) {
+          processedFiles++;
+          
+          // Calculate ETA based on average time per file
+          let etaMessage = '';
+          if (fileTimes.length > 0) {
+            const avgTime = fileTimes.reduce((a, b) => a + b, 0) / fileTimes.length;
+            const remainingFiles = totalFiles - processedFiles;
+            const etaSeconds = Math.ceil((avgTime * remainingFiles) / 1000);
+            if (etaSeconds > 60) {
+              const minutes = Math.floor(etaSeconds / 60);
+              const seconds = etaSeconds % 60;
+              etaMessage = ` (ETA: ~${minutes}m ${seconds}s)`;
+            } else if (etaSeconds > 0) {
+              etaMessage = ` (ETA: ~${etaSeconds}s)`;
+            }
+          }
+          
+          logger.info(`📄 Analyzing ${file.path} (${processedFiles}/${totalFiles})${etaMessage}`);
+        }
+        
         const { windowEthereum, networking, fallbacks, dynamicResourceLoading, invalidDynamicUrls } = await analyzeScript(kubo, cache, file);
+        
+        // Track time taken for this file
+        if (needsAnalysis) {
+          const fileTime = Date.now() - fileStart;
+          fileTimes.push(fileTime);
+        }
         
         // Set window.ethereum detection from AI
         if (windowEthereum) {
@@ -527,6 +598,11 @@ const NETWORKING_STEPS = [
           error: error.message
         });
       }
+    }
+    
+    if (totalFiles > 0) {
+      const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+      logger.info(`✅ Script analysis complete (${processedFiles}/${totalFiles} files in ${totalTime}s)`);
     }
     
     if (failedFiles.length > 0) {
