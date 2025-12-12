@@ -535,7 +535,7 @@ const NETWORKING_STEPS = [
           logger.info(`📄 Analyzing ${file.path} (${processedFiles}/${totalFiles})${etaMessage}`);
         }
         
-        const { windowEthereum, networking, fallbacks, dynamicResourceLoading, invalidDynamicUrls } = await analyzeScript(kubo, cache, file);
+        const { windowEthereum, networking, fallbacks, dynamicResourceLoading } = await analyzeScript(kubo, cache, file);
         
         // Track time taken for this file
         if (needsAnalysis) {
@@ -550,16 +550,6 @@ const NETWORKING_STEPS = [
         
         if (networking?.length > 0) file.networking = networking;
         if (fallbacks?.length > 0) file.fallbacks = fallbacks;
-        
-        // Check for invalid dynamic URLs and report them
-        if (invalidDynamicUrls?.length > 0) {
-          logger.warn(`File ${file.path} has invalid dynamic loading URLs`);
-          failedFiles.push({
-            path: file.path,
-            error: 'Invalid dynamic loading URLs detected',
-            invalidUrls: invalidDynamicUrls
-          });
-        }
         
         // Merge dynamic resource loading into distributionPurity structure
         if (dynamicResourceLoading?.length > 0) {

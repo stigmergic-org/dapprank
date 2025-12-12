@@ -1,8 +1,6 @@
-import { logger } from './logger.js'
-
 /**
- * Validates that URLs reported by AI actually exist in source code
- * Handles direct matches, template patterns, and dynamic construction
+ * URL normalization and processing utilities
+ * Used for deduplication and consistent URL formatting
  */
 
 /**
@@ -22,56 +20,6 @@ export function normalizeUrl(url) {
     // Relative URL or invalid - just remove trailing slash
     return url.replace(/^\.\//, '').replace(/\/$/, '');
   }
-}
-
-/**
- * Validate URLs against source code
- * Only checks if domain exists in source code for absolute URLs
- * Accepts all relative URLs without validation
- * @param {string[]} urls - Array of URLs to validate
- * @param {string} scriptText - Source code to validate against
- * @returns {Array<{url: string, valid: boolean, reason: string}>} Validation results
- */
-export function validateUrls(urls, scriptText) {
-  return urls.map(url => {
-    const normalized = normalizeUrl(url);
-    
-    // Priority 1: Relative URLs - accept all relative URLs without checking
-    if (url.startsWith('/') || url.startsWith('./')) {
-      return { url: normalized, valid: true, reason: 'relative' };
-    }
-    
-    // Priority 2: Dynamic/Arbitrary marker check
-    // Accept markers like <dynamic> or <arbitrary>
-    if (url.includes('<dynamic>') || url.includes('<arbitrary>')) {
-      return { url, valid: true, reason: 'marker' };
-    }
-    
-    // Priority 3: Domain match for absolute URLs
-    // Try to extract domain and check if it exists in code
-    try {
-      const urlObj = new URL(url);
-      const domain = urlObj.hostname;
-      
-      // Check if domain exists anywhere in code
-      if (scriptText.includes(domain)) {
-        return { url: normalized, valid: true, reason: 'domain-found' };
-      }
-      
-      // Domain not found in source
-      return { url, valid: false, reason: 'domain-not-found' };
-    } catch {
-      // Not a valid absolute URL, check direct match as fallback
-    }
-    
-    // Priority 4: Direct match (fallback for edge cases)
-    if (scriptText.includes(url)) {
-      return { url: normalized, valid: true, reason: 'direct' };
-    }
-    
-    // Otherwise invalid
-    return { url, valid: false, reason: 'not-found' };
-  });
 }
 
 /**

@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import { getFileContent } from './ipfs-utils.js'
 import { SYSTEM_PROMPT_TEMPLATE, AI_REQUESTS_PER_MINUTE } from './constants.js'
 import { logger } from './logger.js'
-import { validateUrls, normalizeUrl, stripApiKey } from './url-validator.js'
+import { normalizeUrl, stripApiKey } from './url-validator.js'
 import { deduplicateNetworking, deduplicateFallbacks } from './deduplication.js'
 import { getRateLimiter } from './rate-limiter.js'
 
@@ -351,8 +351,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         windowEthereum: false,
         networking: [],
         fallbacks: [],
-        dynamicResourceLoading: [],
-        invalidDynamicUrls: []
+        dynamicResourceLoading: []
     };
     
     let cacheHit = false;
@@ -369,8 +368,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
                 windowEthereum: cachedResult.windowEthereum || false,
                 networking: cachedResult.networking || [],
                 fallbacks: cachedResult.fallbacks || [],
-                dynamicResourceLoading: cachedResult.dynamicResourceLoading || [],
-                invalidDynamicUrls: cachedResult.invalidDynamicUrls || []
+                dynamicResourceLoading: cachedResult.dynamicResourceLoading || []
             };
             
             // Log metrics
@@ -393,31 +391,12 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
         // Process window.ethereum detection
         result.windowEthereum = analysis.windowEthereum || false;
         
-        // Process and validate networking results
+        // Process networking results
         if (analysis.networking && analysis.networking.length > 0) {
-            const validatedNetworking = [];
-            
-            for (const item of analysis.networking) {
-                // Validate URLs against source code
-                const validation = validateUrls(item.urls || [], scriptText);
-                const invalidUrls = validation.filter(v => !v.valid);
-                
-                if (invalidUrls.length > 0) {
-                    logger.warn(`Invalid URLs detected in ${filePath}:`, invalidUrls.map(v => v.url));
-                }
-                
-                // Keep only valid URLs
-                const validUrls = validation.filter(v => v.valid).map(v => v.url);
-                
-                if (validUrls.length > 0) {
-                    validatedNetworking.push({
-                        ...item,
-                        urls: validUrls
-                    });
-                }
-            }
-            
-            result.networking = validatedNetworking;
+            result.networking = analysis.networking.map(item => ({
+                ...item,
+                urls: (item.urls || []).map(normalizeUrl)
+            }));
         }
         
         // Process fallbacks
@@ -425,41 +404,12 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             result.fallbacks = analysis.fallbacks;
         }
         
-        // Process dynamic resource loading and validate URLs
+        // Process dynamic resource loading
         if (analysis.dynamicResourceLoading && analysis.dynamicResourceLoading.length > 0) {
-            const validatedDynamic = [];
-            const invalidUrlDetails = [];  // Track invalid URLs
-            
-            for (const item of analysis.dynamicResourceLoading) {
-                // Validate URLs against source code
-                const validation = validateUrls(item.urls || [], scriptText);
-                const invalidUrls = validation.filter(v => !v.valid);
-                
-                if (invalidUrls.length > 0) {
-                    logger.warn(`Invalid dynamic loading URLs in ${filePath}:`, invalidUrls.map(v => v.url));
-                    
-                    // Collect invalid URL details for reporting
-                    invalidUrlDetails.push({
-                        method: item.method,
-                        type: item.type,
-                        invalidUrls: invalidUrls.map(v => ({ url: v.url, reason: v.reason })),
-                        motivation: item.motivation
-                    });
-                }
-                
-                // Keep only valid URLs
-                const validUrls = validation.filter(v => v.valid).map(v => v.url);
-                
-                if (validUrls.length > 0) {
-                    validatedDynamic.push({
-                        ...item,
-                        urls: validUrls
-                    });
-                }
-            }
-            
-            result.dynamicResourceLoading = validatedDynamic;
-            result.invalidDynamicUrls = invalidUrlDetails;  // Store for reporting
+            result.dynamicResourceLoading = analysis.dynamicResourceLoading.map(item => ({
+                ...item,
+                urls: (item.urls || []).map(normalizeUrl)
+            }));
         }
         
         // Deduplicate within single file results
@@ -472,8 +422,7 @@ export async function analyzeIndividualScript(filePath, scriptText, cache, fileC
             windowEthereum: result.windowEthereum,
             networking: result.networking,
             fallbacks: result.fallbacks,
-            dynamicResourceLoading: result.dynamicResourceLoading,
-            invalidDynamicUrls: result.invalidDynamicUrls
+            dynamicResourceLoading: result.dynamicResourceLoading
         });
         
         // Log metrics
