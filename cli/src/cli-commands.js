@@ -18,7 +18,7 @@ function createStorage(options, kubo = null) {
         return new MFSStorage(kubo, `/${MFS_ROOT_PATH}`, dataPointerPath)
     } else {
         if (!options.directory) {
-            throw new Error('--directory (-d) option is required when --use-mfs=false')
+            throw new Error('--directory (-d) option is required when --mfs=false')
         }
         return new FilesystemStorage(options.directory)
     }

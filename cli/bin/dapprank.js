@@ -12,11 +12,11 @@ program
     .description('Analyze ENS sites for external dependencies and Web3 APIs')
     .option('-i, --ipfs <url>', 'IPFS API URL', 'http://localhost:5001')
     .option('-r, --rpc <url>', 'Ethereum RPC URL', 'https://eth.drpc.org')
-    .option('-d, --directory <path>', 'Output directory (only used when --use-mfs=false)', 'public/dapps')
+    .option('-d, --directory <path>', 'Output directory (only used when --mfs=false)', 'public/dapps')
     .option('-c, --cache <path>', 'Directory to use for cache (defaults to ./llm-cache)', './llm-cache')
     .option('-f, --force', 'Force overwrite existing reports')
     .option('-l, --log-level <level>', 'Log level (error, warn, info, debug)', process.env.LOG_LEVEL || 'error')
-    .option('--use-mfs', 'Use IPFS MFS for storage', true)
+    .option('--mfs <boolean>', 'Use IPFS MFS for storage (default: true)', 'true')
     .option('-p, --data-pointer <path>', 'File to store MFS root CID', './data-pointer.txt')
 
 
@@ -27,6 +27,9 @@ program
     .action(async (options) => {
         const parentOptions = program.optsWithGlobals();
         const mergedOptions = { ...parentOptions, ...options };
+        
+        // Parse mfs boolean option
+        mergedOptions.useMfs = mergedOptions.mfs === 'true' || mergedOptions.mfs === true;
         
         // Set log level
         let logLevel = mergedOptions.logLevel;
@@ -49,6 +52,9 @@ program
         const parentOptions = program.optsWithGlobals();
         const mergedOptions = { ...parentOptions, ...options };
         
+        // Parse mfs boolean option
+        mergedOptions.useMfs = mergedOptions.mfs === 'true' || mergedOptions.mfs === true;
+        
         // Set log level
         let logLevel = mergedOptions.logLevel;
         if (logLevel && logLevel.startsWith('=')) {
@@ -66,6 +72,9 @@ program
     .action(async (options) => {
         const parentOptions = program.optsWithGlobals();
         const mergedOptions = { ...parentOptions, ...options };
+        
+        // Parse mfs boolean option
+        mergedOptions.useMfs = mergedOptions.mfs === 'true' || mergedOptions.mfs === true;
         
         // Set log level
         let logLevel = mergedOptions.logLevel;
@@ -86,6 +95,9 @@ program
     .action(async (ensName, options) => {
         const parentOptions = program.optsWithGlobals();
         const mergedOptions = { ...parentOptions, ...options };
+        
+        // Parse mfs boolean option
+        mergedOptions.useMfs = mergedOptions.mfs === 'true' || mergedOptions.mfs === true;
         
         // Set log level
         let logLevel = mergedOptions.logLevel;
