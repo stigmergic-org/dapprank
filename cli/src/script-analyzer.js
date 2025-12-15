@@ -158,10 +158,12 @@ async function geminiAnalysis(scriptText, filePath) {
         }
     };
 
-    let retries = 3;
+    const MAX_RETRIES = 3; // For non-rate-limit errors
+    let retries = MAX_RETRIES;
+    let rateLimitAttempt = 0; // Separate counter for rate limit retries (unlimited)
     let lastError = null;
 
-    while (retries > 0) {
+    while (true) {
         try {
             // Wait for rate limiter before making API call
             const rateLimiter = getRateLimiter(AI_REQUESTS_PER_MINUTE);
@@ -227,55 +229,61 @@ async function geminiAnalysis(scriptText, filePath) {
             }
         } catch (error) {
             lastError = error;
-            retries--;
             
+            // Check for quota exhaustion (don't retry)
+            if (error.message && error.message.includes('Quota exceeded')) {
+                logger.error(`Quota exceeded for ${filePath}: ${error.message}`);
+                throw error;
+            }
+            
+            // Check for token count exceeded (don't retry, will chunk instead)
+            if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
+                throw error;
+            }
+            
+            // Check for rate limit (429) - retry indefinitely with exponential backoff
+            if (error.message && error.message.includes('status: 429')) {
+                rateLimitAttempt++;
+                
+                // Exponential backoff with cap: min(2^attempt * 10s, 5 minutes)
+                // Attempt 1: 20s, Attempt 2: 40s, Attempt 3: 80s, Attempt 4: 160s, Attempt 5+: 300s (5 min)
+                const baseDelay = 10000;
+                const maxDelay = 300000; // Cap at 5 minutes
+                const backoffDelay = Math.min(Math.pow(2, rateLimitAttempt) * baseDelay, maxDelay);
+                const backoffSeconds = Math.ceil(backoffDelay / 1000);
+                
+                logger.warn(`Rate limit hit for ${filePath} (rate limit attempt ${rateLimitAttempt}), waiting ${backoffSeconds}s...`);
+                await new Promise(resolve => setTimeout(resolve, backoffDelay));
+                
+                // Notify rate limiter to slow down globally
+                const rateLimiter = getRateLimiter(AI_REQUESTS_PER_MINUTE);
+                rateLimiter.onRateLimitError();
+                
+                continue;
+            }
+            
+            // For other errors, retry with short delay
+            retries--;
             if (retries > 0) {
-                if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
-                    break;
-                }
-                logger.warn(`Error parsing Gemini response for ${filePath}, retrying... (${retries} attempts left)`);
+                const attempt = MAX_RETRIES - retries;
+                logger.warn(`Error analyzing ${filePath} (attempt ${attempt}/${MAX_RETRIES}), retrying...`);
                 logger.debug(`Error details: ${error.message}`);
-                if (error.stack) {
-                    logger.debug(`Stack trace: ${error.stack}`);
-                }
-                // Add a small delay between retries
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 continue;
             }
             
-            logger.error(`Failed to parse Gemini response after all retries for ${filePath}`);
+            logger.error(`Failed to analyze ${filePath} after ${MAX_RETRIES} attempts`);
             logger.debug(`Final error: ${error.message}`);
             throw lastError;
         }
     }
-
-    throw lastError;
 }
 
-async function geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries = 0) {
-    const MAX_RATE_LIMIT_RETRIES = 3;
-    
+async function geminiAnalysisWithChunking(scriptText, filePath) {
     try {
         return await geminiAnalysis(scriptText, filePath);
     } catch (error) {
-        // Check if this is a quota exhaustion (don't retry)
-        if (error.message && error.message.includes('Quota exceeded')) {
-            logger.error(`Quota exceeded for ${filePath}: ${error.message}`);
-            throw error; // Don't retry quota exhaustion
-        }
-        
-        // Handle rate limit error (429) - but not quota exhaustion
-        if (error.message && error.message.includes('status: 429')) {
-            if (rateLimitRetries >= MAX_RATE_LIMIT_RETRIES) {
-                logger.error(`Rate limit exceeded after ${MAX_RATE_LIMIT_RETRIES} retries, giving up on ${filePath}`);
-                throw error;
-            }
-            logger.warn(`Rate limit exceeded (retry ${rateLimitRetries + 1}/${MAX_RATE_LIMIT_RETRIES}), waiting for 1 minute before retrying...`);
-            await new Promise(resolve => setTimeout(resolve, 60000)); // Wait for 1 minute
-            return await geminiAnalysisWithChunking(scriptText, filePath, rateLimitRetries + 1); // Retry with incremented counter
-        }
-        
-        // Handle token count exceeded error
+        // Handle token count exceeded error by chunking
         if (error.message && error.message.includes('token count') && error.message.includes('exceeds')) {
             logger.warn('  ⚠️  Token limit exceeded, splitting into chunks...');
             const chunks = await splitScriptIntoChunks(scriptText);

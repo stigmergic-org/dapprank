@@ -7,6 +7,7 @@ export class RateLimiter {
   #requestTimestamps = []
   #maxRequestsPerMinute
   #minDelayMs
+  #lastRateLimitError = null
   
   constructor(maxRequestsPerMinute = 2) {
     this.#maxRequestsPerMinute = maxRequestsPerMinute
@@ -17,11 +18,30 @@ export class RateLimiter {
   }
   
   /**
+   * Called when a 429 rate limit error occurs
+   * This helps the rate limiter be aware of rate limit violations
+   */
+  onRateLimitError() {
+    this.#lastRateLimitError = Date.now()
+    logger.debug('Rate limiter notified of 429 error')
+  }
+  
+  /**
    * Wait if necessary to respect rate limit, then record the request
    * @returns {Promise<void>}
    */
   async waitForSlot() {
     const now = Date.now()
+    
+    // If we recently got a rate limit error, add extra delay
+    if (this.#lastRateLimitError && (now - this.#lastRateLimitError) < 120000) {
+      const timeSinceError = now - this.#lastRateLimitError
+      const extraDelay = Math.max(0, 5000 - timeSinceError) // Wait at least 5s after a 429
+      if (extraDelay > 0) {
+        logger.debug(`Rate limit: adding ${Math.ceil(extraDelay / 1000)}s delay due to recent 429 error`)
+        await new Promise(resolve => setTimeout(resolve, extraDelay))
+      }
+    }
     
     // Remove timestamps older than 1 minute
     this.#requestTimestamps = this.#requestTimestamps.filter(
