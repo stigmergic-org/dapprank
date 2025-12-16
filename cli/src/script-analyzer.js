@@ -245,11 +245,21 @@ async function geminiAnalysis(scriptText, filePath) {
             if (error.message && error.message.includes('status: 429')) {
                 rateLimitAttempt++;
                 
-                // Exponential backoff with cap: min(2^attempt * 10s, 5 minutes)
-                // Attempt 1: 20s, Attempt 2: 40s, Attempt 3: 80s, Attempt 4: 160s, Attempt 5+: 300s (5 min)
+                // Exponential backoff with cap: min(2^attempt * 10s, 2 hours)
+                // Attempt 1: 20s, Attempt 2: 40s, Attempt 3: 80s, Attempt 4: 160s, Attempt 5: 320s, 
+                // Attempt 6: 640s, Attempt 7: 1280s, Attempt 8: 2560s, Attempt 9: 5120s, Attempt 10+: 7200s (2 hours)
                 const baseDelay = 10000;
-                const maxDelay = 300000; // Cap at 5 minutes
-                const backoffDelay = Math.min(Math.pow(2, rateLimitAttempt) * baseDelay, maxDelay);
+                const maxDelay = 7200000; // Cap at 2 hours
+                const backoffDelay = Math.pow(2, rateLimitAttempt) * baseDelay;
+                
+                // If we've hit the max delay cap, it means we're consistently being rate limited
+                // Exit the program to avoid waiting indefinitely
+                if (backoffDelay >= maxDelay) {
+                    logger.error(`Rate limit backoff has reached maximum (2 hours) for ${filePath}`);
+                    logger.error('This indicates persistent rate limiting. Please check your API quota and try again later.');
+                    process.exit(1);
+                }
+                
                 const backoffSeconds = Math.ceil(backoffDelay / 1000);
                 
                 logger.warn(`Rate limit hit for ${filePath} (rate limit attempt ${rateLimitAttempt}), waiting ${backoffSeconds}s...`);
